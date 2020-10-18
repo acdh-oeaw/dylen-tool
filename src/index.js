@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Provider } from 'react-redux'
 import store from './redux/store'
-import { fetchCorpora } from './redux/actions'
+import { fetchAvailableQueryParams } from './redux/actions'
 import App from './App';
 
-//Dispatch the fetchPosts() before our root component renders
-store.dispatch(fetchCorpora())
+//Dispatch the fetchAvailableQueryParams() before our root component renders
+store.dispatch(fetchAvailableQueryParams())
 
 ReactDOM.render(
   <Provider store={store}>
