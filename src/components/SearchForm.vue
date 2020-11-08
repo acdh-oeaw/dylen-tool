@@ -40,7 +40,9 @@
           ></b-form-select>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Query</b-button>
+        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled">
+          Query
+        </b-button>
       </b-form>
     </div>
   </div>
@@ -117,6 +119,10 @@ export default {
       set(val) {
         if (val) this.$store.commit('changeSelectedTargetwordID', val);
       }
+    },
+    isButtonDisabled() {
+      if (this.$store.getters.egoNetworks.length < 2) return false;
+      return true;
     },
   },
   watch: {

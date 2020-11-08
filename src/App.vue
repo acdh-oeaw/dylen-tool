@@ -6,7 +6,7 @@
           <Sidebar/>
         </div>
         <div class="col-md-10">
-          Results
+          <Results/>
         </div>
       </div>
     </div>
@@ -15,12 +15,13 @@
 
 <script>
 
-import Sidebar from './components/Sidebar';
+import Sidebar from '@/components/Sidebar';
+import Results from '@/components/Results';
 
 export default {
   name: 'App',
   components: {
-    Sidebar
+    Sidebar, Results
   },
   mounted() {
     this.$store.dispatch('loadAvailableQueryParams');

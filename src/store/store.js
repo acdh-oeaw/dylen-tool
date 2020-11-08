@@ -67,6 +67,15 @@ const store = new Vuex.Store({
     changeSelectedTargetwordID (state, networkID) {
       state.selectedTargetwordID = networkID;
     },
+    addEgoNetwork (state, networkObj) {
+      state.egoNetworks.push(networkObj);
+    },
+    removeEgoNetwork(state, networkID) {
+      const selectedNetworkIndex = state.egoNetworks.findIndex(obj => {
+        return obj.id === networkID;
+      });
+      state.egoNetworks.splice(selectedNetworkIndex, 1);
+    }
   },
   getters: {
     availableQueryParams: (state) => state.availableQueryParams,
@@ -76,6 +85,7 @@ const store = new Vuex.Store({
     selectedCorpusID: (state) => state.selectedCorpusID,
     selectedSubcorpusID: (state) => state.selectedSubcorpusID,
     selectedTargetwordID: (state) => state.selectedTargetwordID,
+    egoNetworks: (state) => state.egoNetworks,
   },
   actions: {
     async loadAvailableQueryParams({state}) {
@@ -117,8 +127,8 @@ const store = new Vuex.Store({
                 id
                 text
                 year
-                corpusId
-                sourceId
+                corpus
+                source
                 absFreq
                 relFreq
                 threshold
@@ -140,7 +150,7 @@ const store = new Vuex.Store({
           }`
         };
         const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-        state.egoNetworks.push(response.data.data);
+        this.commit('addEgoNetwork', response.data.data.networkById)
       } catch (error) {
         console.log(error);
       }
