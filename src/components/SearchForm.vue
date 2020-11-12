@@ -22,7 +22,7 @@
             v-model="selectedSubcorpusID"
             :options="selectedCorpus.sources"
             @change="onSelectedSubcorpusChange"
-            value-field="id"
+            value-field="name"
             text-field="name"
             required
           ></b-form-select>
@@ -32,9 +32,9 @@
           <b-form-select
             id="select-targetword"
             v-model="selectedTargetwordID"
-            :options="selectedSubcorpus.networks"
+            :options="selectedSubcorpus.targetWords"
             @change="onSelectedTargetwordChange"
-            value-field="id"
+            value-field="text"
             text-field="text"
             required
           ></b-form-select>

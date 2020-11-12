@@ -12,7 +12,7 @@ const store = new Vuex.Store({
   state: {
     availableQueryParams: [],
     selectedCorpus: {id: '', name: '', sources: []},
-    selectedSubcorpus: {id: '', name: '', networks: []},
+    selectedSubcorpus: {id: '', name: '', targetWords: []},
     selectedTargetword: {id: '', text: ''},
     selectedCorpusID: '',
     selectedSubcorpusID: '',
@@ -37,11 +37,11 @@ const store = new Vuex.Store({
       let selectedSubcorpusObj;
       if (subcorpusID) {
         selectedSubcorpusObj = state.selectedCorpus.sources.find(obj => {
-          return obj.id === subcorpusID;
+          return obj.name === subcorpusID;
         });
       } else {
         selectedSubcorpusObj = state.selectedCorpus.sources[0];
-        state.selectedSubcorpusID = selectedSubcorpusObj.id;
+        state.selectedSubcorpusID = selectedSubcorpusObj.name;
       }
       state.selectedSubcorpus = selectedSubcorpusObj;
       this.commit('changeSelectedTargetword', false);
@@ -49,12 +49,12 @@ const store = new Vuex.Store({
     changeSelectedTargetword (state, networkID) {
       let selectedNetworkObj;
       if (networkID) {
-        selectedNetworkObj = state.selectedSubcorpus.networks.find(obj => {
-          return obj.id === networkID;
+        selectedNetworkObj = state.selectedSubcorpus.targetWords.find(obj => {
+          return obj.text === networkID;
         });
       } else {
-        selectedNetworkObj = state.selectedSubcorpus.networks[0];
-        state.selectedTargetwordID = selectedNetworkObj.id;
+        selectedNetworkObj = state.selectedSubcorpus.targetWords[0];
+        state.selectedTargetwordID = selectedNetworkObj.text;
       }
       state.selectedTargetword = selectedNetworkObj;
     },
@@ -72,7 +72,7 @@ const store = new Vuex.Store({
     },
     removeEgoNetwork(state, networkID) {
       const selectedNetworkIndex = state.egoNetworks.findIndex(obj => {
-        return obj.id === networkID;
+        return obj.text === networkID;
       });
       state.egoNetworks.splice(selectedNetworkIndex, 1);
     }
@@ -93,17 +93,22 @@ const store = new Vuex.Store({
         const graphqlQuery = {
           query: `{
             allAvailableCorpora {
-                id
+              id
+              name
+              sources {
                 name
-                sources {
+                targetWords {
+                  text
+                  pos
+                  networks {
                     id
-                    name
-                    networks {
-                        id
-                        text
-                        year
-                    }
+                    year
+                    absFreq
+                    relFreq
+                    threshold
+                  }
                 }
+              }
             }
           }`
         };
@@ -111,10 +116,10 @@ const store = new Vuex.Store({
         state.availableQueryParams = response.data.data.allAvailableCorpora;
         state.selectedCorpus = response.data.data.allAvailableCorpora[0];
         state.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
-        state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].networks[0];
+        state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
         state.selectedCorpusID = response.data.data.allAvailableCorpora[0].id;
-        state.selectedSubcorpusID = response.data.data.allAvailableCorpora[0].sources[0].id;
-        state.selectedTargetwordID = response.data.data.allAvailableCorpora[0].sources[0].networks[0].id;
+        state.selectedSubcorpusID = response.data.data.allAvailableCorpora[0].sources[0].name;
+        state.selectedTargetwordID = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].text;
       } catch (error) {
         console.log(error);
       }
@@ -123,7 +128,7 @@ const store = new Vuex.Store({
       try {
         const graphqlQuery = {
           query: `{
-            networkById(id: "${state.selectedTargetwordID}"){
+            networkById(id: "${state.selectedTargetword.networks[0].id}"){
                 id
                 text
                 year
