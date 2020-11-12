@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <h2>DYLEN</h2>
+        <h2>DYLEN DEV</h2>
       </div>
     </div>
     <MenuNavigation/>
