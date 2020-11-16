@@ -5,39 +5,30 @@
       <b-form @submit="onSubmit">
 
         <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus">
-          <b-form-select
-            id="select-corpus"
-            v-model="selectedCorpusID"
+          <v-select
+            v-model="selectedCorpus"
             :options="availableQueryParams"
-            @change="onSelectedCorpusChange"
-            value-field="id"
-            text-field="name"
-            required
-          ></b-form-select>
+            :clearable="false"
+            label="name"
+          />
         </b-form-group>
 
         <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus">
-          <b-form-select
-            id="select-subcorpus"
-            v-model="selectedSubcorpusID"
+          <v-select
+            v-model="selectedSubcorpus"
             :options="selectedCorpus.sources"
-            @change="onSelectedSubcorpusChange"
-            value-field="name"
-            text-field="name"
-            required
-          ></b-form-select>
+            :clearable="false"
+            label="name"
+          />
         </b-form-group>
 
         <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword">
-          <b-form-select
-            id="select-targetword"
-            v-model="selectedTargetwordID"
+          <v-select
+            v-model="selectedTargetword"
             :options="selectedSubcorpus.targetWords"
-            @change="onSelectedTargetwordChange"
-            value-field="text"
-            text-field="text"
-            required
-          ></b-form-select>
+            :clearable="false"
+            label="text"
+          />
         </b-form-group>
 
         <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled">
@@ -65,15 +56,6 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('loadEgoNetwork');
     },
-    onSelectedCorpusChange(corpusID) {
-      if (corpusID) this.$store.commit('changeSelectedCorpus', corpusID);
-    },
-    onSelectedSubcorpusChange(subcorpusID) {
-      if (subcorpusID) this.$store.commit('changeSelectedSubcorpus', subcorpusID);
-    },
-    onSelectedTargetwordChange(networkID) {
-      if (networkID) this.$store.commit('changeSelectedTargetword', networkID);
-    },
   },
   computed: {
     availableQueryParams: {
@@ -84,40 +66,25 @@ export default {
     selectedCorpus: {
       get() {
         return this.$store.getters.selectedCorpus;
+      },
+      set(val) {
+        if (val) this.$store.commit('changeSelectedCorpus', val);
       }
     },
     selectedSubcorpus: {
       get() {
         return this.$store.getters.selectedSubcorpus;
+      },
+      set(val) {
+        if (val) this.$store.commit('changeSelectedSubcorpus', val);
       }
     },
     selectedTargetword: {
       get() {
         return this.$store.getters.selectedTargetword;
-      }
-    },
-    selectedCorpusID: {
-      get() {
-        return this.$store.getters.selectedCorpusID;
       },
       set(val) {
-        if (val) this.$store.commit('changeSelectedCorpusID', val);
-      }
-    },
-    selectedSubcorpusID: {
-      get() {
-        return this.$store.getters.selectedSubcorpusID;
-      },
-      set(val) {
-        if (val) this.$store.commit('changeSelectedSubcorpusID', val);
-      }
-    },
-    selectedTargetwordID: {
-      get() {
-        return this.$store.getters.selectedTargetwordID;
-      },
-      set(val) {
-        if (val) this.$store.commit('changeSelectedTargetwordID', val);
+        if (val) this.$store.commit('changeSelectedTargetword', val);
       }
     },
     isButtonDisabled() {
