@@ -6,7 +6,7 @@ stages:
 # build development
 
 build-dev:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-build-image:v0.4.0"
+  image: "docker:19"
   stage: build
   variables:
     DOCKER_HOST: tcp://docker:2375/
@@ -57,7 +57,7 @@ deploy-dev:
 
 # build production
 build-prod:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-build-image:v0.4.0"
+  image: "docker:19"
   stage: build
   variables:
     DOCKER_HOST: tcp://docker:2375/
