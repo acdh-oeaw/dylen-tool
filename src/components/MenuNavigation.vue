@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div @mouseover="mouseOver" class="row">
     <div class="col">
       <b-list-group>
         Query Type:
@@ -23,6 +23,10 @@ export default {
   mounted() {
   },
   methods: {
+    mouseOver(event){
+      event.preventDefault();
+      this.$store.dispatch('sautoModule/send',event.clientX,event.clientY);
+    }
   },
   computed: {
   },

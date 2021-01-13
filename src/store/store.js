@@ -8,7 +8,7 @@ Vue.prototype.axios = axios;
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store({
+const mainModule = {
   state: {
     availableQueryParams: [],
     selectedCorpus: {id: '', name: '', sources: []},
@@ -121,13 +121,40 @@ const store = new Vuex.Store({
             }
           }`
         };
-        const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+        //const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+        const response = await axios.post('https://localhost:5000/graphql', graphqlQuery);
         this.commit('addEgoNetwork', response.data.data.networkById)
       } catch (error) {
         console.log(error);
       }
     },
   }
+}
+
+const sautoModule = {
+  state: {
+    connection: null
+  },
+  mounted(){
+    this.state.connection = new WebSocket("ws://localhost:8080/app");
+  },
+  actions: {
+    async send(x,y){
+      const message = {
+        type: "MousePosition",
+        x: x,
+        y: y
+      }
+      this.state.connection.send(message);
+    }
+  }
+}
+const store = new Vuex.Store({
+    modules: {
+      main: mainModule,
+      sauto: sautoModule
+    }
 })
+
 
 export default store;
