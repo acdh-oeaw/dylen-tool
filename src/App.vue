@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div ref="app" id="app" @mousemove="mouseMove">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-2">
@@ -26,6 +26,19 @@ export default {
   mounted() {
     this.$store.dispatch('main/loadAvailableQueryParams');
   },
+  methods:{
+    mouseMove(event){
+      //get mouse position in percentage relative to top element size
+      const elementSizes = this.$refs.app.getBoundingClientRect();
+      const x = event.clientX - elementSizes.left
+      const y = event.clientY - elementSizes.top
+      const positions = {
+        x: (x*100)/elementSizes.width,
+        y: (y*100)/elementSizes.height,
+      }
+      this.$store.dispatch('sauto/send',{positions});
+    }
+  }
 }
 </script>
 
