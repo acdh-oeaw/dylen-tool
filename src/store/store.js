@@ -136,31 +136,27 @@ const sautoModule = {
     namespaced: true,
     state: {
         connection: new WebSocket("ws://localhost:8080/app"),
-        lastOverElement: null
+        lastOverElement: null,
+        mouseOverComponents: ["sidebar", "results"] //add here if any new components come up
     },
     actions: {
         async handleMouseMove({state}, {movement}) {
-            //first send mouse positions
-
+            //send mouse positions
             const message = {
                 type: "MousePosition",
                 x: movement.x,
                 y: movement.y
             }
             state.connection.send(JSON.stringify(message));
+        },
+        async handleMouseOver({state}, {mouseOver}) {
 
-            console.log("lastOverelement: " + state.lastOverElement)
-            console.log("element id: " + movement.elementId)
-            //if mouse over new element send new element
-            if (movement.elementId !== "") {
-                if (movement.elementId !== state.lastOverElement) {
-                    const message = {
-                        type: "Component",
-                        id: movement.elementId,
-                        timestamp: movement.timestamp
-                    }
-                    state.connection.send(JSON.stringify(message))
-                    state.lastOverElement = movement.elementId
+            //send if mouseover new component
+            if(state.mouseOverComponents.includes(mouseOver.id)){
+                if (mouseOver.id !== state.lastOverElement){
+                    mouseOver.type="Component"
+                    state.connection.send(JSON.stringify(mouseOver));
+                    state.lastOverElement = mouseOver.id
                 }
             }
         }

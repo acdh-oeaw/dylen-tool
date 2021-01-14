@@ -2,10 +2,10 @@
   <div ref="app" id="app" @mousemove="mouseMove">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-2">
+        <div @mouseover="mouseOver" data-mouse-over-id="sidebar" class="col-md-2">
           <Sidebar/>
         </div>
-        <div class="col-md-10">
+        <div @mouseover="mouseOver" data-mouse-over-id="results" class="col-md-10">
           <Results/>
         </div>
       </div>
@@ -26,19 +26,25 @@ export default {
   mounted() {
     this.$store.dispatch('main/loadAvailableQueryParams');
   },
-  methods:{
-    mouseMove(event){
+  methods: {
+    mouseMove(event) {
       //get mouse position in percentage relative to top element size
       const elementSizes = this.$refs.app.getBoundingClientRect();
       const x = event.clientX - elementSizes.left
       const y = event.clientY - elementSizes.top
+
       const movement = {
-        x: (x*100)/elementSizes.width,
-        y: (y*100)/elementSizes.height,
-        elementId: event.target.id,
+        x: (x * 100) / elementSizes.width,
+        y: (y * 100) / elementSizes.height
+      }
+      this.$store.dispatch('sauto/handleMouseMove', {movement});
+    },
+    mouseOver(event){
+      const mouseOver = {
+        id: event.target.getAttribute("data-mouse-over-id"),
         timestamp: Date.now()
       }
-      this.$store.dispatch('sauto/handleMouseMove',{movement});
+      this.$store.dispatch('sauto/handleMouseOver', {mouseOver});
     }
   }
 }
