@@ -48,7 +48,7 @@ export default {
         let links = [];
         for (const node of network.nodes) {
           nodes.push({
-            id: nodes.length + 1,
+            id: nodes.length,
             name: node.text,
             _size: node.similarity * 40, /* Math.pow(200, node.similarity)*/
             _color: this.chartColors[networks.length][node.clusterId]

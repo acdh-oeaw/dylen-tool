@@ -8,6 +8,8 @@ Vue.prototype.axios = axios;
 
 Vue.use(Vuex);
 
+const graphqlEndpoint = 'https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql'
+
 const store = new Vuex.Store({
   state: {
     availableQueryParams: [],
@@ -68,21 +70,19 @@ const store = new Vuex.Store({
               sources {
                 name
                 targetWords {
+                  id
                   text
                   pos
                   networks {
                     id
                     year
-                    absFreq
-                    relFreq
-                    threshold
                   }
                 }
               }
             }
           }`
         };
-        const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+        const response = await axios.post(graphqlEndpoint, graphqlQuery);
         state.availableQueryParams = response.data.data.allAvailableCorpora;
         state.selectedCorpus = response.data.data.allAvailableCorpora[0];
         state.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
@@ -95,34 +95,26 @@ const store = new Vuex.Store({
       try {
         const graphqlQuery = {
           query: `{
-            networkById(id: "${state.selectedTargetword.networks[0].id}"){
-                id
-                text
-                year
-                corpus
-                source
-                absFreq
-                relFreq
-                threshold
-                nodes {
-                    id
-                    clusterId
-                    text
-                    pos
-                    similarity
-                    absFreq
-                    relFreq
-                }
-                connections {
-                    node1
-                    node2
-                    similarity
-                }
-            }
-          }`
+                    getNetwork(targetword_id: "${state.selectedTargetword.id}", year:${state.selectedTargetword.networks[0].year}){
+                        id
+                        year
+                        nodes {
+                            id
+                            clusterId
+                            text
+                            pos
+                            similarity
+                        }
+                        connections {
+                            node1
+                            node2
+                            similarity
+                        }
+                    }
+                }`
         };
-        const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-        this.commit('addEgoNetwork', response.data.data.networkById)
+        const response = await axios.post(graphqlEndpoint, graphqlQuery);
+        this.commit('addEgoNetwork', response.data.data.getNetwork)
       } catch (error) {
         console.log(error);
       }
