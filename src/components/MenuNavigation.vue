@@ -25,9 +25,11 @@ export default {
   methods: {
     mouseOver(event){
       event.preventDefault();
-      const x = event.clientX;
-      const y = event.clientY;
-      this.$store.dispatch('sauto/send',{x,y});
+      const positions = {
+        x: event.clientX,
+        y: event.clientY
+      }
+      this.$store.dispatch('sauto/send',{positions});
     }
   },
   computed: {

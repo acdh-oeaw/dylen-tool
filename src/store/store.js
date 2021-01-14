@@ -138,13 +138,10 @@ const sautoModule = {
     connection: new WebSocket("ws://localhost:8080/app")
   },
   actions: {
-    async send({state, x,y}){
-      const message = {
-        type: "MousePosition",
-        x: x,
-        y: y
-      }
-      state.connection.send(JSON.stringify(message));
+    async send({state},{positions}){
+      positions.type = "MousePosition",
+      console.log(positions.x + positions.y)
+      state.connection.send(JSON.stringify(positions));
     }
   }
 }
