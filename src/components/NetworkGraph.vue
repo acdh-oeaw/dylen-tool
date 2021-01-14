@@ -43,7 +43,7 @@ export default {
   computed: {
     egoNetworks() {
       let networks = [];
-      for (const network of this.$store.getters.egoNetworks) {
+      for (const network of this.$store.getters["main/egoNetworks"]) {
         let nodes = [];
         let links = [];
         for (const node of network.nodes) {

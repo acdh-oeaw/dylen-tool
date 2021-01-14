@@ -24,7 +24,7 @@ export default {
     Sidebar, Results
   },
   mounted() {
-    this.$store.dispatch('loadAvailableQueryParams');
+    this.$store.dispatch('main/loadAvailableQueryParams');
   },
 }
 </script>

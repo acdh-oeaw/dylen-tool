@@ -25,7 +25,9 @@ export default {
   methods: {
     mouseOver(event){
       event.preventDefault();
-      this.$store.dispatch('sautoModule/send',event.clientX,event.clientY);
+      const x = event.clientX;
+      const y = event.clientY;
+      this.$store.dispatch('sauto/send',{x,y});
     }
   },
   computed: {

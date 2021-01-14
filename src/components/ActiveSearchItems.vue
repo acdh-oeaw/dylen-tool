@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     removeItem(networkID) {
-      this.$store.commit('removeEgoNetwork', networkID);
+      this.$store.commit('main/removeEgoNetwork', networkID);
     }
   },
   computed: {

@@ -9,6 +9,7 @@ Vue.prototype.axios = axios;
 Vue.use(Vuex);
 
 const mainModule = {
+  namespaced: true,
   state: {
     availableQueryParams: [],
     selectedCorpus: {id: '', name: '', sources: []},
@@ -121,8 +122,8 @@ const mainModule = {
             }
           }`
         };
-        //const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-        const response = await axios.post('https://localhost:5000/graphql', graphqlQuery);
+        const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+        //const response = await axios.post('https://localhost:5000/graphql', graphqlQuery);
         this.commit('addEgoNetwork', response.data.data.networkById)
       } catch (error) {
         console.log(error);
@@ -132,20 +133,22 @@ const mainModule = {
 }
 
 const sautoModule = {
+  namespaced: true,
   state: {
     connection: null
   },
-  mounted(){
-    this.state.connection = new WebSocket("ws://localhost:8080/app");
+  mounted(state){
+    console.log("aaa")
+    state.connection = new WebSocket("ws://localhost:8080/app");
   },
   actions: {
-    async send(x,y){
+    async send(state,{x,y}){
       const message = {
         type: "MousePosition",
         x: x,
         y: y
       }
-      this.state.connection.send(message);
+      state.connection.send(message);
     }
   }
 }
