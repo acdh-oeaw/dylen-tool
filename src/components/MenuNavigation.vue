@@ -23,15 +23,6 @@ export default {
   mounted() {
   },
   methods: {
-
-    // mouseOver(event){
-    //   event.preventDefault();
-    //   const positions = {
-    //     x: event.clientX,
-    //     y: event.clientY
-    //   }
-    //   this.$store.dispatch('sauto/send',{positions});
-    // }
   },
   computed: {
   },

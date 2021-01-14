@@ -32,11 +32,13 @@ export default {
       const elementSizes = this.$refs.app.getBoundingClientRect();
       const x = event.clientX - elementSizes.left
       const y = event.clientY - elementSizes.top
-      const positions = {
+      const movement = {
         x: (x*100)/elementSizes.width,
         y: (y*100)/elementSizes.height,
+        elementId: event.target.id,
+        timestamp: Date.now()
       }
-      this.$store.dispatch('sauto/send',{positions});
+      this.$store.dispatch('sauto/handleMouseMove',{movement});
     }
   }
 }
