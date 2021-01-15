@@ -6,7 +6,7 @@ stages:
 # build development
 
 build-dev:
-  image: "docker:19"
+  image: docker:19-dind
   stage: build
   variables:
     DOCKER_HOST: tcp://docker:2375/
@@ -57,7 +57,7 @@ deploy-dev:
 
 # build production
 build-prod:
-  image: "docker:19"
+  image: docker:19-dind
   stage: build
   variables:
     DOCKER_HOST: tcp://docker:2375/
