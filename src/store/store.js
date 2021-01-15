@@ -52,11 +52,11 @@ const store = new Vuex.Store({
       let selectedNetworkObj;
       if (networkID) {
         selectedNetworkObj = state.selectedSubcorpus.targetWords.find(obj => {
-          return obj.text === networkID;
+          return obj.id === networkID.id;
         });
       } else {
         selectedNetworkObj = state.selectedSubcorpus.targetWords[0];
-        state.selectedTargetwordID = selectedNetworkObj.text;
+        state.selectedTargetwordID = selectedNetworkObj.id;
       }
       state.selectedTargetword = selectedNetworkObj;
     },
@@ -119,7 +119,7 @@ const store = new Vuex.Store({
         state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
         state.selectedCorpusID = response.data.data.allAvailableCorpora[0].id;
         state.selectedSubcorpusID = response.data.data.allAvailableCorpora[0].sources[0].name;
-        state.selectedTargetwordID = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].text;
+        state.selectedTargetwordID = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].id;
       } catch (error) {
         console.log(error);
       }
@@ -147,7 +147,13 @@ const store = new Vuex.Store({
           }`
         };
         const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-        this.commit('addEgoNetwork', response.data.data.getNetwork)
+        const networkID = state.selectedTargetword.id+state.selectedTargetword.networks[0].year
+        let network = response.data.data.getNetwork;
+        network.id = networkID
+        network.corpus = state.selectedCorpus.name
+        network.source = state.selectedSubcorpus.name
+        network.text = state.selectedTargetword.text
+        this.commit('addEgoNetwork', network);
       } catch (error) {
         console.log(error);
       }

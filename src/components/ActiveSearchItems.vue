@@ -4,7 +4,7 @@
       <b-list-group>
         Active Queries:
         <b-list-group-item v-for="item in egoNetworks" :key="item.id" variant="success">
-          {{item.corpus.name}} / {{item.source.name}} / {{item.text}}
+          {{item.corpus}} / {{item.source}} / {{item.text}}
           <b-icon v-on:click="removeItem(item.id)" icon="x-circle"></b-icon>
         </b-list-group-item>
       </b-list-group>
@@ -33,14 +33,7 @@ export default {
     egoNetworks: {
       get() {
         console.log('ActiveSearch')
-        console.log(this.$store.getters.selectedTargetword)
-        let obj = [{
-          id: this.$store.getters.selectedTargetword.id,
-          corpus: this.$store.getters.selectedCorpus,
-          source: this.$store.getters.selectedSubcorpus,
-          text: this.$store.getters.selectedTargetword.text
-        }];
-        return obj;
+        return this.$store.getters.egoNetworks;
       }
     },
   },
