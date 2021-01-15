@@ -64,7 +64,7 @@ build-prod:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "" 
   services:
-    - name: docker:dind
+    - name: docker:19-dind
       command: ["--mtu=1450"]
   tags:
     - cluster
