@@ -135,7 +135,7 @@ const mainModule = {
 const sautoModule = {
     namespaced: true,
     state: {
-        connection: new WebSocket("ws://localhost:8080/app"),
+        connection: new WebSocket("ws://localhost:8081/app"),
         lastOverElement: null,
         mouseOverComponents: ["sidebar", "results"] //add here if any new components come up
     },
