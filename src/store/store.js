@@ -34,7 +34,7 @@ const mainModule = {
                 state.selectedCorpusID = selectedCorpusObj.id;
             }
             state.selectedCorpus = selectedCorpusObj;
-            this.commit('changeSelectedSubcorpus', false);
+            this.commit('main/changeSelectedSubcorpus', false);
         },
         changeSelectedSubcorpus (state, subcorpusID) {
             let selectedSubcorpusObj;
@@ -47,7 +47,7 @@ const mainModule = {
                 state.selectedSubcorpusID = selectedSubcorpusObj.name;
             }
             state.selectedSubcorpus = selectedSubcorpusObj;
-            this.commit('changeSelectedTargetword', false);
+            this.commit('main/changeSelectedTargetword', false);
         },
         changeSelectedTargetword (state, networkID) {
             let selectedNetworkObj;
@@ -154,7 +154,7 @@ const mainModule = {
                 network.corpus = state.selectedCorpus.name
                 network.source = state.selectedSubcorpus.name
                 network.text = state.selectedTargetword.text
-                this.commit('addEgoNetwork', network);
+                this.commit('main/addEgoNetwork', network);
             } catch (error) {
                 console.log(error);
             }
@@ -165,7 +165,7 @@ const mainModule = {
 const sautoModule = {
     namespaced: true,
     state: {
-        connection: new WebSocket("ws://localhost:8080/app"),
+        connection: new WebSocket("ws://localhost:8081/app"),
         lastOverElement: null,
         mouseOverComponents: ["sidebar", "results"] //add here if any new components come up
     },
