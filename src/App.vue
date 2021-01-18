@@ -23,8 +23,9 @@ export default {
   components: {
     Sidebar, Results
   },
-  mounted() {
+  created: function() {
     this.$store.dispatch('main/loadAvailableQueryParams');
+
   },
   methods: {
     mouseMove(event) {

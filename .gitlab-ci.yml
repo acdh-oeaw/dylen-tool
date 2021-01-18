@@ -6,14 +6,14 @@ stages:
 # build development
 
 build-dev:
-  image: "docker:19"
+  image: docker:19-dind
   stage: build
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "" 
   services:
-    - name: docker:dind
+    - name: docker:19-dind
       command: ["--mtu=1450"]
   tags:
     - cluster
@@ -57,14 +57,14 @@ deploy-dev:
 
 # build production
 build-prod:
-  image: "docker:19"
+  image: docker:19-dind
   stage: build
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "" 
   services:
-    - name: docker:dind
+    - name: docker:19-dind
       command: ["--mtu=1450"]
   tags:
     - cluster

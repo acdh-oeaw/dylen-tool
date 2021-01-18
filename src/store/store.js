@@ -8,6 +8,8 @@ Vue.prototype.axios = axios;
 
 Vue.use(Vuex);
 
+const graphqlEndpoint = 'https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql'
+
 const mainModule = {
     namespaced: true,
     state: {
@@ -15,33 +17,60 @@ const mainModule = {
         selectedCorpus: {id: '', name: '', sources: []},
         selectedSubcorpus: {id: '', name: '', targetWords: []},
         selectedTargetword: {id: '', text: ''},
+        selectedCorpusID: '',
+        selectedSubcorpusID: '',
+        selectedTargetwordID: '',
         egoNetworks: [],
     },
     mutations: {
-        changeSelectedCorpus(state, corpus) {
-            if (corpus) {
-                state.selectedCorpus = corpus;
+        changeSelectedCorpus (state, corpusID) {
+            let selectedCorpusObj;
+            if (corpusID) {
+                selectedCorpusObj = state.availableQueryParams.find(obj => {
+                    return obj.id === corpusID;
+                });
             } else {
-                state.selectedCorpus = state.availableQueryParams[0];
+                selectedCorpusObj = state.availableQueryParams[0];
+                state.selectedCorpusID = selectedCorpusObj.id;
             }
+            state.selectedCorpus = selectedCorpusObj;
             this.commit('changeSelectedSubcorpus', false);
         },
-        changeSelectedSubcorpus(state, subcorpus) {
-            if (subcorpus) {
-                state.selectedSubcorpus = subcorpus;
+        changeSelectedSubcorpus (state, subcorpusID) {
+            let selectedSubcorpusObj;
+            if (subcorpusID) {
+                selectedSubcorpusObj = state.selectedCorpus.sources.find(obj => {
+                    return obj.name === subcorpusID;
+                });
             } else {
-                state.selectedSubcorpus = state.selectedCorpus.sources[0];
+                selectedSubcorpusObj = state.selectedCorpus.sources[0];
+                state.selectedSubcorpusID = selectedSubcorpusObj.name;
             }
+            state.selectedSubcorpus = selectedSubcorpusObj;
             this.commit('changeSelectedTargetword', false);
         },
-        changeSelectedTargetword(state, targetword) {
-            if (targetword) {
-                state.selectedTargetword = targetword;
+        changeSelectedTargetword (state, networkID) {
+            let selectedNetworkObj;
+            if (networkID) {
+                selectedNetworkObj = state.selectedSubcorpus.targetWords.find(obj => {
+                    return obj.id === networkID.id;
+                });
             } else {
-                state.selectedTargetword = state.selectedSubcorpus.targetWords[0];
+                selectedNetworkObj = state.selectedSubcorpus.targetWords[0];
+                state.selectedTargetwordID = selectedNetworkObj.id;
             }
+            state.selectedTargetword = selectedNetworkObj;
         },
-        addEgoNetwork(state, networkObj) {
+        changeSelectedCorpusID (state, corpusID) {
+            state.selectedCorpusID = corpusID;
+        },
+        changeSelectedSubcorpusID (state, subcorpusID) {
+            state.selectedSubcorpusID = subcorpusID;
+        },
+        changeSelectedTargetwordID (state, networkID) {
+            state.selectedTargetwordID = networkID;
+        },
+        addEgoNetwork (state, networkObj) {
             state.egoNetworks.push(networkObj);
         },
         removeEgoNetwork(state, networkID) {
@@ -56,6 +85,9 @@ const mainModule = {
         selectedCorpus: (state) => state.selectedCorpus,
         selectedSubcorpus: (state) => state.selectedSubcorpus,
         selectedTargetword: (state) => state.selectedTargetword,
+        selectedCorpusID: (state) => state.selectedCorpusID,
+        selectedSubcorpusID: (state) => state.selectedSubcorpusID,
+        selectedTargetwordID: (state) => state.selectedTargetwordID,
         egoNetworks: (state) => state.egoNetworks,
     },
     actions: {
@@ -69,25 +101,26 @@ const mainModule = {
               sources {
                 name
                 targetWords {
+                  id
                   text
                   pos
                   networks {
                     id
                     year
-                    absFreq
-                    relFreq
-                    threshold
                   }
                 }
               }
             }
           }`
                 };
-                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+                const response = await axios.post(graphqlEndpoint, graphqlQuery);
                 state.availableQueryParams = response.data.data.allAvailableCorpora;
                 state.selectedCorpus = response.data.data.allAvailableCorpora[0];
                 state.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
                 state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
+                state.selectedCorpusID = response.data.data.allAvailableCorpora[0].id;
+                state.selectedSubcorpusID = response.data.data.allAvailableCorpora[0].sources[0].name;
+                state.selectedTargetwordID = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].id;
             } catch (error) {
                 console.log(error);
             }
@@ -96,23 +129,15 @@ const mainModule = {
             try {
                 const graphqlQuery = {
                     query: `{
-            networkById(id: "${state.selectedTargetword.networks[0].id}"){
+            getNetwork(targetword_id: "${state.selectedTargetword.id}", year:${state.selectedTargetword.networks[0].year}){
                 id
-                text
                 year
-                corpus
-                source
-                absFreq
-                relFreq
-                threshold
                 nodes {
                     id
                     clusterId
                     text
                     pos
                     similarity
-                    absFreq
-                    relFreq
                 }
                 connections {
                     node1
@@ -123,8 +148,13 @@ const mainModule = {
           }`
                 };
                 const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-                //const response = await axios.post('https://localhost:5000/graphql', graphqlQuery);
-                this.commit('addEgoNetwork', response.data.data.networkById)
+                const networkID = state.selectedTargetword.id+state.selectedTargetword.networks[0].year
+                let network = response.data.data.getNetwork;
+                network.id = networkID
+                network.corpus = state.selectedCorpus.name
+                network.source = state.selectedSubcorpus.name
+                network.text = state.selectedTargetword.text
+                this.commit('addEgoNetwork', network);
             } catch (error) {
                 console.log(error);
             }
@@ -135,7 +165,7 @@ const mainModule = {
 const sautoModule = {
     namespaced: true,
     state: {
-        connection: new WebSocket("ws://localhost:8081/app"),
+        connection: new WebSocket("ws://localhost:8080/app"),
         lastOverElement: null,
         mouseOverComponents: ["sidebar", "results"] //add here if any new components come up
     },
