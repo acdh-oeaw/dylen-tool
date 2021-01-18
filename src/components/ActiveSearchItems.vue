@@ -3,7 +3,7 @@
     <div class="col">
       <b-list-group>
         Active Queries:
-        <b-list-group-item v-for="item in 'main/egoNetworks'" :key="item.id" variant="success">
+        <b-list-group-item v-for="item in egoNetworks" :key="item.id" variant="success">
           {{item.corpus}} / {{item.source}} / {{item.text}}
           <b-icon v-on:click="removeItem(item.id)" icon="x-circle"></b-icon>
         </b-list-group-item>
@@ -33,7 +33,7 @@ export default {
     egoNetworks: {
       get() {
         console.log('ActiveSearch')
-        return this.$store.getters.egoNetworks;
+        return this.$store.getters["main/egoNetworks"];
       }
     },
   },

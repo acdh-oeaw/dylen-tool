@@ -121,7 +121,7 @@ const mainModule = {
                 network.corpus = state.selectedCorpus.name
                 network.source = state.selectedSubcorpus.name
                 network.text = state.selectedTargetword.text
-                this.commit('addEgoNetwork', network);
+                this.commit('main/addEgoNetwork', network);
             } catch (error) {
                 console.log(error);
             }
