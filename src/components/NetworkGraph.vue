@@ -1,6 +1,7 @@
 <template>
   <div class="row">
-    <div class="col-md-6" style="height: 600px;" v-for="item in egoNetworks" :key="item.id" @mouseover="mouseOver" :data-sauto-id="item.id">
+    <div class="col-md-6" style="height: 600px;" v-for="item in egoNetworks" :key="item.id" @mouseover="mouseOver"
+         :data-sauto-id="'network-'+item.id">
       <div class="network-wrapper p-2">
         <h5>{{item.text}} / {{item.corpus}} / {{item.subcorpus}}</h5>
         <h6>Year: {{item.year}}</h6>
@@ -38,15 +39,7 @@ export default {
   },
   mounted() {
   },
-  methods: {
-    mouseOver(event){
-      const mouseOver = {
-        id: "network-"+event.target.getAttribute("data-sauto-id"),
-        timestamp: Date.now()
-      }
-      this.$store.dispatch('sauto/handleMouseOver', {mouseOver});
-    }
-  },
+  methods: {},
   computed: {
     egoNetworks() {
       let networks = [];

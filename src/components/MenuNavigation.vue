@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col">
+    <div data-sauto-id="queryType" @mouseover="mouseOver" class="col">
       <b-list-group>
         Query Type:
         <b-list-group-item variant="success">Ego Networks</b-list-group-item>

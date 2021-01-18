@@ -167,7 +167,7 @@ const sautoModule = {
     state: {
         connection: new WebSocket("ws://localhost:8081/app"),
         lastOverElement: null,
-        mouseOverComponents: ["sidebar", "results", "network-0", "network-1"] //add here if any new components come up //todo network enumeration might grow in the future, find fix instead of hardcoding
+        mouseOverComponents: ["sidebar", "results", "network-0", "network-1", "queryType"] //add here if any new components come up //todo network enumeration might grow in the future, find fix instead of hardcoding
     },
     actions: {
         async handleMouseMove({state}, {movement}) {
@@ -195,6 +195,18 @@ const store = new Vuex.Store({
     modules: {
         main: mainModule,
         sauto: sautoModule
+    }
+})
+
+Vue.mixin({
+    methods: {
+        mouseOver(event){
+            const mouseOver = {
+                id: event.target.getAttribute("data-sauto-id"),
+                timestamp: Date.now()
+            }
+            this.$store.dispatch('sauto/handleMouseOver', {mouseOver});
+        }
     }
 })
 

@@ -39,13 +39,6 @@ export default {
         y: (y * 100) / elementSizes.height
       }
       this.$store.dispatch('sauto/handleMouseMove', {movement});
-    },
-    mouseOver(event){
-      const mouseOver = {
-        id: event.target.getAttribute("data-sauto-id"),
-        timestamp: Date.now()
-      }
-      this.$store.dispatch('sauto/handleMouseOver', {mouseOver});
     }
   }
 }
