@@ -1,10 +1,10 @@
 <template>
   <div class="row">
-    <div data-sauto-id="queryType" @mouseover="mouseOver" class="col">
+    <div class="col">
       <b-list-group>
         Query Type:
-        <b-list-group-item variant="success">Ego Networks</b-list-group-item>
-        <b-list-group-item variant="light">General Networks</b-list-group-item>
+        <b-list-group-item data-sauto-id="egoNetworkQueryButton" @mouseover="mouseOver" variant="success">Ego Networks</b-list-group-item>
+        <b-list-group-item data-sauto-id="generalNetworkQueryButton" @mouseover="mouseOver" variant="light">General Networks</b-list-group-item>
       </b-list-group>
     </div>
   </div>
