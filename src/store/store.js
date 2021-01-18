@@ -166,8 +166,7 @@ const sautoModule = {
     namespaced: true,
     state: {
         connection: new WebSocket("ws://localhost:8081/app"),
-        lastOverElement: null,
-        mouseOverComponents: ["sidebar", "results", "network-0", "network-1", "queryType"] //add here if any new components come up //todo network enumeration might grow in the future, find fix instead of hardcoding
+        lastOverElement: null
     },
     actions: {
         async handleMouseMove({state}, {movement}) {
@@ -181,7 +180,7 @@ const sautoModule = {
         },
         async handleMouseOver({state}, {mouseOver}) {
             //send if mouseover new component
-            if (state.mouseOverComponents.includes(mouseOver.id)) {
+            if (mouseOver.id!==null) {
                 if (mouseOver.id !== state.lastOverElement) {
                     mouseOver.type = "Component"
                     state.connection.send(JSON.stringify(mouseOver));
