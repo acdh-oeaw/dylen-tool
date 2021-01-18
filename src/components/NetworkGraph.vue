@@ -4,7 +4,6 @@
       <div class="network-wrapper p-2">
         <h5>{{item.text}} / {{item.corpus}} / {{item.subcorpus}}</h5>
         <h6>Year: {{item.year}}</h6>
-        <h6>Threshold: {{item.threshold}}</h6>
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
       </div>
     </div>
