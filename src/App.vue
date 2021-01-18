@@ -2,10 +2,10 @@
   <div ref="app" id="app" @mousemove="mouseMove">
     <div class="container-fluid">
       <div class="row">
-        <div @mouseover="mouseOver" data-mouse-over-id="sidebar" class="col-md-2">
+        <div @mouseover="mouseOver" data-sauto-id="sidebar" class="col-md-2">
           <Sidebar/>
         </div>
-        <div @mouseover="mouseOver" data-mouse-over-id="results" class="col-md-10">
+        <div @mouseover="mouseOver" data-sauto-id="results" class="col-md-10">
           <Results/>
         </div>
       </div>
@@ -42,7 +42,7 @@ export default {
     },
     mouseOver(event){
       const mouseOver = {
-        id: event.target.getAttribute("data-mouse-over-id"),
+        id: event.target.getAttribute("data-sauto-id"),
         timestamp: Date.now()
       }
       this.$store.dispatch('sauto/handleMouseOver', {mouseOver});

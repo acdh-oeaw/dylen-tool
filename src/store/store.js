@@ -23,7 +23,7 @@ const mainModule = {
         egoNetworks: [],
     },
     mutations: {
-        changeSelectedCorpus (state, corpusID) {
+        changeSelectedCorpus(state, corpusID) {
             let selectedCorpusObj;
             if (corpusID) {
                 selectedCorpusObj = state.availableQueryParams.find(obj => {
@@ -36,7 +36,7 @@ const mainModule = {
             state.selectedCorpus = selectedCorpusObj;
             this.commit('main/changeSelectedSubcorpus', false);
         },
-        changeSelectedSubcorpus (state, subcorpusID) {
+        changeSelectedSubcorpus(state, subcorpusID) {
             let selectedSubcorpusObj;
             if (subcorpusID) {
                 selectedSubcorpusObj = state.selectedCorpus.sources.find(obj => {
@@ -49,7 +49,7 @@ const mainModule = {
             state.selectedSubcorpus = selectedSubcorpusObj;
             this.commit('main/changeSelectedTargetword', false);
         },
-        changeSelectedTargetword (state, networkID) {
+        changeSelectedTargetword(state, networkID) {
             let selectedNetworkObj;
             if (networkID) {
                 selectedNetworkObj = state.selectedSubcorpus.targetWords.find(obj => {
@@ -61,16 +61,16 @@ const mainModule = {
             }
             state.selectedTargetword = selectedNetworkObj;
         },
-        changeSelectedCorpusID (state, corpusID) {
+        changeSelectedCorpusID(state, corpusID) {
             state.selectedCorpusID = corpusID;
         },
-        changeSelectedSubcorpusID (state, subcorpusID) {
+        changeSelectedSubcorpusID(state, subcorpusID) {
             state.selectedSubcorpusID = subcorpusID;
         },
-        changeSelectedTargetwordID (state, networkID) {
+        changeSelectedTargetwordID(state, networkID) {
             state.selectedTargetwordID = networkID;
         },
-        addEgoNetwork (state, networkObj) {
+        addEgoNetwork(state, networkObj) {
             state.egoNetworks.push(networkObj);
         },
         removeEgoNetwork(state, networkID) {
@@ -148,7 +148,7 @@ const mainModule = {
           }`
                 };
                 const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-                const networkID = state.selectedTargetword.id+state.selectedTargetword.networks[0].year
+                const networkID = state.selectedTargetword.id + state.selectedTargetword.networks[0].year
                 let network = response.data.data.getNetwork;
                 network.id = networkID
                 network.corpus = state.selectedCorpus.name
@@ -167,7 +167,7 @@ const sautoModule = {
     state: {
         connection: new WebSocket("ws://localhost:8081/app"),
         lastOverElement: null,
-        mouseOverComponents: ["sidebar", "results"] //add here if any new components come up
+        mouseOverComponents: ["sidebar", "results", "network-0", "network-1"] //add here if any new components come up //todo network enumeration might grow in the future, find fix instead of hardcoding
     },
     actions: {
         async handleMouseMove({state}, {movement}) {
@@ -180,11 +180,10 @@ const sautoModule = {
             state.connection.send(JSON.stringify(message));
         },
         async handleMouseOver({state}, {mouseOver}) {
-
             //send if mouseover new component
-            if(state.mouseOverComponents.includes(mouseOver.id)){
-                if (mouseOver.id !== state.lastOverElement){
-                    mouseOver.type="Component"
+            if (state.mouseOverComponents.includes(mouseOver.id)) {
+                if (mouseOver.id !== state.lastOverElement) {
+                    mouseOver.type = "Component"
                     state.connection.send(JSON.stringify(mouseOver));
                     state.lastOverElement = mouseOver.id
                 }
