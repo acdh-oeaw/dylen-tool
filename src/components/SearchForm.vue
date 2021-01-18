@@ -30,6 +30,14 @@
             label="text"
           />
         </b-form-group>
+        <b-form-group id="select-year-group" label="Year:" label-for="select-year">
+          <v-select
+              v-model="selectedYear"
+              :options="selectedTargetword.networks"
+              :clearable="false"
+              label="year"
+          />
+        </b-form-group>
 
         <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled">
           Query
@@ -81,10 +89,25 @@ export default {
     },
     selectedTargetword: {
       get() {
+        console.log("SELECTED Targetword")
+        console.log(this.$store.getters.selectedTargetword)
         return this.$store.getters.selectedTargetword;
       },
       set(val) {
+        console.log("SELECTING Targetword")
+        console.log(this.$store.getters.selectedTargetword)
         if (val) this.$store.commit('changeSelectedTargetword', val);
+      }
+    },
+    selectedYear: {
+      get() {
+        console.log(this.selectedTargetword.networks)
+        console.log("SELECTED YEAR")
+        console.log(this.$store.getters.selectedYear)
+        return this.$store.getters.selectedYear;
+      },
+      set(val) {
+        if (val) this.$store.commit('changeSelectedYear', val);
       }
     },
     isButtonDisabled() {
