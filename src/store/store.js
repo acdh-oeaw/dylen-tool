@@ -20,7 +20,7 @@ const mainModule = {
         egoNetworks: [],
     },
     mutations: {
-        changeSelectedCorpus (state, corpus) {
+        changeSelectedCorpus(state, corpus) {
             if (corpus) {
                 state.selectedCorpus = corpus;
             } else {
@@ -28,7 +28,7 @@ const mainModule = {
             }
             this.commit('changeSelectedSubcorpus', false);
         },
-        changeSelectedSubcorpus (state, subcorpus) {
+        changeSelectedSubcorpus(state, subcorpus) {
             if (subcorpus) {
                 state.selectedSubcorpus = subcorpus;
             } else {
@@ -36,14 +36,14 @@ const mainModule = {
             }
             this.commit('changeSelectedTargetword', false);
         },
-        changeSelectedTargetword (state, targetword) {
+        changeSelectedTargetword(state, targetword) {
             if (targetword) {
                 state.selectedTargetword = targetword;
             } else {
                 state.selectedTargetword = state.selectedSubcorpus.targetWords[0];
             }
         },
-        addEgoNetwork (state, networkObj) {
+        addEgoNetwork(state, networkObj) {
             state.egoNetworks.push(networkObj);
         },
         removeEgoNetwork(state, networkID) {
@@ -115,7 +115,7 @@ const mainModule = {
           }`
                 };
                 const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-                const networkID = state.selectedTargetword.id+state.selectedTargetword.networks[0].year
+                const networkID = state.selectedTargetword.id + state.selectedTargetword.networks[0].year
                 let network = response.data.data.getNetwork;
                 network.id = networkID
                 network.corpus = state.selectedCorpus.name
@@ -132,11 +132,16 @@ const mainModule = {
 const sautoModule = {
     namespaced: true,
     state: {
-        connection: new WebSocket("ws://localhost:8081/app"),
+        connection: null,
         lastOverElement: null,
-        sauto: true //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
+        sauto: false //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
     },
     actions: {
+        async connect({state}) {
+            if(state.sauto){
+                state.connection = new WebSocket("ws://localhost:8081/app")
+            }
+        },
         async handleMouseMove({state}, {movement}) {
             //send mouse positions
             movement.type = "MousePosition"
@@ -144,7 +149,7 @@ const sautoModule = {
         },
         async handleMouseOver({state}, {mouseOver}) {
             //send if mouseover new component
-            if (mouseOver.id!==null) {
+            if (mouseOver.id !== null) {
                 if (mouseOver.id !== state.lastOverElement) {
                     mouseOver.type = "MouseOver"
                     state.connection.send(JSON.stringify(mouseOver));
@@ -168,8 +173,8 @@ const store = new Vuex.Store({
 
 Vue.mixin({
     methods: {
-        mouseOver(event){
-            if(this.$store.state.sauto.sauto===false){
+        mouseOver(event) {
+            if (this.$store.state.sauto.sauto === false) {
                 return
             }
 
@@ -204,7 +209,7 @@ Vue.mixin({
 
             this.$store.dispatch('sauto/handleMouseClick', {click});
         },
-        calculateMousePosition(event){
+        calculateMousePosition(event) {
             //get mouse position in percentage relative to top element size
             const elementSizes = this.$refs.app.getBoundingClientRect();
             const x = event.clientX - elementSizes.left

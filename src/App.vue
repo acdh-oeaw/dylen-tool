@@ -25,6 +25,7 @@ export default {
   },
   created: function () {
     this.$store.dispatch('main/loadAvailableQueryParams');
+    this.$store.dispatch('sauto/connect');
 
   },
   methods: {
