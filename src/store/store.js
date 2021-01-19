@@ -134,7 +134,7 @@ const sautoModule = {
     state: {
         connection: null,
         lastOverElement: null,
-        sauto: false //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
+        sauto: true //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
     },
     actions: {
         async connect({state}) {
