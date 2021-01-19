@@ -149,7 +149,7 @@ const sautoModule = {
             //send if mouseover new component
             if (mouseOver.id!==null) {
                 if (mouseOver.id !== state.lastOverElement) {
-                    mouseOver.type = "Component"
+                    mouseOver.type = "MouseOver"
                     state.connection.send(JSON.stringify(mouseOver));
                     state.lastOverElement = mouseOver.id
                 }
