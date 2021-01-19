@@ -139,12 +139,8 @@ const sautoModule = {
     actions: {
         async handleMouseMove({state}, {movement}) {
             //send mouse positions
-            const message = {
-                type: "MousePosition",
-                x: movement.x,
-                y: movement.y
-            }
-            state.connection.send(JSON.stringify(message));
+            movement.type = "MousePosition"
+            state.connection.send(JSON.stringify(movement));
         },
         async handleMouseOver({state}, {mouseOver}) {
             //send if mouseover new component
@@ -155,6 +151,11 @@ const sautoModule = {
                     state.lastOverElement = mouseOver.id
                 }
             }
+        },
+        async handleMouseClick({state}, {click}) {
+            //send mouse click
+            click.type = "MouseClick"
+            state.connection.send(JSON.stringify(click));
         }
     }
 }
@@ -177,6 +178,43 @@ Vue.mixin({
                 timestamp: Date.now()
             }
             this.$store.dispatch('sauto/handleMouseOver', {mouseOver});
+        },
+        mouseMove(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return
+            }
+
+            const movement = this.calculateMousePosition(event)
+            this.$store.dispatch('sauto/handleMouseMove', {movement});
+        },
+        mouseClick(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return
+            }
+
+            const click = this.calculateMousePosition(event)
+
+            var element = event.target
+            if (element.getAttribute("data-sauto-id") === null) {// go up in tree until an element with this attribute is found
+                while ((element = element.parentElement) && !element.getAttribute("data-sauto-id")) ;
+            }
+
+            click.id = element.getAttribute("data-sauto-id")
+            click.timestamp = Date.now()
+
+            this.$store.dispatch('sauto/handleMouseClick', {click});
+        },
+        calculateMousePosition(event){
+            //get mouse position in percentage relative to top element size
+            const elementSizes = this.$refs.app.getBoundingClientRect();
+            const x = event.clientX - elementSizes.left
+            const y = event.clientY - elementSizes.top
+
+            const positions = {
+                x: (x * 100) / elementSizes.width,
+                y: (y * 100) / elementSizes.height
+            }
+            return positions
         }
     }
 })

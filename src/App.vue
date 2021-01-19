@@ -1,5 +1,5 @@
 <template>
-  <div ref="app" id="app" @mousemove="mouseMove">
+  <div ref="app" id="app" @mousemove="mouseMove" @click="mouseClick">
     <div class="container-fluid">
       <div class="row">
         <div @mouseover="mouseOver" data-sauto-id="sidebar" class="col-md-2">
@@ -23,27 +23,11 @@ export default {
   components: {
     Sidebar, Results
   },
-  created: function() {
+  created: function () {
     this.$store.dispatch('main/loadAvailableQueryParams');
 
   },
   methods: {
-    mouseMove(event) {
-      if(this.$store.state.sauto.sauto===false){
-        return
-      }
-
-      //get mouse position in percentage relative to top element size
-      const elementSizes = this.$refs.app.getBoundingClientRect();
-      const x = event.clientX - elementSizes.left
-      const y = event.clientY - elementSizes.top
-
-      const movement = {
-        x: (x * 100) / elementSizes.width,
-        y: (y * 100) / elementSizes.height
-      }
-      this.$store.dispatch('sauto/handleMouseMove', {movement});
-    }
   }
 }
 </script>
