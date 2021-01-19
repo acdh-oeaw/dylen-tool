@@ -133,7 +133,8 @@ const sautoModule = {
     namespaced: true,
     state: {
         connection: new WebSocket("ws://localhost:8081/app"),
-        lastOverElement: null
+        lastOverElement: null,
+        sauto: true //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
     },
     actions: {
         async handleMouseMove({state}, {movement}) {
@@ -167,6 +168,10 @@ const store = new Vuex.Store({
 Vue.mixin({
     methods: {
         mouseOver(event){
+            if(this.$store.state.sauto.sauto===false){
+                return
+            }
+
             const mouseOver = {
                 id: event.target.getAttribute("data-sauto-id"),
                 timestamp: Date.now()

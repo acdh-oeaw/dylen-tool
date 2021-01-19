@@ -29,6 +29,10 @@ export default {
   },
   methods: {
     mouseMove(event) {
+      if(this.$store.state.sauto.sauto===false){
+        return
+      }
+
       //get mouse position in percentage relative to top element size
       const elementSizes = this.$refs.app.getBoundingClientRect();
       const x = event.clientX - elementSizes.left
