@@ -5,11 +5,11 @@
       <b-form @submit="onSubmit">
 
         <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus">
-          <select v-model="selectedCorpus" data-sauto-id="selectCorpus">
+          <b-select v-model="selectedCorpus" data-sauto-id="selectCorpus">
             <option v-for="option in availableQueryParams" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectCorpusOption">
               {{option.name}}
             </option>
-          </select>
+          </b-select>
 <!--          <v-select-->
 <!--            v-model="selectedCorpus"-->
 <!--            :options="availableQueryParams"-->
@@ -19,11 +19,11 @@
         </b-form-group>
 
         <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus">
-          <select v-model="selectedSubcorpus" data-sauto-id="selectSubCorpus">
+          <b-select v-model="selectedSubcorpus" data-sauto-id="selectSubCorpus">
             <option v-for="option in selectedCorpus.sources" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectSubCorpusOption">
               {{option.name}}
             </option>
-          </select>
+          </b-select>
 <!--          <v-select-->
 <!--            v-model="selectedSubcorpus"-->
 <!--            :options="selectedCorpus.sources"-->
@@ -33,11 +33,11 @@
         </b-form-group>
 
         <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword">
-          <select v-model="selectedTargetword" data-sauto-id="selectTargetWord">
+          <b-select v-model="selectedTargetword" data-sauto-id="selectTargetWord">
             <option v-for="option in selectedSubcorpus.targetWords" v-bind:key="option.text" v-bind:value="option" data-sauto-id="selectTargetWordOption">
               {{option.text}}
             </option>
-          </select>
+          </b-select>
 <!--          <v-select-->
 <!--            v-model="selectedTargetword"-->
 <!--            :options="selectedSubcorpus.targetWords"-->
