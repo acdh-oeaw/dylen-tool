@@ -26,7 +26,7 @@ const mainModule = {
             } else {
                 state.selectedCorpus = state.availableQueryParams[0];
             }
-            this.commit('changeSelectedSubcorpus', false);
+            this.commit('main/changeSelectedSubcorpus', false);
         },
         changeSelectedSubcorpus(state, subcorpus) {
             if (subcorpus) {
@@ -34,7 +34,7 @@ const mainModule = {
             } else {
                 state.selectedSubcorpus = state.selectedCorpus.sources[0];
             }
-            this.commit('changeSelectedTargetword', false);
+            this.commit('main/changeSelectedTargetword', false);
         },
         changeSelectedTargetword(state, targetword) {
             if (targetword) {
@@ -134,7 +134,7 @@ const sautoModule = {
     state: {
         connection: null,
         lastOverElement: null,
-        sauto: true //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
+        sauto: false //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
     },
     actions: {
         async connect({state}) {

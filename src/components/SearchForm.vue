@@ -4,7 +4,7 @@
       New Query:
       <b-form @submit="onSubmit">
 
-        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus">
+        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus" data-sauto-id="selectCorpus">
           <v-select
             v-model="selectedCorpus"
             :options="availableQueryParams"
@@ -13,7 +13,7 @@
           />
         </b-form-group>
 
-        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus">
+        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus" data-sauto-id="selectSubCorpus">
           <v-select
             v-model="selectedSubcorpus"
             :options="selectedCorpus.sources"
@@ -22,7 +22,7 @@
           />
         </b-form-group>
 
-        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword">
+        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword" data-sauto-id="selectTargetWord">
           <v-select
             v-model="selectedTargetword"
             :options="selectedSubcorpus.targetWords"
@@ -31,7 +31,7 @@
           />
         </b-form-group>
 
-        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled">
+        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton">
           Query
         </b-button>
       </b-form>
