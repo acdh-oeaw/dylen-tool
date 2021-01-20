@@ -4,7 +4,7 @@
       New Query:
       <b-form @submit="onSubmit">
 
-        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus">
+        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus" data-sauto-id="selectCorpus" @mouseover="mouseOver">
           <b-select v-model="selectedCorpus" data-sauto-id="selectCorpus">
             <option v-for="option in availableQueryParams" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectCorpusOption">
               {{option.name}}
@@ -18,7 +18,7 @@
 <!--          />-->
         </b-form-group>
 
-        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus">
+        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus" data-sauto-id="selectSubCorpus" @mouseover="mouseOver">
           <b-select v-model="selectedSubcorpus" data-sauto-id="selectSubCorpus">
             <option v-for="option in selectedCorpus.sources" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectSubCorpusOption">
               {{option.name}}
@@ -32,7 +32,7 @@
 <!--          />-->
         </b-form-group>
 
-        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword">
+        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword" data-sauto-id="selectTargetWord" @mouseover="mouseOver">
           <b-select v-model="selectedTargetword" data-sauto-id="selectTargetWord">
             <option v-for="option in selectedSubcorpus.targetWords" v-bind:key="option.text" v-bind:value="option" data-sauto-id="selectTargetWordOption">
               {{option.text}}
@@ -46,7 +46,7 @@
 <!--          />-->
         </b-form-group>
 
-        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton">
+        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton" @mouseover="mouseOver">
           Query
         </b-button>
       </b-form>
