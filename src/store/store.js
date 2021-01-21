@@ -21,7 +21,6 @@ const mainModule = {
     },
     mutations: {
         changeSelectedCorpus(state, corpus) {
-            console.log(corpus)
             if (corpus) {
                 state.selectedCorpus = corpus;
             } else {
@@ -135,12 +134,18 @@ const sautoModule = {
     state: {
         connection: null,
         lastOverElement: null,
-        sauto: true //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
+        sauto: false //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
     },
     actions: {
         async connect({state}) {
             if(state.sauto){
                 state.connection = new WebSocket("ws://localhost:8081/app")
+            }
+        },
+        agree({state}, {agreed}){
+            state.sauto=agreed
+            if(agreed){
+               this.dispatch('sauto/connect');
             }
         },
         async handleMouseMove({state}, {movement}) {

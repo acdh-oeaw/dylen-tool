@@ -9,6 +9,7 @@
           <Results/>
         </div>
       </div>
+      <Modal/>
     </div>
   </div>
 </template>
@@ -17,16 +18,15 @@
 
 import Sidebar from '@/components/Sidebar';
 import Results from '@/components/Results';
+import Modal from '@/components/SautoConfirmationModal';
 
 export default {
   name: 'App',
   components: {
-    Sidebar, Results
+    Sidebar, Results, Modal
   },
   created: function () {
     this.$store.dispatch('main/loadAvailableQueryParams');
-    this.$store.dispatch('sauto/connect');
-
   },
   methods: {
   }
@@ -42,5 +42,8 @@ export default {
   */
   color: #2c3e50;
   margin-top: 20px;
+}
+.overflow-hidden {
+  overflow: hidden;
 }
 </style>
