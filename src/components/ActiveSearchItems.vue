@@ -26,14 +26,14 @@ export default {
   },
   methods: {
     removeItem(networkID) {
-      this.$store.commit('removeEgoNetwork', networkID);
+      this.$store.commit('main/removeEgoNetwork', networkID);
     }
   },
   computed: {
     egoNetworks: {
       get() {
         console.log('ActiveSearch')
-        return this.$store.getters.egoNetworks;
+        return this.$store.getters["main/egoNetworks"];
       }
     },
   },

@@ -62,56 +62,49 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('loadEgoNetwork');
+      this.$store.dispatch('main/loadEgoNetwork');
     },
   },
   computed: {
     availableQueryParams: {
       get() {
-        return this.$store.getters.availableQueryParams;
+        return this.$store.getters["main/availableQueryParams"];
       }
     },
     selectedCorpus: {
       get() {
-        return this.$store.getters.selectedCorpus;
+        return this.$store.getters["main/selectedCorpus"];
       },
       set(val) {
-        if (val) this.$store.commit('changeSelectedCorpus', val);
+        if (val) this.$store.commit('main/changeSelectedCorpus', val);
       }
     },
     selectedSubcorpus: {
       get() {
-        return this.$store.getters.selectedSubcorpus;
+        return this.$store.getters["main/selectedSubcorpus"];
       },
       set(val) {
-        if (val) this.$store.commit('changeSelectedSubcorpus', val);
+        if (val) this.$store.commit('main/changeSelectedSubcorpus', val);
       }
     },
     selectedTargetword: {
       get() {
-        console.log("SELECTED Targetword")
-        console.log(this.$store.getters.selectedTargetword)
-        return this.$store.getters.selectedTargetword;
+        return this.$store.getters["main/selectedTargetword"];
       },
       set(val) {
-        console.log("SELECTING Targetword")
-        console.log(this.$store.getters.selectedTargetword)
-        if (val) this.$store.commit('changeSelectedTargetword', val);
+        if (val) this.$store.commit('main/changeSelectedTargetword', val);
       }
     },
     selectedYear: {
       get() {
-        console.log(this.selectedTargetword.networks)
-        console.log("SELECTED YEAR")
-        console.log(this.$store.getters.selectedYear)
-        return this.$store.getters.selectedYear;
+        return this.$store.getters["main/selectedYear"];
       },
       set(val) {
-        if (val) this.$store.commit('changeSelectedYear', val);
+        if (val) this.$store.commit('main/changeSelectedYear', val);
       }
     },
     isButtonDisabled() {
-      if (this.$store.getters.egoNetworks.length < 2) return false;
+      if (this.$store.getters["main/egoNetworks"].length < 2) return false;
       return true;
     },
   },

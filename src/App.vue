@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
+  <div ref="app" id="app" @mousemove="mouseMove" @click="mouseClick">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-2">
+        <div @mouseover="mouseOver" data-sauto-id="sidebar" class="col-md-2">
           <Sidebar/>
         </div>
-        <div class="col-md-10">
+        <div @mouseover="mouseOver" data-sauto-id="results" class="col-md-10">
           <Results/>
         </div>
       </div>
@@ -23,9 +23,13 @@ export default {
   components: {
     Sidebar, Results
   },
-  created: function() {
-    this.$store.dispatch('loadAvailableQueryParams');
+  created: function () {
+    this.$store.dispatch('main/loadAvailableQueryParams');
+    this.$store.dispatch('sauto/connect');
+
   },
+  methods: {
+  }
 }
 </script>
 
