@@ -46,7 +46,6 @@ const mainModule = {
             this.commit('main/changeSelectedYear', false);
         },
         changeSelectedYear (state, year) {
-            console.log(year)
             if (year) {
                 state.selectedYear = year;
             } else {
@@ -58,8 +57,9 @@ const mainModule = {
         },
         removeEgoNetwork(state, networkID) {
             const selectedNetworkIndex = state.egoNetworks.findIndex(obj => {
-                return obj.text === networkID;
+                return obj.id === networkID;
             });
+
             state.egoNetworks.splice(selectedNetworkIndex, 1);
         }
     },
