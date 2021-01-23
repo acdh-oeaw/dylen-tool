@@ -217,6 +217,14 @@ Vue.mixin({
             const movement = this.calculateMousePosition(event)
             this.$store.dispatch('sauto/handleMouseMove', {movement});
         },
+        scroll(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return
+            }
+//todo
+//sauto/scroll is also todo
+            this.$store.dispatch('sauto/scroll', {movement});
+        },
         mouseClick(event) {
             if (this.$store.state.sauto.sauto === false) {
                 return
