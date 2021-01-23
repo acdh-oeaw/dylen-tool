@@ -3,8 +3,8 @@
     <div class="col">
       <b-list-group>
         Active Queries:
-        <b-list-group-item v-for="item in egoNetworks" :key="item.id" variant="success">
-          {{item.corpus}} / {{item.source}} / {{item.text}}
+        <b-list-group-item v-for="(item,i) in egoNetworks" :key="item.id+i" variant="success">
+          {{item.corpus}} / {{item.source}} / {{item.text}} / {{item.year}}
           <b-icon v-on:click="removeItem(item.id)" icon="x-circle"></b-icon>
         </b-list-group-item>
       </b-list-group>

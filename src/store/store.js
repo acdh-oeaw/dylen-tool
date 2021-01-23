@@ -17,6 +17,7 @@ const mainModule = {
         selectedCorpus: {id: '', name: '', sources: []},
         selectedSubcorpus: {id: '', name: '', targetWords: []},
         selectedTargetword: {id: '', text: ''},
+        selectedYear: null,
         egoNetworks: [],
     },
     mutations: {
@@ -42,8 +43,17 @@ const mainModule = {
             } else {
                 state.selectedTargetword = state.selectedSubcorpus.targetWords[0];
             }
+            this.commit('main/changeSelectedYear', false);
         },
-        addEgoNetwork(state, networkObj) {
+        changeSelectedYear (state, year) {
+            console.log(year)
+            if (year) {
+                state.selectedYear = year;
+            } else {
+                state.selectedYear = state.selectedTargetword.networks[0]
+            }
+        },
+        addEgoNetwork (state, networkObj) {
             state.egoNetworks.push(networkObj);
         },
         removeEgoNetwork(state, networkID) {
@@ -58,6 +68,7 @@ const mainModule = {
         selectedCorpus: (state) => state.selectedCorpus,
         selectedSubcorpus: (state) => state.selectedSubcorpus,
         selectedTargetword: (state) => state.selectedTargetword,
+        selectedYear: (state) => state.selectedYear,
         egoNetworks: (state) => state.egoNetworks,
     },
     actions: {
@@ -75,29 +86,30 @@ const mainModule = {
                   text
                   pos
                   networks {
-                    id
                     year
                   }
                 }
               }
             }
           }`
-                };
-                const response = await axios.post(graphqlEndpoint, graphqlQuery);
-                state.availableQueryParams = response.data.data.allAvailableCorpora;
-                state.selectedCorpus = response.data.data.allAvailableCorpora[0];
-                state.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
-                state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        async loadEgoNetwork({state}) {
-            try {
-                const graphqlQuery = {
-                    query: `{
-            getNetwork(targetword_id: "${state.selectedTargetword.id}", year:${state.selectedTargetword.networks[0].year}){
-                id
+        };
+        const response = await axios.post(graphqlEndpoint, graphqlQuery);
+        state.availableQueryParams = response.data.data.allAvailableCorpora;
+        state.selectedCorpus = response.data.data.allAvailableCorpora[0];
+        state.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
+        state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
+        state.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async loadEgoNetwork({state}) {
+        let year_param = state.selectedYear? state.selectedYear.year:state.selectedTargetword.networks[0].year
+
+        try {
+        const graphqlQuery = {
+          query: `{
+            getNetwork(targetword_id: "${state.selectedTargetword.id}", year:${year_param}){
                 year
                 nodes {
                     id
@@ -105,6 +117,12 @@ const mainModule = {
                     text
                     pos
                     similarity
+                    metrics {
+                      degreeCentrality
+                      closenessCentrality
+                      betweennessCentrality
+                      eigenvectorCentrality
+                    }
                 }
                 connections {
                     node1
@@ -113,21 +131,22 @@ const mainModule = {
                 }
             }
           }`
-                };
-                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
-                const networkID = state.selectedTargetword.id + state.selectedTargetword.networks[0].year
-                let network = response.data.data.getNetwork;
-                network.id = networkID
-                network.corpus = state.selectedCorpus.name
-                network.source = state.selectedSubcorpus.name
-                network.text = state.selectedTargetword.text
-                this.commit('main/addEgoNetwork', network);
-            } catch (error) {
-                console.log(error);
-            }
-        },
-    }
+        };
+        const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+        const networkID = state.selectedTargetword.id+state.selectedYear.year
+        let network = response.data.data.getNetwork;
+        network.id = networkID
+        network.corpus = state.selectedCorpus.name
+        network.source = state.selectedSubcorpus.name
+        network.text = state.selectedTargetword.text
+        this.commit('main/addEgoNetwork', network);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  }
 }
+
 
 const sautoModule = {
     namespaced: true,
