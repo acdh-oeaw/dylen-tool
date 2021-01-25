@@ -4,31 +4,46 @@
       New Query:
       <b-form @submit="onSubmit">
 
-        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus" data-sauto-id="selectCorpus">
-          <v-select
-            v-model="selectedCorpus"
-            :options="availableQueryParams"
-            :clearable="false"
-            label="name"
-          />
+        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus" data-sauto-id="selectCorpus" @mouseover="mouseOver">
+          <b-select v-model="selectedCorpus" data-sauto-id="selectCorpus">
+            <option v-for="option in availableQueryParams" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectCorpusOption">
+              {{option.name}}
+            </option>
+          </b-select>
+<!--          <v-select-->
+<!--            v-model="selectedCorpus"-->
+<!--            :options="availableQueryParams"-->
+<!--            :clearable="false"-->
+<!--            label="name"-->
+<!--          />-->
         </b-form-group>
 
-        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus" data-sauto-id="selectSubCorpus">
-          <v-select
-            v-model="selectedSubcorpus"
-            :options="selectedCorpus.sources"
-            :clearable="false"
-            label="name"
-          />
+        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus" data-sauto-id="selectSubCorpus" @mouseover="mouseOver">
+          <b-select v-model="selectedSubcorpus" data-sauto-id="selectSubCorpus">
+            <option v-for="option in selectedCorpus.sources" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectSubCorpusOption">
+              {{option.name}}
+            </option>
+          </b-select>
+<!--          <v-select-->
+<!--            v-model="selectedSubcorpus"-->
+<!--            :options="selectedCorpus.sources"-->
+<!--            :clearable="false"-->
+<!--            label="name"-->
+<!--          />-->
         </b-form-group>
 
-        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword" data-sauto-id="selectTargetWord">
-          <v-select
-            v-model="selectedTargetword"
-            :options="selectedSubcorpus.targetWords"
-            :clearable="false"
-            label="text"
-          />
+        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword" data-sauto-id="selectTargetWord" @mouseover="mouseOver">
+          <b-select v-model="selectedTargetword" data-sauto-id="selectTargetWord">
+            <option v-for="option in selectedSubcorpus.targetWords" v-bind:key="option.text" v-bind:value="option" data-sauto-id="selectTargetWordOption">
+              {{option.text}}
+            </option>
+          </b-select>
+<!--          <v-select-->
+<!--            v-model="selectedTargetword"-->
+<!--            :options="selectedSubcorpus.targetWords"-->
+<!--            :clearable="false"-->
+<!--            label="text"-->
+<!--          />-->
         </b-form-group>
         <b-form-group id="select-year-group" label="Year:" label-for="select-year">
           <v-select
@@ -39,7 +54,7 @@
           />
         </b-form-group>
 
-        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton">
+        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton" @mouseover="mouseOver">
           Query
         </b-button>
       </b-form>
