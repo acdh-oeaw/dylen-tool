@@ -4,57 +4,55 @@
       New Query:
       <b-form @submit="onSubmit">
 
-        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus" data-sauto-id="selectCorpus" @mouseover="mouseOver">
-          <b-select v-model="selectedCorpus" data-sauto-id="selectCorpus">
-            <option v-for="option in availableQueryParams" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectCorpusOption">
-              {{option.name}}
-            </option>
-          </b-select>
-<!--          <v-select-->
-<!--            v-model="selectedCorpus"-->
-<!--            :options="availableQueryParams"-->
-<!--            :clearable="false"-->
-<!--            label="name"-->
-<!--          />-->
+        <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus">
+          <div @wheel="scroll" @mouseover="mouseOver" data-sauto-id="selectCorpus">
+            <v-select
+                data-sauto-id="selectCorpus"
+                v-model="selectedCorpus"
+                :options="availableQueryParams"
+                :clearable="false"
+                label="name"
+            />
+          </div>
         </b-form-group>
 
-        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus" data-sauto-id="selectSubCorpus" @mouseover="mouseOver">
-          <b-select v-model="selectedSubcorpus" data-sauto-id="selectSubCorpus">
-            <option v-for="option in selectedCorpus.sources" v-bind:key="option.name" v-bind:value="option" data-sauto-id="selectSubCorpusOption">
-              {{option.name}}
-            </option>
-          </b-select>
-<!--          <v-select-->
-<!--            v-model="selectedSubcorpus"-->
-<!--            :options="selectedCorpus.sources"-->
-<!--            :clearable="false"-->
-<!--            label="name"-->
-<!--          />-->
+        <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus">
+          <div @wheel="scroll" @mouseover="mouseOver" data-sauto-id="selectSubCorpus">
+            <v-select
+                data-sauto-id="selectSubCorpus"
+                v-model="selectedSubcorpus"
+                :options="selectedCorpus.sources"
+                :clearable="false"
+                label="name"
+            />
+          </div>
         </b-form-group>
 
-        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword" data-sauto-id="selectTargetWord" @mouseover="mouseOver">
-          <b-select v-model="selectedTargetword" data-sauto-id="selectTargetWord">
-            <option v-for="option in selectedSubcorpus.targetWords" v-bind:key="option.text" v-bind:value="option" data-sauto-id="selectTargetWordOption">
-              {{option.text}}
-            </option>
-          </b-select>
-<!--          <v-select-->
-<!--            v-model="selectedTargetword"-->
-<!--            :options="selectedSubcorpus.targetWords"-->
-<!--            :clearable="false"-->
-<!--            label="text"-->
-<!--          />-->
+        <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword">
+          <div @wheel="scroll" @mouseover="mouseOver" data-sauto-id="selectTargetWord">
+            <v-select
+                data-sauto-id="selectTargetWord"
+                v-model="selectedTargetword"
+                :options="selectedSubcorpus.targetWords"
+                :clearable="false"
+                label="text"
+            />
+          </div>
         </b-form-group>
         <b-form-group id="select-year-group" label="Year:" label-for="select-year">
-          <v-select
-              v-model="selectedYear"
-              :options="selectedTargetword.networks"
-              :clearable="false"
-              label="year"
-          />
+          <div @wheel="scroll" @mouseover="mouseOver" data-sauto-id="selectYear">
+            <v-select
+                data-sauto-id="selectYear"
+                v-model="selectedYear"
+                :options="selectedTargetword.networks"
+                :clearable="false"
+                label="year"
+            />
+          </div>
         </b-form-group>
 
-        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton" @mouseover="mouseOver">
+        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton"
+                  @mouseover="mouseOver">
           Query
         </b-button>
       </b-form>
@@ -66,11 +64,9 @@
 
 export default {
   name: 'SearchForm',
-  props: {
-  },
+  props: {},
   data() {
-    return {
-    }
+    return {}
   },
   mounted() {
   },
@@ -123,8 +119,7 @@ export default {
       return true;
     },
   },
-  watch: {
-  },
+  watch: {},
 }
 </script>
 

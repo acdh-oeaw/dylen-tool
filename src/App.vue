@@ -1,5 +1,5 @@
 <template>
-  <div ref="app" id="app" @scroll="scroll" @mousemove="mouseMove" @click="mouseClick">
+  <div ref="app" id="app" @mousemove="mouseMove" @click="mouseClick">
     <div class="container-fluid">
       <div class="row">
         <div @mouseover="mouseOver" data-sauto-id="sidebar" class="col-md-2">
