@@ -1,14 +1,14 @@
 <template>
   <div>
-    <b-modal v-model="modalShow" id="bv-modal-example" hide-footer>
-      <template #modal-title>
-        Master Thesis data
+    <b-modal header-class="modal-header-center" v-model="modalShow" id="bv-modal-example" hide-footer no-close-on-esc no-close-on-backdrop hide-header-close>
+      <template #modal-header>
+        MASTER'S THESIS DATA
       </template>
-      <div class="d-block text-center">
+      <div class="d-block">
         <p>
-          Your usage of this web application will be captured and used in a Master's Thesis.
-          No information about your identity, device or location is saved.
-          Please accept if you want to help the master's thesis.
+          In the scope of a Master's Thesis about usability and user friendliness, your usage of this web application will be captured.
+          <b>NO information about your identity, device or location will be captured or saved.</b>
+          Please accept, if you want to support the research for the Master's Thesis.
         </p>
       </div>
       <div class="row justify-content-around">
@@ -43,4 +43,9 @@ export default {
 }
 
 </script>
-<style scoped></style>
+<style scoped>
+/deep/ .modal-header-center{
+  display: flex;
+  justify-content: center;
+}
+</style>

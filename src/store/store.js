@@ -46,7 +46,6 @@ const mainModule = {
             this.commit('main/changeSelectedYear', false);
         },
         changeSelectedYear (state, year) {
-            console.log(year)
             if (year) {
                 state.selectedYear = year;
             } else {
@@ -221,9 +220,10 @@ Vue.mixin({
             if (this.$store.state.sauto.sauto === false) {
                 return
             }
+            event
 //todo
 //sauto/scroll is also todo
-            this.$store.dispatch('sauto/scroll', {movement});
+           // this.$store.dispatch('sauto/scroll', {movement});
         },
         mouseClick(event) {
             if (this.$store.state.sauto.sauto === false) {
