@@ -226,6 +226,8 @@ Vue.mixin({
             this.$store.dispatch('sauto/handleMouseMove', {movement});
         },
         scroll(event) {
+
+            console.log(event)
             if (this.$store.state.sauto.sauto === false) {
                 return
             }
