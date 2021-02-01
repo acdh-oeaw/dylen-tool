@@ -252,7 +252,7 @@ Vue.mixin({
 
             click.id = element.getAttribute("data-sauto-id")
             click.timestamp = Date.now()
-
+console.log(click.id)
             this.$store.dispatch('sauto/handleMouseClick', {click});
         },
         calculateMousePosition(event) {
