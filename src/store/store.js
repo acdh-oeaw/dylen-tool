@@ -10,6 +10,8 @@ Vue.use(Vuex);
 
 const graphqlEndpoint = 'https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql'
 
+const logger = require('../helpers/logger')
+
 const mainModule = {
     namespaced: true,
     state: {
@@ -100,8 +102,9 @@ const mainModule = {
                 state.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
                 state.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
                 state.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
+                logger.log('Query parameters loaded successfully.')
             } catch (error) {
-                console.log(error);
+                logger.error(error);
             }
         },
         async loadEgoNetwork({state}) {
@@ -140,9 +143,10 @@ const mainModule = {
                 network.corpus = state.selectedCorpus.name
                 network.source = state.selectedSubcorpus.name
                 network.text = state.selectedTargetword.text
+                logger.log('Ego Network loaded successfully.')
                 this.commit('main/addEgoNetwork', network);
             } catch (error) {
-                console.log(error);
+                logger.error(error);
             }
         },
     }
@@ -159,7 +163,14 @@ const sautoModule = {
     actions: {
         async connect({state}) {
             if (state.sauto) {
-                state.connection = new WebSocket("ws://localhost:8081/app")
+                state.connection = new WebSocket("ws://localhost:8081/app") //todo get url from properties file
+                state.connection.onerror = function (event) {
+                    logger.error(event)
+                }
+                state.connection.onopen = function () {
+                    logger.log("Connection with Sauto backed established successfully.")
+                }
+
             }
         },
         agree({state}, {agreed}) {
@@ -226,8 +237,6 @@ Vue.mixin({
             this.$store.dispatch('sauto/handleMouseMove', {movement});
         },
         scroll(event) {
-
-            console.log(event)
             if (this.$store.state.sauto.sauto === false) {
                 return
             }
@@ -245,14 +254,13 @@ Vue.mixin({
             if (this.$store.state.sauto.sauto === false) {
                 return
             }
-
             const click = this.calculateMousePosition(event)
 
             const element = this.getNearestSautoId(event.target)
 
             click.id = element.getAttribute("data-sauto-id")
             click.timestamp = Date.now()
-console.log(click.id)
+
             this.$store.dispatch('sauto/handleMouseClick', {click});
         },
         calculateMousePosition(event) {

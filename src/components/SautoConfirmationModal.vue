@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import logger from '../helpers/logger'
+
 export default {
   name: 'SautoConfirmationModal',
   props: {},
@@ -34,6 +36,7 @@ export default {
   },
   methods: {
     agreeSauto(agreed) {
+      logger.log("User agreed to Sauto: "+agreed);
       this.$store.dispatch('sauto/agree', {agreed});
       this.modalShow = false;
     }

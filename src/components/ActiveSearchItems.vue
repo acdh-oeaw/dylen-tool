@@ -32,7 +32,6 @@ export default {
   computed: {
     egoNetworks: {
       get() {
-        // console.log('ActiveSearch')
         return this.$store.getters["main/egoNetworks"];
       }
     },
