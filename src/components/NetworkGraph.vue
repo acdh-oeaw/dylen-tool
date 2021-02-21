@@ -6,7 +6,24 @@
         <h5>{{ item.text }} / {{ item.corpus }} / {{ item.subcorpus }} / {{ item.year }}</h5>
         <h6>Year: {{ item.year }}</h6>
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
-        <vue-range-slider :data-sauto-id="'network-'+item.id-+'slider'" v-model="item.year" :data="item.possibleYears" @drag-end="updateNetwork(item)"></vue-range-slider>
+        <div class="row">
+          <p class="col-sm-2 text-center">
+            <small>
+              <b>Min:</b> {{ item.possibleYears[0] }}
+            </small>
+          </p>
+          <div class="col-sm my-auto">
+            <vue-range-slider :data-sauto-id="'network-'+item.id-+'slider'" v-model="item.year"
+                              :data="item.possibleYears"
+                              @drag-start="saveYear(item.year)" @drag-end="updateNetwork(item)"
+                              piecewise></vue-range-slider>
+          </div>
+          <p class="col-sm-2 text-center">
+            <small>
+              <b>Max:</b> {{ item.possibleYears[item.possibleYears.length - 1] }}
+            </small>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -28,6 +45,7 @@ export default {
   data() {
     return {
       options: {
+        currentYear: 0,
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
@@ -42,9 +60,14 @@ export default {
   mounted() {
   },
   methods: {
-    updateNetwork(network){
-      //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-      this.$store.dispatch('main/loadUpdatedEgoNetwork',{network: network});
+    updateNetwork(network) {
+      if (this.currentYear != network.year) {
+        //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
+        this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network});
+      }
+    },
+    saveYear(year) {//save the current year at the start of the drag and if the year is the same at the end, dont send a call
+      this.currentYear = year
     }
   },
   computed: {
