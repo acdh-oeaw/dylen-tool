@@ -3,9 +3,10 @@
     <div class="col-md-6" style="height: 600px;" v-for="item in egoNetworks" :key="item.id" @mouseover="mouseOver"
          :data-sauto-id="'network-'+item.id">
       <div class="network-wrapper p-2">
-        <h5>{{item.text}} / {{item.corpus}} / {{item.subcorpus}} / {{item.year}}</h5>
-        <h6>Year: {{item.year}}</h6>
+        <h5>{{ item.text }} / {{ item.corpus }} / {{ item.subcorpus }} / {{ item.year }}</h5>
+        <h6>Year: {{ item.year }}</h6>
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
+        <vue-range-slider :data-sauto-id="'network-'+item.id-+'slider'" v-model="item.year" :data="item.possibleYears" @drag-end="updateNetwork(item)"></vue-range-slider>
       </div>
     </div>
   </div>
@@ -14,14 +15,16 @@
 <script>
 
 import D3Network from 'vue-d3-network'
+import 'vue-range-component/dist/vue-range-slider.css'
+import VueRangeSlider from 'vue-range-component'
 
 export default {
   name: 'NetworkGraph',
   components: {
-    D3Network
+    D3Network,
+    VueRangeSlider
   },
-  props: {
-  },
+  props: {},
   data() {
     return {
       options: {
@@ -33,12 +36,17 @@ export default {
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b']
-      ]
+      ],
     }
   },
   mounted() {
   },
-  methods: {},
+  methods: {
+    updateNetwork(network){
+      //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
+      this.$store.dispatch('main/loadUpdatedEgoNetwork',{network: network});
+    }
+  },
   computed: {
     egoNetworks() {
       let networks = [];
@@ -59,26 +67,38 @@ export default {
             tid: link.node2
           });
         }
-        networks.push({id: networks.length, nodes: nodes, links:links, text: network.text, year: network.year, threshold: network.threshold, corpus: network.corpus, subcorpus: network.source})
+        networks.push({
+          id: network.id,
+          nodes: nodes,
+          links: links,
+          text: network.text,
+          year: network.year,
+          possibleYears: network.possibleYears,
+          threshold: network.threshold,
+          corpus: network.corpus,
+          subcorpus: network.subcorpus,
+          targetWordId: network.targetWordId
+        })
       }
       return networks;
     },
   },
-  watch: {
-  },
+  watch: {},
 }
 </script>
 
 <style src="vue-d3-network/dist/vue-d3-network.css"></style>
 
 <style scoped>
-  .link {
-    stroke: rgb(18 120 98 / 0.15);
-  }
-  .node-label {
-    font-size: 11px;
-  }
-  .network-wrapper {
-    border: 1px solid #ccc;
-  }
+.link {
+  stroke: rgb(18 120 98 / 0.15);
+}
+
+.node-label {
+  font-size: 11px;
+}
+
+.network-wrapper {
+  border: 1px solid #ccc;
+}
 </style>

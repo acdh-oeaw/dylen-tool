@@ -3,9 +3,9 @@
     <div class="col">
       <b-list-group>
         Active Queries:
-        <b-list-group-item v-for="(item,i) in egoNetworks" :key="item.id+i" variant="success" :data-sauto-id="'activeSearch-'+item.corpus+item.source+item.text+item.year+'-'+i">
-          {{item.corpus}} / {{item.source}} / {{item.text}} / {{item.year}}
-          <b-icon v-on:click="removeItem(item.id)" icon="x-circle" :data-sauto-id="'activeSearch-remove-'+item.corpus+item.source+item.text+item.year+'-'+i"></b-icon>
+        <b-list-group-item v-for="(item,i) in egoNetworks" :key="item.id+i" variant="success" :data-sauto-id="'activeSearch-'+item.corpus+item.subcorpus+item.text+item.year+'-'+i">
+          {{item.corpus}} / {{item.subcorpus}} / {{item.text}} / {{item.year}}
+          <b-icon v-on:click="removeItem(item.id)" icon="x-circle" :data-sauto-id="'activeSearch-remove-'+item.corpus+item.subcorpus+item.text+item.year+'-'+i"></b-icon>
         </b-list-group-item>
       </b-list-group>
     </div>
