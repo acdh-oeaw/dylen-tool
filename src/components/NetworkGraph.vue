@@ -3,9 +3,27 @@
     <div class="col-md-6" style="height: 600px;" v-for="item in egoNetworks" :key="item.id" @mouseover="mouseOver"
          :data-sauto-id="'network-'+item.id">
       <div class="network-wrapper p-2">
-        <h5>{{item.text}} / {{item.corpus}} / {{item.subcorpus}} / {{item.year}}</h5>
-        <h6>Year: {{item.year}}</h6>
+        <h5>{{ item.text }} / {{ item.corpus }} / {{ item.subcorpus }} / {{ item.year }}</h5>
+        <h6>Year: {{ item.year }}</h6>
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
+        <div class="row">
+          <p class="col-sm-2 text-center">
+            <small>
+              <b>Min:</b> {{ item.possibleYears[0] }}
+            </small>
+          </p>
+          <div class="col-sm my-auto">
+            <vue-range-slider :data-sauto-id="'network-'+item.id-+'slider'" v-model="item.year"
+                              :data="item.possibleYears"
+                              @drag-start="saveYear(item.year)" @drag-end="updateNetwork(item)"
+                              piecewise></vue-range-slider>
+          </div>
+          <p class="col-sm-2 text-center">
+            <small>
+              <b>Max:</b> {{ item.possibleYears[item.possibleYears.length - 1] }}
+            </small>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -14,17 +32,20 @@
 <script>
 
 import D3Network from 'vue-d3-network'
+import 'vue-range-component/dist/vue-range-slider.css'
+import VueRangeSlider from 'vue-range-component'
 
 export default {
   name: 'NetworkGraph',
   components: {
-    D3Network
+    D3Network,
+    VueRangeSlider
   },
-  props: {
-  },
+  props: {},
   data() {
     return {
       options: {
+        currentYear: 0,
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
@@ -33,12 +54,22 @@ export default {
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b']
-      ]
+      ],
     }
   },
   mounted() {
   },
-  methods: {},
+  methods: {
+    updateNetwork(network) {
+      if (this.currentYear != network.year) {
+        //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
+        this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network});
+      }
+    },
+    saveYear(year) {//save the current year at the start of the drag and if the year is the same at the end, dont send a call
+      this.currentYear = year
+    }
+  },
   computed: {
     egoNetworks() {
       let networks = [];
@@ -59,26 +90,38 @@ export default {
             tid: link.node2
           });
         }
-        networks.push({id: networks.length, nodes: nodes, links:links, text: network.text, year: network.year, threshold: network.threshold, corpus: network.corpus, subcorpus: network.source})
+        networks.push({
+          id: network.id,
+          nodes: nodes,
+          links: links,
+          text: network.text,
+          year: network.year,
+          possibleYears: network.possibleYears,
+          threshold: network.threshold,
+          corpus: network.corpus,
+          subcorpus: network.subcorpus,
+          targetWordId: network.targetWordId
+        })
       }
       return networks;
     },
   },
-  watch: {
-  },
+  watch: {},
 }
 </script>
 
 <style src="vue-d3-network/dist/vue-d3-network.css"></style>
 
 <style scoped>
-  .link {
-    stroke: rgb(18 120 98 / 0.15);
-  }
-  .node-label {
-    font-size: 11px;
-  }
-  .network-wrapper {
-    border: 1px solid #ccc;
-  }
+.link {
+  stroke: rgb(18 120 98 / 0.15);
+}
+
+.node-label {
+  font-size: 11px;
+}
+
+.network-wrapper {
+  border: 1px solid #ccc;
+}
 </style>

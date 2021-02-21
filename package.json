@@ -14,6 +14,7 @@
     "core-js": "^3.6.5",
     "vue": "^2.6.12",
     "vue-d3-network": "^0.1.28",
+    "vue-range-component": "^1.0.3",
     "vue-select": "^3.10.8",
     "vuex": "^3.5.1"
   },

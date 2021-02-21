@@ -48,7 +48,6 @@ const mainModule = {
             this.commit('main/changeSelectedYear', false);
         },
         changeSelectedYear(state, year) {
-
             if (year) {
                 state.selectedYear = year;
             } else {
@@ -64,7 +63,15 @@ const mainModule = {
             });
 
             state.egoNetworks.splice(selectedNetworkIndex, 1);
+        },
+        updateEgoNetwork(state, {networkID, networkObj}) {
+            const selectedNetworkIndex = state.egoNetworks.findIndex(obj => {
+                return obj.id === networkID;
+            });
+
+            state.egoNetworks.splice(selectedNetworkIndex, 1, networkObj);
         }
+
     },
     getters: {
         availableQueryParams: (state) => state.availableQueryParams,
@@ -140,15 +147,59 @@ const mainModule = {
                 const networkID = state.selectedTargetword.id + state.selectedYear.year
                 let network = response.data.data.getNetwork;
                 network.id = networkID
+                network.targetWordId = state.selectedTargetword.id
                 network.corpus = state.selectedCorpus.name
-                network.source = state.selectedSubcorpus.name
+                network.subcorpus = state.selectedSubcorpus.name
                 network.text = state.selectedTargetword.text
+                network.possibleYears = state.selectedTargetword.networks.map(n => n.year)
                 logger.log('Ego Network loaded successfully.')
                 this.commit('main/addEgoNetwork', network);
             } catch (error) {
                 logger.error(error);
             }
         },
+        async loadUpdatedEgoNetwork(state, {network: oldNetwork}) {
+            try {
+                const graphqlQuery = {
+                    query: `{
+            getNetwork(targetword_id: "${oldNetwork.targetWordId}", year:${oldNetwork.year}){
+                year
+                nodes {
+                    id
+                    clusterId
+                    text
+                    pos
+                    similarity
+                    metrics {
+                      degreeCentrality
+                      closenessCentrality
+                      betweennessCentrality
+                      eigenvectorCentrality
+                    }
+                }
+                connections {
+                    node1
+                    node2
+                    similarity
+                }
+            }
+          }`
+                };
+                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+                const networkID = oldNetwork.targetWordId + oldNetwork.year
+                let updatedNetwork = response.data.data.getNetwork;
+                updatedNetwork.id = networkID
+                updatedNetwork.targetWordId = oldNetwork.targetWordId
+                updatedNetwork.corpus = oldNetwork.corpus
+                updatedNetwork.subcorpus = oldNetwork.subcorpus
+                updatedNetwork.text = oldNetwork.text
+                updatedNetwork.possibleYears = oldNetwork.possibleYears
+                logger.log('Ego Network %s updated successfully.', networkID)
+                this.commit('main/updateEgoNetwork', {networkID: oldNetwork.id, networkObj: updatedNetwork});
+            } catch (error) {
+                logger.error(error);
+            }
+        }
     }
 }
 

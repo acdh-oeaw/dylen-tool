@@ -3,9 +3,12 @@ const isProduction = window
     : process.env.NODE_ENV === 'production'
 //todo use real env variable
 
-// exports.log = (message, ...args) => { if we want to append args
 exports.log = (message) => {
     if (!isProduction) console.log(message)
+}
+
+exports.log = (message, ...args) => {
+    if (!isProduction) console.log(message, ...args)
 }
 
 exports.error = (err) => {
