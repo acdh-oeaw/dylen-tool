@@ -3,23 +3,23 @@
     <div class="col">
       New Query:
       <b-form @submit="onSubmit">
-
         <b-form-group id="select-corpus-group" label="Corpus:" label-for="select-corpus">
           <div @mouseover="mouseOver" data-sauto-id="selectCorpus">
             <b-form-select v-model="selectedCorpus" data-sauto-id="selectCorpus">
-              <b-form-select-option v-for="option in availableQueryParams" v-bind:key="option.name" v-bind:value="option" :data-sauto-id="'corpusOption-'+option.name">
+              <b-form-select-option v-for="option in availableQueryParams" v-bind:key="option.name"
+                                    v-bind:value="option" :data-sauto-id="'corpusOption-'+option.name">
                 {{ option.name }}
               </b-form-select-option>
             </b-form-select>
-
           </div>
         </b-form-group>
 
         <b-form-group id="select-subcorpus-group" label="Subcorpus:" label-for="select-subcorpus">
           <div @mouseover="mouseOver" data-sauto-id="selectSubCorpus">
             <b-form-select v-model="selectedSubcorpus" data-sauto-id="selectSubCorpus">
-              <b-form-select-option v-for="option in selectedCorpus.sources" v-bind:key="option.name" v-bind:value="option" :data-sauto-id="'subCorpusOption-'+option.name">
-                  {{ option.name }}
+              <b-form-select-option v-for="option in selectedCorpus.sources" v-bind:key="option.name"
+                                    v-bind:value="option" :data-sauto-id="'subCorpusOption-'+option.name">
+                {{ option.name }}
               </b-form-select-option>
             </b-form-select>
           </div>
@@ -28,16 +28,19 @@
         <b-form-group id="select-targetword-group" label="Target Word:" label-for="select-targetword">
           <div @mouseover="mouseOver" data-sauto-id="selectTargetWord">
             <b-form-select v-model="selectedTargetword" data-sauto-id="selectTargetWord">
-              <b-form-select-option v-for="option in selectedSubcorpus.targetWords" v-bind:key="option.text" v-bind:value="option" :data-sauto-id="'targetWord-'+option.text">
+              <b-form-select-option v-for="option in selectedSubcorpus.targetWords" v-bind:key="option.text"
+                                    v-bind:value="option" :data-sauto-id="'targetWord-'+option.text">
                 {{ option.text }}
               </b-form-select-option>
             </b-form-select>
           </div>
         </b-form-group>
+
         <b-form-group id="select-year-group" label="Year:" label-for="select-year">
           <div @mouseover="mouseOver" data-sauto-id="selectYear">
             <b-form-select v-model="selectedYear" data-sauto-id="selectYear">
-              <b-form-select-option v-for="option in selectedTargetword.networks" v-bind:key="option.year" v-bind:value="option" :data-sauto-id="'year-'+option.year">
+              <b-form-select-option v-for="option in selectedTargetword.networks" v-bind:key="option.year"
+                                    v-bind:value="option" :data-sauto-id="'year-'+option.year">
                 {{ option.year }}
               </b-form-select-option>
             </b-form-select>
