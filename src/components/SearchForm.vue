@@ -60,7 +60,7 @@
 
 export default {
   name: 'SearchForm',
-  props: {},
+  props: [],
   data() {
     return {}
   },
@@ -69,10 +69,14 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork', 'pane1');
+      this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
     },
   },
   computed: {
+    queryPane() {
+      if (this.$store.getters["main/egoNetworks"].length > 0 ) return 'pane2';
+      return "pane1";
+    },
     availableQueryParams: {
       get() {
         return this.$store.getters["main/availableQueryParams"];
@@ -80,34 +84,34 @@ export default {
     },
     selectedCorpus: {
       get() {
-        return this.$store.getters["main/selectedCorpus"]('pane1')
+        return this.$store.getters["main/selectedCorpus"](this.queryPane)
       },
       set(val) {
-        if (val) this.$store.commit('main/changeSelectedCorpus', val);
+        if (val) this.$store.commit('main/changeSelectedCorpus', {corpus:val, pane:this.queryPane});
       }
     },
     selectedSubcorpus: {
       get() {
-        return this.$store.getters["main/selectedSubcorpus"]('pane1');
+        return this.$store.getters["main/selectedSubcorpus"](this.queryPane);
       },
       set(val) {
-        if (val) this.$store.commit('main/changeSelectedSubcorpus', val);
+        if (val) this.$store.commit('main/changeSelectedSubcorpus', {subcorpus:val, pane:this.queryPane});
       }
     },
     selectedTargetword: {
       get() {
-        return this.$store.getters["main/selectedTargetword"]('pane1');
+        return this.$store.getters["main/selectedTargetword"](this.queryPane);
       },
       set(val) {
-        if (val) this.$store.commit('main/changeSelectedTargetword', val);
+        if (val) this.$store.commit('main/changeSelectedTargetword', {targetword:val, pane:this.queryPane});
       }
     },
     selectedYear: {
       get() {
-        return this.$store.getters["main/selectedYear"]('pane1');
+        return this.$store.getters["main/selectedYear"](this.queryPane);
       },
       set(val) {
-        if (val) this.$store.commit('main/changeSelectedYear', val);
+        if (val) this.$store.commit('main/changeSelectedYear', {year:val, pane:this.queryPane});
       }
     },
     isButtonDisabled() {

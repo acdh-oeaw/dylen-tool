@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-6" style="height: 600px;" v-bind="egoNetwork" :key="egoNetwork.id" @mouseover="mouseOver"
+    <div class="col-md-12" style="height: 600px;" v-bind="egoNetwork" :key="egoNetwork.id" @mouseover="mouseOver"
          :data-sauto-id="'network-'+egoNetwork.id">
       <div class="network-wrapper p-2">
         <h5>{{ egoNetwork.text }} / {{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }} / {{ egoNetwork.year }}</h5>

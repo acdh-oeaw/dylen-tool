@@ -60,11 +60,11 @@ const mainModule = {
             }
             this.commit('main/changeSelectedYear', false);
         },
-        changeSelectedYear(state, year) {
-            if (year) {
-                state.selectedYear = year;
+        changeSelectedYear(state, payload) {
+            if (payload.year) {
+                state[payload.pane].selectedYear = payload.year;
             } else {
-                state.selectedYear = state.selectedTargetword.networks[0]
+                state[payload.pane].selectedYear = state.[payload.pane].selectedTargetword.networks[0]
             }
         },
         addEgoNetwork(state, payload) {

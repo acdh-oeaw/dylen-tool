@@ -1,7 +1,14 @@
 <template>
   <div>
-    <NetworkGraph pane="pane1"/>
-    <NetworkGraph pane="pane2"/>
+    <b-row>
+      <b-col cols="6">
+        <NetworkGraph pane="pane1"/>
+      </b-col>
+      <b-col cols="6">
+        <NetworkGraph pane="pane2"/>
+      </b-col>
+    </b-row>
+
   </div>
 </template>
 
