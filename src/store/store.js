@@ -36,35 +36,35 @@ const mainModule = {
         egoNetworks: [],
     },
     mutations: {
-        changeSelectedCorpus(state, corpus) {
-            if (corpus) {
-                state.selectedCorpus = corpus;
+        changeSelectedCorpus(state, payload) {
+            if (payload.corpus) {
+                state[payload.pane].selectedCorpus = payload.corpus;
             } else {
-                state.selectedCorpus = state.availableQueryParams[0];
+                state[payload.pane].selectedCorpus = state[payload.pane].availableQueryParams[0];
             }
-            this.commit('main/changeSelectedSubcorpus', false);
+            this.commit('main/changeSelectedSubcorpus', {pane:payload.pane});
         },
-        changeSelectedSubcorpus(state, subcorpus) {
-            if (subcorpus) {
-                state.selectedSubcorpus = subcorpus;
+        changeSelectedSubcorpus(state, payload) {
+            if (payload.subcorpus) {
+                state[payload.pane].selectedSubcorpus = payload.subcorpus;
             } else {
-                state.selectedSubcorpus = state.selectedCorpus.sources[0];
+                state[payload.pane].selectedSubcorpus = state[payload.pane].selectedCorpus.sources[0];
             }
-            this.commit('main/changeSelectedTargetword', false);
+            this.commit('main/changeSelectedTargetword', {pane:payload.pane});
         },
-        changeSelectedTargetword(state, targetword) {
-            if (targetword) {
-                state.selectedTargetword = targetword;
+        changeSelectedTargetword(state, payload) {
+            if (payload.targetword) {
+                state[payload.pane].selectedTargetword = payload.targetword;
             } else {
-                state.selectedTargetword = state.selectedSubcorpus.targetWords[0];
+                state[payload.pane].selectedTargetword = state[payload.pane].selectedSubcorpus.targetWords[0];
             }
-            this.commit('main/changeSelectedYear', false);
+            this.commit('main/changeSelectedYear', {pane:payload.pane});
         },
         changeSelectedYear(state, payload) {
             if (payload.year) {
                 state[payload.pane].selectedYear = payload.year;
             } else {
-                state[payload.pane].selectedYear = state.[payload.pane].selectedTargetword.networks[0]
+                state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0]
             }
         },
         addEgoNetwork(state, payload) {
