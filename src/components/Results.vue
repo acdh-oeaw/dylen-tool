@@ -1,6 +1,7 @@
 <template>
   <div>
-    <NetworkGraph/>
+    <NetworkGraph pane="pane1"/>
+    <NetworkGraph pane="pane2"/>
   </div>
 </template>
 

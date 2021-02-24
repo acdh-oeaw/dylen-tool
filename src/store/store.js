@@ -16,118 +16,110 @@ const graphqlEndpoint = props.graphqlEndpoint;
 const logger = require("../helpers/logger");
 
 const mainModule = {
-  namespaced: true,
-  state: {
-    availableQueryParams: [],
-    selectedCorpus: { id: "", name: "", sources: [] },
-    selectedSubcorpus: { id: "", name: "", targetWords: [] },
-    selectedTargetword: { id: "", text: "" },
-    selectedYear: null,
-    egoNetworks: [],
-  },
-  mutations: {
-    changeSelectedCorpus(state, corpus) {
-      if (corpus) {
-        state.selectedCorpus = corpus;
-      } else {
-        state.selectedCorpus = state.availableQueryParams[0];
-      }
-      this.commit("main/changeSelectedSubcorpus", false);
+    namespaced: true,
+    state: {
+        availableQueryParams: [],
+        pane1: {
+            selectedCorpus: {id: '', name: '', sources: []},
+            selectedSubcorpus: {id: '', name: '', targetWords: []},
+            selectedTargetword: {id: '', text: ''},
+            selectedYear: null,
+            selectedNetwork: null
+        },
+        pane2: {
+            selectedCorpus: {id: '', name: '', sources: []},
+            selectedSubcorpus: {id: '', name: '', targetWords: []},
+            selectedTargetword: {id: '', text: ''},
+            selectedYear: null,
+            selectedNetwork:null
+        },
+        egoNetworks: [],
     },
-    changeSelectedSubcorpus(state, subcorpus) {
-      if (subcorpus) {
-        state.selectedSubcorpus = subcorpus;
-      } else {
-        state.selectedSubcorpus = state.selectedCorpus.sources[0];
-      }
-      this.commit("main/changeSelectedTargetword", false);
-    },
-    changeSelectedTargetword(state, targetword) {
-      if (targetword) {
-        state.selectedTargetword = targetword;
-      } else {
-        state.selectedTargetword = state.selectedSubcorpus.targetWords[0];
-      }
-      this.commit("main/changeSelectedYear", false);
-    },
-    changeSelectedYear(state, year) {
-      if (year) {
-        state.selectedYear = year;
-      } else {
-        state.selectedYear = state.selectedTargetword.networks[0];
-      }
-    },
-    addEgoNetwork(state, networkObj) {
-      state.egoNetworks.push(networkObj);
-    },
-    removeEgoNetwork(state, networkID) {
-      const selectedNetworkIndex = state.egoNetworks.findIndex((obj) => {
-        return obj.id === networkID;
-      });
-
-      state.egoNetworks.splice(selectedNetworkIndex, 1);
-    },
-    updateEgoNetwork(state, { networkID, networkObj }) {
-      const selectedNetworkIndex = state.egoNetworks.findIndex((obj) => {
-        return obj.id === networkID;
-      });
-
-      state.egoNetworks.splice(selectedNetworkIndex, 1, networkObj);
-    },
-  },
-  getters: {
-    availableQueryParams: (state) => state.availableQueryParams,
-    selectedCorpus: (state) => state.selectedCorpus,
-    selectedSubcorpus: (state) => state.selectedSubcorpus,
-    selectedTargetword: (state) => state.selectedTargetword,
-    selectedYear: (state) => state.selectedYear,
-    egoNetworks: (state) => state.egoNetworks,
-  },
-  actions: {
-    async loadAvailableQueryParams({ state }) {
-      try {
-        const graphqlQuery = {
-          query: `{
-            allAvailableCorpora {
-              id
-              name
-              sources {
-                name
-                targetWords {
-                  id
-                  text
-                  pos
-                  networks {
-                    year
-                  }
-                }
-              }
+    mutations: {
+        changeSelectedCorpus(state, corpus) {
+            if (corpus) {
+                state.selectedCorpus = corpus;
+            } else {
+                state.selectedCorpus = state.availableQueryParams[0];
             }
-          }`,
-        };
-        const response = await axios.post(graphqlEndpoint, graphqlQuery);
-        state.availableQueryParams = response.data.data.allAvailableCorpora;
-        state.selectedCorpus = response.data.data.allAvailableCorpora[0];
-        state.selectedSubcorpus =
-          response.data.data.allAvailableCorpora[0].sources[0];
-        state.selectedTargetword =
-          response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
-        state.selectedYear =
-          response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0];
-        logger.log("Query parameters loaded successfully.");
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-    async loadEgoNetwork({ state }) {
-      let year_param = state.selectedYear
-        ? state.selectedYear.year
-        : state.selectedTargetword.networks[0].year;
+            this.commit('main/changeSelectedSubcorpus', false);
+        },
+        changeSelectedSubcorpus(state, subcorpus) {
+            if (subcorpus) {
+                state.selectedSubcorpus = subcorpus;
+            } else {
+                state.selectedSubcorpus = state.selectedCorpus.sources[0];
+            }
+            this.commit('main/changeSelectedTargetword', false);
+        },
+        changeSelectedTargetword(state, targetword) {
+            if (targetword) {
+                state.selectedTargetword = targetword;
+            } else {
+                state.selectedTargetword = state.selectedSubcorpus.targetWords[0];
+            }
+            this.commit('main/changeSelectedYear', false);
+        },
+        changeSelectedYear(state, year) {
+            if (year) {
+                state.selectedYear = year;
+            } else {
+                state.selectedYear = state.selectedTargetword.networks[0]
+            }
+        },
+        addEgoNetwork(state, payload) {
+            state.egoNetworks.push(payload.network);
+            state[payload['pane']].selectedNetwork = payload.network
+        },
+        removeEgoNetwork(state, networkID) {
+            const selectedNetworkIndex = state.egoNetworks.findIndex(obj => {
+                return obj.id === networkID;
+            });
 
-      try {
-        const graphqlQuery = {
-          query: `{
-            getNetwork(targetword_id: "${state.selectedTargetword.id}", year:${year_param}){
+            state.egoNetworks.splice(selectedNetworkIndex, 1);
+        },
+        updateEgoNetwork(state, payload) {
+            state[payload.pane].selectedNetwork = payload.networkObj
+            logger.log("Updated Ego Network for pane " + payload.pane)
+        }
+
+    },
+    getters: {
+        availableQueryParams: (state) => state.availableQueryParams,
+        selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
+        selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
+        selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
+        selectedYear: (state) => (pane) => state[pane].selectedYear,
+        getPane: (state) => (pane) => state[pane],
+        egoNetworks: (state) => state.egoNetworks,
+    },
+    actions: {
+        async loadAvailableQueryParams({state}) {
+            try {
+                const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
+                state.availableQueryParams = response.data.data.allAvailableCorpora;
+
+                state.pane1.selectedCorpus = response.data.data.allAvailableCorpora[0];
+                state.pane1.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
+                state.pane1.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
+                state.pane1.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
+
+                state.pane2.selectedCorpus = response.data.data.allAvailableCorpora[0];
+                state.pane2.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
+                state.pane2.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
+                state.pane2.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
+                logger.log('Query parameters loaded successfully.')
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+        async loadEgoNetwork({state}, pane) {
+            let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year
+
+            try {
+                const graphqlQuery = {
+                    query: `{
+            getNetwork(targetword_id: "${state[pane].selectedTargetword.id}", year:${year_param}){
                 year
                 nodes {
                     id
@@ -148,32 +140,32 @@ const mainModule = {
                     similarity
                 }
             }
-          }`,
-        };
-        const response = await axios.post(
-          "https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql",
-          graphqlQuery
-        );
-        const networkID = state.selectedTargetword.id + state.selectedYear.year;
-        let network = response.data.data.getNetwork;
-        network.id = networkID;
-        network.targetWordId = state.selectedTargetword.id;
-        network.corpus = state.selectedCorpus.name;
-        network.subcorpus = state.selectedSubcorpus.name;
-        network.text = state.selectedTargetword.text;
-        network.possibleYears = state.selectedTargetword.networks.map(
-          (n) => n.year
-        );
-        logger.log("Ego Network loaded successfully.");
-        this.commit("main/addEgoNetwork", network);
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-    async loadUpdatedEgoNetwork(state, { network: oldNetwork }) {
-      try {
-        const graphqlQuery = {
-          query: `{
+          }`
+                };
+                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+                const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year
+                let network = response.data.data.getNetwork;
+                network.id = networkID
+                network.targetWordId = state[pane].selectedTargetword.id
+                network.corpus = state[pane].selectedCorpus.name
+                network.subcorpus = state[pane].selectedSubcorpus.name
+                network.text = state[pane].selectedTargetword.text
+                network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year)
+                logger.log('Ego Network loaded successfully.')
+
+                const payload = {
+                    pane:pane,
+                    network:network
+                }
+                this.commit('main/addEgoNetwork', payload);
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+        async loadUpdatedEgoNetwork(state, {network: oldNetwork, pane:pane}) {
+            try {
+                const graphqlQuery = {
+                    query: `{
             getNetwork(targetword_id: "${oldNetwork.targetWordId}", year:${oldNetwork.year}){
                 year
                 nodes {
@@ -195,31 +187,29 @@ const mainModule = {
                     similarity
                 }
             }
-          }`,
-        };
-        const response = await axios.post(
-          "https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql",
-          graphqlQuery
-        );
-        const networkID = oldNetwork.targetWordId + oldNetwork.year;
-        let updatedNetwork = response.data.data.getNetwork;
-        updatedNetwork.id = networkID;
-        updatedNetwork.targetWordId = oldNetwork.targetWordId;
-        updatedNetwork.corpus = oldNetwork.corpus;
-        updatedNetwork.subcorpus = oldNetwork.subcorpus;
-        updatedNetwork.text = oldNetwork.text;
-        updatedNetwork.possibleYears = oldNetwork.possibleYears;
-        logger.log("Ego Network %s updated successfully.", networkID);
-        this.commit("main/updateEgoNetwork", {
-          networkID: oldNetwork.id,
-          networkObj: updatedNetwork,
-        });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-  },
-};
+          }`
+                };
+                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql', graphqlQuery);
+
+                const networkID = oldNetwork.targetWordId + oldNetwork.year
+                let updatedNetwork = response.data.data.getNetwork;
+
+                updatedNetwork.id = networkID
+                updatedNetwork.targetWordId = oldNetwork.targetWordId
+                updatedNetwork.corpus = oldNetwork.corpus
+                updatedNetwork.subcorpus = oldNetwork.subcorpus
+                updatedNetwork.text = oldNetwork.text
+                updatedNetwork.possibleYears = oldNetwork.possibleYears
+                logger.log('Ego Network %s updated successfully.', networkID)
+
+                this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane:pane});
+            } catch (error) {
+                logger.error(error);
+            }
+        }
+    }
+}
+
 
 const sautoModule = {
   namespaced: true,

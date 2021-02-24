@@ -69,7 +69,7 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork');
+      this.$store.dispatch('main/loadEgoNetwork', 'pane1');
     },
   },
   computed: {
@@ -80,7 +80,7 @@ export default {
     },
     selectedCorpus: {
       get() {
-        return this.$store.getters["main/selectedCorpus"];
+        return this.$store.getters["main/selectedCorpus"]('pane1')
       },
       set(val) {
         if (val) this.$store.commit('main/changeSelectedCorpus', val);
@@ -88,7 +88,7 @@ export default {
     },
     selectedSubcorpus: {
       get() {
-        return this.$store.getters["main/selectedSubcorpus"];
+        return this.$store.getters["main/selectedSubcorpus"]('pane1');
       },
       set(val) {
         if (val) this.$store.commit('main/changeSelectedSubcorpus', val);
@@ -96,7 +96,7 @@ export default {
     },
     selectedTargetword: {
       get() {
-        return this.$store.getters["main/selectedTargetword"];
+        return this.$store.getters["main/selectedTargetword"]('pane1');
       },
       set(val) {
         if (val) this.$store.commit('main/changeSelectedTargetword', val);
@@ -104,7 +104,7 @@ export default {
     },
     selectedYear: {
       get() {
-        return this.$store.getters["main/selectedYear"];
+        return this.$store.getters["main/selectedYear"]('pane1');
       },
       set(val) {
         if (val) this.$store.commit('main/changeSelectedYear', val);
