@@ -2,9 +2,18 @@
   <div class="row">
     <div class="col">
       <b-list-group>
-        Query Type:
-        <b-list-group-item data-sauto-id="egoNetworkQueryButton" @mouseover="mouseOver" variant="success">Ego Networks</b-list-group-item>
-        <b-list-group-item data-sauto-id="generalNetworkQueryButton" @mouseover="mouseOver" variant="light">General Networks</b-list-group-item>
+        <b-list-group-item
+            data-sauto-id="egoNetworkQueryButton"
+            @mouseover="mouseOver"
+            variant="success">
+          Ego Networks
+        </b-list-group-item>
+        <b-list-group-item
+            data-sauto-id="generalNetworkQueryButton"
+            @mouseover="mouseOver"
+            variant="light">
+          General Networks
+        </b-list-group-item>
       </b-list-group>
     </div>
   </div>
@@ -14,20 +23,15 @@
 
 export default {
   name: 'MenuNavigation',
-  props: {
-  },
+  props: {},
   data() {
-    return {
-    }
+    return {}
   },
   mounted() {
   },
-  methods: {
-  },
-  computed: {
-  },
-  watch: {
-  },
+  methods: {},
+  computed: {},
+  watch: {},
 }
 </script>
 

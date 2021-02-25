@@ -1,17 +1,40 @@
 <template>
-  <div v-if="egoNetwork" class="row">
-    <div class="col-md-12" style="height: 600px;" v-bind="egoNetwork" :key="egoNetwork.id" @mouseover="mouseOver"
-         :data-sauto-id="'network-'+egoNetwork.id">
+  <div
+      v-if="egoNetwork"
+      class="row">
+    <div
+        class="col-md-12"
+        style="height: 600px;"
+        v-bind="egoNetwork"
+        :key="egoNetwork.id"
+        @mouseover="mouseOver"
+        :data-sauto-id="'network-'+egoNetwork.id">
       <div class="network-wrapper p-2">
-        <b-button v-b-toggle="'query-collapse-'+pane" variant="primary" size="sm">
-          <span class="when-open">Hide</span><span class="when-closed">New</span>
+        <b-button
+            v-b-toggle="'query-collapse-'+pane"
+            variant="primary"
+            size="sm">
+          <span class="when-open">Hide</span>
+          <span class="when-closed">New</span>
         </b-button>
-        <b-collapse v-bind:id="'query-collapse-'+pane" class="mt-2">
-          <search-form :pane="pane" :is-sidebar="false"></search-form>
+        <b-collapse
+            v-bind:id="'query-collapse-'+pane"
+            class="mt-2">
+          <search-form
+              :pane="pane"
+              :is-sidebar="false">
+          </search-form>
         </b-collapse>
         <hr/>
-        <h5><div style="text-align: center;">{{ egoNetwork.text }}  ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</div></h5>
-        <d3-network :net-nodes="egoNetwork.nodes" :net-links="egoNetwork.links" :options="options"/>
+        <h5>
+          <div style="text-align: center;">
+            {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
+          </div>
+        </h5>
+        <d3-network
+            :net-nodes="egoNetwork.nodes"
+            :net-links="egoNetwork.links"
+            :options="options"/>
         <div class="row">
           <p class="col-sm-2 text-center">
             <small>
@@ -22,17 +45,17 @@
 
           <VueSlider
               ref="slider"
-              v-model="item.year"
+              v-model="egoNetwork.year"
               v-bind="sliderOptions"
-              :min="item.possibleYears[0]"
-              :max="item.possibleYears[item.possibleYears.length - 1]"
-              :data="item.possibleYears"
+              :min="egoNetwork.possibleYears[0]"
+              :max="egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]"
+              :data="egoNetwork.possibleYears"
               :process="false"
               :lazy="true"
               :adsorb="true"
               :duration="0.3"
-              v-on:change="updateNetwork(item)"
-              :marks="item.possibleYears"
+              v-on:change="updateNetwork(egoNetwork)"
+              :marks="egoNetwork.possibleYears"
               :tooltip="'none'"
           />
           </div>
@@ -43,9 +66,15 @@
 
   </div>
 
-  <div v-else class="network-wrapper" >
-    <div style="text-align: center;">Select Parameters and click on the Query button to visualize the Ego-Network</div>
-    <search-form :pane="pane" :is-sidebar="false" style="  padding: 15px;"></search-form>
+  <div v-else class="network-wrapper">
+    <div style="text-align: center;">
+      Select Parameters and click on the Query button to visualize the Ego-Network
+    </div>
+    <search-form
+        :pane="pane"
+        :is-sidebar="false"
+        style="padding: 15px;">
+    </search-form>
   </div>
 </template>
 
@@ -89,7 +118,7 @@ export default {
     updateNetwork(network) {
       if (this.currentYear != network.year) {
         //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-        this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network, pane:this.pane});
+        this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network, pane: this.pane});
       }
     },
     saveYear(year) {//save the current year at the start of the drag and if the year is the same at the end, dont send a call
@@ -104,7 +133,7 @@ export default {
       const links = [];
       let selectedNetwork;
 
-      if(network) {
+      if (network) {
         for (const node of network.nodes) {
           nodes.push({
             id: nodes.length,
