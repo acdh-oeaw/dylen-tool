@@ -33,7 +33,6 @@ const mainModule = {
             selectedYear: null,
             selectedNetwork:null
         },
-        egoNetworks: [],
     },
     mutations: {
         changeSelectedCorpus(state, payload) {
@@ -68,15 +67,7 @@ const mainModule = {
             }
         },
         addEgoNetwork(state, payload) {
-            //state.egoNetworks.push(payload.network);
             state[payload['pane']].selectedNetwork = payload.network
-        },
-        removeEgoNetwork(state, networkID) {
-            const selectedNetworkIndex = state.egoNetworks.findIndex(obj => {
-                return obj.id === networkID;
-            });
-
-            state.egoNetworks.splice(selectedNetworkIndex, 1);
         },
         updateEgoNetwork(state, payload) {
             state[payload.pane].selectedNetwork = payload.networkObj
@@ -91,7 +82,6 @@ const mainModule = {
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
-        egoNetworks: (state) => state.egoNetworks,
     },
     actions: {
         async loadAvailableQueryParams({state}) {

@@ -99,7 +99,6 @@ export default {
   computed: {
     egoNetwork() {
 
-      //let networks = []
       const network = this.$store.getters["main/getPane"](this.pane).selectedNetwork
       const nodes = [];
       const links = [];
@@ -136,41 +135,7 @@ export default {
       }
 
       return selectedNetwork
-    },
-    egoNetworks() {
-      let networks = [];
-      for (const network of this.$store.getters["main/egoNetworks"]) {
-        let nodes = [];
-        let links = [];
-        for (const node of network.nodes) {
-          nodes.push({
-            id: nodes.length,
-            name: node.text,
-            _size: node.similarity * 40, /* Math.pow(200, node.similarity)*/
-            _color: this.chartColors[networks.length][node.clusterId]
-          });
-        }
-        for (const link of network.connections) {
-          links.push({
-            sid: link.node1,
-            tid: link.node2
-          });
-        }
-        networks.push({
-          id: network.id,
-          nodes: nodes,
-          links: links,
-          text: network.text,
-          year: network.year,
-          possibleYears: network.possibleYears,
-          threshold: network.threshold,
-          corpus: network.corpus,
-          subcorpus: network.subcorpus,
-          targetWordId: network.targetWordId
-        })
-      }
-      return networks;
-    },
+    }
   },
   watch: {},
 }

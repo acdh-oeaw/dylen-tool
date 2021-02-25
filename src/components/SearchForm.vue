@@ -47,7 +47,8 @@
           </div>
         </b-form-group>
 
-        <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton"
+        <b-button type="submit" variant="primary"
+                  data-sauto-id="queryButton"
                   @mouseover="mouseOver">
           Query
         </b-button>
@@ -154,7 +155,7 @@
         </b-row>
         <b-row align-h="end">
           <b-col align="end">
-            <b-button type="submit" variant="primary" v-bind:disabled="isButtonDisabled" data-sauto-id="queryButton"
+            <b-button type="submit" variant="primary" data-sauto-id="queryButton"
                       @mouseover="mouseOver">   Query     </b-button>
 
           </b-col>
@@ -187,7 +188,19 @@ export default {
     queryPane() {
       if(this.pane)
         return this.pane;
-      if (this.$store.getters["main/egoNetworks"].length > 0 ) return 'pane2';
+
+      let count = 0;
+      const network1 = this.$store.getters["main/getPane"]('pane1').selectedNetwork
+      const network2 = this.$store.getters["main/getPane"]('pane2').selectedNetwork
+
+      if(network1) {
+        count++;
+      }
+      if (network2) {
+        count++;
+      }
+
+      if (count>0) return 'pane2';
       return "pane1";
     },
     availableQueryParams: {
@@ -226,10 +239,6 @@ export default {
       set(val) {
         if (val) this.$store.commit('main/changeSelectedYear', {year:val, pane:this.queryPane});
       }
-    },
-    isButtonDisabled() {
-      if (this.$store.getters["main/egoNetworks"].length < 2) return false;
-      return true;
     },
   },
   watch: {},
