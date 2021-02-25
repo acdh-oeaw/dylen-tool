@@ -133,7 +133,7 @@ const mainModule = {
             try {
 
                 const response = await axios.post(graphqlEndpoint,
-                    getNetworkQuery(oldNetwork.id, oldNetwork.year));
+                    getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
 
                 const networkID = oldNetwork.targetWordId + oldNetwork.year
                 let updatedNetwork = response.data.data.getNetwork;
