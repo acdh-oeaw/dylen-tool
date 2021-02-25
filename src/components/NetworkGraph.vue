@@ -1,10 +1,16 @@
 <template>
-  <div class="row">
+  <div v-if="egoNetwork" class="row">
     <div class="col-md-12" style="height: 600px;" v-bind="egoNetwork" :key="egoNetwork.id" @mouseover="mouseOver"
          :data-sauto-id="'network-'+egoNetwork.id">
       <div class="network-wrapper p-2">
-        <h5>{{ egoNetwork.text }} / {{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }} / {{ egoNetwork.year }}</h5>
-        <h6>Year: {{ egoNetwork.year }}</h6>
+        <b-button v-b-toggle="'query-collapse-'+pane" variant="primary" size="sm">
+          <span class="when-open">Hide</span><span class="when-closed">New</span>
+        </b-button>
+        <b-collapse v-bind:id="'query-collapse-'+pane" class="mt-2">
+          <search-form :pane="pane"></search-form>
+        </b-collapse>
+        <hr/>
+        <h5>{{ egoNetwork.text }}  ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</h5>
         <d3-network :net-nodes="egoNetwork.nodes" :net-links="egoNetwork.links" :options="options"/>
         <div class="row">
           <p class="col-sm-2 text-center">
@@ -12,7 +18,7 @@
               <b>Min:</b> {{ egoNetwork.possibleYears[0] }}
             </small>
           </p>
-          <div class="col-sm-9 my-auto year-slider-row">
+          <div class="col-sm my-auto year-slider-row">
 
           <VueSlider
               ref="slider"
@@ -38,6 +44,15 @@
   </div>
 
 
+
+  <div v-else>
+      <b-button v-b-toggle="'query-collapse-'+pane" variant="primary" size="sm">
+        <span class="when-open">Hide</span><span class="when-closed">New</span>
+      </b-button>
+      <b-collapse v-bind:id="'query-collapse-'+pane" class="mt-2">
+        <search-form :pane="pane" :is-sidebar="false"></search-form>
+      </b-collapse>
+  </div>
 </template>
 
 <script>
@@ -46,10 +61,12 @@ import D3Network from 'vue-d3-network'
 import 'vue-range-component/dist/vue-range-slider.css'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
+import SearchForm from "@/components/SearchForm";
 
 export default {
   name: 'NetworkGraph',
   components: {
+    SearchForm,
     D3Network,
     VueSlider
   },
@@ -178,6 +195,11 @@ export default {
 
 .network-wrapper {
   border: 1px solid #ccc;
+}
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
 }
 </style>
 <style lang="scss">
