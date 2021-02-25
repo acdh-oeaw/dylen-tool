@@ -54,16 +54,16 @@
       </b-form>
     </div>
 
-    <div v-else-if="isSidebar==false" class="col">
+    <div v-else-if="isSidebar==false" class="col" >
       <b-form @submit="onSubmit">
-        <b-row>
+        <b-row align-h="center">
           <b-col cols="6">
             <b-form-group id="select-corpus-group-viz"
                           label="Corpus:"
                           label-for="select-corpus"
                           label-size="sm"
-                          label-cols-lg="5"
-                          content-cols-lg="7"
+                          label-cols-lg="3"
+                          content-cols-lg="9"
                           label-align-lg="right">
 
               <span @mouseover="mouseOver"
@@ -86,8 +86,8 @@
                           label="Subcorpus:"
                           label-for="select-subcorpus"
                           label-size="sm"
-                          label-cols-lg="5"
-                          content-cols-lg="7"
+                          label-cols-lg="3"
+                          content-cols-lg="9"
                           label-align-lg="right">
               <span @mouseover="mouseOver"
                 data-sauto-id="selectSubCorpus">
@@ -104,14 +104,14 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row align-h="center">
           <b-col cols="6">
             <b-form-group id="select-targetword-group-biz"
                           label="Target Word:"
                           label-for="select-targetword"
                           label-size="sm"
-                          label-cols-lg="5"
-                          content-cols-lg="7"
+                          label-cols-lg="3"
+                          content-cols-lg="9"
                           label-align-lg="right">
               <span @mouseover="mouseOver"
                 data-sauto-id="selectTargetWord">
@@ -133,8 +133,8 @@
                           label="Year:"
                           label-for="select-year"
                           label-size="sm"
-                          label-cols-lg="5"
-                          content-cols-lg="7"
+                          label-cols-lg="3"
+                          content-cols-lg="9"
                           label-align-lg="right">
               <div @mouseover="mouseOver"
                    data-sauto-id="selectYear">

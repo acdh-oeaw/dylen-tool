@@ -7,7 +7,7 @@
           <span class="when-open">Hide</span><span class="when-closed">New</span>
         </b-button>
         <b-collapse v-bind:id="'query-collapse-'+pane" class="mt-2">
-          <search-form :pane="pane"></search-form>
+          <search-form :pane="pane" :is-sidebar="false"></search-form>
         </b-collapse>
         <hr/>
         <h5>{{ egoNetwork.text }}  ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</h5>
@@ -43,15 +43,9 @@
 
   </div>
 
-
-
-  <div v-else>
-      <b-button v-b-toggle="'query-collapse-'+pane" variant="primary" size="sm">
-        <span class="when-open">Hide</span><span class="when-closed">New</span>
-      </b-button>
-      <b-collapse v-bind:id="'query-collapse-'+pane" class="mt-2">
-        <search-form :pane="pane" :is-sidebar="false"></search-form>
-      </b-collapse>
+  <div v-else class="network-wrapper" >
+    <div style="text-align: center;">Select Parameters and click on the Query button to visualize the Ego-Network</div>
+    <search-form :pane="pane" :is-sidebar="false" style="  padding: 15px;"></search-form>
   </div>
 </template>
 
