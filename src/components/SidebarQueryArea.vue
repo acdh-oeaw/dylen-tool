@@ -1,7 +1,6 @@
 <template>
   <div class="row mt-2">
     <div class="col">
-      <ActiveSearchItems/>
       <SearchForm/>
     </div>
   </div>
@@ -9,13 +8,12 @@
 
 <script>
 
-import ActiveSearchItems from '@/components/ActiveSearchItems';
 import SearchForm from '@/components/SearchForm';
 
 export default {
   name: 'SidebarQueryArea',
   components: {
-    ActiveSearchItems, SearchForm
+    SearchForm
   },
   props: {
   },
