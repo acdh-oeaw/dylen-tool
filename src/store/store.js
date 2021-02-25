@@ -108,7 +108,7 @@ const mainModule = {
             let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year
 
             try {
-                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql',
+                const response = await axios.post(graphqlEndpoint,
                     getNetworkQuery(state[pane].selectedTargetword.id, year_param));
                 const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year
                 let network = response.data.data.getNetwork;
@@ -132,7 +132,7 @@ const mainModule = {
         async loadUpdatedEgoNetwork(state, {network: oldNetwork, pane: pane}) {
             try {
 
-                const response = await axios.post('https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql',
+                const response = await axios.post(graphqlEndpoint,
                     getNetworkQuery(oldNetwork.id, oldNetwork.year));
 
                 const networkID = oldNetwork.targetWordId + oldNetwork.year
