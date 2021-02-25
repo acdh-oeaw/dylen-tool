@@ -68,7 +68,7 @@ const mainModule = {
             }
         },
         addEgoNetwork(state, payload) {
-            state.egoNetworks.push(payload.network);
+            //state.egoNetworks.push(payload.network);
             state[payload['pane']].selectedNetwork = payload.network
         },
         removeEgoNetwork(state, networkID) {
