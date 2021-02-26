@@ -7,39 +7,52 @@
         <h6>Year: {{ item.year }}</h6>
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
         <div class="row">
+
           <p class="col-sm-2 text-center">
             <small>
-              <b>Min:</b> {{ item.possibleYears[0] }}
+              <b>Available years: </b>
             </small>
           </p>
-          <div class="col-sm my-auto">
-            <vue-range-slider :data-sauto-id="'network-'+item.id-+'slider'" v-model="item.year"
-                              :data="item.possibleYears"
-                              @drag-start="saveYear(item.year)" @drag-end="updateNetwork(item)"
-                              piecewise></vue-range-slider>
+          <div class="col-sm my-auto year-slider-row">
+
+          <VueSlider
+              ref="slider"
+              v-model="item.year"
+              :min="item.possibleYears[0]"
+              :max="item.possibleYears[item.possibleYears.length - 1]"
+              :data="item.possibleYears"
+              :lazy="true"
+              :adsorb="true"
+              :duration="0.3"
+              v-on:change="updateNetwork(item)"
+              :marks="item.possibleYears"
+              :tooltip="'none'"
+          />
           </div>
-          <p class="col-sm-2 text-center">
-            <small>
-              <b>Max:</b> {{ item.possibleYears[item.possibleYears.length - 1] }}
-            </small>
-          </p>
         </div>
       </div>
+
     </div>
+
   </div>
+
+
 </template>
 
 <script>
 
 import D3Network from 'vue-d3-network'
 import 'vue-range-component/dist/vue-range-slider.css'
-import VueRangeSlider from 'vue-range-component'
+//import VueRangeSlider from 'vue-range-component'
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
 
 export default {
   name: 'NetworkGraph',
   components: {
     D3Network,
-    VueRangeSlider
+    //VueRangeSlider,
+    VueSlider
   },
   props: {},
   data() {
@@ -125,3 +138,22 @@ export default {
   border: 1px solid #ccc;
 }
 </style>
+<style lang="scss">
+.year-slider-row {
+  font-size: 0.9rem;
+  min-height: 90px;
+  padding: 10px 15px 0 20px !important;
+
+  .vue-slider {
+    padding: 3px 7px 5px 5px !important;
+    cursor: pointer;
+
+    .vue-slider-mark-label {
+      transform: rotate(-45deg);
+      left: -20px;
+    }
+
+  }
+}
+</style>
+
