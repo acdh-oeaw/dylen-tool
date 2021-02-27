@@ -144,14 +144,14 @@ export default {
   min-height: 90px;
   padding: 10px 15px 0 20px !important;
 
-  .vue-slider {
-    padding: 3px 7px 5px 5px !important;
-    cursor: pointer;
+.vue-slider {
+  padding: 3px 7px 5px 5px !important;
+  cursor: pointer;
 
-    .vue-slider-mark-label {
-      transform: rotate(-45deg);
-      left: -20px;
-    }
+.vue-slider-mark-label {
+  transform: rotate(-45deg);
+  left: -20px;
+}
 
   }
 }
