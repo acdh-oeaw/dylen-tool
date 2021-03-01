@@ -10,29 +10,31 @@
         @mouseover="mouseOver"
         :data-sauto-id="'network-'+egoNetwork.id">
       <div class="network-wrapper p-2">
-        <b-button
-            v-b-toggle="'query-collapse-'+pane"
-            variant="primary"
-            size="sm">
-          <span class="when-open">Hide</span>
-          <span class="when-closed">New</span>
-        </b-button>
-        <b-collapse
-            v-bind:id="'query-collapse-'+pane"
-            class="mt-2">
-          <search-form
-              :pane="pane"
-              :is-sidebar="false">
-          </search-form>
-        </b-collapse>
-        <hr/>
-        <h5>
-          <div style="text-align: center;">
-            {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
-          </div>
-        </h5>
         <div class="p-2">
+          <h5>
+            <div class="mb-2" style="text-align: center;">
+              {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
+              <b-button
+                  class="ml-2"
+                  v-b-toggle="'query-collapse-'+pane"
+                  variant="primary"
+                  size="sm">
+                <span class="when-open">Hide</span>
+                <span class="when-closed">New</span>
+              </b-button>
+              <b-collapse
+                  v-bind:id="'query-collapse-'+pane"
+                  class="mt-2">
+                <search-form
+                    class="pt-3"
+                    :pane="pane"
+                    :is-sidebar="false">
+                </search-form>
+              </b-collapse>
+            </div>
+          </h5>
           <d3-network
+              class="network-wrapper"
               :net-nodes="egoNetwork.nodes"
               :net-links="egoNetwork.links"
               :options="options"/>
