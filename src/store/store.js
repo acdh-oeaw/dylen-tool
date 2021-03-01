@@ -1,30 +1,17 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { getProperties } from "../properties/propertiesLoader";
+import props from "../properties/propertiesLoader";
 
 // Axios properties
 Vue.prototype.$http = axios;
 Vue.prototype.axios = axios;
 
-//todo use real env variable
-let properties; //todo get this from env variable in the future
-if (window) {
-  let uri = window.location.host;
-  if (uri === "https://dylen-tool.acdh.oeaw.ac.at/") {
-    properties = getProperties();
-  } else if (uri === "https://dylen-tool.acdh-dev.oeaw.ac.at") {
-    properties = getProperties("staging");
-  } else {
-    properties = getProperties("dev");
-  }
-}
-Vue.prototype.$properties = properties; //to be able to access in modules
+Vue.prototype.$properties = props; //to be able to access in modules
 
 Vue.use(Vuex);
 
-const graphqlEndpoint =
-  "https://dylen-ego-network-service.acdh-dev.oeaw.ac.at/graphql";
+const graphqlEndpoint = props.graphqlEndpoint;
 
 const logger = require("../helpers/logger");
 
@@ -239,12 +226,13 @@ const sautoModule = {
   state: {
     connection: null,
     lastOverElement: null,
-    sauto: false, //change this to false if you dont want sauto functionality, todo set this from a modal box when a session starts
+    sauto: false,
   },
   actions: {
     async connect({ state }) {
       if (state.sauto) {
-        state.connection = new WebSocket(properties.sautoURI); //todo get url from properties file
+        console.log(props.sautoURI);
+        state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
         state.connection.onerror = function (event) {
           logger.error(event);
         };

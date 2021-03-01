@@ -1,14 +1,17 @@
-import * as properties from "./properties.json";
-import * as properties_dev from "./properties_dev.json";
-import * as properties_staging from "./properties_staging.json";
+import properties from "./properties.js";
+import properties_dev from "./properties_dev.js";
+import properties_local from "./properties_local.js";
 
-//TODO get this from env variable
-export const getProperties = (env) => {
-  if (env === "dev") {
-    return properties_dev;
-  } else if (env === "staging") {
-    return properties_staging;
-  } else {
-    return properties;
-  }
-};
+let environment = process.env.ENVIRONMENT;
+
+let props;
+
+if (environment === "dev") {
+  props = properties_dev;
+} else if (environment === "prod") {
+  props = properties;
+} else {
+  props = properties_local;
+}
+
+export default props;

@@ -1,7 +1,7 @@
 stages:
   - build
  # - test
-  - deploy 
+  - deploy
 
 # build development
 
@@ -11,7 +11,7 @@ build-dev:
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: "" 
+    DOCKER_TLS_CERTDIR: ""
   services:
     - name: docker:19-dind
       command: ["--mtu=1450"]
@@ -27,13 +27,14 @@ build-dev:
     - if: '$CI_COMMIT_REF_NAME == "dev"'
 
 # deploy development
-deploy-dev: 
+deploy-dev:
   image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v1.0.7"
   stage: deploy
   variables:
     POSTGRES_ENABLED: "false"
     HELM_UPGRADE_EXTRA_ARGS: "--set ingress.tls.enabled=false --set service.externalPort=80 --set service.internalPort=80 --set readinessProbe.timeoutSeconds=30 --set livenessProbe.timeoutSeconds=30"
     ROLLOUT_RESOURCE_TYPE: deployment
+    ENVIRONMENT: "dev"
   script:
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
@@ -48,7 +49,7 @@ deploy-dev:
     name: dylen-tool-dev
     url: https://dylen-tool.acdh-dev.oeaw.ac.at
     kubernetes:
-      namespace: dylen-tool-dev  
+      namespace: dylen-tool-dev
   artifacts:
     paths: [environment_url.txt, tiller.log]
     when: always
@@ -62,7 +63,7 @@ build-prod:
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: "" 
+    DOCKER_TLS_CERTDIR: ""
   services:
     - name: docker:19-dind
       command: ["--mtu=1450"]
@@ -78,13 +79,14 @@ build-prod:
     - if: '$CI_COMMIT_REF_NAME == "master"'
 
 # deploy production
-deploy-prod: 
+deploy-prod:
   image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v1.0.7"
   stage: deploy
   variables:
     POSTGRES_ENABLED: "false"
     HELM_UPGRADE_EXTRA_ARGS: "--set ingress.tls.enabled=false --set service.externalPort=80 --set service.internalPort=80 --set readinessProbe.timeoutSeconds=30 --set livenessProbe.timeoutSeconds=30"
     ROLLOUT_RESOURCE_TYPE: deployment
+    ENVIRONMENT: "prod"
   script:
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
@@ -99,7 +101,7 @@ deploy-prod:
     name: dylen-tool-prod
     url: https://dylen-tool.acdh.oeaw.ac.at
     kubernetes:
-      namespace: dylen-tool-prod 
+      namespace: dylen-tool-prod
   artifacts:
     paths: [environment_url.txt, tiller.log]
     when: always
