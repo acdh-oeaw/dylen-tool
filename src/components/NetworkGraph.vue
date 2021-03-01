@@ -8,7 +8,7 @@
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
         <div class="row">
 
-          <p class="col-sm-2 text-center">
+          <p class="col-sm-2 text-center padding-right: 5px">
             <small>
               <b>Available years: </b>
             </small>
@@ -18,9 +18,11 @@
           <VueSlider
               ref="slider"
               v-model="item.year"
+              v-bind="sliderOptions"
               :min="item.possibleYears[0]"
               :max="item.possibleYears[item.possibleYears.length - 1]"
               :data="item.possibleYears"
+              :process="false"
               :lazy="true"
               :adsorb="true"
               :duration="0.3"
@@ -57,12 +59,15 @@ export default {
   props: {},
   data() {
     return {
+      sliderOptions: {
+        dotSize: 15,
+      },
       options: {
         currentYear: 0,
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
-        canvas: false
+        canvas: false,
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
@@ -141,17 +146,23 @@ export default {
 <style lang="scss">
 .year-slider-row {
   font-size: 0.9rem;
-  min-height: 90px;
-  padding: 10px 15px 0 20px !important;
+  min-height: 50px;
+  padding: 10px 50px 0 20px !important;
 
-.vue-slider {
-  padding: 3px 7px 5px 5px !important;
-  cursor: pointer;
+  .vue-slider {
+    padding: 3px 7px 5px 5px !important;
+    cursor: pointer;
 
-.vue-slider-mark-label {
-  transform: rotate(-45deg);
-  left: -20px;
-}
+    .vue-slider-rail {
+      background-color: #b3c1d0;
+      border-radius: 25px;
+      transition: background-color 0.3s;
+    }
+    
+    .vue-slider-mark-label {
+      transform: rotate(-45deg);
+      left: -20px;
+    }
 
   }
 }
