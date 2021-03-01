@@ -31,10 +31,12 @@
             {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
           </div>
         </h5>
-        <d3-network
-            :net-nodes="egoNetwork.nodes"
-            :net-links="egoNetwork.links"
-            :options="options"/>
+        <div class="p-2">
+          <d3-network
+              :net-nodes="egoNetwork.nodes"
+              :net-links="egoNetwork.links"
+              :options="options"/>
+        </div>
         <div class="row">
           <p class="col-sm-2 text-center">
             <small>
