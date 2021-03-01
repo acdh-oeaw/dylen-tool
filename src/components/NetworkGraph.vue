@@ -8,12 +8,12 @@
         <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
         <div class="row">
 
-          <p class="col-sm-2 text-center padding-right: 5px">
+          <p class="col-sm-3 text-center">
             <small>
               <b>Available years: </b>
             </small>
           </p>
-          <div class="col-sm my-auto year-slider-row">
+          <div class="col-sm-9 my-auto year-slider-row">
 
           <VueSlider
               ref="slider"
@@ -147,7 +147,7 @@ export default {
 .year-slider-row {
   font-size: 0.9rem;
   min-height: 50px;
-  padding: 10px 50px 0 20px !important;
+  padding: 10px 50px 0px 10px !important;
 
   .vue-slider {
     padding: 3px 7px 5px 5px !important;
