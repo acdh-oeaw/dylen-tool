@@ -67,7 +67,7 @@ export default {
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
-        canvas: false,
+        canvas: false
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
