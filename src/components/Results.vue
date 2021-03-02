@@ -7,7 +7,7 @@
             class="col-md-12"
             pane="pane1"/>
         <NetworkGraph
-            style="height:50%; border-top: solid; border-top-width: thin; border-top-color: darkgray"
+            style="height:50%;"
             class="col-md-12"
             v-if="networkCount>=1"
             pane="pane2"/>
