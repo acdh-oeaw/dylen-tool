@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div class="col-md-12">
     <b-row>
-      <b-col cols="6">
-        <NetworkGraph pane="pane1"/>
-      </b-col>
-      <b-col cols="6">
+      <b-col class="col-md-6">
         <NetworkGraph
+            style="height:50%"
+            class="col-md-12"
+            pane="pane1"/>
+        <NetworkGraph
+            style="height:50%"
+            class="col-md-12"
             v-if="networkCount>=1"
             pane="pane2"/>
       </b-col>
@@ -20,6 +23,7 @@ import NetworkGraph from '@/components/NetworkGraph';
 
 export default {
   name: 'Results',
+  props: ['pane'],
   components: {
     NetworkGraph
   },

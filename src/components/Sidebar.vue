@@ -6,19 +6,17 @@
       </div>
     </div>
     <MenuNavigation/>
-    <SidebarQueryArea/>
   </div>
 </template>
 
 <script>
 
 import MenuNavigation from '@/components/MenuNavigation';
-import SidebarQueryArea from '@/components/SidebarQueryArea';
 
 export default {
   name: 'Sidebar',
   components: {
-    MenuNavigation, SidebarQueryArea
+    MenuNavigation
   },
   props: {
   },

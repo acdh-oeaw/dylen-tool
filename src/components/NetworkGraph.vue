@@ -4,7 +4,7 @@
       class="row">
     <div
         class="col-md-12"
-        style="height: 600px;"
+        style="height: 50%;"
         v-bind="egoNetwork"
         :key="egoNetwork.id"
         @mouseover="mouseOver"
@@ -14,23 +14,6 @@
           <h5>
             <div class="mb-2" style="text-align: center;">
               {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
-              <b-button
-                  class="ml-2"
-                  v-b-toggle="'query-collapse-'+pane"
-                  variant="primary"
-                  size="sm">
-                <span class="when-open">Hide</span>
-                <span class="when-closed">New</span>
-              </b-button>
-              <b-collapse
-                  v-bind:id="'query-collapse-'+pane"
-                  class="mt-2">
-                <search-form
-                    class="pt-3"
-                    :pane="pane"
-                    :is-sidebar="false">
-                </search-form>
-              </b-collapse>
             </div>
           </h5>
           <d3-network
@@ -70,16 +53,6 @@
 
   </div>
 
-  <div v-else class="network-wrapper">
-    <div style="text-align: center;">
-      Select Parameters and click on the Query button to visualize the Ego-Network
-    </div>
-    <search-form
-        :pane="pane"
-        :is-sidebar="false"
-        style="padding: 15px;">
-    </search-form>
-  </div>
 </template>
 
 <script>
@@ -88,12 +61,10 @@ import D3Network from 'vue-d3-network'
 import 'vue-range-component/dist/vue-range-slider.css'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
-import SearchForm from "@/components/SearchForm";
 
 export default {
   name: 'NetworkGraph',
   components: {
-    SearchForm,
     D3Network,
     VueSlider
   },
@@ -108,7 +79,8 @@ export default {
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
-        canvas: false
+        canvas: false,
+        size:{ w:750, h:380}
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],

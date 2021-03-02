@@ -1,119 +1,18 @@
 <template>
   <div class="row mt-2">
-    <div
-        v-if='isSidebar==true'
-        class="col">
-      New Query:
-      <b-form @submit="onSubmit">
-        <b-form-group
-            id="select-corpus-group"
-            label="Corpus:"
-            label-for="select-corpus">
-          <div
-              @mouseover="mouseOver"
-              data-sauto-id="selectCorpus">
-            <b-form-select
-                v-model="selectedCorpus"
-                data-sauto-id="selectCorpus">
-              <b-form-select-option
-                  v-for="option in availableQueryParams"
-                  v-bind:key="option.name"
-                  v-bind:value="option"
-                  :data-sauto-id="'corpusOption-'+option.name">
-                {{ option.name }}
-              </b-form-select-option>
-            </b-form-select>
-          </div>
-        </b-form-group>
-
-        <b-form-group
-            id="select-subcorpus-group"
-            label="Subcorpus:"
-            label-for="select-subcorpus">
-          <div
-              @mouseover="mouseOver"
-              data-sauto-id="selectSubCorpus">
-            <b-form-select
-                v-model="selectedSubcorpus"
-                data-sauto-id="selectSubCorpus">
-              <b-form-select-option
-                  v-for="option in selectedCorpus.sources"
-                  v-bind:key="option.name"
-                  v-bind:value="option"
-                  :data-sauto-id="'subCorpusOption-'+option.name">
-                {{ option.name }}
-              </b-form-select-option>
-            </b-form-select>
-          </div>
-        </b-form-group>
-
-        <b-form-group
-            id="select-targetword-group"
-            label="Target Word:"
-            label-for="select-targetword">
-          <div
-              @mouseover="mouseOver"
-              data-sauto-id="selectTargetWord">
-            <b-form-select
-                v-model="selectedTargetword"
-                data-sauto-id="selectTargetWord">
-              <b-form-select-option
-                  v-for="option in selectedSubcorpus.targetWords"
-                  v-bind:key="option.text"
-                  v-bind:value="option"
-                  :data-sauto-id="'targetWord-'+option.text">
-                {{ option.text }}
-              </b-form-select-option>
-            </b-form-select>
-          </div>
-        </b-form-group>
-
-        <b-form-group
-            id="select-year-group"
-            label="Year:"
-            label-for="select-year">
-          <div
-              @mouseover="mouseOver"
-              data-sauto-id="selectYear">
-            <b-form-select
-                v-model="selectedYear"
-                data-sauto-id="selectYear">
-              <b-form-select-option
-                  v-for="option in selectedTargetword.networks"
-                  v-bind:key="option.year"
-                  v-bind:value="option"
-                  :data-sauto-id="'year-'+option.year">
-                {{ option.year }}
-              </b-form-select-option>
-            </b-form-select>
-          </div>
-        </b-form-group>
-
-        <b-button
-            type="submit"
-            variant="primary"
-            data-sauto-id="queryButton"
-            @mouseover="mouseOver">
-          Query
-        </b-button>
-      </b-form>
-    </div>
-
-    <div
-        v-else-if="isSidebar==false"
-        class="col">
+    <div class="col">
       <b-form @submit="onSubmit">
         <b-row align-h="center">
-          <b-col cols="6">
+          <b-col cols="2">
+            <b-row v-if="withLabels==true" align-h="center" cols="2">
+              Corpus
+            </b-row>
             <b-form-group
                 id="select-corpus-group-viz"
-                label="Corpus:"
                 label-for="select-corpus"
                 label-size="sm"
-                label-cols-lg="3"
-                content-cols-lg="9"
+                content-cols-lg="12"
                 label-align-lg="right">
-
               <span
                   @mouseover="mouseOver"
                   data-sauto-id="selectCorpus">
@@ -132,14 +31,15 @@
               </span>
             </b-form-group>
           </b-col>
-          <b-col cols="6">
+          <b-col cols="3">
+            <b-row v-if="withLabels==true" align-h="center" cols="">
+              Subcorpus
+            </b-row>
             <b-form-group
                 id="select-subcorpus-group-viz"
-                label="Subcorpus:"
                 label-for="select-subcorpus"
                 label-size="sm"
-                label-cols-lg="3"
-                content-cols-lg="9"
+                content-cols-lg="12"
                 label-align-lg="right">
               <span
                   @mouseover="mouseOver"
@@ -158,16 +58,15 @@
               </span>
             </b-form-group>
           </b-col>
-        </b-row>
-        <b-row align-h="center">
-          <b-col cols="6">
+          <b-col cols="3">
+            <b-row v-if="withLabels==true" align-h="center" cols="3">
+              Targetword
+            </b-row>
             <b-form-group
                 id="select-targetword-group-biz"
-                label="Target Word:"
                 label-for="select-targetword"
                 label-size="sm"
-                label-cols-lg="3"
-                content-cols-lg="9"
+                content-cols-lg="12"
                 label-align-lg="right">
               <span
                   @mouseover="mouseOver"
@@ -186,14 +85,15 @@
               </span>
             </b-form-group>
           </b-col>
-          <b-col cols="6">
+          <b-col cols="2">
+            <b-row v-if="withLabels==true" align-h="center" cols="2">
+              Year
+            </b-row>
             <b-form-group
                 id="select-year-group-viz"
-                label="Year:"
                 label-for="select-year"
                 label-size="sm"
-                label-cols-lg="3"
-                content-cols-lg="9"
+                content-cols-lg="12"
                 label-align-lg="right">
               <div
                   @mouseover="mouseOver"
@@ -212,10 +112,7 @@
               </div>
             </b-form-group>
           </b-col>
-
-        </b-row>
-        <b-row align-h="end">
-          <b-col align="end">
+          <b-col cols="2">
             <b-button
                 type="submit"
                 variant="primary"
@@ -225,11 +122,8 @@
             </b-button>
           </b-col>
         </b-row>
-
-
       </b-form>
     </div>
-
   </div>
 </template>
 
@@ -237,9 +131,14 @@
 
 export default {
   name: 'SearchForm',
-  props: ['isSidebar', 'pane'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
-    return {}
+    return {
+      corpusEdit:false,
+      subcorpusEdit:false,
+      targetwordEdit:false,
+      yearEdit:false,
+    }
   },
   mounted() {
   },

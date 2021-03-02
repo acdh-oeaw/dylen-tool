@@ -1,29 +1,54 @@
 <template>
-  <div ref="app" id="app" @mousemove="mouseMove" @click="mouseClick" @wheel="scroll">
-    <div class="container-fluid">
-      <div class="row">
-        <div @mouseover="mouseOver" data-sauto-id="sidebar" class="col-md-2">
-          <Sidebar/>
-        </div>
-        <div @mouseover="mouseOver" data-sauto-id="results" class="col-md-10">
-          <Results/>
-        </div>
-      </div>
+  <div ref="app" id="app" style="height:100%;max-height: 720px" @mousemove="mouseMove" @click="mouseClick" @wheel="scroll">
+    <b-container fluid>
+        <b-row md="12" align-v="center" class="p-0">
+          <b-col md="2" >
+            <h2 style="text-align:center;">DYLEN</h2>
+          </b-col>
+          <b-col md="10">
+            <b-container fluid>
+              <b-row md="12" class="p-0">
+                <b-col md="12">
+                  <search-form
+                      :with-labels="false"
+                      :pane="'pane'+1"
+                      :is-sidebar="false">
+                  </search-form>
+                </b-col>
+                <b-col md="12">
+                  <search-form
+                      :with-labels="false"
+                      :pane="'pane'+2"
+                      :is-sidebar="false">
+                  </search-form>
+                </b-col>
+              </b-row>
+            </b-container>
+          </b-col>
+        </b-row>
+        <hr/>
+        <b-row md="12">
+          <b-col md="12">
+            <div @mouseover="mouseOver" data-sauto-id="results">
+              <Results/>
+            </div>
+          </b-col>
+        </b-row>
       <Modal/>
-    </div>
+    </b-container>
   </div>
 </template>
 
 <script>
 
-import Sidebar from '@/components/Sidebar';
 import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
+import SearchForm from '@/components/SearchForm'
 
 export default {
   name: 'App',
   components: {
-    Sidebar, Results, Modal
+    Results, Modal, SearchForm
   },
   created: function () {
     this.$store.dispatch('main/loadAvailableQueryParams');
@@ -42,6 +67,14 @@ export default {
   */
   color: #2c3e50;
   margin-top: 20px;
+}
+html, body {
+  height: 100%;
+}
+.fill-height {
+  min-height: 100%;
+  height:auto !important; /* cross-browser */
+  height: 100%; /* cross-browser */
 }
 .overflow-hidden {
   overflow: hidden;
