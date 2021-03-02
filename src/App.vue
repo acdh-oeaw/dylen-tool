@@ -1,21 +1,21 @@
 <template>
-  <div ref="app" id="app" style="height:100%;max-height: 720px" @mousemove="mouseMove" @click="mouseClick" @wheel="scroll">
+  <div ref="app" id="app" style="margin-top:0;height:100%;max-height: 720px" @mousemove="mouseMove" @click="mouseClick" @wheel="scroll">
     <b-container fluid>
-        <b-row md="12" align-v="center" class="p-0">
+        <b-row md="12" align-v="center" class="p-0" style="border-bottom:solid;border-bottom-color: darkgray; border-width: thin">
           <b-col md="2" >
             <h2 style="text-align:center;">DYLEN</h2>
           </b-col>
           <b-col md="10">
             <b-container fluid>
-              <b-row md="12" class="p-0">
-                <b-col md="12">
+              <b-row md="12" class="p-0 mb-0 mt-0">
+                <b-col md="6" style="border-right: solid; border-right-color:darkgray; border-width: thin" class="pb-2 pt-2 mt-0 mb-0">
                   <search-form
                       :with-labels="false"
                       :pane="'pane'+1"
                       :is-sidebar="false">
                   </search-form>
                 </b-col>
-                <b-col md="12">
+                <b-col md="6" class="pb-2 pt-2 mt-0 mb-0">
                   <search-form
                       :with-labels="false"
                       :pane="'pane'+2"
@@ -26,7 +26,6 @@
             </b-container>
           </b-col>
         </b-row>
-        <hr/>
         <b-row md="12">
           <b-col md="12">
             <div @mouseover="mouseOver" data-sauto-id="results">

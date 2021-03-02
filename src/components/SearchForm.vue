@@ -1,130 +1,154 @@
 <template>
-  <div class="row mt-2">
-    <div class="col">
-      <b-form @submit="onSubmit">
-        <b-row align-h="center">
-          <b-col cols="2">
-            <b-row v-if="withLabels==true" align-h="center" cols="2">
-              Corpus
+  <b-container fluid>
+    <b-form @submit="onSubmit">
+      <b-row md="12">
+        <b-col md="11">
+            <b-row md="12">
+              <b-col md="6">
+                  <b-row>
+                    <b-col md="3">
+                      Corpus:
+                    </b-col>
+                    <b-col
+                        class="col-md-9"
+                        @mouseover="mouseOver"
+                        data-sauto-id="selectCorpus">
+                      <b-form-group
+                          id="select-corpus-group-viz">
+                        <b-form-select
+                            size="sm"
+                            v-model="selectedCorpus"
+                            data-sauto-id="selectCorpus">
+                          <b-form-select-option
+                              md="12"
+                              v-for="option in availableQueryParams"
+                              v-bind:key="option.name"
+                              v-bind:value="option"
+                              :data-sauto-id="'corpusOption-'+option.name">
+                            {{ option.name }}
+                          </b-form-select-option>
+                        </b-form-select>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+              </b-col>
+              <b-col md="6">
+                <b-row>
+                  <b-col md="3">
+                    Subcorpus:
+                  </b-col>
+                  <b-col
+                      class="col-md-9"
+                      @mouseover="mouseOver"
+                      data-sauto-id="selectSubCorpus">
+                  <b-form-group
+                      id="select-subcorpus-group-viz"
+                      label-for="select-subcorpus">
+                      <b-form-select
+                          size="sm"
+                          v-model="selectedSubcorpus"
+                          data-sauto-id="selectSubCorpus">
+                        <b-form-select-option
+                            md="12"
+                            v-for="option in selectedCorpus.sources"
+                            v-bind:key="option.name"
+                            v-bind:value="option"
+                            :data-sauto-id="'subCorpusOption-'+option.name">
+                          {{ option.name }}
+                        </b-form-select-option>
+                      </b-form-select>
+                      </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-col>
             </b-row>
-            <b-form-group
-                id="select-corpus-group-viz"
-                label-for="select-corpus"
-                label-size="sm"
-                content-cols-lg="12"
-                label-align-lg="right">
-              <span
-                  @mouseover="mouseOver"
-                  data-sauto-id="selectCorpus">
-                <b-form-select
-                    size="sm"
-                    v-model="selectedCorpus"
-                    data-sauto-id="selectCorpus">
-                  <b-form-select-option
-                      v-for="option in availableQueryParams"
-                      v-bind:key="option.name"
-                      v-bind:value="option"
-                      :data-sauto-id="'corpusOption-'+option.name">
-                  {{ option.name }}
-                  </b-form-select-option>
-                </b-form-select>
-              </span>
-            </b-form-group>
-          </b-col>
-          <b-col cols="3">
-            <b-row v-if="withLabels==true" align-h="center" cols="">
-              Subcorpus
-            </b-row>
-            <b-form-group
-                id="select-subcorpus-group-viz"
-                label-for="select-subcorpus"
-                label-size="sm"
-                content-cols-lg="12"
-                label-align-lg="right">
-              <span
-                  @mouseover="mouseOver"
-                  data-sauto-id="selectSubCorpus">
-                <b-form-select
-                    v-model="selectedSubcorpus"
-                    data-sauto-id="selectSubCorpus">
-                  <b-form-select-option
-                      v-for="option in selectedCorpus.sources"
-                      v-bind:key="option.name"
-                      v-bind:value="option"
-                      :data-sauto-id="'subCorpusOption-'+option.name">
-                    {{ option.name }}
-                  </b-form-select-option>
-                </b-form-select>
-              </span>
-            </b-form-group>
-          </b-col>
-          <b-col cols="3">
-            <b-row v-if="withLabels==true" align-h="center" cols="3">
-              Targetword
-            </b-row>
-            <b-form-group
-                id="select-targetword-group-biz"
-                label-for="select-targetword"
-                label-size="sm"
-                content-cols-lg="12"
-                label-align-lg="right">
-              <span
-                  @mouseover="mouseOver"
-                  data-sauto-id="selectTargetWord">
-                <b-form-select
-                    v-model="selectedTargetword"
-                    data-sauto-id="selectTargetWord">
-                  <b-form-select-option
-                      v-for="option in selectedSubcorpus.targetWords"
-                      v-bind:key="option.text"
-                      v-bind:value="option"
-                      :data-sauto-id="'targetWord-'+option.text">
-                    {{ option.text }}
-                  </b-form-select-option>
-                </b-form-select>
-              </span>
-            </b-form-group>
-          </b-col>
-          <b-col cols="2">
-            <b-row v-if="withLabels==true" align-h="center" cols="2">
-              Year
-            </b-row>
-            <b-form-group
-                id="select-year-group-viz"
-                label-for="select-year"
-                label-size="sm"
-                content-cols-lg="12"
-                label-align-lg="right">
-              <div
-                  @mouseover="mouseOver"
-                  data-sauto-id="selectYear">
-                <b-form-select
-                    v-model="selectedYear"
+        </b-col>
+      </b-row>
+      <b-row md="12">
+        <b-col md="11">
+          <b-row md="12">
+            <b-col md="6">
+              <b-row>
+                <b-col md="3">
+                  Targetword:
+                </b-col>
+                <b-col
+                    class="col-md-9"
+                    @mouseover="mouseOver"
+                    data-sauto-id="selectTargetword">
+                  <b-form-group
+                      id="select-targetword-group-biz"
+                      label-for="select-targetword"
+                      label-size="sm"
+                      content-cols-lg="12"
+                      label-align-lg="right">
+                    <b-form-select
+                        size="sm"
+                        v-model="selectedTargetword"
+                        data-sauto-id="selectTargetWord">
+                      <b-form-select-option
+                          v-for="option in selectedSubcorpus.targetWords"
+                          v-bind:key="option.text"
+                          v-bind:value="option"
+                          :data-sauto-id="'targetWord-'+option.text">
+                        {{ option.text }}
+                      </b-form-select-option>
+                    </b-form-select>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col md="6">
+              <b-row>
+                <b-col md="3">
+                  Year:
+                </b-col>
+                <b-col
+                    class="col-md-9"
+                    @mouseover="mouseOver"
                     data-sauto-id="selectYear">
-                  <b-form-select-option
-                      v-for="option in selectedTargetword.networks"
-                      v-bind:key="option.year"
-                      v-bind:value="option"
-                      :data-sauto-id="'year-'+option.year">
-                    {{ option.year }}
-                  </b-form-select-option>
-                </b-form-select>
-              </div>
-            </b-form-group>
-          </b-col>
-          <b-col cols="2">
-            <b-button
-                type="submit"
-                variant="primary"
-                data-sauto-id="queryButton"
-                @mouseover="mouseOver">
-              Query
-            </b-button>
-          </b-col>
-        </b-row>
-      </b-form>
-    </div>
-  </div>
+                  <b-form-group
+                      id="select-year-group-viz"
+                      label-for="select-year"
+                      label-size="sm"
+                      content-cols-lg="12"
+                      label-align-lg="right">
+                    <div
+                        @mouseover="mouseOver"
+                        data-sauto-id="selectYear">
+                      <b-form-select
+                          size="sm"
+                          v-model="selectedYear"
+                          data-sauto-id="selectYear">
+                        <b-form-select-option
+                            v-for="option in selectedTargetword.networks"
+                            v-bind:key="option.year"
+                            v-bind:value="option"
+                            :data-sauto-id="'year-'+option.year">
+                          {{ option.year }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
+                  </b-form-group>
+                </b-col>
+
+              </b-row>
+            </b-col>
+          </b-row>
+        </b-col>
+        <b-col md="1">
+          <b-button
+              size="sm"
+              type="submit"
+              variant="primary"
+              data-sauto-id="queryButton"
+              @mouseover="mouseOver">
+            Query
+          </b-button>
+        </b-col>
+      </b-row>
+    </b-form>
+  </b-container>
 </template>
 
 <script>
@@ -211,4 +235,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.form-group {
+  margin-bottom: 0rem;
+}
 </style>
