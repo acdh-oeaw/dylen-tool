@@ -9,10 +9,12 @@
         :key="egoNetwork.id"
         @mouseover="mouseOver"
         :data-sauto-id="'network-'+egoNetwork.id">
-      <div class="network-wrapper p-2">
+      <div class="p-2">
         <div class="p-2">
           <h5>
-            <div class="mb-2" style="text-align: center;">
+            <div
+                class="mb-2"
+                style="text-align: center;">
               {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
             </div>
           </h5>
