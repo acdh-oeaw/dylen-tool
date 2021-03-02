@@ -140,7 +140,7 @@
           <b-button
               size="sm"
               type="submit"
-              variant="light"
+              variant="primary"
               data-sauto-id="queryButton"
               @mouseover="mouseOver">
             Query
