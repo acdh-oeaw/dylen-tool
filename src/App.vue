@@ -11,15 +11,13 @@
       <b-row
           align-v="center"
           class="p-0"
-          style="border-bottom:solid; border-bottom-color:darkgray; border-width:thin">
+          style="border-bottom:solid darkgray thin">
         <b-col xl="1">
           <h2 style="text-align:center;"><b>DYLEN</b></h2>
         </b-col>
         <b-col
-            class="pl-0 ml-0 pr-0 mr-0"
-            style="border-left:solid;
-            border-left-color:darkgray;
-            border-width: thin;">
+            class=" pr-0 mr-0"
+            style="border-left:solid darkgray thin;">
             <b-row
                 xl="12"
                 class="p-0 mb-0 mt-0"
@@ -41,6 +39,7 @@
               </b-col>
             </b-row>
             <b-row
+                style="border-top: solid thin darkgray"
                 xl="12"
                 class="p-0 mb-0 mt-0"
                 align-h="end"

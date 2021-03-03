@@ -25,7 +25,6 @@
             </b-form-select>
           </b-form-group>
         </b-col>
-
         <b-col
             v-b-tooltip.hover title="Subcorpus"
             @mouseover="mouseOver"
