@@ -8,33 +8,31 @@
       @wheel="scroll">
     <b-container fluid>
       <b-row
-          md="12"
+          sm="6"
           align-v="center"
           class="p-0"
           style="border-bottom:solid; border-bottom-color:darkgray; border-width:thin">
-        <b-col md="1">
+        <b-col>
           <h2 style="text-align:center;">DYLEN</h2>
         </b-col>
-        <b-col class="pl-0 ml-0 pr-0 mr-0" md="11" style="border-left:solid; border-left-color:darkgray; border-width: thin;">
+        <b-col class="pl-0 ml-0 pr-0 mr-0" xl="11" style="border-left:solid; border-left-color:darkgray; border-width: thin;">
             <b-row
-                md="12"
                 style="background-color: linen;  border-bottom: solid; border-bottom-width: thin; border-bottom-color: darkgray"
                 class="ml-0 pl-0" align-h="center">
               <b>Please select parameters for ego-network visualization</b>
             </b-row>
             <b-row
-                md="12"
+                xl="12"
                 class="p-0 mb-0 mt-0"
                 align-h="end"
                 align-v="center">
               <b-col
                   align="center"
-                  class="pl-6"
-                  md="1">
+                  class="pl-6">
                 <b>Query 1:</b>
               </b-col>
               <b-col
-                  md="5"
+                  xl="5"
                   style="border-right: solid;border-right-color:darkgray; border-width: thin" class="pb-2 pt-2 mt-0 mb-0">
                 <search-form
                     :with-labels="false"
@@ -43,12 +41,13 @@
                 </search-form>
               </b-col>
               <b-col
-                  md="1"
                   align="center"
                   class="pl-6">
                 <b>Query 2: </b>
               </b-col>
-              <b-col md="5" class="pb-2 pt-2 mt-0 mb-0">
+              <b-col
+                  xl="5"
+                     class="pb-2 pt-2 mt-0 mb-0">
                 <search-form
                     :with-labels="false"
                     :pane="'pane'+2"

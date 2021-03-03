@@ -82,7 +82,6 @@ export default {
         nodeSize: 30,
         nodeLabels: true,
         canvas: false,
-        size:{ w:1000, h:380}
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],

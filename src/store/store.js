@@ -4,7 +4,6 @@ import axios from "axios";
 import props from "../properties/propertiesLoader";
 import {allAvailableCorporaQuery, getNetworkQuery} from "@/queries/queries";
 
-// Axios properties
 Vue.prototype.$http = axios;
 Vue.prototype.axios = axios;
 
