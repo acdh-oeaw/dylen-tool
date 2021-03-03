@@ -6,13 +6,14 @@
       @mousemove="mouseMove"
       @click="mouseClick"
       @wheel="scroll">
-    <b-container fluid>
+    <b-container
+        fluid>
       <b-row
           align-v="center"
           class="p-0"
           style="border-bottom:solid; border-bottom-color:darkgray; border-width:thin">
         <b-col xl="1">
-          <h3 style="text-align:center;">DYLEN</h3>
+          <h2 style="text-align:center;"><b>DYLEN</b></h2>
         </b-col>
         <b-col
             class="pl-0 ml-0 pr-0 mr-0"
@@ -55,7 +56,7 @@
             </b-row>
         </b-col>
       </b-row>
-      <b-row xl="12">
+      <b-row xl="12" style="background-color: beige">
         <b-col xl="12">
           <div
               @mouseover="mouseOver"

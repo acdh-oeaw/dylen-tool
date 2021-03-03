@@ -1,29 +1,30 @@
 <template>
-  <div
-      v-if="egoNetwork"
-      class="row">
-    <div
-        class="col-md-12"
-        style="height: 50%;"
+  <b-container
+      fluid
+      class="mt-2"
+      style="background-color: white; border: thin solid darkgray;"
+      v-if="egoNetwork">
+    <b-row
+        lg="12"
         v-bind="egoNetwork"
         :key="egoNetwork.id"
         @mouseover="mouseOver"
         :data-sauto-id="'network-'+egoNetwork.id">
-      <div class="p-2">
-        <div class="p-2">
-          <h5>
-            <div
-                class="mb-2"
-                style="text-align: center;">
-              {{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
-            </div>
-          </h5>
-          <d3-network
-              class="network-wrapper"
-              :net-nodes="egoNetwork.nodes"
-              :net-links="egoNetwork.links"
-              :options="options"/>
-        </div>
+      <b-col class="p-2" align="center">
+        <h5>
+          <b>{{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})</b>
+        </h5>
+      </b-col>
+    </b-row>
+    <b-row lg="12">
+      <b-col>
+        <d3-network
+            class="network-wrapper"
+            :net-nodes="egoNetwork.nodes"
+            :net-links="egoNetwork.links"
+            :options="options"/>
+      </b-col>
+    </b-row>
         <div class="row">
           <p class="col-sm-2 text-center">
             <small>
@@ -48,12 +49,13 @@
               :tooltip="'none'"
           />
           </div>
+          <p class="col-sm-2 text-center">
+            <small>
+              <b>Max:</b> {{ egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1] }}
+            </small>
+          </p>
         </div>
-      </div>
-
-    </div>
-
-  </div>
+  </b-container>
 
 </template>
 
