@@ -31,7 +31,7 @@
           Subcorpus:
         </b-col>
         <b-col
-            xl="4"
+            xl="3"
             @mouseover="mouseOver"
             data-sauto-id="selectSubCorpus">
         <b-form-group
@@ -85,6 +85,7 @@
           Year:
         </b-col>
         <b-col
+            xl="3"
             @mouseover="mouseOver"
             data-sauto-id="selectYear">
           <b-form-group

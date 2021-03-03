@@ -8,7 +8,6 @@
       @wheel="scroll">
     <b-container fluid>
       <b-row
-          sm="6"
           align-v="center"
           class="p-0"
           style="border-bottom:solid; border-bottom-color:darkgray; border-width:thin">
@@ -57,8 +56,8 @@
             </b-row>
         </b-col>
       </b-row>
-      <b-row md="12">
-        <b-col md="12">
+      <b-row xl="12">
+        <b-col xl="12">
           <div
               @mouseover="mouseOver"
               data-sauto-id="results">
