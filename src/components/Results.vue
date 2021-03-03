@@ -3,7 +3,6 @@
     <b-row>
       <b-col class="col-md-6">
         <NetworkGraph
-            style="height:50%"
             class="col-md-12"
             pane="pane1"/>
         <NetworkGraph
