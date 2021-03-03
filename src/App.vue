@@ -11,15 +11,14 @@
           align-v="center"
           class="p-0"
           style="border-bottom:solid; border-bottom-color:darkgray; border-width:thin">
-        <b-col>
-          <h2 style="text-align:center;">DYLEN</h2>
+        <b-col xl="1">
+          <h3 style="text-align:center;">DYLEN</h3>
         </b-col>
-        <b-col class="pl-0 ml-0 pr-0 mr-0" xl="11" style="border-left:solid; border-left-color:darkgray; border-width: thin;">
-            <b-row
-                style="background-color: linen;  border-bottom: solid; border-bottom-width: thin; border-bottom-color: darkgray"
-                class="ml-0 pl-0" align-h="center">
-              <b>Please select parameters for ego-network visualization</b>
-            </b-row>
+        <b-col
+            class="pl-0 ml-0 pr-0 mr-0"
+            style="border-left:solid;
+            border-left-color:darkgray;
+            border-width: thin;">
             <b-row
                 xl="12"
                 class="p-0 mb-0 mt-0"
