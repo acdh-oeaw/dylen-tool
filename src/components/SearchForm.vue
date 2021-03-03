@@ -1,20 +1,21 @@
 <template>
   <b-container fluid>
     <b-form @submit="onSubmit">
-      <b-row style="padding-right:30px">
+      <b-row>
         <b-col
             v-b-tooltip.hover title="Corpus"
-            xl="5"
+            xl="2"
             @mouseover="mouseOver"
             data-sauto-id="selectCorpus">
           <b-form-group
-              id="select-corpus-group-viz">
+              id="select-corpus-group-viz"
+              label="Corpus: "
+              label-cols-xl="5">
             <b-form-select
                 size="sm"
                 v-model="selectedCorpus"
                 data-sauto-id="selectCorpus">
               <b-form-select-option
-                  xl="12"
                   v-for="option in availableQueryParams"
                   v-bind:key="option.name"
                   v-bind:value="option"
@@ -24,20 +25,21 @@
             </b-form-select>
           </b-form-group>
         </b-col>
+
         <b-col
             v-b-tooltip.hover title="Subcorpus"
-            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectSubCorpus">
-        <b-form-group
-            id="select-subcorpus-group-viz"
-            label-for="select-subcorpus">
+          <b-form-group
+              id="select-subcorpus-group-viz"
+              label="Subcorpus:"
+              label-cols-xl="4"
+              label-for="select-subcorpus">
             <b-form-select
                 size="sm"
                 v-model="selectedSubcorpus"
                 data-sauto-id="selectSubCorpus">
               <b-form-select-option
-                  xl="12"
                   v-for="option in selectedCorpus.sources"
                   v-bind:key="option.name"
                   v-bind:value="option"
@@ -45,26 +47,23 @@
                 {{ option.name }}
               </b-form-select-option>
             </b-form-select>
-            </b-form-group>
+          </b-form-group>
         </b-col>
-      </b-row>
-      <b-row style="padding-right:30px">
         <b-col
             v-b-tooltip.hover title="Targetword"
-            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectTargetword">
           <b-form-group
               id="select-targetword-group-biz"
+              label="Targetword:"
+              label-cols-xl="4"
               label-for="select-targetword"
-              content-cols-xl="12"
-              label-align-lg="right">
+              label-align-lg="left">
             <b-form-select
                 size="sm"
                 v-model="selectedTargetword"
                 data-sauto-id="selectTargetWord">
               <b-form-select-option
-                  xl="12"
                   v-for="option in selectedSubcorpus.targetWords"
                   v-bind:key="option.text"
                   v-bind:value="option"
@@ -74,17 +73,19 @@
             </b-form-select>
           </b-form-group>
         </b-col>
+
         <b-col
             v-b-tooltip.hover title="Year"
-            xl="5"
+            xl="2"
             @mouseover="mouseOver"
             data-sauto-id="selectYear">
           <b-form-group
               id="select-year-group-viz"
+              label="Year:"
               label-for="select-year"
               label-size="sm"
-              content-cols-xl="12"
-              label-align-lg="right">
+              label-cols-xl="4"
+              label-align-lg="left">
             <div
                 @mouseover="mouseOver"
                 data-sauto-id="selectYear">
@@ -93,7 +94,6 @@
                   v-model="selectedYear"
                   data-sauto-id="selectYear">
                 <b-form-select-option
-                    xl="12"
                     v-for="option in selectedTargetword.networks"
                     v-bind:key="option.year"
                     v-bind:value="option"

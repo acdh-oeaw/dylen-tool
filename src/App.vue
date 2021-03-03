@@ -31,7 +31,7 @@
                 <b>Query 1:</b>
               </b-col>
               <b-col
-                  xl="5"
+                  xl="11"
                   style="border-right: solid;border-right-color:darkgray; border-width: thin" class="pb-2 pt-2 mt-0 mb-0">
                 <search-form
                     :with-labels="false"
@@ -39,14 +39,21 @@
                     :is-sidebar="false">
                 </search-form>
               </b-col>
+            </b-row>
+            <b-row
+                xl="12"
+                class="p-0 mb-0 mt-0"
+                align-h="end"
+                align-v="center">
               <b-col
+                  xl="1"
                   align="center"
                   class="pl-6">
                 <b>Query 2: </b>
               </b-col>
               <b-col
-                  xl="5"
-                     class="pb-2 pt-2 mt-0 mb-0">
+                  xl="11"
+                  class="pb-2 pt-2 mt-0 mb-0">
                 <search-form
                     :with-labels="false"
                     :pane="'pane'+2"
