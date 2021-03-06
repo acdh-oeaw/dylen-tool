@@ -1,35 +1,96 @@
 <template>
-  <div ref="app" id="app" @mousemove="mouseMove" @click="mouseClick" @wheel="scroll">
-    <div class="container-fluid">
-      <div class="row">
-        <div @mouseover="mouseOver" data-sauto-id="sidebar" class="col-md-2">
-          <Sidebar/>
-        </div>
-        <div @mouseover="mouseOver" data-sauto-id="results" class="col-md-10">
-          <Results/>
-        </div>
-      </div>
+  <div
+      ref="app"
+      id="app"
+      style="margin-top:0; height:100%; max-height: 720px"
+      @mousemove="mouseMove"
+      @click="mouseClick"
+      @wheel="scroll">
+    <b-container
+        fluid>
+      <b-row
+          align-v="center"
+          class="p-0"
+          style="border-bottom:solid darkgray thin">
+        <b-col xl="1">
+          <h2 style="text-align:center;"><b>DYLEN</b></h2>
+        </b-col>
+        <b-col
+            class=" pr-0 mr-0"
+            style="border-left:solid darkgray thin;">
+            <b-row
+                xl="12"
+                class="p-0 mb-0 mt-0"
+                align-h="end"
+                align-v="center">
+              <b-col
+                  align="center"
+                  class="pl-6">
+                <b>Query 1:</b>
+              </b-col>
+              <b-col
+                  xl="11"
+                  style="border-right: solid;border-right-color:darkgray; border-width: thin" class="pb-2 pt-2 mt-0 mb-0">
+                <search-form
+                    :with-labels="false"
+                    :pane="'pane'+1"
+                    :is-sidebar="false">
+                </search-form>
+              </b-col>
+            </b-row>
+            <b-row
+                style="border-top: solid thin darkgray"
+                xl="12"
+                class="p-0 mb-0 mt-0"
+                align-h="end"
+                align-v="center">
+              <b-col
+                  xl="1"
+                  align="center"
+                  class="pl-6">
+                <b>Query 2: </b>
+              </b-col>
+              <b-col
+                  xl="11"
+                  class="pb-2 pt-2 mt-0 mb-0">
+                <search-form
+                    :with-labels="false"
+                    :pane="'pane'+2"
+                    :is-sidebar="false">
+                </search-form>
+              </b-col>
+            </b-row>
+        </b-col>
+      </b-row>
+      <b-row xl="12" style="background-color: beige">
+        <b-col xl="12">
+          <div
+              @mouseover="mouseOver"
+              data-sauto-id="results">
+            <Results/>
+          </div>
+        </b-col>
+      </b-row>
       <Modal/>
-    </div>
+    </b-container>
   </div>
 </template>
 
 <script>
 
-import Sidebar from '@/components/Sidebar';
 import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
+import SearchForm from '@/components/SearchForm'
 
 export default {
   name: 'App',
   components: {
-    Sidebar, Results, Modal
+    Results, Modal, SearchForm
   },
   created: function () {
     this.$store.dispatch('main/loadAvailableQueryParams');
   },
-  methods: {
-  }
+  methods: {}
 }
 </script>
 
@@ -43,6 +104,17 @@ export default {
   color: #2c3e50;
   margin-top: 20px;
 }
+
+html, body {
+  height: 100%;
+}
+
+.fill-height {
+  min-height: 100%;
+  height: auto !important; /* cross-browser */
+  height: 100%; /* cross-browser */
+}
+
 .overflow-hidden {
   overflow: hidden;
 }

@@ -1,43 +1,61 @@
 <template>
-  <div class="row">
-    <div class="col-md-6" style="height: 600px;" v-for="item in egoNetworks" :key="item.id" @mouseover="mouseOver"
-         :data-sauto-id="'network-'+item.id">
-      <div class="network-wrapper p-2">
-        <h5>{{ item.text }} / {{ item.corpus }} / {{ item.subcorpus }} / {{ item.year }}</h5>
-        <h6>Year: {{ item.year }}</h6>
-        <d3-network :net-nodes="item.nodes" :net-links="item.links" :options="options"/>
+  <b-container
+      fluid
+      class="mt-2"
+      style="background-color: white; border: thin solid darkgray;"
+      v-if="egoNetwork">
+    <b-row
+        lg="12"
+        v-bind="egoNetwork"
+        :key="egoNetwork.id"
+        @mouseover="mouseOver"
+        :data-sauto-id="'network-'+egoNetwork.id">
+      <b-col class="p-2" align="center">
+        <h5>
+          <b>{{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})</b>
+        </h5>
+      </b-col>
+    </b-row>
+    <b-row lg="12">
+      <b-col>
+        <d3-network
+            class="network-wrapper"
+            :net-nodes="egoNetwork.nodes"
+            :net-links="egoNetwork.links"
+            :options="options"/>
+      </b-col>
+    </b-row>
         <div class="row">
-
-          <p class="col-sm-3 text-center">
+          <p class="col-sm-2 text-center">
             <small>
-              <b>Available years: </b>
+              <b>Min:</b> {{ egoNetwork.possibleYears[0] }}
             </small>
           </p>
-          <div class="col-sm-9 my-auto year-slider-row">
+          <div class="col-sm my-auto year-slider-row">
 
           <VueSlider
               ref="slider"
-              v-model="item.year"
+              v-model="egoNetwork.year"
               v-bind="sliderOptions"
-              :min="item.possibleYears[0]"
-              :max="item.possibleYears[item.possibleYears.length - 1]"
-              :data="item.possibleYears"
+              :min="egoNetwork.possibleYears[0]"
+              :max="egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]"
+              :data="egoNetwork.possibleYears"
               :process="false"
               :lazy="true"
               :adsorb="true"
               :duration="0.3"
-              v-on:change="updateNetwork(item)"
-              :marks="item.possibleYears"
+              v-on:change="updateNetwork(egoNetwork)"
+              :marks="egoNetwork.possibleYears"
               :tooltip="'none'"
           />
           </div>
+          <p class="col-sm-2 text-center">
+            <small>
+              <b>Max:</b> {{ egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1] }}
+            </small>
+          </p>
         </div>
-      </div>
-
-    </div>
-
-  </div>
-
+  </b-container>
 
 </template>
 
@@ -45,7 +63,6 @@
 
 import D3Network from 'vue-d3-network'
 import 'vue-range-component/dist/vue-range-slider.css'
-//import VueRangeSlider from 'vue-range-component'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
 
@@ -53,10 +70,9 @@ export default {
   name: 'NetworkGraph',
   components: {
     D3Network,
-    //VueRangeSlider,
     VueSlider
   },
-  props: {},
+  props: ['pane'],
   data() {
     return {
       sliderOptions: {
@@ -67,7 +83,7 @@ export default {
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
-        canvas: false
+        canvas: false,
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
@@ -81,7 +97,7 @@ export default {
     updateNetwork(network) {
       if (this.currentYear != network.year) {
         //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-        this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network});
+        this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network, pane: this.pane});
       }
     },
     saveYear(year) {//save the current year at the start of the drag and if the year is the same at the end, dont send a call
@@ -89,17 +105,20 @@ export default {
     }
   },
   computed: {
-    egoNetworks() {
-      let networks = [];
-      for (const network of this.$store.getters["main/egoNetworks"]) {
-        let nodes = [];
-        let links = [];
+    egoNetwork() {
+
+      const network = this.$store.getters["main/getPane"](this.pane).selectedNetwork
+      const nodes = [];
+      const links = [];
+      let selectedNetwork;
+
+      if (network) {
         for (const node of network.nodes) {
           nodes.push({
             id: nodes.length,
             name: node.text,
             _size: node.similarity * 40, /* Math.pow(200, node.similarity)*/
-            _color: this.chartColors[networks.length][node.clusterId]
+            _color: this.chartColors[0][node.clusterId]
           });
         }
         for (const link of network.connections) {
@@ -108,7 +127,7 @@ export default {
             tid: link.node2
           });
         }
-        networks.push({
+        selectedNetwork = {
           id: network.id,
           nodes: nodes,
           links: links,
@@ -119,10 +138,12 @@ export default {
           corpus: network.corpus,
           subcorpus: network.subcorpus,
           targetWordId: network.targetWordId
-        })
+        }
+        //networks.push(selectedNetwork)
       }
-      return networks;
-    },
+
+      return selectedNetwork
+    }
   },
   watch: {},
 }
@@ -142,6 +163,11 @@ export default {
 .network-wrapper {
   border: 1px solid #ccc;
 }
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
+}
 </style>
 <style lang="scss">
 .year-slider-row {
@@ -158,7 +184,7 @@ export default {
       border-radius: 25px;
       transition: background-color 0.3s;
     }
-    
+
     .vue-slider-mark-label {
       transform: rotate(-45deg);
       left: -20px;
