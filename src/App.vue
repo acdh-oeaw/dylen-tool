@@ -12,9 +12,7 @@
         fluid>
       <top-navigation
           class="mb-20"
-          style="min-height:72px;"
-          :first-form="false"
-          :second-form="false">
+          style="min-height:72px;">
       </top-navigation>
       <b-row xl="12">
         <b-col xl="12">

@@ -25,7 +25,7 @@
               size="sm"
               block
               variant="secondary"
-              @click="queryButtonClicked(1)">
+              v-on="queryButtonClicked(1)">
             <b>Query 1</b>
           </b-button>
         </b-col>
@@ -54,7 +54,7 @@
               size="sm"
               block
               variant="secondary"
-              @click="queryButtonClicked(2)">
+              v-on="queryButtonClicked(2)">
             <b>Query 2</b>
           </b-button>
         </b-col>
@@ -77,9 +77,14 @@ import SearchForm from "@/components/SearchForm";
 
 export default {
   name: 'TopNavigation',
-  props: ['firstForm', 'secondForm'],
   components: {
     SearchForm
+  },
+  data() {
+    return {
+      firstForm: false,
+      secondForm: false
+    }
   },
   methods: {
     queryButtonClicked(button) {
