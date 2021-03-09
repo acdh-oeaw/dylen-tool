@@ -1,19 +1,27 @@
 <template>
-  <b-row xl="12">
-      <b-col xl="auto" align-self="center">
+  <b-row
+      align-h="center"
+      xl="12"
+      style="height:100%; border-bottom: solid thick; border-bottom-color: grey"
+      align-v="stretch">
+      <b-col
+          class="h-100"
+          xl="auto"
+          align-self="center">
         <h2><b>DYLEN</b></h2>
       </b-col>
       <b-col
-          xl="11"
-          align-self="center">
-        <b-row xl="12">
-          <b-col v-if="!firstForm">
+          class="pb-1"
+          xl="5"
+          align-self="stretch">
+        <b-row class="h-100" align-h="center" align-v="stretch">
+          <b-col class="h-100" align-self="stretch" v-if="!firstForm">
             <b-button
-                pill
+                class="button"
                 size="sm"
-                variant="primary"
+                variant="secondary"
                 @click="queryButtonClicked(1)">
-              +
+              <b>Query 1</b>
             </b-button>
           </b-col>
           <b-col v-else-if="firstForm">
@@ -25,32 +33,35 @@
                     :is-sidebar="false">
                 </search-form>
               </b-col>
-              <b-col xl="1">
-                <b-button
-                    v-if="firstForm && !secondForm"
-                    size="sm"
-                    pill
-                    variant="primary"
-                    @click="queryButtonClicked(2)">
-                  +
-                </b-button>
-              </b-col>
             </b-row>
           </b-col>
         </b-row>
-        <b-row xl="12">
-          <b-col v-if="secondForm">
-            <b-row>
-              <b-col>
-                <search-form
-                    :with-labels="false"
-                    :pane="'pane'+2"
-                    :is-sidebar="false">
-                </search-form>
-              </b-col>
-              <b-col xl="1"></b-col>
-            </b-row>
+      </b-col>
+      <b-col
+          class="ml-1 pb-1"
+          align-self="stretch">
+        <b-row class="h-100">
+          <b-col
+              class="h-100"
+              v-if="!secondForm"
+              align-self="stretch" >
+            <b-button
+                v-if="firstForm && !secondForm"
+                class="button"
+                size="sm"
+                variant="secondary"
+                @click="queryButtonClicked(2)">
+              <b>Query 2</b>
+            </b-button>
           </b-col>
+          <b-col v-else>
+            <search-form
+                :with-labels="false"
+                :pane="'pane'+2"
+                :is-sidebar="false">
+            </search-form>
+          </b-col>
+          <b-col xl="1"></b-col>
         </b-row>
       </b-col>
   </b-row>
@@ -79,3 +90,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.button {
+  width:100%;
+  height:100%;
+  opacity: 1.0;
+  display:block;
+}
+</style>

@@ -7,9 +7,14 @@
       @click="mouseClick"
       @wheel="scroll">
     <b-container
+        class="pt-1 pb-5"
         fluid>
-      <top-navigation :first-form="false" :second-form="false"></top-navigation>
-      <b-row xl="12" style="background-color: beige">
+      <top-navigation
+          class="mb-20"
+          style="min-height:72px;"
+          :first-form="false"
+          :second-form="false"></top-navigation>
+      <b-row xl="12">
         <b-col xl="12">
           <div
               class="h-100"

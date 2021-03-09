@@ -3,14 +3,14 @@
       <b-row>
         <b-col
             v-b-tooltip.hover title="Corpus"
-            xl="auto"
+            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectCorpus">
           <b-form-group
               id="select-corpus-group-viz"
               label="Corpus: "
               label-size="sm"
-              label-cols-xl="auto">
+              label-cols-xl="4">
             <b-form-select
                 size="sm"
                 v-model="selectedCorpus"
@@ -26,6 +26,7 @@
           </b-form-group>
         </b-col>
         <b-col
+            xl="5"
             v-b-tooltip.hover title="Subcorpus"
             @mouseover="mouseOver"
             data-sauto-id="selectSubCorpus">
@@ -49,7 +50,11 @@
             </b-form-select>
           </b-form-group>
         </b-col>
+
+      </b-row>
+      <b-row>
         <b-col
+            xl="5"
             v-b-tooltip.hover title="Targetword"
             @mouseover="mouseOver"
             data-sauto-id="selectTargetword">
@@ -77,7 +82,7 @@
 
         <b-col
             v-b-tooltip.hover title="Year"
-            xl="2"
+            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectYear">
           <b-form-group
@@ -105,17 +110,18 @@
             </div>
           </b-form-group>
         </b-col>
-        <b-col xl="1">
+        <b-col xl="auto">
           <b-button
               size="sm"
               type="submit"
-              variant="primary"
+              variant="secondary"
               data-sauto-id="queryButton"
               @mouseover="mouseOver">
             Query
           </b-button>
         </b-col>
       </b-row>
+
     </b-form>
 </template>
 
