@@ -1,16 +1,16 @@
 <template>
-  <b-container fluid>
     <b-form @submit="onSubmit">
       <b-row>
         <b-col
             v-b-tooltip.hover title="Corpus"
-            xl="2"
+            xl="auto"
             @mouseover="mouseOver"
             data-sauto-id="selectCorpus">
           <b-form-group
               id="select-corpus-group-viz"
               label="Corpus: "
-              label-cols-xl="5">
+              label-size="sm"
+              label-cols-xl="auto">
             <b-form-select
                 size="sm"
                 v-model="selectedCorpus"
@@ -32,6 +32,7 @@
           <b-form-group
               id="select-subcorpus-group-viz"
               label="Subcorpus:"
+              label-size="sm"
               label-cols-xl="4"
               label-for="select-subcorpus">
             <b-form-select
@@ -55,6 +56,7 @@
           <b-form-group
               id="select-targetword-group-biz"
               label="Targetword:"
+              label-size="sm"
               label-cols-xl="4"
               label-for="select-targetword"
               label-align-lg="left">
@@ -115,7 +117,6 @@
         </b-col>
       </b-row>
     </b-form>
-  </b-container>
 </template>
 
 <script>
