@@ -2,7 +2,6 @@
     <b-form @submit="onSubmit">
       <b-row>
         <b-col
-            v-b-tooltip.hover title="Corpus"
             xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectCorpus">
@@ -27,7 +26,6 @@
         </b-col>
         <b-col
             xl="5"
-            v-b-tooltip.hover title="Subcorpus"
             @mouseover="mouseOver"
             data-sauto-id="selectSubCorpus">
           <b-form-group
@@ -55,7 +53,6 @@
       <b-row>
         <b-col
             xl="5"
-            v-b-tooltip.hover title="Targetword"
             @mouseover="mouseOver"
             data-sauto-id="selectTargetword">
           <b-form-group
@@ -81,7 +78,6 @@
         </b-col>
 
         <b-col
-            v-b-tooltip.hover title="Year"
             xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectYear">

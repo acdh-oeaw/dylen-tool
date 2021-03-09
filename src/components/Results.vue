@@ -13,7 +13,6 @@
             pane="pane2"/>
       </b-col>
     </b-row>
-
   </div>
 </template>
 

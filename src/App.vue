@@ -1,7 +1,8 @@
 <template>
   <div
-      ref="app"
       id="app"
+      ref="app"
+      style="margin-top:0;"
       style="margin-top:0; height:100%;"
       @mousemove="mouseMove"
       @click="mouseClick"
@@ -13,7 +14,8 @@
           class="mb-20"
           style="min-height:72px;"
           :first-form="false"
-          :second-form="false"></top-navigation>
+          :second-form="false">
+      </top-navigation>
       <b-row xl="12">
         <b-col xl="12">
           <div
@@ -63,13 +65,4 @@ html, body {
   height: 100%;
 }
 
-.fill-height {
-  min-height: 100%;
-  height: auto !important; /* cross-browser */
-  height: 100%; /* cross-browser */
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
 </style>
