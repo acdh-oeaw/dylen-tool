@@ -85,6 +85,19 @@ build-prod:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
 
+deploy_review:
+  stage:deploy
+  script:
+    - echo "Deploy reiew app"
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_ENVIRONMENT_SLUG.acdh.oeaw.ac.at
+  only:
+    - branches
+  except:
+    - master
+    - dev
+
 # deploy production
 deploy-prod:
   image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v1.0.7"
