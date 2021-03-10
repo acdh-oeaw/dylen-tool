@@ -2,7 +2,6 @@
   <div
       id="app"
       ref="app"
-      style="margin-top:0;"
       style="margin-top:0; height:100%;"
       @mousemove="mouseMove"
       @click="mouseClick"
