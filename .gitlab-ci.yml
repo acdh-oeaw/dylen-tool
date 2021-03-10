@@ -3,6 +3,12 @@ stages:
  # - test
   - deploy
 
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "master"
+
 # build development
 
 build-dev:
@@ -25,6 +31,7 @@ build-dev:
     - docker push $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
   rules:
     - if: '$CI_COMMIT_REF_NAME == "dev"'
+    - if: $CI_MERGE_REQUEST_IID
 
 # deploy development
 deploy-dev:
