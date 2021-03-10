@@ -6,7 +6,6 @@
       align-v="stretch">
     <b-col
         xl="auto"
-        class="h-100"
         align-self="center">
       <h2><b>DYLEN</b></h2>
     </b-col>

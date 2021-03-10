@@ -5,10 +5,12 @@
         <NetworkGraph
             v-if="networkCount>=1"
             ref="networkGraph"
-            class="col-md-12 h-45"
+            class="col-md-12"
+            style="height:45%"
             pane="pane1"/>
         <NetworkGraph
-            class="col-md-12 h-45"
+            class="col-md-12"
+            style="height:45%"
             v-if="networkCount==2"
             pane="pane2"/>
       </b-col>

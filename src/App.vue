@@ -2,18 +2,25 @@
   <div
       id="app"
       ref="app"
-      style="margin-top:0; height:100%;"
+      class="h-100"
+      style="margin-top:0;"
       @mousemove="mouseMove"
       @click="mouseClick"
       @wheel="scroll">
     <b-container
-        class="pt-1 pb-5"
+        class="pt-1 pb-5 h-100"
         fluid>
-      <top-navigation
-          class="mb-20"
-          style="min-height:72px;">
-      </top-navigation>
-      <b-row xl="12">
+      <b-row>
+        <b-col>
+          <top-navigation
+              class="mb-20"
+              style="min-height:72px;">
+          </top-navigation>
+        </b-col>
+      </b-row>
+      <b-row
+          xl="12"
+          class="h-100">
         <b-col xl="12">
           <div
               class="h-100"

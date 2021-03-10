@@ -2,41 +2,36 @@
   <b-container
       ref="con"
       fluid
-      class="mt-2 h-40"
+      class="mt-2"
       style="background-color: white; border: thin solid darkgray;"
       v-if="egoNetwork">
-    <b-row
-        lg="12"
-        class="h-5"
-        v-bind="egoNetwork"
-        :key="egoNetwork.id"
-        @mouseover="mouseOver"
-        :data-sauto-id="'network-'+egoNetwork.id">
-      <b-col class="p-2" align="center">
-        <h5>
-          <b>{{ egoNetwork.text }} ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})</b>
-        </h5>
+    <b-row lg="12"
+           class="pt-2"
+           v-bind="egoNetwork"
+           :key="egoNetwork.id"
+           @mouseover="mouseOver"
+           :data-sauto-id="'network-'+egoNetwork.id">
+      <b-col xl="2">
+          <b-row align-h="center">
+            <b>{{ egoNetwork.text }}</b>
+          </b-row>
+          <b-row align-h="center">
+            ({{ egoNetwork.corpus }} / {{egoNetwork.subcorpus }})
+          </b-row>
       </b-col>
-    </b-row>
-    <b-row lg="12" class="h-90">
-      <b-col class="h-100">
+      <b-col>
         <d3-network
             ref="egoChart"
             class="network-wrapper"
             :net-nodes="egoNetwork.nodes"
             :net-links="egoNetwork.links"
-            :options="options"/>
+            :options="options"
+        />
       </b-col>
     </b-row>
     <b-row class="h-5">
-      <b-col
-          sm="2"
-          class="text-center">
-        <small>
-          <b>Min:</b> {{ egoNetwork.possibleYears[0] }}
-        </small>
-      </b-col>
-      <b-col class="my-auto year-slider-row">
+      <b-col xl="2"></b-col>
+      <b-col class="pl-5 year-slider-row">
         <VueSlider
             ref="slider"
             v-model="egoNetwork.year"
@@ -52,13 +47,6 @@
             :marks="egoNetwork.possibleYears"
             :tooltip="'none'"
         />
-      </b-col>
-      <b-col
-          sm="2"
-          class="text-center">
-        <small>
-          <b>Max:</b> {{ egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1] }}
-        </small>
       </b-col>
     </b-row>
   </b-container>
@@ -82,7 +70,6 @@ export default {
   data() {
     return {
       options: {
-        currentYear: 0,
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
@@ -112,11 +99,12 @@ export default {
       this.defineChartSize();
     },
     defineChartSize() {
-      const heightRefElem = this.$refs.egoChart.$el.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
-      const widthRefElem = this.$refs.egoChart.$el.parentElement.parentElement
+      const heightRefElem = this.$refs.egoChart.$el.parentElement.parentElement.parentElement.parentElement
+      const widthRefElem = this.$refs.egoChart.$el.parentElement
 
-      const chartHeight = heightRefElem.clientHeight/3;
-      const chartWidth = widthRefElem.clientWidth/1.1;
+      console.log(heightRefElem)
+      const chartHeight = heightRefElem.clientHeight/2.7;
+      const chartWidth = widthRefElem.clientWidth/1.08;
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
 
@@ -206,7 +194,7 @@ export default {
     cursor: pointer;
 
     .vue-slider-rail {
-      background-color: #b3c1d0;
+      background-color: grey;
       border-radius: 25px;
       transition: background-color 0.3s;
     }
