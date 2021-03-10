@@ -17,18 +17,7 @@
           class="h-100"
           align-h="center"
           align-v="stretch">
-        <b-col
-            v-if="!firstForm">
-          <b-button
-              class="button"
-              size="sm"
-              block
-              variant="secondary"
-              v-on:click="queryButtonClicked(1)">
-            <b>Query 1</b>
-          </b-button>
-        </b-col>
-        <b-col v-else-if="firstForm">
+        <b-col>
           <b-row>
             <b-col>
               <search-form
@@ -44,17 +33,15 @@
     <b-col
         class="ml-1 pb-1"
         align-self="stretch">
-      <b-row class="h-100">
+      <b-row class="h-100" align-v="center">
         <b-col
             v-if="!secondForm">
           <b-button
               v-if="firstForm && !secondForm"
-              class="button"
               size="sm"
-              block
               variant="secondary"
               v-on:click="queryButtonClicked(2)">
-            <b>Query 2</b>
+            <b>+</b>
           </b-button>
         </b-col>
         <b-col v-else>
@@ -81,7 +68,7 @@ export default {
   },
   data() {
     return {
-      firstForm: false,
+      firstForm: true,
       secondForm: false
     }
   },
