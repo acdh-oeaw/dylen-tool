@@ -29,7 +29,7 @@
         />
       </b-col>
     </b-row>
-    <b-row class="h-5">
+    <b-row class="h-20 pb-5">
       <b-col xl="2"></b-col>
       <b-col class="pl-5 year-slider-row">
         <VueSlider
@@ -102,8 +102,7 @@ export default {
       const heightRefElem = this.$refs.egoChart.$el.parentElement.parentElement.parentElement.parentElement
       const widthRefElem = this.$refs.egoChart.$el.parentElement
 
-      console.log(heightRefElem)
-      const chartHeight = heightRefElem.clientHeight/2.7;
+      const chartHeight = heightRefElem.clientHeight*0.36;
       const chartWidth = widthRefElem.clientWidth/1.08;
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
