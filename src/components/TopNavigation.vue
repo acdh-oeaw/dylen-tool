@@ -25,7 +25,7 @@
               size="sm"
               block
               variant="secondary"
-              v-on="queryButtonClicked(1)">
+              v-on:click="queryButtonClicked(1)">
             <b>Query 1</b>
           </b-button>
         </b-col>
@@ -54,7 +54,7 @@
               size="sm"
               block
               variant="secondary"
-              v-on="queryButtonClicked(2)">
+              v-on:click="queryButtonClicked(2)">
             <b>Query 2</b>
           </b-button>
         </b-col>
