@@ -1,14 +1,15 @@
 <template>
-  <div class="col-md-12">
-    <b-row>
-      <b-col class="col-md-6">
+  <div class="col-md-12 h-100">
+    <b-row class="h-100">
+      <b-col class="col-md-6 h-100">
         <NetworkGraph
-            class="col-md-12"
+            v-if="networkCount>=1"
+            ref="networkGraph"
+            class="col-md-12 h-45"
             pane="pane1"/>
         <NetworkGraph
-            style="height:50%;"
-            class="col-md-12"
-            v-if="networkCount>=1"
+            class="col-md-12 h-45"
+            v-if="networkCount==2"
             pane="pane2"/>
       </b-col>
     </b-row>
@@ -32,7 +33,10 @@ export default {
       const network1 = this.$store.getters["main/getPane"]('pane1').selectedNetwork
       const network2 = this.$store.getters["main/getPane"]('pane2').selectedNetwork
 
-      if (network1 || network2) {
+      if (network1) {
+        count++;
+      }
+      if (network2) {
         count++;
       }
 

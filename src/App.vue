@@ -2,12 +2,13 @@
   <div
       ref="app"
       id="app"
-      style="margin-top:0; height:100%; max-height: 720px"
+      style="margin-top:0; height:100%;"
       @mousemove="mouseMove"
       @click="mouseClick"
       @wheel="scroll">
     <b-container
-        fluid>
+        fluid
+        class="h-100">
       <b-row
           align-v="center"
           class="p-0"
@@ -62,9 +63,10 @@
             </b-row>
         </b-col>
       </b-row>
-      <b-row xl="12" style="background-color: beige">
+      <b-row xl="12" style="background-color: beige" class="fill-height h-100">
         <b-col xl="12">
           <div
+              class="h-100"
               @mouseover="mouseOver"
               data-sauto-id="results">
             <Results/>

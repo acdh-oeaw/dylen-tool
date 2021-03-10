@@ -1,11 +1,13 @@
 <template>
   <b-container
+      ref="con"
       fluid
-      class="mt-2"
+      class="mt-2 h-40"
       style="background-color: white; border: thin solid darkgray;"
       v-if="egoNetwork">
     <b-row
         lg="12"
+        class="h-5"
         v-bind="egoNetwork"
         :key="egoNetwork.id"
         @mouseover="mouseOver"
@@ -16,45 +18,49 @@
         </h5>
       </b-col>
     </b-row>
-    <b-row lg="12">
-      <b-col>
+    <b-row lg="12" class="h-90">
+      <b-col class="h-100">
         <d3-network
+            ref="egoChart"
             class="network-wrapper"
             :net-nodes="egoNetwork.nodes"
             :net-links="egoNetwork.links"
             :options="options"/>
       </b-col>
     </b-row>
-        <div class="row">
-          <p class="col-sm-2 text-center">
-            <small>
-              <b>Min:</b> {{ egoNetwork.possibleYears[0] }}
-            </small>
-          </p>
-          <div class="col-sm my-auto year-slider-row">
-
-          <VueSlider
-              ref="slider"
-              v-model="egoNetwork.year"
-              v-bind="sliderOptions"
-              :min="egoNetwork.possibleYears[0]"
-              :max="egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]"
-              :data="egoNetwork.possibleYears"
-              :process="false"
-              :lazy="true"
-              :adsorb="true"
-              :duration="0.3"
-              v-on:change="updateNetwork(egoNetwork)"
-              :marks="egoNetwork.possibleYears"
-              :tooltip="'none'"
-          />
-          </div>
-          <p class="col-sm-2 text-center">
-            <small>
-              <b>Max:</b> {{ egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1] }}
-            </small>
-          </p>
-        </div>
+    <b-row class="h-5">
+      <b-col
+          sm="2"
+          class="text-center">
+        <small>
+          <b>Min:</b> {{ egoNetwork.possibleYears[0] }}
+        </small>
+      </b-col>
+      <b-col class="my-auto year-slider-row">
+        <VueSlider
+            ref="slider"
+            v-model="egoNetwork.year"
+            v-bind="sliderOptions"
+            :min="egoNetwork.possibleYears[0]"
+            :max="egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]"
+            :data="egoNetwork.possibleYears"
+            :process="false"
+            :lazy="true"
+            :adsorb="true"
+            :duration="0.3"
+            v-on:change="updateNetwork(egoNetwork)"
+            :marks="egoNetwork.possibleYears"
+            :tooltip="'none'"
+        />
+      </b-col>
+      <b-col
+          sm="2"
+          class="text-center">
+        <small>
+          <b>Max:</b> {{ egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1] }}
+        </small>
+      </b-col>
+    </b-row>
   </b-container>
 
 </template>
@@ -75,15 +81,19 @@ export default {
   props: ['pane'],
   data() {
     return {
-      sliderOptions: {
-        dotSize: 15,
-      },
       options: {
         currentYear: 0,
         force: 750,
         nodeSize: 30,
         nodeLabels: true,
         canvas: false,
+        size: {
+          h:0,
+          w:0
+        }
+      },
+      sliderOptions: {
+        dotSize: 15,
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
@@ -91,9 +101,26 @@ export default {
       ],
     }
   },
+  created() {
+    window.addEventListener("resize", this.resizeHandler);
+  },
   mounted() {
+    this.defineChartSize()
   },
   methods: {
+    resizeHandler() {
+      this.defineChartSize();
+    },
+    defineChartSize() {
+      const heightRefElem = this.$refs.egoChart.$el.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+      const widthRefElem = this.$refs.egoChart.$el.parentElement.parentElement
+
+      const chartHeight = heightRefElem.clientHeight/3;
+      const chartWidth = widthRefElem.clientWidth/1.1;
+      if (chartHeight) this.options.size.h = chartHeight;
+      if (chartWidth) this.options.size.w = chartWidth;
+
+    },
     updateNetwork(network) {
       if (this.currentYear != network.year) {
         //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
@@ -139,7 +166,6 @@ export default {
           subcorpus: network.subcorpus,
           targetWordId: network.targetWordId
         }
-        //networks.push(selectedNetwork)
       }
 
       return selectedNetwork
