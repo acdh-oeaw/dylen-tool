@@ -86,7 +86,7 @@ build-prod:
     - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy_review:
-  stage:deploy
+  stage: deploy
   script:
     - echo "Deploy reiew app"
   environment:
