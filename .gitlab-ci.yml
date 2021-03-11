@@ -31,7 +31,7 @@ build-dev:
     - docker push $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
   rules:
     - if: '$CI_COMMIT_REF_NAME == "dev"'
-    - if: $CI_MERGE_REQUEST_IID
+    - if: '$CI_MERGE_REQUEST_IID'
     - if: '$CI_COMMIT_BRANCH'
 
 # deploy development
@@ -87,11 +87,9 @@ deploy_review:
     url: https://$CI_ENVIRONMENT_SLUG.acdh-cluster.arz.oeaw.ac.at
     kubernetes:
       namespace: dylen-review-stage
-  only:
-    - branches
-  except:
-    - master
-    - dev
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
 
 # build production
 build-prod:
