@@ -2,8 +2,8 @@
   <b-container
       ref="con"
       fluid
-      class="mt-2"
-      style="background-color: white; border: thin solid darkgray;"
+      class="mt-2 h-100"
+      style="background-color: white;"
       v-if="egoNetwork">
     <b-row lg="12"
            class="pt-2"
@@ -99,17 +99,18 @@ export default {
       this.defineChartSize();
     },
     defineChartSize() {
-      const heightRefElem = this.$refs.egoChart.$el.parentElement.parentElement.parentElement.parentElement
+      const heightRefElem = this.$refs.con
       const widthRefElem = this.$refs.egoChart.$el.parentElement
 
-      const chartHeight = heightRefElem.clientHeight*0.36;
+      const chartHeight = heightRefElem.clientHeight*0.8;
       const chartWidth = widthRefElem.clientWidth/1.08;
+
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
 
     },
     updateNetwork(network) {
-      if (this.currentYear != network.year) {
+      if (this.currentYear !== network.year) {
         //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
         this.$store.dispatch('main/loadUpdatedEgoNetwork', {network: network, pane: this.pane});
       }
