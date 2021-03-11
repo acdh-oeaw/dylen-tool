@@ -84,7 +84,7 @@ deploy_review:
     - auto-deploy persist_environment_url
   environment:
     name: review/$CI_COMMIT_REF_NAME
-    url: https://$CI_ENVIRONMENT_SLUG.acdh-dev.oeaw.ac.at
+    url: https://$CI_ENVIRONMENT_SLUG.acdh-cluster.arz.oeaw.ac.at
     kubernetes:
       namespace: dylen-review-stage
   only:
