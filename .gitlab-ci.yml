@@ -86,7 +86,7 @@ deploy_review:
     name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.acdh-dev.oeaw.ac.at
     kubernetes:
-      namespace: dylen-tool-review
+      namespace: dylen-review-stage
   only:
     - branches
   except:
