@@ -1,16 +1,15 @@
 <template>
-  <b-container fluid>
     <b-form @submit="onSubmit">
       <b-row>
         <b-col
-            v-b-tooltip.hover title="Corpus"
-            xl="2"
+            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectCorpus">
           <b-form-group
               id="select-corpus-group-viz"
               label="Corpus: "
-              label-cols-xl="5">
+              label-size="sm"
+              label-cols-xl="4">
             <b-form-select
                 size="sm"
                 v-model="selectedCorpus"
@@ -26,12 +25,13 @@
           </b-form-group>
         </b-col>
         <b-col
-            v-b-tooltip.hover title="Subcorpus"
+            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectSubCorpus">
           <b-form-group
               id="select-subcorpus-group-viz"
               label="Subcorpus:"
+              label-size="sm"
               label-cols-xl="4"
               label-for="select-subcorpus">
             <b-form-select
@@ -48,13 +48,17 @@
             </b-form-select>
           </b-form-group>
         </b-col>
+
+      </b-row>
+      <b-row>
         <b-col
-            v-b-tooltip.hover title="Targetword"
+            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectTargetword">
           <b-form-group
               id="select-targetword-group-biz"
               label="Targetword:"
+              label-size="sm"
               label-cols-xl="4"
               label-for="select-targetword"
               label-align-lg="left">
@@ -74,8 +78,7 @@
         </b-col>
 
         <b-col
-            v-b-tooltip.hover title="Year"
-            xl="2"
+            xl="5"
             @mouseover="mouseOver"
             data-sauto-id="selectYear">
           <b-form-group
@@ -103,19 +106,19 @@
             </div>
           </b-form-group>
         </b-col>
-        <b-col xl="1">
+        <b-col xl="auto">
           <b-button
               size="sm"
               type="submit"
-              variant="primary"
+              variant="secondary"
               data-sauto-id="queryButton"
               @mouseover="mouseOver">
             Query
           </b-button>
         </b-col>
       </b-row>
+
     </b-form>
-  </b-container>
 </template>
 
 <script>

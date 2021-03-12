@@ -120,10 +120,10 @@ const mainModule = {
                 logger.log('Ego Network loaded successfully.')
 
                 const payload = {
-                    pane:pane,
-                    network:network
+                    pane: pane,
+                    network: network
                 }
-                    this.commit('main/addEgoNetwork', payload);
+                this.commit('main/addEgoNetwork', payload);
             } catch (error) {
                 logger.error(error);
             }
@@ -155,138 +155,138 @@ const mainModule = {
 
 
 const sautoModule = {
-  namespaced: true,
-  state: {
-    connection: null,
-    lastOverElement: null,
-    sauto: false,
-  },
-  actions: {
-    async connect({ state }) {
-      if (state.sauto) {
-        console.log(props.sautoURI);
-        state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
-        state.connection.onerror = function (event) {
-          logger.error(event);
-        };
-        state.connection.onopen = function () {
-          logger.log("Connection with Sauto backed established successfully.");
-        };
-      }
+    namespaced: true,
+    state: {
+        connection: null,
+        lastOverElement: null,
+        sauto: false,
     },
-    agree({ state }, { agreed }) {
-      state.sauto = agreed;
-      if (agreed) {
-        this.dispatch("sauto/connect");
-      }
+    actions: {
+        async connect({state}) {
+            if (state.sauto) {
+                console.log(props.sautoURI);
+                state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
+                state.connection.onerror = function (event) {
+                    logger.error(event);
+                };
+                state.connection.onopen = function () {
+                    logger.log("Connection with Sauto backed established successfully.");
+                };
+            }
+        },
+        agree({state}, {agreed}) {
+            state.sauto = agreed;
+            if (agreed) {
+                this.dispatch("sauto/connect");
+            }
+        },
+        async handleMouseMove({state}, {movement}) {
+            //send mouse positions
+            movement.type = "MousePosition";
+            state.connection.send(JSON.stringify(movement));
+        },
+        async handleMouseOver({state}, {mouseOver}) {
+            //send if mouseover new component
+            if (mouseOver.id !== null) {
+                if (mouseOver.id !== state.lastOverElement) {
+                    mouseOver.type = "MouseOver";
+                    state.connection.send(JSON.stringify(mouseOver));
+                    state.lastOverElement = mouseOver.id;
+                }
+            }
+        },
+        async handleMouseClick({state}, {click}) {
+            //send mouse click
+            click.type = "MouseClick";
+            state.connection.send(JSON.stringify(click));
+        },
+        async handleScroll({state}, {scroll}) {
+            //send mouse scroll
+            scroll.type = "Scroll";
+            state.connection.send(JSON.stringify(scroll));
+        },
     },
-    async handleMouseMove({ state }, { movement }) {
-      //send mouse positions
-      movement.type = "MousePosition";
-      state.connection.send(JSON.stringify(movement));
-    },
-    async handleMouseOver({ state }, { mouseOver }) {
-      //send if mouseover new component
-      if (mouseOver.id !== null) {
-        if (mouseOver.id !== state.lastOverElement) {
-          mouseOver.type = "MouseOver";
-          state.connection.send(JSON.stringify(mouseOver));
-          state.lastOverElement = mouseOver.id;
-        }
-      }
-    },
-    async handleMouseClick({ state }, { click }) {
-      //send mouse click
-      click.type = "MouseClick";
-      state.connection.send(JSON.stringify(click));
-    },
-    async handleScroll({ state }, { scroll }) {
-      //send mouse scroll
-      scroll.type = "Scroll";
-      state.connection.send(JSON.stringify(scroll));
-    },
-  },
 };
 const store = new Vuex.Store({
-  modules: {
-    main: mainModule,
-    sauto: sautoModule,
-  },
+    modules: {
+        main: mainModule,
+        sauto: sautoModule,
+    },
 });
 
 Vue.mixin({
-  methods: {
-    mouseOver(event) {
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
+    methods: {
+        mouseOver(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return;
+            }
 
-      const element = this.getNearestSautoId(event.target);
+            const element = this.getNearestSautoId(event.target);
 
-      const mouseOver = {
-        id: element.getAttribute("data-sauto-id"),
-        timestamp: Date.now(),
-      };
-      this.$store.dispatch("sauto/handleMouseOver", { mouseOver });
+            const mouseOver = {
+                id: element.getAttribute("data-sauto-id"),
+                timestamp: Date.now(),
+            };
+            this.$store.dispatch("sauto/handleMouseOver", {mouseOver});
+        },
+        mouseMove(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return;
+            }
+
+            const movement = this.calculateMousePosition(event);
+            this.$store.dispatch("sauto/handleMouseMove", {movement});
+        },
+        scroll(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return;
+            }
+
+            const element = this.getNearestSautoId(event.target);
+
+            const scroll = {
+                id: element.getAttribute("data-sauto-id"),
+                height: event.deltaY,
+            };
+
+            this.$store.dispatch("sauto/handleScroll", {scroll});
+        },
+        mouseClick(event) {
+            if (this.$store.state.sauto.sauto === false) {
+                return;
+            }
+            const click = this.calculateMousePosition(event);
+
+            const element = this.getNearestSautoId(event.target);
+
+            click.id = element.getAttribute("data-sauto-id");
+            click.timestamp = Date.now();
+
+            this.$store.dispatch("sauto/handleMouseClick", {click});
+        },
+        calculateMousePosition(event) {
+            //get mouse position in percentage relative to top element size
+            const elementSizes = this.$refs.app.getBoundingClientRect();
+            const x = event.clientX - elementSizes.left;
+            const y = event.clientY - elementSizes.top;
+
+            const positions = {
+                x: (x * 100) / elementSizes.width,
+                y: (y * 100) / elementSizes.height,
+            };
+            return positions;
+        },
+        getNearestSautoId(element) {
+            if (element.getAttribute("data-sauto-id") === null) {
+                // go up in tree until an element with this attribute is found
+                while (
+                    (element = element.parentElement) &&
+                    !element.getAttribute("data-sauto-id")
+                    ) ;
+            }
+            return element;
+        },
     },
-    mouseMove(event) {
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
-
-      const movement = this.calculateMousePosition(event);
-      this.$store.dispatch("sauto/handleMouseMove", { movement });
-    },
-    scroll(event) {
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
-
-      const element = this.getNearestSautoId(event.target);
-
-      const scroll = {
-        id: element.getAttribute("data-sauto-id"),
-        height: event.deltaY,
-      };
-
-      this.$store.dispatch("sauto/handleScroll", { scroll });
-    },
-    mouseClick(event) {
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
-      const click = this.calculateMousePosition(event);
-
-      const element = this.getNearestSautoId(event.target);
-
-      click.id = element.getAttribute("data-sauto-id");
-      click.timestamp = Date.now();
-
-      this.$store.dispatch("sauto/handleMouseClick", { click });
-    },
-    calculateMousePosition(event) {
-      //get mouse position in percentage relative to top element size
-      const elementSizes = this.$refs.app.getBoundingClientRect();
-      const x = event.clientX - elementSizes.left;
-      const y = event.clientY - elementSizes.top;
-
-      const positions = {
-        x: (x * 100) / elementSizes.width,
-        y: (y * 100) / elementSizes.height,
-      };
-      return positions;
-    },
-    getNearestSautoId(element) {
-      if (element.getAttribute("data-sauto-id") === null) {
-        // go up in tree until an element with this attribute is found
-        while (
-          (element = element.parentElement) &&
-          !element.getAttribute("data-sauto-id")
-        );
-      }
-      return element;
-    },
-  },
 });
 
 export default store;

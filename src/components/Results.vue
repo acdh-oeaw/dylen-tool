@@ -1,20 +1,29 @@
 <template>
-  <div class="col-md-12 h-100">
-    <b-row class="h-100">
-      <b-col class="col-md-6 h-100">
-        <NetworkGraph
-            v-if="networkCount>=1"
-            ref="networkGraph"
-            class="col-md-12 h-45"
-            pane="pane1"/>
-        <NetworkGraph
-            class="col-md-12 h-45"
-            v-if="networkCount==2"
-            pane="pane2"/>
+    <b-row style="height:90%">
+      <b-col
+          class="col-md-6 h-100">
+        <b-row class="h-50">
+          <b-col class="h-100">
+            <NetworkGraph
+                v-if="networkCount>=1"
+                ref="networkGraph"
+                class="col-md-12"
+                style="height:45%"
+                pane="pane1"/>
+          </b-col>
+        </b-row>
+        <b-row class="h-50">
+          <b-col class="h-100">
+            <NetworkGraph
+                class="col-md-12"
+                style="height:45%"
+                v-if="networkCount===2"
+                pane="pane2"/>
+          </b-col>
+        </b-row>
+
       </b-col>
     </b-row>
-
-  </div>
 </template>
 
 <script>
