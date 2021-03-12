@@ -1,11 +1,9 @@
 <template>
-  <div class="col-md-12 h-100">
-    <b-row style="height:97%">
+    <b-row style="height:90%">
       <b-col
-          class="col-md-6 h-100"
-          style="border: thick solid">
+          class="col-md-6 h-100">
         <b-row class="h-50">
-          <b-col>
+          <b-col class="h-100">
             <NetworkGraph
                 v-if="networkCount>=1"
                 ref="networkGraph"
@@ -15,7 +13,7 @@
           </b-col>
         </b-row>
         <b-row class="h-50">
-          <b-col>
+          <b-col class="h-100">
             <NetworkGraph
                 class="col-md-12"
                 style="height:45%"
@@ -26,7 +24,6 @@
 
       </b-col>
     </b-row>
-  </div>
 </template>
 
 <script>

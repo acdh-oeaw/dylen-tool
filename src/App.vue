@@ -2,8 +2,7 @@
   <div
       id="app"
       ref="app"
-      class="h-100"
-      style="margin-top:0;"
+      style="margin-top:0; height:95%"
       @mousemove="mouseMove"
       @click="mouseClick"
       @wheel="scroll">
@@ -21,7 +20,7 @@
       <b-row
           xl="12"
           class="h-100">
-        <b-col xl="12">
+        <b-col class="h-100" xl="12">
           <div
               class="h-100"
               @mouseover="mouseOver"

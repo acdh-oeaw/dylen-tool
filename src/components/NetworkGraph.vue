@@ -2,7 +2,7 @@
   <b-container
       ref="con"
       fluid
-      class="mt-2 h-100"
+      class="mt-2"
       style="background-color: white;"
       v-if="egoNetwork">
     <b-row lg="12"
@@ -99,8 +99,9 @@ export default {
       this.defineChartSize();
     },
     defineChartSize() {
-      const heightRefElem = this.$refs.con
+      const heightRefElem = this.$refs.con.parentElement
       const widthRefElem = this.$refs.egoChart.$el.parentElement
+      console.log(heightRefElem.clientHeight)
 
       const chartHeight = heightRefElem.clientHeight*0.8;
       const chartWidth = widthRefElem.clientWidth/1.08;
