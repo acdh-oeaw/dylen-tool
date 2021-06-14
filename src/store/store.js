@@ -41,7 +41,10 @@ const mainModule = {
         },
         labelOptions: {
             fontSize: 12,
-            bold: false,
+            bold: false
+        },
+        linkOptions: {
+            opacity: 0.25
         }
     },
     mutations: {
@@ -94,6 +97,7 @@ const mainModule = {
         getPane: (state) => (pane) => state[pane],
         posColors: (state) => state.posColors,
         labelOptions: (state) => state.labelOptions,
+        linkOptions: (state) => state.linkOptions,
     },
     actions: {
         async loadAvailableQueryParams({state}) {

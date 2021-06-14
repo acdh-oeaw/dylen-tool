@@ -45,7 +45,7 @@
       shadow
     >
       <div class="px-3 py-2">
-        <h4>Part-of-speech colors</h4>
+        <h4 class="mt-3">Part-of-speech colors</h4>
         <b-row
           v-for="key in Object.keys(posColors)"
           :key="key"
@@ -61,7 +61,7 @@
             ></b-form-input>
           </b-col>
         </b-row>
-        <h4>Node label options</h4>
+        <h4 class="mt-3">Node label options</h4>
         <b-row>
           <b-col>Font size</b-col>
           <b-col>
@@ -77,6 +77,21 @@
           <b-col>Bold</b-col>
           <b-col>
             <b-form-checkbox v-model="labelOptions.bold"></b-form-checkbox>
+          </b-col>
+        </b-row>
+        <h4 class="mt-3">Link options</h4>
+        <b-row>
+          <b-col>Opacity: {{linkOptions.opacity}}</b-col>
+          <b-col>
+            <b-form-input
+              type="range"
+              v-model="linkOptions.opacity"
+              number="true"
+              :min="0"
+              :max="1"
+              :step="0.1"
+            >
+            </b-form-input>
           </b-col>
         </b-row>
       </div>
@@ -108,6 +123,11 @@ export default {
     labelOptions: {
       get() {
         return this.$store.getters['main/labelOptions'];
+      },
+    },
+    linkOptions: {
+      get() {
+        return this.$store.getters['main/linkOptions'];
       },
     },
   },

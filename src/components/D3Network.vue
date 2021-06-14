@@ -1,5 +1,9 @@
 <template>
-  <svg ref="svg" class="line-chart" :viewBox="viewBox">
+  <svg
+    ref="svg"
+    class="line-chart"
+    :viewBox="viewBox"
+  >
     <g>
       <g class="links"></g>
       <g class="nodes"></g>
@@ -28,7 +32,7 @@ export default {
     netLinks: function () {
       this.updateSimulation();
     },
-    options: {
+    size: {
       handler() {
         this.initNetwork();
       },
@@ -36,8 +40,11 @@ export default {
     },
   },
   computed: {
+    size() {
+      return this.options.size;
+    },
     viewBox() {
-      return `0 0 ${this.options.size.w} ${this.options.size.h}`;
+      return `0 0 ${this.size.w} ${this.size.h}`;
     },
     nodeSize() {
       return this.options.nodeSize || 15;
@@ -95,7 +102,7 @@ export default {
         .selectAll('line')
         .data(this.links)
         .join('line')
-        .attr('stroke', '#aaa')
+        .attr('stroke', `rgba(0, 0, 0, ${this.options?.linkOptions?.opacity})`)
         .attr('stroke-width', 1);
     },
   },
