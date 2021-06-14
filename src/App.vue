@@ -7,44 +7,52 @@
     @click="mouseClick"
     @wheel="scroll"
   >
-    <b-container
-      class="pt-1 pb-5 h-100"
-      fluid
+    <div
+      ref="main"
+      class="main full"
     >
-      <b-row>
-        <b-col>
-          <top-navigation
-            class="mb-20"
-            style="min-height: 72px"
-          >
-          </top-navigation>
-        </b-col>
-      </b-row>
-      <b-row
-        xl="12"
-        class="h-100"
+      <b-container
+        class="pt-1 pb-5 h-100"
+        fluid
       >
-        <b-col
-          class="h-100"
+        <b-row>
+          <b-col>
+            <top-navigation
+              class="mb-20"
+              style="min-height: 72px"
+            >
+            </top-navigation>
+          </b-col>
+        </b-row>
+        <b-row
           xl="12"
+          class="h-100"
         >
-          <div
+          <b-col
             class="h-100"
-            @mouseover="mouseOver"
-            data-sauto-id="results"
+            xl="12"
           >
-            <Results />
-          </div>
-        </b-col>
-      </b-row>
-      <Modal />
-    </b-container>
-    <b-sidebar
-      id="sidebar-1"
-      title="Visualization Settings"
-      shadow
+            <div
+              class="h-100"
+              @mouseover="mouseOver"
+              data-sauto-id="results"
+            >
+              <Results />
+            </div>
+          </b-col>
+        </b-row>
+        <Modal />
+      </b-container>
+    </div>
+
+    <div
+      ref="sidebar"
+      class="sidebar collapsed"
     >
-      <div class="px-3 py-2">
+      <div
+        class="px-4 py-3"
+        style="width: 300px"
+      >
         <h4 class="mt-3">Part-of-speech colors</h4>
         <b-row
           v-for="key in Object.keys(posColors)"
@@ -95,7 +103,7 @@
           </b-col>
         </b-row>
       </div>
-    </b-sidebar>
+    </div>
   </div>
 </template>
 
@@ -149,5 +157,30 @@ export default {
 html,
 body {
   height: 100%;
+}
+
+.sidebar {
+  height: 100%; /* 100% Full-height */
+  width: 300px; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0;
+  right: 0;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+  border-left: 5px solid grey;
+}
+.sidebar.collapsed {
+  width: 0;
+  margin-right: -5px;
+}
+
+.main {
+  margin-right: 300px;
+  transition: margin-right 0.5s; /* If you want a transition effect */
+  padding: 20px;
+}
+.main.full {
+  margin-right: 0;
 }
 </style>

@@ -71,7 +71,7 @@
     >
       <b-button
         class="float-right"
-        v-b-toggle.sidebar-1
+        @click="toggleSideBar"
       > Settings </b-button>
     </b-col>
   </b-row>
@@ -98,6 +98,10 @@ export default {
       } else if (button === 2) {
         this.secondForm = true;
       }
+    },
+    toggleSideBar() {
+      this.$parent.$refs.sidebar.classList.toggle('collapsed');
+      this.$parent.$refs.main.classList.toggle('full');
     },
   },
 };
