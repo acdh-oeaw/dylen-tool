@@ -42,7 +42,6 @@ const mainModule = {
         labelOptions: {
             fontSize: 12,
             bold: false,
-
         }
     },
     mutations: {
