@@ -68,7 +68,7 @@
             <b-form-input
               type="number"
               v-model="labelOptions.fontSize"
-              number="true"
+              :number="true"
             >
             </b-form-input>
           </b-col>
@@ -86,7 +86,7 @@
             <b-form-input
               type="range"
               v-model="linkOptions.opacity"
-              number="true"
+              :number="true"
               :min="0"
               :max="1"
               :step="0.1"

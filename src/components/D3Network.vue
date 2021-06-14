@@ -38,6 +38,12 @@ export default {
       },
       deep: true,
     },
+    options: {
+      handler() {
+        this.simulation.restart();
+      },
+      deep: true,
+    },
   },
   computed: {
     size() {

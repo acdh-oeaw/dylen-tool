@@ -139,7 +139,6 @@ export default {
       let selectedNetwork;
 
       if (network) {
-        console.log(this.$store.state);
         for (const node of network.nodes) {
           nodes.push({
             id: nodes.length,
