@@ -77,6 +77,7 @@ export default {
         nodeDistance: 75,
         nodeLabels: true,
         boundingBox: true, //Indicates whether nodes are forces to be placed withing the surrounding container
+        labelOptions: this.$store.getters['main/labelOptions'],
         canvas: false,
         size: {
           h: 0,
@@ -90,12 +91,6 @@ export default {
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b'],
       ],
-      posColors: {
-        noun: 'red',
-        verb: 'blue',
-        adjective: 'orange',
-        proper_noun: 'black',
-      },
     };
   },
   created() {
@@ -143,12 +138,12 @@ export default {
       let selectedNetwork;
 
       if (network) {
-        console.log(network);
+        console.log(this.$store.state);
         for (const node of network.nodes) {
           nodes.push({
             id: nodes.length,
             name: node.text,
-            _labelColor: this.posColors[node.pos],
+            _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
           });

@@ -74,7 +74,12 @@ export default {
         .data(this.nodes)
         .join('text')
         .text((_, idx) => this.netNodes[idx].name)
-        .attr('fill', (_, idx) => this.netNodes[idx]._labelColor);
+        .attr('fill', (_, idx) => this.netNodes[idx]._labelColor)
+        .attr('font-size', this.options?.labelOptions?.fontSize)
+        .attr(
+          'font-weight',
+          this.options?.labelOptions?.bold ? 'bold' : 'normal'
+        );
       l.call(
         d3
           .drag()
