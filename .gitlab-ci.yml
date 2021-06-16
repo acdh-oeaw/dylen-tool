@@ -94,6 +94,7 @@ deploy_review:
 
 stop_review_app:
   script: stop-review-app
+  stage: deploy
   environment:
     name: review/$CI_COMMIT_REF_NAME
     action: stop
