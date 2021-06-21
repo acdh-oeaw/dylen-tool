@@ -53,6 +53,15 @@
         class="px-4 py-3"
         style="width: 300px"
       >
+        <b-button
+          type="button"
+          class="close"
+          aria-label="Close"
+          variant="light"
+          @click="toggleSideBar"
+        >
+          <span aria-hidden="true">×</span>
+        </b-button>
         <h4 class="mt-3">Part-of-speech colors</h4>
         <b-row
           v-for="key in Object.keys(posColors)"
@@ -139,7 +148,12 @@ export default {
       },
     },
   },
-  methods: {},
+  methods: {
+    toggleSideBar() {
+      this.$refs.sidebar.classList.toggle('collapsed');
+      this.$refs.main.classList.toggle('full');
+    },
+  },
 };
 </script>
 
@@ -160,6 +174,7 @@ body {
 }
 
 .sidebar {
+  z-index: 6;
   height: 100%; /* 100% Full-height */
   width: 300px; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
@@ -169,6 +184,7 @@ body {
   overflow-x: hidden; /* Disable horizontal scroll */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
   border-left: 5px solid grey;
+  background-color: white;
 }
 .sidebar.collapsed {
   width: 0;
@@ -178,9 +194,15 @@ body {
 .main {
   margin-right: 300px;
   transition: margin-right 0.5s; /* If you want a transition effect */
-  padding: 20px;
+  /*  padding: 20px; */
+  height: 100%;
 }
 .main.full {
   margin-right: 0;
+}
+@media screen and (max-width: 576px) {
+  .main {
+    margin-right: 0px;
+  }
 }
 </style>
