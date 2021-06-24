@@ -19,6 +19,8 @@ export default {
   props: ['netNodes', 'netLinks', 'options'],
   data() {
     return {
+      scaleFactor: 1,
+      translation: [0, 0],
       simulation: {},
       nodes: [],
       links: [],
@@ -113,14 +115,51 @@ export default {
     },
   },
   methods: {
+    getNodeCoords(d) {
+      const width = this.options.size.w;
+      const height = this.options.size.h;
+      const r = this.nodeSize / 2;
+      return {
+        x: this.options.boundingBox
+          ? Math.max(r, Math.min(width - r, d.x))
+          : d.x,
+        y: this.options.boundingBox
+          ? Math.max(r, Math.min(height - r, d.y))
+          : d.y,
+      };
+    },
+    transformNode(t) {
+      return function (d) {
+        return `translate(${t.apply([d.x, d.y])})`;
+      };
+    },
+    applyScaleAndTransform() {
+      let r = this.nodeSize / 2;
+      this.link
+        .attr('x1', (d) => this.translation[0] + this.scaleFactor * d.source.x)
+        .attr('y1', (d) => this.translation[1] + this.scaleFactor * d.source.y)
+        .attr('x2', (d) => this.translation[0] + this.scaleFactor * d.target.x)
+        .attr('y2', (d) => this.translation[1] + this.scaleFactor * d.target.y);
+
+      this.node
+        .attr('cx', (d) => this.translation[0] + this.scaleFactor * d.x)
+        .attr('cy', (d) => this.translation[1] + this.scaleFactor * d.y);
+
+      if (this.options.nodeLabels)
+        this.label
+          .attr('x', (d) => this.translation[0] + this.scaleFactor * d.x + r)
+          .attr('y', (d) => this.translation[1] + this.scaleFactor * d.y + r);
+    },
+    zoom(event) {
+      this.scaleFactor = event.transform.k;
+      this.translation = [event.transform.x, event.transform.y];
+      this.applyScaleAndTransform();
+    },
     initNetwork() {
+      console.log(this.transformNode(d3.zoomIdentity));
       this.svg = d3
         .select(this.$refs.svg)
-        .call(
-          d3
-            .zoom()
-            .on('zoom', (event) => this.svg.attr('transform', event.transform))
-        )
+        .call(d3.zoom().on('zoom', this.zoom))
         .select('g');
       this.updateSimulation();
     },
@@ -129,7 +168,6 @@ export default {
       const width = options.size.w;
       const height = options.size.h;
       if (width <= 0 || height <= 0) return;
-      const r = this.nodeSize / 2;
       this.nodes = this.netNodes.map((d) => Object.create(d));
       this.links = this.netLinks.map((d) => {
         return { source: d.sid, target: d.tid };
@@ -148,36 +186,21 @@ export default {
         .force('center', d3.forceCenter(width / 2, height / 2));
 
       this.simulation.on('tick', () => {
-        this.link
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
-
-        this.node
-          .attr('cx', function (d) {
-            return (d.x = options.boundingBox
-              ? Math.max(r, Math.min(width - r, d.x))
-              : d.x);
-          })
-          .attr('cy', function (d) {
-            return (d.y = options.boundingBox
-              ? Math.max(r, Math.min(height - r, d.y))
-              : d.y);
-          });
-        if (options.nodeLabels)
-          this.label.attr('x', (d) => d.x + r).attr('y', (d) => d.y + r);
+        this.applyScaleAndTransform();
       });
     },
     dragstarted(event, d) {
+      let mousePos = [event.sourceEvent.offsetX, event.sourceEvent.offsetY];
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
+      d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
+      d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
     },
 
     dragged(event, d) {
-      d.fx = event.x;
-      d.fy = event.y;
+      let mousePos = [event.sourceEvent.offsetX, event.sourceEvent.offsetY];
+      d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
+      d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
+      this.applyScaleAndTransform();
     },
 
     dragended(event, d) {
