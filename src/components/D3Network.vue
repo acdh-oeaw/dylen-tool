@@ -1,15 +1,31 @@
 <template>
-  <svg
-    ref="svg"
-    class="line-chart"
-    :viewBox="viewBox"
-  >
-    <g>
-      <g class="links"></g>
-      <g class="nodes"></g>
-      <g class="labels"></g>
-    </g>
-  </svg>
+  <div>
+    <svg
+      ref="svg"
+      class="line-chart"
+      :viewBox="viewBox"
+    >
+      <g>
+        <g class="links"></g>
+        <g class="nodes"></g>
+        <g class="labels"></g>
+      </g>
+    </svg>
+    <b-button
+      @click="() => onZoomButtonClick(1.25)"
+      class="float-right"
+      variant="outline-secondary"
+    >
+      <b-icon icon="zoom-in"></b-icon>
+    </b-button>
+    <b-button
+      @click="() => onZoomButtonClick(0.75)"
+      class="float-right"
+      variant="outline-secondary"
+    >
+      <b-icon icon="zoom-out"></b-icon>
+    </b-button>
+  </div>
 </template>
 
 <script>
@@ -19,6 +35,7 @@ export default {
   props: ['netNodes', 'netLinks', 'options'],
   data() {
     return {
+      d3Zoom: d3.zoom().on('zoom', this.zoom),
       scaleFactor: 1,
       translation: [0, 0],
       simulation: {},
@@ -115,6 +132,13 @@ export default {
     },
   },
   methods: {
+    onZoomButtonClick(zoomFactor = 1) {
+      this.d3Zoom.scaleBy(
+        d3.select(this.$refs.svg).transition().duration(750),
+        zoomFactor
+      );
+      this.applyScaleAndTransform();
+    },
     getNodeCoords(d) {
       const width = this.options.size.w;
       const height = this.options.size.h;
@@ -126,11 +150,6 @@ export default {
         y: this.options.boundingBox
           ? Math.max(r, Math.min(height - r, d.y))
           : d.y,
-      };
-    },
-    transformNode(t) {
-      return function (d) {
-        return `translate(${t.apply([d.x, d.y])})`;
       };
     },
     applyScaleAndTransform() {
@@ -156,11 +175,7 @@ export default {
       this.applyScaleAndTransform();
     },
     initNetwork() {
-      console.log(this.transformNode(d3.zoomIdentity));
-      this.svg = d3
-        .select(this.$refs.svg)
-        .call(d3.zoom().on('zoom', this.zoom))
-        .select('g');
+      this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
       this.updateSimulation();
     },
     updateSimulation() {
