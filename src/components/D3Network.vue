@@ -1,5 +1,19 @@
 <template>
   <div>
+    <div class="controls-container">
+      <b-button
+        @click="() => onZoomButtonClick(1.25)"
+        variant="outline-secondary"
+      >
+        <b-icon icon="zoom-in"></b-icon>
+      </b-button>
+      <b-button
+        @click="() => onZoomButtonClick(0.75)"
+        variant="outline-secondary"
+      >
+        <b-icon icon="zoom-out"></b-icon>
+      </b-button>
+    </div>
     <svg
       ref="svg"
       class="line-chart"
@@ -11,20 +25,7 @@
         <g class="labels"></g>
       </g>
     </svg>
-    <b-button
-      @click="() => onZoomButtonClick(1.25)"
-      class="float-right"
-      variant="outline-secondary"
-    >
-      <b-icon icon="zoom-in"></b-icon>
-    </b-button>
-    <b-button
-      @click="() => onZoomButtonClick(0.75)"
-      class="float-right"
-      variant="outline-secondary"
-    >
-      <b-icon icon="zoom-out"></b-icon>
-    </b-button>
+
   </div>
 </template>
 
@@ -134,7 +135,7 @@ export default {
   methods: {
     onZoomButtonClick(zoomFactor = 1) {
       this.d3Zoom.scaleBy(
-        d3.select(this.$refs.svg).transition().duration(750),
+        d3.select(this.$refs.svg).transition().duration(500),
         zoomFactor
       );
       this.applyScaleAndTransform();
@@ -143,31 +144,33 @@ export default {
       const width = this.options.size.w;
       const height = this.options.size.h;
       const r = this.nodeSize / 2;
+      let scaledX = this.translation[0] + this.scaleFactor * d.x;
+      let scaledY = this.translation[1] + this.scaleFactor * d.y;
       return {
         x: this.options.boundingBox
-          ? Math.max(r, Math.min(width - r, d.x))
-          : d.x,
+          ? Math.max(r, Math.min(width - r, scaledX))
+          : scaledX,
         y: this.options.boundingBox
-          ? Math.max(r, Math.min(height - r, d.y))
-          : d.y,
+          ? Math.max(r, Math.min(height - r, scaledY))
+          : scaledY,
       };
     },
     applyScaleAndTransform() {
       let r = this.nodeSize / 2;
       this.link
-        .attr('x1', (d) => this.translation[0] + this.scaleFactor * d.source.x)
-        .attr('y1', (d) => this.translation[1] + this.scaleFactor * d.source.y)
-        .attr('x2', (d) => this.translation[0] + this.scaleFactor * d.target.x)
-        .attr('y2', (d) => this.translation[1] + this.scaleFactor * d.target.y);
+        .attr('x1', (d) => this.getNodeCoords(d.source).x)
+        .attr('y1', (d) => this.getNodeCoords(d.source).y)
+        .attr('x2', (d) => this.getNodeCoords(d.target).x)
+        .attr('y2', (d) => this.getNodeCoords(d.target).y);
 
       this.node
-        .attr('cx', (d) => this.translation[0] + this.scaleFactor * d.x)
-        .attr('cy', (d) => this.translation[1] + this.scaleFactor * d.y);
+        .attr('cx', (d) => this.getNodeCoords(d).x)
+        .attr('cy', (d) => this.getNodeCoords(d).y);
 
       if (this.options.nodeLabels)
         this.label
-          .attr('x', (d) => this.translation[0] + this.scaleFactor * d.x + r)
-          .attr('y', (d) => this.translation[1] + this.scaleFactor * d.y + r);
+          .attr('x', (d) => this.getNodeCoords(d).x + r)
+          .attr('y', (d) => this.getNodeCoords(d).y + r);
     },
     zoom(event) {
       this.scaleFactor = event.transform.k;
@@ -232,5 +235,9 @@ export default {
 <style>
 svg .labels text {
   cursor: default;
+}
+.controls-container {
+  position: absolute;
+  background: #fff;
 }
 </style>
