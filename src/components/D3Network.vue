@@ -1,15 +1,32 @@
 <template>
-  <svg
-    ref="svg"
-    class="line-chart"
-    :viewBox="viewBox"
-  >
-    <g>
-      <g class="links"></g>
-      <g class="nodes"></g>
-      <g class="labels"></g>
-    </g>
-  </svg>
+  <div>
+    <div class="controls-container">
+      <b-button
+        @click="() => onZoomButtonClick(1.25)"
+        variant="outline-secondary"
+      >
+        <b-icon icon="zoom-in"></b-icon>
+      </b-button>
+      <b-button
+        @click="() => onZoomButtonClick(0.75)"
+        variant="outline-secondary"
+      >
+        <b-icon icon="zoom-out"></b-icon>
+      </b-button>
+    </div>
+    <svg
+      ref="svg"
+      class="line-chart"
+      :viewBox="viewBox"
+    >
+      <g>
+        <g class="links"></g>
+        <g class="nodes"></g>
+        <g class="labels"></g>
+      </g>
+    </svg>
+
+  </div>
 </template>
 
 <script>
@@ -19,6 +36,9 @@ export default {
   props: ['netNodes', 'netLinks', 'options'],
   data() {
     return {
+      d3Zoom: d3.zoom().on('zoom', this.zoom),
+      scaleFactor: 1,
+      translation: [0, 0],
       simulation: {},
       nodes: [],
       links: [],
@@ -113,15 +133,52 @@ export default {
     },
   },
   methods: {
+    onZoomButtonClick(zoomFactor = 1) {
+      this.d3Zoom.scaleBy(
+        d3.select(this.$refs.svg).transition().duration(500),
+        zoomFactor
+      );
+      this.applyScaleAndTransform();
+    },
+    getNodeCoords(d) {
+      const width = this.options.size.w;
+      const height = this.options.size.h;
+      const r = this.nodeSize / 2;
+      let scaledX = this.translation[0] + this.scaleFactor * d.x;
+      let scaledY = this.translation[1] + this.scaleFactor * d.y;
+      return {
+        x: this.options.boundingBox
+          ? Math.max(r, Math.min(width - r, scaledX))
+          : scaledX,
+        y: this.options.boundingBox
+          ? Math.max(r, Math.min(height - r, scaledY))
+          : scaledY,
+      };
+    },
+    applyScaleAndTransform() {
+      let r = this.nodeSize / 2;
+      this.link
+        .attr('x1', (d) => this.getNodeCoords(d.source).x)
+        .attr('y1', (d) => this.getNodeCoords(d.source).y)
+        .attr('x2', (d) => this.getNodeCoords(d.target).x)
+        .attr('y2', (d) => this.getNodeCoords(d.target).y);
+
+      this.node
+        .attr('cx', (d) => this.getNodeCoords(d).x)
+        .attr('cy', (d) => this.getNodeCoords(d).y);
+
+      if (this.options.nodeLabels)
+        this.label
+          .attr('x', (d) => this.getNodeCoords(d).x + r)
+          .attr('y', (d) => this.getNodeCoords(d).y + r);
+    },
+    zoom(event) {
+      this.scaleFactor = event.transform.k;
+      this.translation = [event.transform.x, event.transform.y];
+      this.applyScaleAndTransform();
+    },
     initNetwork() {
-      this.svg = d3
-        .select(this.$refs.svg)
-        .call(
-          d3
-            .zoom()
-            .on('zoom', (event) => this.svg.attr('transform', event.transform))
-        )
-        .select('g');
+      this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
       this.updateSimulation();
     },
     updateSimulation() {
@@ -129,7 +186,6 @@ export default {
       const width = options.size.w;
       const height = options.size.h;
       if (width <= 0 || height <= 0) return;
-      const r = this.nodeSize / 2;
       this.nodes = this.netNodes.map((d) => Object.create(d));
       this.links = this.netLinks.map((d) => {
         return { source: d.sid, target: d.tid };
@@ -148,36 +204,21 @@ export default {
         .force('center', d3.forceCenter(width / 2, height / 2));
 
       this.simulation.on('tick', () => {
-        this.link
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
-
-        this.node
-          .attr('cx', function (d) {
-            return (d.x = options.boundingBox
-              ? Math.max(r, Math.min(width - r, d.x))
-              : d.x);
-          })
-          .attr('cy', function (d) {
-            return (d.y = options.boundingBox
-              ? Math.max(r, Math.min(height - r, d.y))
-              : d.y);
-          });
-        if (options.nodeLabels)
-          this.label.attr('x', (d) => d.x + r).attr('y', (d) => d.y + r);
+        this.applyScaleAndTransform();
       });
     },
     dragstarted(event, d) {
+      let mousePos = [event.sourceEvent.offsetX, event.sourceEvent.offsetY];
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
+      d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
+      d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
     },
 
     dragged(event, d) {
-      d.fx = event.x;
-      d.fy = event.y;
+      let mousePos = [event.sourceEvent.offsetX, event.sourceEvent.offsetY];
+      d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
+      d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
+      this.applyScaleAndTransform();
     },
 
     dragended(event, d) {
@@ -194,5 +235,9 @@ export default {
 <style>
 svg .labels text {
   cursor: default;
+}
+.controls-container {
+  position: absolute;
+  background: #fff;
 }
 </style>

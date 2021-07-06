@@ -76,7 +76,7 @@ export default {
         nodeSize: 15,
         nodeDistance: 75,
         nodeLabels: true,
-        boundingBox: true, //Indicates whether nodes are forces to be placed withing the surrounding container
+        boundingBox: false, //Indicates whether nodes are forces to be placed withing the surrounding container
         labelOptions: this.$store.getters['main/labelOptions'],
         linkOptions: this.$store.getters['main/linkOptions'],
         canvas: false,
