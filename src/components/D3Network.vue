@@ -57,7 +57,7 @@ export default {
         .attr("r", this.nodeSize / 2)
         .attr("stroke", "#000")
         .attr("fill", (_, idx) => this.netNodes[idx]._color)
-        .on("click", this.addSelectedNode);
+        .on("click", (event, d) => this.addSelectedNode(d.index));
       n.append("title").text((d) => d.name);
       n.call(
         d3
@@ -97,8 +97,8 @@ export default {
     },
   },
   methods: {
-    addSelectedNode() {
-      this.$store.addSelectedNodeForNodeMetrics()
+    addSelectedNode(node) {
+      this.$store.commit("main/addSelectedNodeForNodeMetrics", this.netNodes[node])
     },
     initNetwork() {
       this.svg = d3

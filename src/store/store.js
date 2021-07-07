@@ -70,7 +70,7 @@ const mainModule = {
             }
         },
         addSelectedNodeForNodeMetrics(state, payload) {
-            state["main/nodeMetrics"].selectedNodes.push(payload)
+            state["nodeMetrics"].selectedNodes.push(payload)
         },
         // TODO: check if this is still used.
         addEgoNetwork(state, payload) {
