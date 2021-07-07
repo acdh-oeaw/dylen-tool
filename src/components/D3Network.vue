@@ -10,6 +10,7 @@
 
 <script>
 import * as d3 from "d3";
+
 export default {
   name: "D3Network",
   props: ["netNodes", "netLinks", "options"],
@@ -55,7 +56,8 @@ export default {
         .join("circle")
         .attr("r", this.nodeSize / 2)
         .attr("stroke", "#000")
-        .attr("fill", (_, idx) => this.netNodes[idx]._color);
+        .attr("fill", (_, idx) => this.netNodes[idx]._color)
+        .on("click", this.addSelectedNode);
       n.append("title").text((d) => d.name);
       n.call(
         d3
@@ -95,6 +97,9 @@ export default {
     },
   },
   methods: {
+    addSelectedNode() {
+      this.$store.addSelectedNodeForNodeMetrics()
+    },
     initNetwork() {
       this.svg = d3
         .select(this.$refs.svg)

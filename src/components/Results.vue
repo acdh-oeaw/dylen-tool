@@ -23,17 +23,27 @@
         </b-row>
 
       </b-col>
+      <b-col class="col-md-6 h-100">
+        <b-row class="h-50">
+          <b-col class="h-100">
+            <NodeMetrics>
+            </NodeMetrics>
+          </b-col>
+        </b-row>
+      </b-col>
     </b-row>
 </template>
 
 <script>
 
 import NetworkGraph from '@/components/NetworkGraph';
+import NodeMetrics from "@/components/NodeMetrics";
 
 export default {
   name: 'Results',
   props: ['pane'],
   components: {
+    NodeMetrics,
     NetworkGraph
   },
   computed: {

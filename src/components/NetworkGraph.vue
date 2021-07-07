@@ -6,8 +6,7 @@
       v-bind="egoNetwork"
       :key="egoNetwork.id"
       @mouseover="mouseOver"
-      :data-sauto-id="'network-' + egoNetwork.id"
-    >
+      :data-sauto-id="'network-' + egoNetwork.id">
       <b-col xl="2">
         <b-row align-h="center">
           <b>{{ egoNetwork.text }}</b>
@@ -48,7 +47,6 @@
 </template>
 
 <script>
-//import D3Network from 'vue-d3-network'
 import D3Network from "./D3Network";
 import "vue-range-component/dist/vue-range-slider.css";
 import VueSlider from "vue-slider-component";
@@ -126,16 +124,17 @@ export default {
       if (network) {
         for (const node of network.nodes) {
           nodes.push({
-            id: nodes.length,
+            id: network.id + '_' + node.id,
             name: node.text,
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
+            _metrics: node.metrics
           });
         }
         for (const link of network.connections) {
           links.push({
-            sid: link.node1,
-            tid: link.node2,
+            sid: network.id + '_' + link.node1,
+            tid: network.id + '_' + link.node2,
           });
         }
         selectedNetwork = {

@@ -33,6 +33,9 @@ const mainModule = {
             selectedYear: null,
             selectedNetwork: null
         },
+        nodeMetrics: {
+            selectedNodes: []
+        }
     },
     mutations: {
         changeSelectedCorpus(state, payload) {
@@ -66,6 +69,10 @@ const mainModule = {
                 state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0]
             }
         },
+        addSelectedNodeForNodeMetrics(state, payload) {
+            state["main/nodeMetrics"].selectedNodes.push(payload)
+        },
+        // TODO: check if this is still used.
         addEgoNetwork(state, payload) {
             state[payload['pane']].selectedNetwork = payload.network
         },
@@ -82,6 +89,7 @@ const mainModule = {
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
+        selectedNodesForMetrics: (state) => state["nodeMetrics"].selectedNodes
     },
     actions: {
         async loadAvailableQueryParams({state}) {
