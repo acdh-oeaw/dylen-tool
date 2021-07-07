@@ -34,8 +34,8 @@ export default {
     return {
       options: {
         size: {
-          h: 0,
-          w: 0,
+          h: 100,
+          w: 300,
         },
       },
     };
