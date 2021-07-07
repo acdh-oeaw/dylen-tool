@@ -59,13 +59,17 @@ export default {
         .data(this.nodes)
         .join('circle')
         .attr('r', this.nodeSize / 2)
-        .attr('stroke', (d) =>
-          this.$store.getters['main/selectedNodesForMetrics'].indexOf(d) > -1
+        .attr('stroke', (_, idx) =>
+          this.$store.getters['main/selectedNodesForMetrics'].indexOf(
+            this.netNodes[idx]
+          ) > -1
             ? '#F00'
             : '#000'
         )
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (_, d) => this.addOrRemoveSelectedNode(d));
+        .on('click', (_, node) =>
+          this.addOrRemoveSelectedNode(this.netNodes[node.index])
+        );
       n.append('title').text((d) => d.name);
       n.call(
         d3

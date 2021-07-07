@@ -1,13 +1,21 @@
 <template>
-  <b-container ref="con" fluid class="mt-2" style="background-color: white;">
+  <b-container
+    ref="con"
+    fluid
+    class="mt-2"
+    style="background-color: white;"
+  >
     <b-row
-        lg="12"
-        class="pt-2"
-        @mouseover="mouseOver">
+      lg="12"
+      class="pt-2"
+      @mouseover="mouseOver"
+    >
       <b-col>
-        <parallel-coordinates v-if="nodes"
-                              :net-nodes="nodes"
-                              :options="options">
+        <parallel-coordinates
+          v-if="nodes"
+          :net-nodes="nodes"
+          :options="options"
+        >
 
         </parallel-coordinates>
       </b-col>
@@ -17,11 +25,11 @@
 </template>
 
 <script>
-import ParallelCoordinates from "@/components/ParallelCoordinates";
+import ParallelCoordinates from '@/components/ParallelCoordinates';
 export default {
-  name: "NodeMetrics",
-  components: {ParallelCoordinates},
-  props: ["pane"],
+  name: 'NodeMetrics',
+  components: { ParallelCoordinates },
+  props: ['pane'],
   data() {
     return {
       options: {
@@ -30,34 +38,31 @@ export default {
           w: 0,
         },
       },
-    }
+    };
   },
-  created() {
-  },
-  mounted() {
-  },
+  created() {},
+  mounted() {},
   methods: {
     prepareNode(network) {
-      const nodes = []
+      const nodes = [];
       for (const node of network) {
         nodes.push({
           id: network.id + '_' + node.id,
           name: node.text,
-          _metrics: node.metrics
-        })
+          _metrics: node.metrics,
+        });
       }
-      return nodes
-    }
+      return nodes;
+    },
   },
   computed: {
     nodes() {
-      return this.$store.getters["main/selectedNodesForMetrics"];
-    }
+      return this.$store.getters['main/selectedNodesForMetrics'];
+    },
   },
   watch: {},
-}
+};
 </script>
 
 <style scoped>
-
 </style>
