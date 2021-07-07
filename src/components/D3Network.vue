@@ -59,9 +59,13 @@ export default {
         .data(this.nodes)
         .join('circle')
         .attr('r', this.nodeSize / 2)
-        .attr('stroke', '#000')
+        .attr('stroke', (d) =>
+          this.$store.getters['main/selectedNodesForMetrics'].indexOf(d) > -1
+            ? '#F00'
+            : '#000'
+        )
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (_, d) => this.addSelectedNode(d));
+        .on('click', (_, d) => this.addOrRemoveSelectedNode(d));
       n.append('title').text((d) => d.name);
       n.call(
         d3
@@ -101,8 +105,14 @@ export default {
     },
   },
   methods: {
-    addSelectedNode(node) {
-      this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+    addOrRemoveSelectedNode(node) {
+      if (
+        this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) > -1
+      ) {
+        this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+      } else {
+        this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+      }
     },
     initNetwork() {
       this.svg = d3

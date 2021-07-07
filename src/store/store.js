@@ -72,6 +72,10 @@ const mainModule = {
         addSelectedNodeForNodeMetrics(state, payload) {
             state["nodeMetrics"].selectedNodes.push(payload)
         },
+        removeSelectedNodeForNodeMetrics(state, payload) {
+            let payloadIndex = state["nodeMetrics"].selectedNodes.indexOf(payload);
+            state["nodeMetrics"].selectedNodes.splice(payloadIndex, 1);
+        },
         // TODO: check if this is still used.
         addEgoNetwork(state, payload) {
             state[payload['pane']].selectedNetwork = payload.network
