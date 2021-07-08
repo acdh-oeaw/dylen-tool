@@ -61,7 +61,7 @@ export default {
         .attr('r', this.nodeSize / 2)
         .attr('stroke', '#000')
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (event, d) => this.addSelectedNode(d.index));
+        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       n.append('title').text((d) => d.name);
       n.call(
         d3
