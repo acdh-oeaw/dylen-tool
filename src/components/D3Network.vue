@@ -59,17 +59,9 @@ export default {
         .data(this.nodes)
         .join('circle')
         .attr('r', this.nodeSize / 2)
-        .attr('stroke', (_, idx) =>
-          this.$store.getters['main/selectedNodesForMetrics'].indexOf(
-            this.netNodes[idx]
-          ) > -1
-            ? '#F00'
-            : '#000'
-        )
+        .attr('stroke', '#000')
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (_, node) =>
-          this.addOrRemoveSelectedNode(this.netNodes[node.index])
-        );
+        .on('click', (event, d) => this.addSelectedNode(d.index));
       n.append('title').text((d) => d.name);
       n.call(
         d3
@@ -111,11 +103,19 @@ export default {
   methods: {
     addOrRemoveSelectedNode(node) {
       if (
-        this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) > -1
+        this.$store.getters['main/selectedNodesForMetrics'].indexOf(
+          this.netNodes[node]
+        ) > -1
       ) {
-        this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        this.$store.commit(
+          'main/removeSelectedNodeForNodeMetrics',
+          this.netNodes[node]
+        );
       } else {
-        this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+        this.$store.commit(
+          'main/addSelectedNodeForNodeMetrics',
+          this.netNodes[node]
+        );
       }
     },
     initNetwork() {
