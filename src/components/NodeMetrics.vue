@@ -12,6 +12,7 @@
     >
       <b-col>
         <parallel-coordinates
+          ref="parCoords"
           v-if="nodes"
           :net-nodes="nodes"
           :options="options"
@@ -34,15 +35,33 @@ export default {
     return {
       options: {
         size: {
-          h: 100,
-          w: 300,
+          h: 0,
+          w: 0,
         },
       },
     };
   },
-  created() {},
-  mounted() {},
+  created() {
+    window.addEventListener('resize', this.resizeHandler);
+  },
+  mounted() {
+    this.defineChartSize();
+  },
   methods: {
+    resizeHandler() {
+      this.defineChartSize();
+    },
+    defineChartSize() {
+      const heightRefElem = this.$refs.con.parentElement;
+      const widthRefElem = this.$refs.parCoords.$el.parentElement;
+      console.log(heightRefElem.clientHeight);
+
+      const chartHeight = heightRefElem.clientHeight * 0.8;
+      const chartWidth = widthRefElem.clientWidth / 1.08;
+
+      if (chartHeight) this.options.size.h = chartHeight;
+      if (chartWidth) this.options.size.w = chartWidth;
+    },
     prepareNode(network) {
       const nodes = [];
       for (const node of network) {

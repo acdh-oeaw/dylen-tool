@@ -5,6 +5,46 @@
     :viewBox="viewBox"
   >
     <g>
+      <g
+        class="grid"
+        v-if="netNodes.length > 0"
+      >
+        <line
+          v-for="i in 10"
+          :key="`horizontal${i}`"
+          :x1="scaleX.range()[0]"
+          :x2="scaleX.range()[1]"
+          :y1="svgPadding.top + (i-1)*(chartSize[1]-svgPadding.top)/9"
+          :y2="svgPadding.top + (i-1)*(chartSize[1]-svgPadding.top)/9"
+          stroke-width="1"
+          stroke="#ccc"
+        />
+      </g>
+      <g class="y_axis">
+        <g
+          v-for="scale in Object.entries(scaleY)"
+          :key="scale[0]"
+        >
+          <g
+            v-axis:y="scale[1]"
+            :transform="`translate(${scaleX(scale[0])},0)`"
+          ></g>
+          <text
+            :transform="`translate(${scaleX(scale[0])},${scale[1].range()[0]+12})`"
+            style="text-anchor: middle;"
+            font-size="12"
+            fill="black"
+            font-weight="bold"
+          >
+            <tspan
+              v-for="(line, idx) in camelCaseToSpaces(scale[0]).split(' ')"
+              :key="line"
+              x="0"
+              :dy="idx == 0 ? '1em' : '1.2em'"
+            >{{line}}</tspan>
+          </text>
+        </g>
+      </g>
       <g class="lines">
         <path
           v-for="node in netNodes"
@@ -16,31 +56,19 @@
         />
       </g>
       <g class="x_axis"></g>
-      <g class="y_axis">
-        <g
-          v-for="scale in Object.entries(scaleY)"
-          :key="scale[0]"
-          v-axis:y="scale[1]"
-          :transform="`translate(${scaleX(scale[0])},0)`"
-        ></g>
-        <text
-          v-for="scale in Object.entries(scaleY)"
-          :key="scale[0]"
-          :transform="`translate(${scaleX(scale[0])},${scale[1].range()[0]+12})`"
-          style="text-anchor: middle;"
-          font-size="8"
-        >{{scale[0]}}</text>
-      </g>
+
       <g class="labels">
         <text
           v-for="node in netNodes"
           :key="node.id"
           fill="black"
-          font-size="8"
+          font-size="12"
           :x="scaleX(Object.keys(scaleY)[0])-4"
           :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])+4"
           style="text-anchor: end;"
-        >{{node.name}}</text>
+        >
+          <tspan dy="0em">{{node.name}}</tspan>
+        </text>
       </g>
 
     </g>
@@ -54,10 +82,10 @@ export default {
   data() {
     return {
       svgPadding: {
-        top: 10,
-        right: 40,
-        bottom: 15,
-        left: 40,
+        top: 20,
+        right: 50,
+        bottom: 50,
+        left: 100,
       },
     };
   },
@@ -82,8 +110,9 @@ export default {
         scale[metric] = d3
           .scaleLinear()
           .domain([
-            d3.min(this.netNodes, (entry) => entry._metrics[metric]),
-            d3.max(this.netNodes, (entry) => entry._metrics[metric]),
+            0,
+            /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
+            d3.max(this.netNodes, (entry) => entry._metrics[metric]) * 1.1,
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
       });
@@ -107,13 +136,16 @@ export default {
     generateLine(node) {
       return this.lineGenerator(Object.entries(node._metrics));
     },
+    camelCaseToSpaces(text) {
+      let result = text.replace(/([A-Z])/g, ' $1');
+      return result.charAt(0).toUpperCase() + result.slice(1);
+    },
   },
   directives: {
     axis(el, binding) {
       const axis = binding.arg;
       const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
       const methodArg = binding.value;
-      console.log(el);
       d3.select(el).call(
         d3[axisMethod](methodArg).tickValues([
           methodArg.domain()[0],
@@ -125,5 +157,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.y_axis path,
+.y_axis line {
+  stroke: #ccc;
+}
+.y_axis .tick text {
+  transform: translate(9px, -6px);
+  text-anchor: middle;
+  font-weight: bold;
+}
 </style>
