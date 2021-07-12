@@ -48,10 +48,10 @@
       <g class="lines">
         <path
           v-for="node in netNodes"
-          :key="node.id"
+          :key="node.id + node._pane"
           :d="generateLine(node)"
           fill="none"
-          stroke="black"
+          :stroke="getLineColor(node)"
           stroke-width="1"
         />
       </g>
@@ -60,7 +60,7 @@
       <g class="labels">
         <text
           v-for="node in netNodes"
-          :key="node.id"
+          :key="node.id + node._pane + 'label'"
           fill="black"
           font-size="12"
           :x="scaleX(Object.keys(scaleY)[0])-4"
@@ -81,6 +81,7 @@ export default {
   props: ['netNodes', 'options'],
   data() {
     return {
+      lineColors: ['blue', 'red'],
       svgPadding: {
         top: 20,
         right: 50,
@@ -139,6 +140,13 @@ export default {
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');
       return result.charAt(0).toUpperCase() + result.slice(1);
+    },
+    getLineColor(node) {
+      if (node._pane == 'pane1')
+        return this.$store.getters['main/selectionColors'][0];
+      if (node._pane == 'pane2')
+        return this.$store.getters['main/selectionColors'][1];
+      return 'black';
     },
   },
   directives: {

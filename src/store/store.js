@@ -18,6 +18,7 @@ const logger = require("../helpers/logger");
 const mainModule = {
     namespaced: true,
     state: {
+        selectionColors: ["blue", "red"],
         availableQueryParams: [],
         pane1: {
             selectedCorpus: {id: '', name: '', sources: []},
@@ -87,6 +88,7 @@ const mainModule = {
 
     },
     getters: {
+        selectionColors: (state) => state.selectionColors,
         availableQueryParams: (state) => state.availableQueryParams,
         selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
         selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,

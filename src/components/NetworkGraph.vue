@@ -167,6 +167,7 @@ export default {
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
             _metrics: node.metrics,
+            _pane: this.pane,
           });
         }
         for (const link of network.connections) {

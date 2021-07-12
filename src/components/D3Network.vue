@@ -62,7 +62,9 @@ export default {
         .data(this.nodes)
         .join('circle')
         .attr('r', this.nodeSize / 2)
-        .attr('stroke', (d) => (this.isSelected(d.index) ? '#f00' : '#000'))
+        .attr('stroke', (d) =>
+          this.isSelected(d.index) ? this.getLineColor(d) : '#000'
+        )
         .attr('stroke-width', (d) => (this.isSelected(d.index) ? 2 : 1))
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
         .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
@@ -195,6 +197,13 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+    },
+    getLineColor(node) {
+      if (node._pane == 'pane1')
+        return this.$store.getters['main/selectionColors'][0];
+      if (node._pane == 'pane2')
+        return this.$store.getters['main/selectionColors'][1];
+      return 'black';
     },
   },
   mounted() {
