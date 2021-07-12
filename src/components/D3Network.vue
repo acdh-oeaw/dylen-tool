@@ -39,6 +39,9 @@ export default {
       },
       deep: true,
     },
+    selectedNodes: function () {
+      this.simulation.restart();
+    },
   },
   computed: {
     viewBox() {
@@ -59,7 +62,8 @@ export default {
         .data(this.nodes)
         .join('circle')
         .attr('r', this.nodeSize / 2)
-        .attr('stroke', '#000')
+        .attr('stroke', (d) => (this.isSelected(d.index) ? '#f00' : '#000'))
+        .attr('stroke-width', (d) => (this.isSelected(d.index) ? 2 : 1))
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
         .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       n.append('title').text((d) => d.name);
@@ -99,14 +103,13 @@ export default {
         .attr('stroke', '#aaa')
         .attr('stroke-width', 1);
     },
+    selectedNodes() {
+      return this.$store.getters['main/selectedNodesForMetrics'];
+    },
   },
   methods: {
     addOrRemoveSelectedNode(node) {
-      if (
-        this.$store.getters['main/selectedNodesForMetrics'].indexOf(
-          this.netNodes[node]
-        ) > -1
-      ) {
+      if (this.selectedNodes.indexOf(this.netNodes[node]) > -1) {
         this.$store.commit(
           'main/removeSelectedNodeForNodeMetrics',
           this.netNodes[node]
@@ -117,6 +120,9 @@ export default {
           this.netNodes[node]
         );
       }
+    },
+    isSelected(node) {
+      return this.selectedNodes.indexOf(this.netNodes[node]) > -1;
     },
     initNetwork() {
       this.svg = d3

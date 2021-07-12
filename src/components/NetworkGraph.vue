@@ -1,17 +1,28 @@
 <template>
-  <b-container ref="con" fluid class="mt-2" style="background-color: white;" v-if="egoNetwork">
+  <b-container
+    ref="con"
+    fluid
+    class="mt-2"
+    style="background-color: white;"
+    v-if="egoNetwork"
+  >
     <b-row
       lg="12"
       class="pt-2"
       v-bind="egoNetwork"
       :key="egoNetwork.id"
       @mouseover="mouseOver"
-      :data-sauto-id="'network-' + egoNetwork.id">
+      :data-sauto-id="'network-' + egoNetwork.id"
+    >
       <b-col xl="2">
         <b-row align-h="center">
           <b>{{ egoNetwork.text }}</b>
         </b-row>
         <b-row align-h="center"> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }}) </b-row>
+        <b-row align-h="center">
+          <b-button @click="selectAllNodes">Select all nodes</b-button>
+          <b-button @click="deselectAllNodes">Deselect all nodes</b-button>
+        </b-row>
       </b-col>
       <b-col>
         <d3-network
@@ -47,18 +58,18 @@
 </template>
 
 <script>
-import D3Network from "./D3Network";
-import "vue-range-component/dist/vue-range-slider.css";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/antd.css";
+import D3Network from './D3Network';
+import 'vue-range-component/dist/vue-range-slider.css';
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/antd.css';
 
 export default {
-  name: "NetworkGraph",
+  name: 'NetworkGraph',
   components: {
     D3Network,
     VueSlider,
   },
-  props: ["pane"],
+  props: ['pane'],
   data() {
     return {
       options: {
@@ -77,13 +88,13 @@ export default {
         dotSize: 15,
       },
       chartColors: [
-        ["#2b6ca3", "#65add2", "#b0efff"],
-        ["#a36c23", "#d59c1e", "#ffd20b"],
+        ['#2b6ca3', '#65add2', '#b0efff'],
+        ['#a36c23', '#d59c1e', '#ffd20b'],
       ],
     };
   },
   created() {
-    window.addEventListener("resize", this.resizeHandler);
+    window.addEventListener('resize', this.resizeHandler);
   },
   mounted() {
     this.defineChartSize();
@@ -106,17 +117,44 @@ export default {
     updateNetwork(network) {
       if (this.currentYear !== network.year) {
         //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-        this.$store.dispatch("main/loadUpdatedEgoNetwork", { network: network, pane: this.pane });
+        this.$store.dispatch('main/loadUpdatedEgoNetwork', {
+          network: network,
+          pane: this.pane,
+        });
       }
     },
     saveYear(year) {
       //save the current year at the start of the drag and if the year is the same at the end, dont send a call
       this.currentYear = year;
     },
+    selectAllNodes() {
+      this.egoNetwork.nodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
+            0
+        )
+        .forEach((node) => {
+          this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+        });
+    },
+    deselectAllNodes() {
+      this.egoNetwork.nodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) >
+            -1
+        )
+        .forEach((node) => {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        });
+    },
   },
   computed: {
     egoNetwork() {
-      const network = this.$store.getters["main/getPane"](this.pane).selectedNetwork;
+      const network = this.$store.getters['main/getPane'](
+        this.pane
+      ).selectedNetwork;
       const nodes = [];
       const links = [];
       let selectedNetwork;
@@ -128,7 +166,7 @@ export default {
             name: node.text,
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
-            _metrics: node.metrics
+            _metrics: node.metrics,
           });
         }
         for (const link of network.connections) {
