@@ -52,7 +52,9 @@
           :d="generateLine(node)"
           fill="none"
           :stroke="getLineColor(node)"
-          stroke-width="1"
+          :stroke-width="hoverNodes.indexOf(node) >= 0 ? 3 : 1"
+          @mouseenter="(e) => onMouseEnter(e, node)"
+          @mouseleave="(e) => onMouseLeave(e, node)"
         />
       </g>
       <g class="x_axis"></g>
@@ -63,9 +65,12 @@
           :key="node.id + node._pane + 'label'"
           fill="black"
           font-size="12"
+          :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
           :x="scaleX(Object.keys(scaleY)[0])-4"
           :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])+4"
           style="text-anchor: end;"
+          @mouseenter="(e) => onMouseEnter(e, node)"
+          @mouseleave="(e) => onMouseLeave(e, node)"
         >
           <tspan dy="0em">{{node.name}}</tspan>
         </text>
@@ -81,6 +86,7 @@ export default {
   props: ['netNodes', 'options'],
   data() {
     return {
+      hoverNodes: [],
       lineColors: ['blue', 'red'],
       svgPadding: {
         top: 20,
@@ -147,6 +153,13 @@ export default {
       if (node._pane == 'pane2')
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
+    },
+    onMouseEnter(e, node) {
+      if (this.hoverNodes.indexOf(node) < 0) this.hoverNodes.push(node);
+    },
+    onMouseLeave(e, node) {
+      if (this.hoverNodes.indexOf(node) >= 0)
+        this.hoverNodes.splice(this.hoverNodes.indexOf(node), 1);
     },
   },
   directives: {
