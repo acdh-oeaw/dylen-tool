@@ -87,7 +87,6 @@ export default {
   data() {
     return {
       hoverNodes: [],
-      lineColors: ['blue', 'red'],
       svgPadding: {
         top: 20,
         right: 50,

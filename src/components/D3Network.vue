@@ -27,7 +27,8 @@ export default {
     };
   },
   watch: {
-    netNodes: function () {
+    netNodes: function (_, oldNodes) {
+      this.deselectOldNodes(oldNodes);
       this.updateSimulation();
     },
     netLinks: function () {
@@ -110,6 +111,14 @@ export default {
     },
   },
   methods: {
+    deselectOldNodes(nodes) {
+      console.log('Deselect', nodes);
+      nodes.forEach((node) => {
+        if (this.selectedNodes.indexOf(node) > -1) {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        }
+      });
+    },
     addOrRemoveSelectedNode(node) {
       if (this.selectedNodes.indexOf(this.netNodes[node]) > -1) {
         this.$store.commit(
@@ -208,6 +217,10 @@ export default {
   },
   mounted() {
     this.initNetwork();
+  },
+  beforeDestroy() {
+    console.log('Destroy');
+    this.deselectOldNodes(this.netNodes);
   },
 };
 </script>
