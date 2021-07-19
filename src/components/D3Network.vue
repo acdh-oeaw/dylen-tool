@@ -138,7 +138,7 @@ export default {
         .selectAll('line')
         .data(this.links)
         .join('line')
-        .attr('stroke', '#aaa')
+        .attr('stroke', `rgba(0, 0, 0, ${this.options?.linkOptions?.opacity})`)
         .attr('stroke-width', 1);
     },
     selectedNodes() {
@@ -227,7 +227,6 @@ export default {
       this.links = this.netLinks.map((d) => {
         return { source: d.sid, target: d.tid };
       });
-      let r = this.nodeSize / 2;
 
       this.simulation = d3
         .forceSimulation(this.nodes)
@@ -242,25 +241,6 @@ export default {
         .force('center', d3.forceCenter(width / 2, height / 2));
 
       this.simulation.on('tick', () => {
-        this.link
-          .attr('x1', (d) => d.source.x)
-          .attr('y1', (d) => d.source.y)
-          .attr('x2', (d) => d.target.x)
-          .attr('y2', (d) => d.target.y);
-
-        this.node
-          .attr('cx', function (d) {
-            return (d.x = options.boundingBox
-              ? Math.max(r, Math.min(width - r, d.x))
-              : d.x);
-          })
-          .attr('cy', function (d) {
-            return (d.y = options.boundingBox
-              ? Math.max(r, Math.min(height - r, d.y))
-              : d.y);
-          });
-        if (options.nodeLabels)
-          this.label.attr('x', (d) => d.x + r).attr('y', (d) => d.y + r);
         this.applyScaleAndTransform();
       });
     },
