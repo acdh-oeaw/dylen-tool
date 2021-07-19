@@ -36,6 +36,19 @@ const mainModule = {
         },
         nodeMetrics: {
             selectedNodes: []
+        },
+        posColors: {
+            noun: '#aa0000',
+            verb: '#000088',
+            adjective: '#f18e04',
+            proper_noun: '#000000',
+        },
+        labelOptions: {
+            fontSize: 12,
+            bold: false
+        },
+        linkOptions: {
+            opacity: 0.25
         }
     },
     mutations: {
@@ -95,7 +108,10 @@ const mainModule = {
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
-        selectedNodesForMetrics: (state) => state["nodeMetrics"].selectedNodes
+        selectedNodesForMetrics: (state) => state["nodeMetrics"].selectedNodes,
+        posColors: (state) => state.posColors,
+        labelOptions: (state) => state.labelOptions,
+        linkOptions: (state) => state.linkOptions,
     },
     actions: {
         async loadAvailableQueryParams({state}) {
@@ -164,6 +180,9 @@ const mainModule = {
                 logger.error(error);
             }
         }
+    },
+    setPosColor({state}, posTag, colorCode){
+        state.posColors[posTag] = colorCode;
     }
 }
 

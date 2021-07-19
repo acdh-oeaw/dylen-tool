@@ -85,11 +85,22 @@ deploy_review:
   environment:
     name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.acdh-cluster.arz.oeaw.ac.at
+    on_stop: stop_review_app
+    auto_stop_in: 1 week
     kubernetes:
       namespace: dylen-review-stage
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
+stop_review_app:
+  script: stop-review-app
+  stage: deploy
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: manual
 
 # build production
 build-prod:

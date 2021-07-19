@@ -58,6 +58,7 @@
 </template>
 
 <script>
+//import D3Network from 'vue-d3-network'
 import D3Network from './D3Network';
 import 'vue-range-component/dist/vue-range-slider.css';
 import VueSlider from 'vue-slider-component';
@@ -77,7 +78,9 @@ export default {
         nodeSize: 15,
         nodeDistance: 75,
         nodeLabels: true,
-        boundingBox: true, //Indicates whether nodes are forces to be placed withing the surrounding container
+        boundingBox: false, //Indicates whether nodes are forces to be placed withing the surrounding container
+        labelOptions: this.$store.getters['main/labelOptions'],
+        linkOptions: this.$store.getters['main/linkOptions'],
         canvas: false,
         size: {
           h: 0,
@@ -164,6 +167,7 @@ export default {
           nodes.push({
             id: network.id + '_' + node.id,
             name: node.text,
+            _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
             _metrics: node.metrics,
