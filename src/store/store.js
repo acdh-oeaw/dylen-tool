@@ -18,7 +18,7 @@ const logger = require("../helpers/logger");
 const mainModule = {
     namespaced: true,
     state: {
-        selectionColors: ["blue", "red"],
+        selectionColors: ["#1E88E5", "#D81B60"],
         availableQueryParams: [],
         pane1: {
             selectedCorpus: {id: '', name: '', sources: []},

@@ -60,20 +60,30 @@
       <g class="x_axis"></g>
 
       <g class="labels">
-        <text
+        <g
           v-for="node in netNodes"
           :key="node.id + node._pane + 'label'"
-          fill="black"
-          font-size="12"
-          :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
-          :x="scaleX(Object.keys(scaleY)[0])-4"
-          :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])+4"
-          style="text-anchor: end;"
-          @mouseenter="(e) => onMouseEnter(e, node)"
-          @mouseleave="(e) => onMouseLeave(e, node)"
         >
-          <tspan dy="0em">{{node.name}}</tspan>
-        </text>
+          <!-- <rect
+            x="0"
+            :width="scaleX(Object.keys(scaleY)[0])"
+            :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])-8"
+            height="16"
+            :fill="hoverNodes.indexOf(node) >= 0 ? 'white' : 'none'"
+          /> -->
+          <text
+            font-size="12"
+            :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
+            fill="black"
+            :x="scaleX(Object.keys(scaleY)[0])-4"
+            :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])+4"
+            style="text-anchor: end;"
+            @mouseenter="(e) => nonOverlappingNodes.indexOf(node) >= 0 ? onMouseEnter(e, node) : {}"
+            @mouseleave="(e) => nonOverlappingNodes.indexOf(node) >= 0 ? onMouseLeave(e, node) : {}"
+          >
+            <tspan dy="0em">{{hoverNodes.indexOf(node) >= 0 || nonOverlappingNodes.indexOf(node) >= 0 ? node.name : "*"}}</tspan>
+          </text>
+        </g>
       </g>
 
     </g>
@@ -137,6 +147,20 @@ export default {
         .y((d) => this.scaleY[d[0]](d[1]));
       //.curve(d3.curveCardinal.tension(0.75));
     },
+    nonOverlappingNodes() {
+      return this.netNodes.filter(
+        (node) =>
+          this.netNodes.filter((n) => {
+            let nodeVal = Object.values(this.scaleY)[0](
+              node._metrics[Object.keys(this.scaleY)[0]]
+            );
+            let nVal = Object.values(this.scaleY)[0](
+              n._metrics[Object.keys(this.scaleY)[0]]
+            );
+            return nodeVal + 6 >= nVal && nodeVal - 6 <= nVal;
+          }).length == 1
+      );
+    },
   },
   methods: {
     generateLine(node) {
@@ -154,6 +178,10 @@ export default {
       return 'black';
     },
     onMouseEnter(e, node) {
+      let t = e.target;
+      let parent = t.parentNode;
+      parent.removeChild(t);
+      parent.appendChild(t);
       if (this.hoverNodes.indexOf(node) < 0) this.hoverNodes.push(node);
     },
     onMouseLeave(e, node) {
