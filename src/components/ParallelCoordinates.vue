@@ -47,12 +47,12 @@
       </g>
       <g class="lines">
         <path
-          v-for="node in netNodes"
+          v-for="node in netNodes.slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))"
           :key="node.id + node._pane"
           :d="generateLine(node)"
           fill="none"
-          :stroke="getLineColor(node)"
-          :stroke-width="hoverNodes.indexOf(node) >= 0 ? 3 : 1"
+          :stroke="`${getLineColor(node)}${hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'}`"
+          :stroke-width="hoverNodes.indexOf(node) >= 0 ? 4 : 1"
           @mouseenter="(e) => onMouseEnter(e, node)"
           @mouseleave="(e) => onMouseLeave(e, node)"
         />
@@ -101,7 +101,7 @@ export default {
         top: 20,
         right: 50,
         bottom: 50,
-        left: 100,
+        left: 120,
       },
     };
   },
