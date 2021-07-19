@@ -61,7 +61,7 @@ export default {
     },
     selectedNodes: function () {
       this.simulation.restart();
-    }
+    },
     options: {
       handler() {
         this.simulation.restart();
@@ -171,19 +171,9 @@ export default {
       return this.selectedNodes.indexOf(this.netNodes[node]) > -1;
     },
     initNetwork() {
-      this.svg = d3
-        .select(this.$refs.svg)
-        .call(
-          d3
-            .zoom()
-            .on('zoom', (event) => this.svg.attr('transform', event.transform))
-        )
-        .select('g');
-        .attr('stroke', `rgba(0, 0, 0, ${this.options?.linkOptions?.opacity})`)
-        .attr('stroke-width', 1);
+      this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
+      this.updateSimulation();
     },
-  },
-  methods: {
     onZoomButtonClick(zoomFactor = 1) {
       this.d3Zoom.scaleBy(
         d3.select(this.$refs.svg).transition().duration(500),
@@ -228,10 +218,6 @@ export default {
       this.translation = [event.transform.x, event.transform.y];
       this.applyScaleAndTransform();
     },
-    initNetwork() {
-      this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
-      this.updateSimulation();
-    },
     updateSimulation() {
       const options = this.options;
       const width = options.size.w;
@@ -241,6 +227,7 @@ export default {
       this.links = this.netLinks.map((d) => {
         return { source: d.sid, target: d.tid };
       });
+      let r = this.nodeSize / 2;
 
       this.simulation = d3
         .forceSimulation(this.nodes)
