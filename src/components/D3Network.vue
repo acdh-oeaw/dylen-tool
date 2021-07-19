@@ -87,7 +87,8 @@ export default {
         .data(this.nodes)
         .join('text')
         .text((_, idx) => this.netNodes[idx].name)
-        .attr('fill', '#000');
+        .attr('fill', '#000')
+        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       l.call(
         d3
           .drag()
