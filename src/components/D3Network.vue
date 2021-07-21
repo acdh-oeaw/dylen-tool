@@ -123,13 +123,6 @@ export default {
           this.options?.labelOptions?.bold ? 'bold' : 'normal'
         )
         .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
-      l.call(
-        d3
-          .drag()
-          .on('start', this.dragstarted)
-          .on('drag', this.dragged)
-          .on('end', this.dragended)
-      );
       return l;
     },
     link() {
@@ -211,7 +204,7 @@ export default {
       if (this.options.nodeLabels)
         this.label
           .attr('x', (d) => this.getNodeCoords(d).x + r)
-          .attr('y', (d) => this.getNodeCoords(d).y + r);
+          .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {
       this.scaleFactor = event.transform.k;
