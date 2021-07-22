@@ -67,8 +67,8 @@
           <rect
             x="0"
             :width="scaleX(Object.keys(scaleY)[0])"
-            :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])-8"
-            height="16"
+            :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])-6"
+            height="12"
             :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
           />
           <text
@@ -85,7 +85,7 @@
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
               @mouseenter="(e) => onMouseEnter(e, node)"
               @mouseleave="(e) => onMouseLeave(e, node)"
-            >{{hoverNodes.indexOf(node) >= 0 || nodeGroup.length == 1 ? node.name : "×"}}</tspan>
+            >{{hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : "×"}}</tspan>
           </text>
         </g>
       </g>

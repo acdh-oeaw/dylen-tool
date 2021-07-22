@@ -137,6 +137,8 @@ export default {
           network: network,
           pane: this.pane,
         });
+        this.allNodesSelected = false;
+        this.deselectAllNodes();
       }
     },
     saveYear(year) {
