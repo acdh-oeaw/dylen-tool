@@ -205,7 +205,7 @@ export default {
         });
       return nodeGroup;
     },
-    /* nonOverlappingNodesLeft() {
+    nonOverlappingNodesLeft() {
       return this.netNodes.filter(
         (node) =>
           this.netNodes
@@ -220,7 +220,7 @@ export default {
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
       );
-    }, */
+    },
     nonOverlappingNodesRight() {
       return this.netNodes.filter(
         (node) =>
