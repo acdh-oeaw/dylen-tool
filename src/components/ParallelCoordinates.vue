@@ -59,18 +59,18 @@
       </g>
       <g class="x_axis"></g>
 
-      <g class="labels">
+      <g class="labels left">
         <g
-          v-for="node in netNodes"
+          v-for="node in netNodes.filter(node => node._pane == 'pane1').slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))"
           :key="node.id + node._pane + 'label'"
         >
-          <!-- <rect
+          <rect
             x="0"
             :width="scaleX(Object.keys(scaleY)[0])"
             :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])-8"
             height="16"
             :fill="hoverNodes.indexOf(node) >= 0 ? 'white' : 'none'"
-          /> -->
+          />
           <text
             font-size="12"
             :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
@@ -78,10 +78,37 @@
             :x="scaleX(Object.keys(scaleY)[0])-4"
             :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])+4"
             style="text-anchor: end;"
-            @mouseenter="(e) => nonOverlappingNodes.indexOf(node) >= 0 ? onMouseEnter(e, node) : {}"
-            @mouseleave="(e) => nonOverlappingNodes.indexOf(node) >= 0 ? onMouseLeave(e, node) : {}"
+            @mouseenter="(e) => nonOverlappingNodesLeft.indexOf(node) >= 0 ? onMouseEnter(e, node) : {}"
+            @mouseleave="(e) => nonOverlappingNodesLeft.indexOf(node) >= 0 ? onMouseLeave(e, node) : {}"
           >
-            <tspan dy="0em">{{hoverNodes.indexOf(node) >= 0 || nonOverlappingNodes.indexOf(node) >= 0 ? node.name : "*"}}</tspan>
+            <tspan dy="0em">{{hoverNodes.indexOf(node) >= 0 || nonOverlappingNodesLeft.indexOf(node) >= 0 ? node.name : "×"}}</tspan>
+          </text>
+        </g>
+      </g>
+      <g class="labels right">
+        <g
+          v-for="node in netNodes.filter(node => node._pane == 'pane2').slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))"
+          :key="node.id + node._pane + 'label'"
+        >
+          <rect
+            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])"
+            :width="options.size.w"
+            :y="Object.values(scaleY)[Object.keys(scaleY).length -1](node._metrics[Object.keys(scaleY)[Object.keys(scaleY).length -1]])-8"
+            height="16"
+            :fill="hoverNodes.indexOf(node) >= 0 ? 'white' : 'none'"
+          />
+
+          <text
+            font-size="12"
+            :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
+            fill="black"
+            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+4"
+            :y="Object.values(scaleY)[Object.keys(scaleY).length -1](node._metrics[Object.keys(scaleY)[Object.keys(scaleY).length -1]])+4"
+            style="text-anchor: start;"
+            @mouseenter="(e) => nonOverlappingNodesRight.indexOf(node) >= 0 ? onMouseEnter(e, node) : {}"
+            @mouseleave="(e) => nonOverlappingNodesRight.indexOf(node) >= 0 ? onMouseLeave(e, node) : {}"
+          >
+            <tspan dx="0.5em">{{hoverNodes.indexOf(node) >= 0 || nonOverlappingNodesRight.indexOf(node) >= 0 ? node.name : "×"}}</tspan>
           </text>
         </g>
       </g>
@@ -99,7 +126,7 @@ export default {
       hoverNodes: [],
       svgPadding: {
         top: 20,
-        right: 50,
+        right: 120,
         bottom: 50,
         left: 120,
       },
@@ -147,7 +174,7 @@ export default {
         .y((d) => this.scaleY[d[0]](d[1]));
       //.curve(d3.curveCardinal.tension(0.75));
     },
-    nonOverlappingNodes() {
+    nonOverlappingNodesLeft() {
       return this.netNodes.filter(
         (node) =>
           this.netNodes.filter((n) => {
@@ -157,7 +184,29 @@ export default {
             let nVal = Object.values(this.scaleY)[0](
               n._metrics[Object.keys(this.scaleY)[0]]
             );
-            return nodeVal + 6 >= nVal && nodeVal - 6 <= nVal;
+            return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
+          }).length == 1
+      );
+    },
+    nonOverlappingNodesRight() {
+      return this.netNodes.filter(
+        (node) =>
+          this.netNodes.filter((n) => {
+            let nodeVal = Object.values(this.scaleY)[
+              Object.values(this.scaleY).length - 1
+            ](
+              node._metrics[
+                Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
+              ]
+            );
+            let nVal = Object.values(this.scaleY)[
+              Object.values(this.scaleY).length - 1
+            ](
+              n._metrics[
+                Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
+              ]
+            );
+            return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
           }).length == 1
       );
     },

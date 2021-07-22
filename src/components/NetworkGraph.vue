@@ -6,24 +6,36 @@
     style="background-color: white;"
     v-if="egoNetwork"
   >
+    <b-row class="h-10">
+
+      <b-col>
+        <b-row align-h="center">
+          <b>{{ egoNetwork.text }}</b>
+        </b-row>
+        <b-row align-h="center"> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }}) </b-row>
+      </b-col>
+      <b-col>
+        <b-row align-h="center">
+          <b-form-checkbox
+            class="b-0"
+            v-model="allNodesSelected"
+            @change="selectionCheckboxChanged"
+          >
+            Select all nodes
+          </b-form-checkbox>
+          <!-- <b-button @click="selectAllNodes">Select all nodes</b-button>
+          <b-button @click="deselectAllNodes">Deselect all nodes</b-button> -->
+        </b-row>
+      </b-col>
+    </b-row>
     <b-row
       lg="12"
-      class="pt-2"
+      class="pt-2 h-70"
       v-bind="egoNetwork"
       :key="egoNetwork.id"
       @mouseover="mouseOver"
       :data-sauto-id="'network-' + egoNetwork.id"
     >
-      <b-col xl="2">
-        <b-row align-h="center">
-          <b>{{ egoNetwork.text }}</b>
-        </b-row>
-        <b-row align-h="center"> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }}) </b-row>
-        <b-row align-h="center">
-          <b-button @click="selectAllNodes">Select all nodes</b-button>
-          <b-button @click="deselectAllNodes">Deselect all nodes</b-button>
-        </b-row>
-      </b-col>
       <b-col>
         <d3-network
           ref="egoChart"
@@ -34,7 +46,7 @@
         />
       </b-col>
     </b-row>
-    <b-row class="h-20 pb-5">
+    <b-row class="h-20 pb-2">
       <b-col xl="2"></b-col>
       <b-col class="pl-5 year-slider-row">
         <VueSlider
@@ -94,6 +106,7 @@ export default {
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b'],
       ],
+      allNodesSelected: false,
     };
   },
   created() {
@@ -107,11 +120,11 @@ export default {
       this.defineChartSize();
     },
     defineChartSize() {
-      const heightRefElem = this.$refs.con.parentElement;
+      const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
       console.log(heightRefElem.clientHeight);
 
-      const chartHeight = heightRefElem.clientHeight * 0.8;
+      const chartHeight = heightRefElem.clientHeight * 0.7;
       const chartWidth = widthRefElem.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
@@ -129,6 +142,10 @@ export default {
     saveYear(year) {
       //save the current year at the start of the drag and if the year is the same at the end, dont send a call
       this.currentYear = year;
+    },
+    selectionCheckboxChanged() {
+      if (this.allNodesSelected) this.selectAllNodes();
+      else this.deselectAllNodes();
     },
     selectAllNodes() {
       this.egoNetwork.nodes
@@ -218,6 +235,11 @@ export default {
 .collapsed > .when-open,
 .not-collapsed > .when-closed {
   display: none;
+}
+
+.b-0 {
+  position: absolute;
+  bottom: 0;
 }
 </style>
 <style lang="scss">

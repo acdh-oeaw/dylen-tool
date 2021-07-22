@@ -52,11 +52,11 @@ export default {
       this.defineChartSize();
     },
     defineChartSize() {
-      const heightRefElem = this.$refs.con.parentElement;
+      const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.parCoords.$el.parentElement;
       console.log(heightRefElem.clientHeight);
 
-      const chartHeight = heightRefElem.clientHeight * 0.8;
+      const chartHeight = heightRefElem.clientHeight * 1.0;
       const chartWidth = widthRefElem?.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
