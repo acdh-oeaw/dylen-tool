@@ -61,58 +61,64 @@
 
       <g class="labels left">
         <g
-          v-for="node in netNodes.filter(node => node._pane == 'pane1').slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))"
-          :key="node.id + node._pane + 'label'"
+          v-for="(nodeGroup, idx) in Object.values(groupedNodesPane1)"
+          :key="idx + ' label left'"
         >
           <rect
             x="0"
             :width="scaleX(Object.keys(scaleY)[0])"
-            :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])-8"
+            :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])-8"
             height="16"
-            :fill="hoverNodes.indexOf(node) >= 0 ? 'white' : 'none'"
+            :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
           />
           <text
             font-size="12"
-            :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
             fill="black"
-            :x="scaleX(Object.keys(scaleY)[0])-4"
-            :y="Object.values(scaleY)[0](node._metrics[Object.keys(scaleY)[0]])+4"
+            :x="scaleX(Object.keys(scaleY)[0])-8"
+            :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])+4"
             style="text-anchor: end;"
-            @mouseenter="(e) => nonOverlappingNodesLeft.indexOf(node) >= 0 ? onMouseEnter(e, node) : {}"
-            @mouseleave="(e) => nonOverlappingNodesLeft.indexOf(node) >= 0 ? onMouseLeave(e, node) : {}"
           >
-            <tspan dy="0em">{{hoverNodes.indexOf(node) >= 0 || nonOverlappingNodesLeft.indexOf(node) >= 0 ? node.name : "×"}}</tspan>
+            <tspan
+              dx="0.25em"
+              v-for="node in nodeGroup"
+              :key="idx+node.id"
+              :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
+              @mouseenter="(e) => onMouseEnter(e, node)"
+              @mouseleave="(e) => onMouseLeave(e, node)"
+            >{{hoverNodes.indexOf(node) >= 0 || nodeGroup.length == 1 ? node.name : "×"}}</tspan>
           </text>
         </g>
       </g>
       <g class="labels right">
         <g
-          v-for="node in netNodes.filter(node => node._pane == 'pane2').slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))"
-          :key="node.id + node._pane + 'label'"
+          v-for="(nodeGroup, idx) in Object.values(groupedNodesPane2)"
+          :key="idx + ' label right'"
         >
           <rect
             :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])"
-            :width="options.size.w"
-            :y="Object.values(scaleY)[Object.keys(scaleY).length -1](node._metrics[Object.keys(scaleY)[Object.keys(scaleY).length -1]])-8"
-            height="16"
-            :fill="hoverNodes.indexOf(node) >= 0 ? 'white' : 'none'"
+            :width="options.size.w-scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])"
+            :y="Object.values(scaleY)[Object.keys(scaleY).length -1](Object.keys(groupedNodesPane2)[idx])-6"
+            height="12"
+            :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
           />
-
           <text
             font-size="12"
-            :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
             fill="black"
-            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+4"
-            :y="Object.values(scaleY)[Object.keys(scaleY).length -1](node._metrics[Object.keys(scaleY)[Object.keys(scaleY).length -1]])+4"
+            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+2"
+            :y="Object.values(scaleY)[Object.keys(scaleY).length -1](Object.keys(groupedNodesPane2)[idx])+4"
             style="text-anchor: start;"
-            @mouseenter="(e) => nonOverlappingNodesRight.indexOf(node) >= 0 ? onMouseEnter(e, node) : {}"
-            @mouseleave="(e) => nonOverlappingNodesRight.indexOf(node) >= 0 ? onMouseLeave(e, node) : {}"
           >
-            <tspan dx="0.5em">{{hoverNodes.indexOf(node) >= 0 || nonOverlappingNodesRight.indexOf(node) >= 0 ? node.name : "×"}}</tspan>
+            <tspan
+              dx="0.25em"
+              v-for="node in nodeGroup"
+              :key="idx+node.id"
+              :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
+              @mouseenter="(e) => onMouseEnter(e, node)"
+              @mouseleave="(e) => onMouseLeave(e, node)"
+            >{{hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : "×"}}</tspan>
           </text>
         </g>
       </g>
-
     </g>
   </svg>
 </template>
@@ -174,40 +180,73 @@ export default {
         .y((d) => this.scaleY[d[0]](d[1]));
       //.curve(d3.curveCardinal.tension(0.75));
     },
-    nonOverlappingNodesLeft() {
+    groupedNodesPane1() {
+      let nodeGroup = {};
+      this.netNodes
+        .filter((n) => n._pane == 'pane1')
+        .forEach((n) => {
+          let nodeVal = n._metrics[Object.keys(this.scaleY)[0]];
+          if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
+          nodeGroup[nodeVal].push(n);
+        });
+      return nodeGroup;
+    },
+    groupedNodesPane2() {
+      let nodeGroup = {};
+      this.netNodes
+        .filter((n) => n._pane == 'pane2')
+        .forEach((n) => {
+          let nodeVal =
+            n._metrics[
+              Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
+            ];
+          if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
+          nodeGroup[nodeVal].push(n);
+        });
+      return nodeGroup;
+    },
+    /* nonOverlappingNodesLeft() {
       return this.netNodes.filter(
         (node) =>
-          this.netNodes.filter((n) => {
-            let nodeVal = Object.values(this.scaleY)[0](
-              node._metrics[Object.keys(this.scaleY)[0]]
-            );
-            let nVal = Object.values(this.scaleY)[0](
-              n._metrics[Object.keys(this.scaleY)[0]]
-            );
-            return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
-          }).length == 1
+          this.netNodes
+            .filter((n) => n._pane == 'pane1')
+            .filter((n) => {
+              let nodeVal = Object.values(this.scaleY)[0](
+                node._metrics[Object.keys(this.scaleY)[0]]
+              );
+              let nVal = Object.values(this.scaleY)[0](
+                n._metrics[Object.keys(this.scaleY)[0]]
+              );
+              return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
+            }).length == 1
       );
-    },
+    }, */
     nonOverlappingNodesRight() {
       return this.netNodes.filter(
         (node) =>
-          this.netNodes.filter((n) => {
-            let nodeVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-            ](
-              node._metrics[
-                Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-              ]
-            );
-            let nVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-            ](
-              n._metrics[
-                Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-              ]
-            );
-            return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
-          }).length == 1
+          this.netNodes
+            .filter((n) => n._pane == 'pane2')
+            .filter((n) => {
+              let nodeVal = Object.values(this.scaleY)[
+                Object.values(this.scaleY).length - 1
+              ](
+                node._metrics[
+                  Object.keys(this.scaleY)[
+                    Object.values(this.scaleY).length - 1
+                  ]
+                ]
+              );
+              let nVal = Object.values(this.scaleY)[
+                Object.values(this.scaleY).length - 1
+              ](
+                n._metrics[
+                  Object.keys(this.scaleY)[
+                    Object.values(this.scaleY).length - 1
+                  ]
+                ]
+              );
+              return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
+            }).length == 1
       );
     },
   },
@@ -227,10 +266,6 @@ export default {
       return 'black';
     },
     onMouseEnter(e, node) {
-      let t = e.target;
-      let parent = t.parentNode;
-      parent.removeChild(t);
-      parent.appendChild(t);
       if (this.hoverNodes.indexOf(node) < 0) this.hoverNodes.push(node);
     },
     onMouseLeave(e, node) {
