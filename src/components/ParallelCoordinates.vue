@@ -72,20 +72,32 @@
             :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
           />
           <text
+            v-for="(node, nodeIdx) in nodeGroup"
+            :key="idx+node.id"
             font-size="12"
             fill="black"
-            :x="scaleX(Object.keys(scaleY)[0])-8"
-            :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])+4"
+            :x="scaleX(Object.keys(scaleY)[0]) - 8 - nodeIdx*12"
+            :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])+4 "
             style="text-anchor: end;"
           >
             <tspan
               dx="0.25em"
-              v-for="node in nodeGroup"
-              :key="idx+node.id"
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
               @mouseenter="(e) => onMouseEnter(e, node)"
               @mouseleave="(e) => onMouseLeave(e, node)"
             >{{hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : "×"}}</tspan>
+            <tspan
+              dy="-6"
+              font-size="8"
+              style="cursor: pointer;"
+              @click="deselectNode(node)"
+              @mouseenter="(e) => onMouseEnter(e, node)"
+              @mouseleave="(e) => onMouseLeave(e, node)"
+            >{{hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? "❌" : ""}}
+              <title>Deselect</title>
+            </tspan>
+            <!-- </g> -->
+
           </text>
         </g>
       </g>
@@ -102,20 +114,30 @@
             :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
           />
           <text
+            v-for="(node, nodeIdx) in nodeGroup"
+            :key="idx+node.id"
             font-size="12"
             fill="black"
-            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+2"
+            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+2+nodeIdx*12"
             :y="Object.values(scaleY)[Object.keys(scaleY).length -1](Object.keys(groupedNodesPane2)[idx])+4"
             style="text-anchor: start;"
           >
             <tspan
               dx="0.25em"
-              v-for="node in nodeGroup"
-              :key="idx+node.id"
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
               @mouseenter="(e) => onMouseEnter(e, node)"
               @mouseleave="(e) => onMouseLeave(e, node)"
             >{{hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : "×"}}</tspan>
+            <tspan
+              dy="-6"
+              font-size="8"
+              style="cursor: pointer;"
+              @click="deselectNode(node)"
+              @mouseenter="(e) => onMouseEnter(e, node)"
+              @mouseleave="(e) => onMouseLeave(e, node)"
+            >{{hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? "❌" : ""}}
+              <title>Deselect</title>
+            </tspan>
           </text>
         </g>
       </g>
@@ -271,6 +293,9 @@ export default {
     onMouseLeave(e, node) {
       if (this.hoverNodes.indexOf(node) >= 0)
         this.hoverNodes.splice(this.hoverNodes.indexOf(node), 1);
+    },
+    deselectNode(node) {
+      this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
     },
   },
   directives: {
