@@ -4,6 +4,18 @@
     class="parallel-coordinates"
     :viewBox="viewBox"
   >
+    <defs>
+      <filter
+        x="0"
+        y="0"
+        width="1"
+        height="1"
+        id="solid"
+      >
+        <feFlood flood-color="white" />
+        <feComposite in="SourceGraphic" />
+      </filter>
+    </defs>
     <g>
       <g
         class="grid"
@@ -76,12 +88,14 @@
             :key="idx+node.id"
             font-size="12"
             fill="black"
-            :x="scaleX(Object.keys(scaleY)[0]) - 8 - nodeIdx*12"
+            :x="scaleX(Object.keys(scaleY)[0]) - 8 - (nodeGroup.length-1) * 12 + nodeIdx*12"
             :y="Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])+4 "
             style="text-anchor: end;"
+            :filter="hoverNodes.indexOf(node) >= 0 ? 'url(#solid)' : ''"
           >
             <tspan
               dx="0.25em"
+              dy="6"
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
               @mouseenter="(e) => onMouseEnter(e, node)"
               @mouseleave="(e) => onMouseLeave(e, node)"
@@ -118,9 +132,10 @@
             :key="idx+node.id"
             font-size="12"
             fill="black"
-            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+2+nodeIdx*12"
+            :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+2+(nodeGroup.length -1)*12-nodeIdx*12"
             :y="Object.values(scaleY)[Object.keys(scaleY).length -1](Object.keys(groupedNodesPane2)[idx])+4"
             style="text-anchor: start;"
+            :filter="hoverNodes.indexOf(node) >= 0 ? 'url(#solid)' : ''"
           >
             <tspan
               dx="0.25em"
