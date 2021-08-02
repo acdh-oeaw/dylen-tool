@@ -13,6 +13,13 @@
       >
         <b-icon icon="zoom-out"></b-icon>
       </b-button>
+      <b-form-checkbox
+        class="b-0"
+        v-model="allNodesSelected"
+        @change="selectionCheckboxChanged"
+      >
+        Select all nodes
+      </b-form-checkbox>
     </div>
     <svg
       ref="svg"
@@ -43,6 +50,7 @@ export default {
       nodes: [],
       links: [],
       svg: {},
+      allNodesSelected: false,
     };
   },
   watch: {
@@ -139,14 +147,13 @@ export default {
     },
   },
   methods: {
-    deselectOldNodes(nodes) {
-      console.log('Deselect', nodes);
+    /* deselectOldNodes(nodes) {
       nodes.forEach((node) => {
         if (this.selectedNodes.indexOf(node) > -1) {
           this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
         }
       });
-    },
+    }, */
     addOrRemoveSelectedNode(node) {
       if (this.selectedNodes.indexOf(this.netNodes[node]) > -1) {
         this.$store.commit(
@@ -159,6 +166,32 @@ export default {
           this.netNodes[node]
         );
       }
+    },
+    selectionCheckboxChanged() {
+      if (this.allNodesSelected) this.selectAllNodes();
+      else this.deselectAllNodes();
+    },
+    selectAllNodes() {
+      this.netNodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
+            0
+        )
+        .forEach((node) => {
+          this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+        });
+    },
+    deselectAllNodes() {
+      this.netNodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) >
+            -1
+        )
+        .forEach((node) => {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        });
     },
     isSelected(node) {
       return this.selectedNodes.indexOf(this.netNodes[node]) > -1;
@@ -268,8 +301,7 @@ export default {
     this.initNetwork();
   },
   beforeDestroy() {
-    console.log('Destroy');
-    this.deselectOldNodes(this.netNodes);
+    this.deselectAllNodes();
   },
 };
 </script>

@@ -10,21 +10,7 @@
 
       <b-col>
         <b-row align-h="center">
-          <b>{{ egoNetwork.text }}</b>
-        </b-row>
-        <b-row align-h="center"> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }}) </b-row>
-      </b-col>
-      <b-col>
-        <b-row align-h="center">
-          <b-form-checkbox
-            class="b-0"
-            v-model="allNodesSelected"
-            @change="selectionCheckboxChanged"
-          >
-            Select all nodes
-          </b-form-checkbox>
-          <!-- <b-button @click="selectAllNodes">Select all nodes</b-button>
-          <b-button @click="deselectAllNodes">Deselect all nodes</b-button> -->
+          <span><b>{{ egoNetwork.text }}</b> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</span>
         </b-row>
       </b-col>
     </b-row>
