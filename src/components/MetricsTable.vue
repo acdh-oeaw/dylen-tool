@@ -27,7 +27,9 @@ export default {
           word: node.name,
           network: `${
             this.$store.getters['main/selectedTargetword'](node._pane).text
-          }, ${this.$store.getters['main/selectedYear'](node._pane).year}`,
+          }, ${
+            this.$store.getters['main/getPane'](node._pane).selectedNetwork.year
+          }`,
           color: this.getLineColor(node),
         };
         for (let key in node._metrics) tableEntry[key] = node._metrics[key];
