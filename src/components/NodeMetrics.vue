@@ -2,23 +2,35 @@
   <b-container
     ref="con"
     fluid
-    class="mt-2"
+    class="mt-2 h-100"
     style="background-color: white;"
   >
     <b-row
       lg="12"
-      class="pt-2"
+      class="pt-2 h-100"
       @mouseover="mouseOver"
     >
-      <b-col>
+      <b-col class="h-100">
+        <b-button
+          :pressed.sync="showTable"
+          variant="outline-secondary"
+          class="float-right"
+        >
+          <b-icon icon="table"></b-icon>
+        </b-button>
         <parallel-coordinates
           ref="parCoords"
-          v-if="nodes"
+          v-if="nodes && !showTable"
           :net-nodes="nodes"
           :options="options"
-        >
+        ></parallel-coordinates>
+        <metrics-table
+          ref="parCoords"
+          v-if="nodes && showTable"
+          :net-nodes="nodes"
+          :options="options"
+        ></metrics-table>
 
-        </parallel-coordinates>
       </b-col>
     </b-row>
   </b-container>
@@ -27,9 +39,10 @@
 
 <script>
 import ParallelCoordinates from '@/components/ParallelCoordinates';
+import MetricsTable from '@/components/MetricsTable';
 export default {
   name: 'NodeMetrics',
-  components: { ParallelCoordinates },
+  components: { ParallelCoordinates, MetricsTable },
   props: ['pane'],
   data() {
     return {
@@ -39,6 +52,7 @@ export default {
           w: 0,
         },
       },
+      showTable: false,
     };
   },
   created() {
