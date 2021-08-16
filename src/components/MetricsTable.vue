@@ -6,6 +6,7 @@
     :sort-by="'word'"
     sticky-header="100%"
     small
+    sort-icon-left
     class="h-100"
   >
 

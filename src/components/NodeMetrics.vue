@@ -11,13 +11,26 @@
       @mouseover="mouseOver"
     >
       <b-col class="h-100">
-        <b-button
-          :pressed.sync="showTable"
-          variant="outline-secondary"
-          class="float-right"
-        >
-          <b-icon icon="table"></b-icon>
-        </b-button>
+        <b-button-group class="float-right">
+          <b-dropdown
+            id="dropdown-1"
+            v-if="nodes && showTable"
+            no-caret
+            right
+          >
+            <template #button-content>
+              <b-icon icon="download"></b-icon><span class="sr-only">Download</span>
+            </template>
+            <b-dropdown-item-button @click="csvExport">Export CSV</b-dropdown-item-button>
+            <b-dropdown-item-button @click="jsonExport">Export JSON</b-dropdown-item-button>
+          </b-dropdown>
+          <b-button
+            :pressed.sync="showTable"
+            variant="outline-secondary"
+          >
+            <b-icon icon="table"></b-icon>
+          </b-button>
+        </b-button-group>
         <parallel-coordinates
           ref="parCoords"
           v-if="nodes && !showTable"
@@ -86,6 +99,12 @@ export default {
         });
       }
       return nodes;
+    },
+    csvExport() {
+      this.$store.dispatch('main/downloadMetricsAsCSV', this.nodes);
+    },
+    jsonExport() {
+      this.$store.dispatch('main/downloadMetricsAsJSON', this.nodes);
     },
   },
   computed: {

@@ -13,6 +13,7 @@
     "bootstrap-vue": "^2.18.1",
     "core-js": "^3.6.5",
     "d3": "^6.7.0",
+    "export-to-csv": "^0.2.1",
     "vue": "^2.6.12",
     "vue-d3-network": "^0.1.28",
     "vue-range-component": "^1.0.3",

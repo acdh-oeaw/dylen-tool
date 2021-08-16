@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import props from "../properties/propertiesLoader";
 import {allAvailableCorporaQuery, getNetworkQuery} from "@/queries/queries";
+import { ExportToCsv } from 'export-to-csv';
 
 Vue.prototype.$http = axios;
 Vue.prototype.axios = axios;
@@ -14,6 +15,24 @@ Vue.use(Vuex);
 const graphqlEndpoint = props.graphqlEndpoint;
 
 const logger = require("../helpers/logger");
+
+const nodesToJSON = (state, nodes) => {
+    return nodes.map((node) => {
+        let tableEntry = {
+          Word: node.name,
+          Network: `${
+            state[node._pane].selectedTargetword.text
+          } (${
+            state[node._pane].selectedNetwork.year
+          })`,
+          
+        };
+        for (let key in node._metrics)
+          tableEntry[key] = node._metrics[key];
+              
+        return tableEntry;
+      });
+}
 
 const mainModule = {
     namespaced: true,
@@ -183,6 +202,34 @@ const mainModule = {
             } catch (error) {
                 logger.error(error);
             }
+        },
+        async downloadMetricsAsCSV({state}, nodes){
+            let data = nodesToJSON(state, nodes);
+              const options = { 
+                filename: "DYLEN_Export",
+                fieldSeparator: ',',
+                quoteStrings: '"',
+                decimalSeparator: '.',
+                showLabels: true, 
+                showTitle: false,
+                useTextFile: false,
+                useBom: true,
+                useKeysAsHeaders: true,
+              };
+             
+            const csvExporter = new ExportToCsv(options);
+            csvExporter.generateCsv(data);
+        },
+        async downloadMetricsAsJSON({state}, nodes){
+            let exportName = "DYLEN_Export";
+            let data = nodesToJSON(state, nodes);
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            var downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", exportName + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
         }
     },
     setPosColor({state}, posTag, colorCode){
