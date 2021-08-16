@@ -3,25 +3,25 @@
     ref="con"
     fluid
     class="mt-2"
-    style="background-color: white"
+    style="background-color: white;"
     v-if="egoNetwork"
   >
+    <b-row class="h-10">
+
+      <b-col>
+        <b-row align-h="center">
+          <span><b>{{ egoNetwork.text }}</b> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</span>
+        </b-row>
+      </b-col>
+    </b-row>
     <b-row
       lg="12"
-      class="pt-2"
+      class="pt-2 h-70"
       v-bind="egoNetwork"
       :key="egoNetwork.id"
       @mouseover="mouseOver"
       :data-sauto-id="'network-' + egoNetwork.id"
     >
-      <b-col xl="2">
-        <b-row align-h="center">
-          <b>{{ egoNetwork.text }}</b>
-        </b-row>
-        <b-row align-h="center">
-          ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})
-        </b-row>
-      </b-col>
       <b-col>
         <d3-network
           ref="egoChart"
@@ -32,7 +32,7 @@
         />
       </b-col>
     </b-row>
-    <b-row class="h-20 pb-5">
+    <b-row class="h-20 pb-2">
       <b-col xl="2"></b-col>
       <b-col class="pl-5 year-slider-row">
         <VueSlider
@@ -92,6 +92,7 @@ export default {
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b'],
       ],
+      allNodesSelected: false,
     };
   },
   created() {
@@ -105,11 +106,11 @@ export default {
       this.defineChartSize();
     },
     defineChartSize() {
-      const heightRefElem = this.$refs.con.parentElement;
+      const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
       console.log(heightRefElem.clientHeight);
 
-      const chartHeight = heightRefElem.clientHeight * 0.8;
+      const chartHeight = heightRefElem.clientHeight * 0.7;
       const chartWidth = widthRefElem.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
@@ -122,11 +123,39 @@ export default {
           network: network,
           pane: this.pane,
         });
+        this.allNodesSelected = false;
+        this.deselectAllNodes();
       }
     },
     saveYear(year) {
       //save the current year at the start of the drag and if the year is the same at the end, dont send a call
       this.currentYear = year;
+    },
+    selectionCheckboxChanged() {
+      if (this.allNodesSelected) this.selectAllNodes();
+      else this.deselectAllNodes();
+    },
+    selectAllNodes() {
+      this.egoNetwork.nodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
+            0
+        )
+        .forEach((node) => {
+          this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+        });
+    },
+    deselectAllNodes() {
+      this.egoNetwork.nodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) >
+            -1
+        )
+        .forEach((node) => {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        });
     },
   },
   computed: {
@@ -141,17 +170,19 @@ export default {
       if (network) {
         for (const node of network.nodes) {
           nodes.push({
-            id: nodes.length,
+            id: network.id + '_' + node.id,
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
+            _metrics: node.metrics,
+            _pane: this.pane,
           });
         }
         for (const link of network.connections) {
           links.push({
-            sid: link.node1,
-            tid: link.node2,
+            sid: network.id + '_' + link.node1,
+            tid: network.id + '_' + link.node2,
           });
         }
         selectedNetwork = {
@@ -192,6 +223,11 @@ export default {
 .collapsed > .when-open,
 .not-collapsed > .when-closed {
   display: none;
+}
+
+.b-0 {
+  position: absolute;
+  bottom: 0;
 }
 </style>
 <style lang="scss">

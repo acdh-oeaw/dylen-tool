@@ -13,6 +13,13 @@
       >
         <b-icon icon="zoom-out"></b-icon>
       </b-button>
+      <b-form-checkbox
+        class="b-0"
+        v-model="allNodesSelected"
+        @change="selectionCheckboxChanged"
+      >
+        Select all nodes
+      </b-form-checkbox>
     </div>
     <svg
       ref="svg"
@@ -43,10 +50,12 @@ export default {
       nodes: [],
       links: [],
       svg: {},
+      allNodesSelected: false,
     };
   },
   watch: {
-    netNodes: function () {
+    netNodes: function (_, oldNodes) {
+      this.deselectOldNodes(oldNodes);
       this.updateSimulation();
     },
     netLinks: function () {
@@ -57,6 +66,9 @@ export default {
         this.initNetwork();
       },
       deep: true,
+    },
+    selectedNodes: function () {
+      this.simulation.restart();
     },
     options: {
       handler() {
@@ -87,8 +99,13 @@ export default {
         .data(this.nodes)
         .join('circle')
         .attr('r', this.nodeSize / 2)
-        .attr('stroke', '#000')
-        .attr('fill', (_, idx) => this.netNodes[idx]._color);
+        .attr('stroke', (d) =>
+          this.isSelected(d.index) ? this.getLineColor(d) : '#000'
+        )
+        .attr('stroke-width', (d) => (this.isSelected(d.index) ? 2 : 1))
+        .attr('fill', (_, idx) => this.netNodes[idx]._color)
+        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
+
       n.append('title').text((d) => d.name);
       n.call(
         d3
@@ -112,14 +129,8 @@ export default {
         .attr(
           'font-weight',
           this.options?.labelOptions?.bold ? 'bold' : 'normal'
-        );
-      l.call(
-        d3
-          .drag()
-          .on('start', this.dragstarted)
-          .on('drag', this.dragged)
-          .on('end', this.dragended)
-      );
+        )
+        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       return l;
     },
     link() {
@@ -131,8 +142,64 @@ export default {
         .attr('stroke', `rgba(0, 0, 0, ${this.options?.linkOptions?.opacity})`)
         .attr('stroke-width', 1);
     },
+    selectedNodes() {
+      return this.$store.getters['main/selectedNodesForMetrics'];
+    },
   },
   methods: {
+    /* deselectOldNodes(nodes) {
+      nodes.forEach((node) => {
+        if (this.selectedNodes.indexOf(node) > -1) {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        }
+      });
+    }, */
+    addOrRemoveSelectedNode(node) {
+      if (this.selectedNodes.indexOf(this.netNodes[node]) > -1) {
+        this.$store.commit(
+          'main/removeSelectedNodeForNodeMetrics',
+          this.netNodes[node]
+        );
+      } else {
+        this.$store.commit(
+          'main/addSelectedNodeForNodeMetrics',
+          this.netNodes[node]
+        );
+      }
+    },
+    selectionCheckboxChanged() {
+      if (this.allNodesSelected) this.selectAllNodes();
+      else this.deselectAllNodes();
+    },
+    selectAllNodes() {
+      this.netNodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
+            0
+        )
+        .forEach((node) => {
+          this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+        });
+    },
+    deselectAllNodes() {
+      this.netNodes
+        .filter(
+          (node) =>
+            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) >
+            -1
+        )
+        .forEach((node) => {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        });
+    },
+    isSelected(node) {
+      return this.selectedNodes.indexOf(this.netNodes[node]) > -1;
+    },
+    initNetwork() {
+      this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
+      this.updateSimulation();
+    },
     onZoomButtonClick(zoomFactor = 1) {
       this.d3Zoom.scaleBy(
         d3.select(this.$refs.svg).transition().duration(500),
@@ -170,16 +237,12 @@ export default {
       if (this.options.nodeLabels)
         this.label
           .attr('x', (d) => this.getNodeCoords(d).x + r)
-          .attr('y', (d) => this.getNodeCoords(d).y + r);
+          .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {
       this.scaleFactor = event.transform.k;
       this.translation = [event.transform.x, event.transform.y];
       this.applyScaleAndTransform();
-    },
-    initNetwork() {
-      this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
-      this.updateSimulation();
     },
     updateSimulation() {
       const options = this.options;
@@ -226,9 +289,19 @@ export default {
       d.fx = null;
       d.fy = null;
     },
+    getLineColor(node) {
+      if (node._pane == 'pane1')
+        return this.$store.getters['main/selectionColors'][0];
+      if (node._pane == 'pane2')
+        return this.$store.getters['main/selectionColors'][1];
+      return 'black';
+    },
   },
   mounted() {
     this.initNetwork();
+  },
+  beforeDestroy() {
+    this.deselectAllNodes();
   },
 };
 </script>

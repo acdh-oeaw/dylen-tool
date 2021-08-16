@@ -18,6 +18,7 @@ const logger = require("../helpers/logger");
 const mainModule = {
     namespaced: true,
     state: {
+        selectionColors: ["#1E88E5", "#D81B60"],
         availableQueryParams: [],
         pane1: {
             selectedCorpus: {id: '', name: '', sources: []},
@@ -32,6 +33,9 @@ const mainModule = {
             selectedTargetword: {id: '', text: ''},
             selectedYear: null,
             selectedNetwork: null
+        },
+        nodeMetrics: {
+            selectedNodes: []
         },
         posColors: {
             noun: '#aa0000',
@@ -79,6 +83,14 @@ const mainModule = {
                 state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0]
             }
         },
+        addSelectedNodeForNodeMetrics(state, payload) {
+            state["nodeMetrics"].selectedNodes.push(payload)
+        },
+        removeSelectedNodeForNodeMetrics(state, payload) {
+            let payloadIndex = state["nodeMetrics"].selectedNodes.indexOf(payload);
+            state["nodeMetrics"].selectedNodes.splice(payloadIndex, 1);
+        },
+        // TODO: check if this is still used.
         addEgoNetwork(state, payload) {
             state[payload['pane']].selectedNetwork = payload.network
         },
@@ -89,12 +101,14 @@ const mainModule = {
 
     },
     getters: {
+        selectionColors: (state) => state.selectionColors,
         availableQueryParams: (state) => state.availableQueryParams,
         selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
         selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
+        selectedNodesForMetrics: (state) => state["nodeMetrics"].selectedNodes,
         posColors: (state) => state.posColors,
         labelOptions: (state) => state.labelOptions,
         linkOptions: (state) => state.linkOptions,
