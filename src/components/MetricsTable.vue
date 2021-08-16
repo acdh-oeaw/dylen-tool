@@ -41,7 +41,15 @@ export default {
           color: this.getLineColor(node),
           node: node,
         };
-        for (let key in node._metrics) tableEntry[key] = node._metrics[key];
+        let maxDigits = this.$store.getters['main/tableOptions'].digits;
+        for (let key in node._metrics)
+          tableEntry[key] =
+            maxDigits > 10
+              ? node._metrics[key]
+              : Math.round(
+                  (node._metrics[key] + Number.EPSILON) *
+                    Math.pow(10, maxDigits)
+                ) / Math.pow(10, maxDigits);
         return tableEntry;
       });
     },

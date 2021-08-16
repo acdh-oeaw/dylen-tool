@@ -49,6 +49,9 @@ const mainModule = {
         },
         linkOptions: {
             opacity: 0.25
+        },
+        tableOptions: {
+            digits: 11
         }
     },
     mutations: {
@@ -112,6 +115,7 @@ const mainModule = {
         posColors: (state) => state.posColors,
         labelOptions: (state) => state.labelOptions,
         linkOptions: (state) => state.linkOptions,
+        tableOptions: (state) => state.tableOptions,
     },
     actions: {
         async loadAvailableQueryParams({state}) {
