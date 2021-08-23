@@ -70,7 +70,8 @@ const mainModule = {
             opacity: 0.25
         },
         tableOptions: {
-            digits: 11
+            digits: 3,
+            selectedOnTop: true
         }
     },
     mutations: {

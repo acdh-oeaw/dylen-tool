@@ -38,9 +38,10 @@
           :options="options"
         ></parallel-coordinates>
         <metrics-table
-          ref="parCoords"
+          ref="table"
           v-if="nodes && showTable"
-          :net-nodes="nodes"
+          :selected-nodes="nodes"
+          :all-nodes="allNodes"
           :options="options"
         ></metrics-table>
 
@@ -80,7 +81,8 @@ export default {
     },
     defineChartSize() {
       const heightRefElem = this.$refs.con?.parentElement;
-      const widthRefElem = this.$refs.parCoords.$el.parentElement;
+      const widthRefElem = (this.$refs.parCoords || this.$refs.table).$el
+        .parentElement;
       console.log(heightRefElem.clientHeight);
 
       const chartHeight = heightRefElem.clientHeight * 1.0;
@@ -110,6 +112,26 @@ export default {
   computed: {
     nodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
+    },
+    allNodes() {
+      let nodes = [];
+      const networks = [
+        this.$store.getters['main/getPane']('pane1')?.selectedNetwork,
+        this.$store.getters['main/getPane']('pane2')?.selectedNetwork,
+      ];
+      networks.forEach((network, idx) => {
+        if (network) {
+          for (const node of network.nodes) {
+            nodes.push({
+              id: network.id + '_' + node.id,
+              name: node.text,
+              _metrics: node.metrics,
+              _pane: `pane${idx + 1}`,
+            });
+          }
+        }
+      });
+      return nodes;
     },
   },
   watch: {},

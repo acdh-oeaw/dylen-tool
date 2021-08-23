@@ -124,6 +124,14 @@
               :step="1"
             >
             </b-form-input>
+
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>Show selected words on top</b-col>
+          <b-col>
+            <b-check v-model="tableOptions.selectedOnTop">
+            </b-check>
           </b-col>
         </b-row>
       </div>

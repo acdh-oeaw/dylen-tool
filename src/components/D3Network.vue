@@ -175,8 +175,9 @@ export default {
       this.netNodes
         .filter(
           (node) =>
-            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
-            0
+            !this.$store.getters['main/selectedNodesForMetrics'].find(
+              (n) => n.id == node.id
+            )
         )
         .forEach((node) => {
           this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
@@ -184,17 +185,19 @@ export default {
     },
     deselectAllNodes() {
       this.netNodes
-        .filter(
-          (node) =>
-            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) >
-            -1
+        .filter((node) =>
+          this.$store.getters['main/selectedNodesForMetrics'].find(
+            (n) => n.id == node.id
+          )
         )
         .forEach((node) => {
           this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
         });
     },
     isSelected(node) {
-      return this.selectedNodes.indexOf(this.netNodes[node]) > -1;
+      return Boolean(
+        this.selectedNodes.find((n) => n.id == this.netNodes[node].id)
+      );
     },
     initNetwork() {
       this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');

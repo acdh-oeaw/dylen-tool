@@ -4,18 +4,24 @@
     :fields="fields"
     :responsive="true"
     :sort-by="'word'"
+    :sort-compare="sortCompare"
     sticky-header="100%"
     small
     sort-icon-left
     class="h-100"
   >
 
+    <template #cell(selected)="row">
+      <b-button
+        variant="none"
+        class="mx-auto"
+        @click=" () => addOrRemoveSelectedNode(row.item.node)"
+      >
+        <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
+      </b-button>
+    </template>
     <template #cell(word)="row">
       <span>{{row.item.word}}</span>
-      <span
-        style="cursor: pointer; font-size: 0.5rem; vertical-align: super;"
-        @click="deselectNode(row.item.node)"
-      >❌</span>
     </template>
     <template #cell(network)="row">
       <span :style="`color: ${row.item.color}`">{{row.item.network}}</span>
@@ -25,14 +31,18 @@
 <script>
 export default {
   name: 'MetricsTable',
-  props: ['netNodes', 'options'],
+  props: ['selectedNodes', 'allNodes', 'options'],
   data() {
     return {};
   },
   computed: {
+    tableOptions() {
+      return this.$store.getters['main/tableOptions'];
+    },
     tableData() {
-      return this.netNodes.map((node) => {
+      return this.allNodes.map((node) => {
         let tableEntry = {
+          selected: Boolean(this.checkSelected(node)),
           word: node.name,
           network: `${
             this.$store.getters['main/selectedTargetword'](node._pane).text
@@ -42,7 +52,7 @@ export default {
           color: this.getLineColor(node),
           node: node,
         };
-        let maxDigits = this.$store.getters['main/tableOptions'].digits;
+        let maxDigits = this.tableOptions.digits;
         for (let key in node._metrics)
           tableEntry[key] =
             maxDigits > 10
@@ -72,8 +82,33 @@ export default {
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
     },
-    deselectNode(node) {
-      this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+    checkSelected(node) {
+      return this.selectedNodes.find((n) => n.id == node.id);
+    },
+    addOrRemoveSelectedNode(node) {
+      let foundSelected = this.checkSelected(node);
+      if (foundSelected) {
+        this.$store.commit(
+          'main/removeSelectedNodeForNodeMetrics',
+          foundSelected
+        );
+      } else {
+        this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+      }
+    },
+    sortCompare(a, b, key, sortDesc) {
+      if (this.tableOptions.selectedOnTop) {
+        if (a.selected == b.selected)
+          return a[key].localeCompare
+            ? a[key].localeCompare(b[key])
+            : a[key] - b[key];
+        if (a.selected) return sortDesc ? 1 : -1;
+        if (b.selected) return sortDesc ? -1 : 1;
+      } else {
+        return a[key].localeCompare
+          ? a[key].localeCompare(b[key])
+          : a[key] - b[key];
+      }
     },
   },
 };
