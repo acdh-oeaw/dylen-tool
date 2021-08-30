@@ -26,6 +26,18 @@
       class="line-chart"
       :viewBox="viewBox"
     >
+      <defs>
+        <filter
+          x="0"
+          y="0"
+          width="1"
+          height="1"
+          id="solid"
+        >
+          <feFlood flood-color="white" />
+          <feComposite in="SourceGraphic" />
+        </filter>
+      </defs>
       <g>
         <g class="links"></g>
         <g class="nodes"></g>
@@ -138,6 +150,9 @@ export default {
           this.options?.labelOptions?.bold
             ? 'bold'
             : 'normal'
+        )
+        .attr('filter', (d) =>
+          this.highlightedNodes.indexOf(d) > -1 ? 'url(#solid)' : ''
         )
         .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       return l;
@@ -277,7 +292,7 @@ export default {
 
       if (this.options.nodeLabels)
         this.label
-          .attr('x', (d) => this.getNodeCoords(d).x + r)
+          .attr('x', (d) => this.getNodeCoords(d).x + r + 2)
           .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {
