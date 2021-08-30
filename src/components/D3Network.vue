@@ -173,7 +173,7 @@ export default {
               this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
             })`
         )
-        .attr('stroke-width', (d) => (this.isFocused(d) ? 3 : 1));
+        .attr('stroke-width', (d) => (this.isFocused(d) ? 2 : 1));
     },
     selectedNodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
