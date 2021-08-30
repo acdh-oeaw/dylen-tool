@@ -155,7 +155,13 @@ export default {
       });
     }, */
     addOrRemoveSelectedNode(node) {
-      if (this.selectedNodes.indexOf(this.netNodes[node]) > -1) {
+      if (
+        this.selectedNodes.find(
+          (n) =>
+            n.id == this.netNodes[node].id &&
+            n._pane == this.netNodes[node]._pane
+        )
+      ) {
         this.$store.commit(
           'main/removeSelectedNodeForNodeMetrics',
           this.netNodes[node]
@@ -176,7 +182,7 @@ export default {
         .filter(
           (node) =>
             !this.$store.getters['main/selectedNodesForMetrics'].find(
-              (n) => n.id == node.id
+              (n) => n.id == node.id && n._pane == node._pane
             )
         )
         .forEach((node) => {
@@ -187,7 +193,7 @@ export default {
       this.netNodes
         .filter((node) =>
           this.$store.getters['main/selectedNodesForMetrics'].find(
-            (n) => n.id == node.id
+            (n) => n.id == node.id && n._pane == node._pane
           )
         )
         .forEach((node) => {
@@ -196,7 +202,11 @@ export default {
     },
     isSelected(node) {
       return Boolean(
-        this.selectedNodes.find((n) => n.id == this.netNodes[node].id)
+        this.selectedNodes.find(
+          (n) =>
+            n.id == this.netNodes[node].id &&
+            n._pane == this.netNodes[node]._pane
+        )
       );
     },
     initNetwork() {

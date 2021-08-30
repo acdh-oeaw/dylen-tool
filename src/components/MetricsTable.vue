@@ -83,7 +83,9 @@ export default {
       return 'black';
     },
     checkSelected(node) {
-      return this.selectedNodes.find((n) => n.id == node.id);
+      return this.selectedNodes.find(
+        (n) => n.id == node.id && n._pane == node._pane
+      );
     },
     addOrRemoveSelectedNode(node) {
       let foundSelected = this.checkSelected(node);
