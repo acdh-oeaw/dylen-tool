@@ -64,7 +64,8 @@ const mainModule = {
         },
         labelOptions: {
             fontSize: 12,
-            bold: false
+            bold: false,
+            background: true
         },
         linkOptions: {
             opacity: 0.25

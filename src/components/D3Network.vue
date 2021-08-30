@@ -152,7 +152,10 @@ export default {
             : 'normal'
         )
         .attr('filter', (d) =>
-          this.highlightedNodes.indexOf(d) > -1 ? 'url(#solid)' : ''
+          this.options?.labelOptions?.background &&
+          this.highlightedNodes.indexOf(d) > -1
+            ? 'url(#solid)'
+            : ''
         )
         .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       return l;
