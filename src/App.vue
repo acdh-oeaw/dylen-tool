@@ -111,6 +111,29 @@
             </b-form-input>
           </b-col>
         </b-row>
+        <h4 class="mt-3">Table options</h4>
+        <b-row>
+          <b-col>Number of digits to display: {{tableOptions.digits > 10 ? 'all' : tableOptions.digits}}</b-col>
+          <b-col>
+            <b-form-input
+              type="range"
+              v-model="tableOptions.digits"
+              :number="true"
+              :min="0"
+              :max="11"
+              :step="1"
+            >
+            </b-form-input>
+
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>Show selected words on top</b-col>
+          <b-col>
+            <b-check v-model="tableOptions.selectedOnTop">
+            </b-check>
+          </b-col>
+        </b-row>
       </div>
     </div>
   </div>
@@ -145,6 +168,11 @@ export default {
     linkOptions: {
       get() {
         return this.$store.getters['main/linkOptions'];
+      },
+    },
+    tableOptions: {
+      get() {
+        return this.$store.getters['main/tableOptions'];
       },
     },
   },
