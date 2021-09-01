@@ -34,9 +34,13 @@ export function getNetworkQuery(targetwordId, year) {
                       closenessCentrality
                       betweennessCentrality
                       eigenvectorCentrality
+                      pagerank
+                      loadCentrality
+                      harmonicCentrality
+                      clusteringCoefficient
                     }
                 }
-                connections {
+                edges {
                     node1
                     node2
                     similarity
