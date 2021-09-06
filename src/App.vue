@@ -152,7 +152,7 @@ export default {
     Modal,
   },
   created: function () {
-    this.$store.dispatch('main/loadAvailableQueryParams');
+    this.$store.dispatch('main/loadAvailableCorpora');
   },
   computed: {
     posColors: {

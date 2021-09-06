@@ -179,7 +179,7 @@ export default {
             _pane: this.pane,
           });
         }
-        for (const link of network.connections) {
+        for (const link of network.edges) {
           links.push({
             sid: network.id + '_' + link.node1,
             tid: network.id + '_' + link.node2,

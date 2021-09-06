@@ -15,11 +15,11 @@
                 v-model="selectedCorpus"
                 data-sauto-id="selectCorpus">
               <b-form-select-option
-                  v-for="option in availableQueryParams"
-                  v-bind:key="option.name"
+                  v-for="option in availableCorpora"
+                  v-bind:key="option"
                   v-bind:value="option"
-                  :data-sauto-id="'corpusOption-'+option.name">
-                {{ option.name }}
+                  :data-sauto-id="'corpusOption-'+option">
+                {{ option }}
               </b-form-select-option>
             </b-form-select>
           </b-form-group>
@@ -39,11 +39,11 @@
                 v-model="selectedSubcorpus"
                 data-sauto-id="selectSubCorpus">
               <b-form-select-option
-                  v-for="option in selectedCorpus.sources"
-                  v-bind:key="option.name"
+                  v-for="option in availableSources"
+                  v-bind:key="option"
                   v-bind:value="option"
-                  :data-sauto-id="'subCorpusOption-'+option.name">
-                {{ option.name }}
+                  :data-sauto-id="'subCorpusOption-'+option">
+                {{ option }}
               </b-form-select-option>
             </b-form-select>
           </b-form-group>
@@ -67,8 +67,8 @@
                 v-model="selectedTargetword"
                 data-sauto-id="selectTargetWord">
               <b-form-select-option
-                  v-for="option in selectedSubcorpus.targetWords"
-                  v-bind:key="option.text"
+                  v-for="option in availableTargetwords"
+                  v-bind:key="option.text+option.pos"
                   v-bind:value="option"
                   :data-sauto-id="'targetWord-'+option.text">
                 {{ option.text }}
@@ -158,9 +158,9 @@ export default {
       if (count > 0) return 'pane2';
       return "pane1";
     },
-    availableQueryParams: {
+    availableCorpora: {
       get() {
-        return this.$store.getters["main/availableQueryParams"];
+        return this.$store.getters["main/availableCorpora"];
       }
     },
     selectedCorpus: {
@@ -171,12 +171,22 @@ export default {
         if (val) this.$store.commit('main/changeSelectedCorpus', {corpus: val, pane: this.queryPane});
       }
     },
+    availableSources: {
+      get() {
+        return this.$store.getters["main/availableSourcesByCorpus"](this.selectedCorpus)
+      }
+    },
     selectedSubcorpus: {
       get() {
         return this.$store.getters["main/selectedSubcorpus"](this.queryPane);
       },
       set(val) {
         if (val) this.$store.commit('main/changeSelectedSubcorpus', {subcorpus: val, pane: this.queryPane});
+      }
+    },
+    availableTargetwords: {
+      get() {
+        return this.$store.getters["main/targetwordsOfCorpusAndSource"](this.selectedCorpus, this.selectedSubcorpus)
       }
     },
     selectedTargetword: {

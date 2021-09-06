@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import props from "../properties/propertiesLoader";
-import {allAvailableCorporaQuery, getNetworkQuery} from "@/queries/queries";
+import {allAvailableCorporaQuery, getNetworkQuery, getSoucesByCorpusQuery, getNetworksByCorpusAndSource} from "@/queries/queries";
 import { ExportToCsv } from 'export-to-csv';
 
 Vue.prototype.$http = axios;
@@ -38,9 +38,12 @@ const mainModule = {
     namespaced: true,
     state: {
         selectionColors: ["#1E88E5", "#D81B60"],
-        availableQueryParams: [],
+        availableCorpora: [],
+        availableSourcesByCorpus: {},
+        availableTargetwordsByCorpusAndSource: {},
         pane1: {
             selectedCorpus: {id: '', name: '', sources: []},
+            sourcesOfCorpus: null,
             selectedSubcorpus: {id: '', name: '', targetWords: []},
             selectedTargetword: {id: '', text: ''},
             selectedYear: null,
@@ -75,13 +78,23 @@ const mainModule = {
         }
     },
     mutations: {
+        loadCorpora(state, payload) {
+            state.availableCorpora = payload.corpora;
+        },
+        loadSourcesOfCorpus(state, payload) {
+            Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources)
+        },
+        selectInitValues(state, payload) {
+            state[payload.pane].selectedCorpus = state.availableCorpora[0];
+            state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+
+        },
         changeSelectedCorpus(state, payload) {
             if (payload.corpus) {
                 state[payload.pane].selectedCorpus = payload.corpus;
             } else {
-                state[payload.pane].selectedCorpus = state[payload.pane].availableQueryParams[0];
+                state[payload.pane].selectedCorpus = state[payload.pane].availableCorpora()[0];
             }
-            this.commit('main/changeSelectedSubcorpus', {pane: payload.pane});
         },
         changeSelectedSubcorpus(state, payload) {
             if (payload.subcorpus) {
@@ -89,7 +102,6 @@ const mainModule = {
             } else {
                 state[payload.pane].selectedSubcorpus = state[payload.pane].selectedCorpus.sources[0];
             }
-            this.commit('main/changeSelectedTargetword', {pane: payload.pane});
         },
         changeSelectedTargetword(state, payload) {
             if (payload.targetword) {
@@ -125,9 +137,11 @@ const mainModule = {
     },
     getters: {
         selectionColors: (state) => state.selectionColors,
-        availableQueryParams: (state) => state.availableQueryParams,
+        availableCorpora: (state) => state.availableCorpora,
         selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
+        availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
         selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
+        targetwordsOfCorpusAndSource: (state) => (corpus,selectedSubcorpus) => state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus] ,
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
@@ -138,20 +152,47 @@ const mainModule = {
         tableOptions: (state) => state.tableOptions,
     },
     actions: {
-        async loadAvailableQueryParams({state}) {
+        async initCorporaAndSources({dispatch}) {
+            const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
+            const corporaPayload = {
+                corpora: response.data.data.allAvailableCorpora
+            }
+            this.commit('main/loadCorpora', corporaPayload);
+
+            for (const corpus of response.data.data.allAvailableCorpora) {
+                const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus))
+                const sourcesPayload = {
+                    corpus: corpus,
+                    sources: sourceResponse.data.data.getSourcesByCorpus
+                }
+                this.commit('main/loadSourcesOfCorpus', sourcesPayload)
+            }
+            this.commit("main/selectInitValues", {pane: "pane1"})
+            this.commit("main/selectInitValues", {pane: "pane2"})
+
+            dispatch("initTargetwords", "pane1")
+            dispatch("initTargetwords", "pane2")
+        },
+
+        async initTargetwords({state}, pane) {
+            const targetwordsResponse = await axios.post(graphqlEndpoint, getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0,20))
+
+            if(!state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus]) {
+                Vue.set(state.availableTargetwordsByCorpusAndSource, state[pane].selectedCorpus, {})
+            }
+            Vue.set(state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus], state[pane].selectedSubcorpus, targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords)
+            //state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus][state[pane].selectedSubcorpus] = targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
+
+            state[pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus][state[pane].selectedSubcorpus][0]
+            state[pane].selectedYear = state[pane].selectedTargetword.networks[0]
+
+            this.commit("main/selectInitTargetword", {pane: "pane2"})
+        },
+        async loadAvailableCorpora({dispatch}) {
             try {
-                const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
-                state.availableQueryParams = response.data.data.allAvailableCorpora;
+                dispatch("initCorporaAndSources")
 
-                state.pane1.selectedCorpus = response.data.data.allAvailableCorpora[0];
-                state.pane1.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
-                state.pane1.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
-                state.pane1.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
 
-                state.pane2.selectedCorpus = response.data.data.allAvailableCorpora[0];
-                state.pane2.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
-                state.pane2.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
-                state.pane2.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
                 logger.log('Query parameters loaded successfully.')
             } catch (error) {
                 logger.error(error);
@@ -167,8 +208,8 @@ const mainModule = {
                 let network = response.data.data.getNetwork;
                 network.id = networkID
                 network.targetWordId = state[pane].selectedTargetword.id
-                network.corpus = state[pane].selectedCorpus.name
-                network.subcorpus = state[pane].selectedSubcorpus.name
+                network.corpus = state[pane].selectedCorpus
+                network.subcorpus = state[pane].selectedSubcorpus
                 network.text = state[pane].selectedTargetword.text
                 network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year)
                 logger.log('Ego Network loaded successfully.')

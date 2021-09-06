@@ -1,22 +1,37 @@
 export const allAvailableCorporaQuery = {
     query: `{
-        allAvailableCorpora {
-          id
-          name
-          sources {
-            name
-            targetWords {
-              id
-              text
-              pos
-              networks {
-                year
-              }
-            }
-          }
-        }
-      }`
+        allAvailableCorpora
+    }`
 };
+
+export function getNetworksByCorpusAndSource(corpus, source, page, size) {
+    let query = {
+                    query: `{
+                        getNetworksByCorpusAndSource(corpus: "${corpus}", source: "${source}", page: ${page}, size: ${size}) {
+                            sliceNumber
+                            hasNext
+                            targetWords {
+                                id
+                                text
+                                pos
+                                networks {
+                                    year
+                                }
+                            }
+                        }
+                    }`
+                }
+        return query;
+    }
+
+export function getSoucesByCorpusQuery(corpus) {
+    let query = {
+        query: `{
+            getSourcesByCorpus(corpus: "${corpus}")
+        }`
+    }
+    return query;
+}
 
 export function getNetworkQuery(targetwordId, year) {
     let query = {
