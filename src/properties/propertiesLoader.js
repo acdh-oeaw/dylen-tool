@@ -11,7 +11,7 @@ if (environment === "dev") {
 } else if (environment === "prod") {
   props = properties;
 } else {
-  props = properties_local;
+  props = properties_dev;
 }
 
 export default props;
