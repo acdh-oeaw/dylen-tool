@@ -2,8 +2,13 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import props from "../properties/propertiesLoader";
-import {allAvailableCorporaQuery, getNetworkQuery, getSoucesByCorpusQuery, getNetworksByCorpusAndSource} from "@/queries/queries";
-import { ExportToCsv } from 'export-to-csv';
+import {
+    allAvailableCorporaQuery,
+    getNetworkQuery,
+    getSoucesByCorpusQuery,
+    getNetworksByCorpusAndSource
+} from "@/queries/queries";
+import {ExportToCsv} from 'export-to-csv';
 
 Vue.prototype.$http = axios;
 Vue.prototype.axios = axios;
@@ -19,19 +24,19 @@ const logger = require("../helpers/logger");
 const nodesToJSON = (state, nodes) => {
     return nodes.map((node) => {
         let tableEntry = {
-          Word: node.name,
-          Network: `${
-            state[node._pane].selectedTargetword.text
-          } (${
-            state[node._pane].selectedNetwork.year
-          })`,
-          
+            Word: node.name,
+            Network: `${
+                state[node._pane].selectedTargetword.text
+            } (${
+                state[node._pane].selectedNetwork.year
+            })`,
+
         };
         for (let key in node._metrics)
-          tableEntry[key] = node._metrics[key];
-              
+            tableEntry[key] = node._metrics[key];
+
         return tableEntry;
-      });
+    });
 }
 
 const mainModule = {
@@ -43,7 +48,6 @@ const mainModule = {
         availableTargetwordsByCorpusAndSource: {},
         pane1: {
             selectedCorpus: {id: '', name: '', sources: []},
-            sourcesOfCorpus: null,
             selectedSubcorpus: {id: '', name: '', targetWords: []},
             selectedTargetword: {id: '', text: ''},
             selectedYear: null,
@@ -82,12 +86,21 @@ const mainModule = {
             state.availableCorpora = payload.corpora;
         },
         loadSourcesOfCorpus(state, payload) {
-            Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources)
+            Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources);
+        },
+        loadTargetwordsOfCorpusAndSource(state, payload) {
+            if (!state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus]) {
+                Vue.set(state.availableTargetwordsByCorpusAndSource, state[payload.pane].selectedCorpus, {});
+            }
+            Vue.set(state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus], state[payload.pane].selectedSubcorpus, payload.targetWords);
         },
         selectInitValues(state, payload) {
             state[payload.pane].selectedCorpus = state.availableCorpora[0];
             state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
-
+        },
+        selectInitTargetWord(state, payload) {
+            state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0]
+            state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0]
         },
         changeSelectedCorpus(state, payload) {
             if (payload.corpus) {
@@ -141,7 +154,7 @@ const mainModule = {
         selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
         availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
         selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
-        targetwordsOfCorpusAndSource: (state) => (corpus,selectedSubcorpus) => state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus] ,
+        targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus],
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
@@ -152,14 +165,16 @@ const mainModule = {
         tableOptions: (state) => state.tableOptions,
     },
     actions: {
-        async initCorporaAndSources({dispatch}) {
+        async initCorpora({dispatch}) {
             const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
             const corporaPayload = {
                 corpora: response.data.data.allAvailableCorpora
             }
             this.commit('main/loadCorpora', corporaPayload);
-
-            for (const corpus of response.data.data.allAvailableCorpora) {
+            await dispatch("initSources")
+        },
+        async initSources({dispatch, state}) {
+            for (const corpus of state.availableCorpora) {
                 const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus))
                 const sourcesPayload = {
                     corpus: corpus,
@@ -170,28 +185,24 @@ const mainModule = {
             this.commit("main/selectInitValues", {pane: "pane1"})
             this.commit("main/selectInitValues", {pane: "pane2"})
 
-            dispatch("initTargetwords", "pane1")
-            dispatch("initTargetwords", "pane2")
+            await dispatch("initTargetwords", "pane1")
+            await dispatch("initTargetwords", "pane2")
         },
 
         async initTargetwords({state}, pane) {
-            const targetwordsResponse = await axios.post(graphqlEndpoint, getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0,20))
-
-            if(!state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus]) {
-                Vue.set(state.availableTargetwordsByCorpusAndSource, state[pane].selectedCorpus, {})
+            const targetwordsResponse = await axios.post(graphqlEndpoint, getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0, 20))
+            const payload = {
+                pane: pane,
+                targetWords: targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
             }
-            Vue.set(state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus], state[pane].selectedSubcorpus, targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords)
-            //state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus][state[pane].selectedSubcorpus] = targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
-
-            state[pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[pane].selectedCorpus][state[pane].selectedSubcorpus][0]
-            state[pane].selectedYear = state[pane].selectedTargetword.networks[0]
-
-            this.commit("main/selectInitTargetword", {pane: "pane2"})
+            this.commit("main/loadTargetwordsOfCorpusAndSource", payload)
+            this.commit("main/selectInitTargetWord", {pane: "pane1"})
+            this.commit("main/selectInitTargetWord", {pane: "pane2"})
         },
+
         async loadAvailableCorpora({dispatch}) {
             try {
-                dispatch("initCorporaAndSources")
-
+                await dispatch("initCorpora")
 
                 logger.log('Query parameters loaded successfully.')
             } catch (error) {
@@ -245,36 +256,36 @@ const mainModule = {
                 logger.error(error);
             }
         },
-        async downloadMetricsAsCSV({state}, nodes){
+        async downloadMetricsAsCSV({state}, nodes) {
             let data = nodesToJSON(state, nodes);
-              const options = { 
+            const options = {
                 filename: "DYLEN_Export",
                 fieldSeparator: ',',
                 quoteStrings: '"',
                 decimalSeparator: '.',
-                showLabels: true, 
+                showLabels: true,
                 showTitle: false,
                 useTextFile: false,
                 useBom: true,
                 useKeysAsHeaders: true,
-              };
-             
+            };
+
             const csvExporter = new ExportToCsv(options);
             csvExporter.generateCsv(data);
         },
-        async downloadMetricsAsJSON({state}, nodes){
+        async downloadMetricsAsJSON({state}, nodes) {
             let exportName = "DYLEN_Export";
             let data = nodesToJSON(state, nodes);
             var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
             var downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("href", dataStr);
             downloadAnchorNode.setAttribute("download", exportName + ".json");
             document.body.appendChild(downloadAnchorNode); // required for firefox
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
         }
     },
-    setPosColor({state}, posTag, colorCode){
+    setPosColor({state}, posTag, colorCode) {
         state.posColors[posTag] = colorCode;
     }
 }
