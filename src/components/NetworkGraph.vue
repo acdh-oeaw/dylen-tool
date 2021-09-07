@@ -108,7 +108,6 @@ export default {
     defineChartSize() {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
-      console.log(heightRefElem.clientHeight);
 
       const chartHeight = heightRefElem.clientHeight * 0.7;
       const chartWidth = widthRefElem.clientWidth / 1.08;

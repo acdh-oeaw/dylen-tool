@@ -71,7 +71,7 @@
                   v-bind:key="option.text+option.pos"
                   v-bind:value="option"
                   :data-sauto-id="'targetWord-'+option.text">
-                {{ option.text }}
+                {{ option.text + ' (' + option.pos + ')'}}
               </b-form-select-option>
             </b-form-select>
           </b-form-group>

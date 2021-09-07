@@ -10,10 +10,7 @@ import {
 } from "@/queries/queries";
 import {ExportToCsv} from 'export-to-csv';
 
-Vue.prototype.$http = axios;
 Vue.prototype.axios = axios;
-
-Vue.prototype.$properties = props; //to be able to access in modules
 
 Vue.use(Vuex);
 
@@ -154,7 +151,12 @@ const mainModule = {
         selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
         availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
         selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
-        targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus],
+        targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => {
+            if (!state.availableTargetwordsByCorpusAndSource[corpus] || !state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus]) {
+                return []
+            }
+            return state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus]
+        },
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
@@ -301,7 +303,7 @@ const sautoModule = {
     actions: {
         async connect({state}) {
             if (state.sauto) {
-                console.log(props.sautoURI);
+                log(props.sautoURI);
                 state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
                 state.connection.onerror = function (event) {
                     logger.error(event);
