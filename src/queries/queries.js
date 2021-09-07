@@ -5,7 +5,7 @@ export const allAvailableCorporaQuery = {
 };
 
 export function getNetworksByCorpusAndSource(corpus, source, page, size) {
-    let query = {
+    const query = {
                     query: `{
                         getNetworksByCorpusAndSource(corpus: "${corpus}", source: "${source}", page: ${page}, size: ${size}) {
                             sliceNumber
@@ -25,7 +25,7 @@ export function getNetworksByCorpusAndSource(corpus, source, page, size) {
     }
 
 export function getSoucesByCorpusQuery(corpus) {
-    let query = {
+    const query = {
         query: `{
             getSourcesByCorpus(corpus: "${corpus}")
         }`
@@ -34,7 +34,7 @@ export function getSoucesByCorpusQuery(corpus) {
 }
 
 export function getNetworkQuery(targetwordId, year) {
-    let query = {
+    const query = {
         query:`{
             getNetwork(targetword_id: "${targetwordId}", year:${year}){
                 year
