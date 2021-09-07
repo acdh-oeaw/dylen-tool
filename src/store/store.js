@@ -303,7 +303,7 @@ const sautoModule = {
     actions: {
         async connect({state}) {
             if (state.sauto) {
-                log(props.sautoURI);
+                logger.log(props.sautoURI);
                 state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
                 state.connection.onerror = function (event) {
                     logger.error(event);
