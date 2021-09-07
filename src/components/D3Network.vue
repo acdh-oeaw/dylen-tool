@@ -26,6 +26,18 @@
       class="line-chart"
       :viewBox="viewBox"
     >
+      <defs>
+        <filter
+          x="0"
+          y="0"
+          width="1"
+          height="1"
+          id="solid"
+        >
+          <feFlood flood-color="white" />
+          <feComposite in="SourceGraphic" />
+        </filter>
+      </defs>
       <g>
         <g class="links"></g>
         <g class="nodes"></g>
@@ -51,6 +63,7 @@ export default {
       links: [],
       svg: {},
       allNodesSelected: false,
+      focusedNode: [],
     };
   },
   watch: {
@@ -102,9 +115,15 @@ export default {
         .attr('stroke', (d) =>
           this.isSelected(d.index) ? this.getLineColor(d) : '#000'
         )
-        .attr('stroke-width', (d) => (this.isSelected(d.index) ? 2 : 1))
+        .attr('stroke-width', (d) =>
+          this.highlightedNodes.indexOf(d) > -1 || this.isSelected(d.index)
+            ? 2
+            : 1
+        )
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
+        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index))
+        .on('mouseenter', (event, d) => this.focusNode(d))
+        .on('mouseleave', () => this.defocusNode());
 
       n.append('title').text((d) => d.name);
       n.call(
@@ -126,9 +145,17 @@ export default {
         .text((_, idx) => this.netNodes[idx].name)
         .attr('fill', (_, idx) => this.netNodes[idx]._labelColor)
         .attr('font-size', this.options?.labelOptions?.fontSize)
-        .attr(
-          'font-weight',
-          this.options?.labelOptions?.bold ? 'bold' : 'normal'
+        .attr('font-weight', (d) =>
+          this.highlightedNodes.indexOf(d) > -1 ||
+          this.options?.labelOptions?.bold
+            ? 'bold'
+            : 'normal'
+        )
+        .attr('filter', (d) =>
+          this.options?.labelOptions?.background &&
+          this.highlightedNodes.indexOf(d) > -1
+            ? 'url(#solid)'
+            : ''
         )
         .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
       return l;
@@ -139,21 +166,40 @@ export default {
         .selectAll('line')
         .data(this.links)
         .join('line')
-        .attr('stroke', `rgba(0, 0, 0, ${this.options?.linkOptions?.opacity})`)
-        .attr('stroke-width', 1);
+        .attr(
+          'stroke',
+          (d) =>
+            `rgba(0, 0, 0, ${
+              this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
+            })`
+        )
+        .attr('stroke-width', (d) => (this.isFocused(d) ? 2 : 1));
     },
     selectedNodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
     },
+    highlightedNodes() {
+      let targets = this.links
+        .filter((link) => link.source == this.focusedNode)
+        .map((link) => link.target);
+      let sources = this.links
+        .filter((link) => link.target == this.focusedNode)
+        .map((link) => link.source);
+      return [this.focusedNode].concat(targets).concat(sources);
+    },
   },
   methods: {
-    /* deselectOldNodes(nodes) {
-      nodes.forEach((node) => {
-        if (this.selectedNodes.indexOf(node) > -1) {
-          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
-        }
-      });
-    }, */
+    focusNode(node) {
+      this.focusedNode = node;
+      this.simulation.restart();
+    },
+    defocusNode() {
+      this.focusedNode = null;
+      this.simulation.restart();
+    },
+    isFocused(node) {
+      return node.source == this.focusedNode || node.target == this.focusedNode;
+    },
     addOrRemoveSelectedNode(node) {
       if (
         this.selectedNodes.find(
@@ -249,7 +295,7 @@ export default {
 
       if (this.options.nodeLabels)
         this.label
-          .attr('x', (d) => this.getNodeCoords(d).x + r)
+          .attr('x', (d) => this.getNodeCoords(d).x + r + 2)
           .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {

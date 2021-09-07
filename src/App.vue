@@ -96,6 +96,12 @@
             <b-form-checkbox v-model="labelOptions.bold"></b-form-checkbox>
           </b-col>
         </b-row>
+        <b-row>
+          <b-col>White label background</b-col>
+          <b-col>
+            <b-form-checkbox v-model="labelOptions.background"></b-form-checkbox>
+          </b-col>
+        </b-row>
         <h4 class="mt-3">Link options</h4>
         <b-row>
           <b-col>Opacity: {{linkOptions.opacity}}</b-col>
