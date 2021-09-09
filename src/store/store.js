@@ -2,43 +2,171 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import props from "../properties/propertiesLoader";
-import {allAvailableCorporaQuery, getNetworkQuery} from "@/queries/queries";
-import { ExportToCsv } from 'export-to-csv';
+import {
+    allAvailableCorporaQuery,
+    getNetworkQuery,
+    getSoucesByCorpusQuery,
+    getNetworksByCorpusAndSource
+} from "@/queries/queries";
+import {ExportToCsv} from 'export-to-csv';
 
-Vue.prototype.$http = axios;
 Vue.prototype.axios = axios;
-
-Vue.prototype.$properties = props; //to be able to access in modules
-
 Vue.use(Vuex);
 
 const graphqlEndpoint = props.graphqlEndpoint;
-
 const logger = require("../helpers/logger");
 
 const nodesToJSON = (state, nodes) => {
     return nodes.map((node) => {
         let tableEntry = {
-          Word: node.name,
-          Network: `${
-            state[node._pane].selectedTargetword.text
-          } (${
-            state[node._pane].selectedNetwork.year
-          })`,
-          
+            Word: node.name,
+            Network: `${
+                state[node._pane].selectedTargetword.text
+            } (${
+                state[node._pane].selectedNetwork.year
+            })`,
+
         };
         for (let key in node._metrics)
-          tableEntry[key] = node._metrics[key];
-              
+            tableEntry[key] = node._metrics[key];
+
         return tableEntry;
-      });
+    });
 }
 
 const mainModule = {
+    actions: {
+        async initCorpora({dispatch}) {
+            const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
+            const corporaPayload = {
+                corpora: response.data.data.allAvailableCorpora
+            }
+            this.commit('main/loadCorpora', corporaPayload);
+            await dispatch("initSources")
+        },
+        async initSources({dispatch, state}) {
+            for (const corpus of state.availableCorpora) {
+                const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus))
+                const sourcesPayload = {
+                    corpus: corpus,
+                    sources: sourceResponse.data.data.getSourcesByCorpus
+                }
+                this.commit('main/loadSourcesOfCorpus', sourcesPayload)
+            }
+            this.commit("main/selectInitValues", {pane: "pane1"})
+            this.commit("main/selectInitValues", {pane: "pane2"})
+
+            await dispatch("initTargetwords", "pane1")
+            await dispatch("initTargetwords", "pane2")
+        },
+        async initTargetwords({state}, pane) {
+            const targetwordsResponse = await axios.post(graphqlEndpoint,
+                getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0, 20))
+            const payload = {
+                pane: pane,
+                targetWords: targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
+            }
+            this.commit("main/loadTargetwordsOfCorpusAndSource", payload)
+            this.commit("main/selectInitTargetWord", {pane: "pane1"})
+            this.commit("main/selectInitTargetWord", {pane: "pane2"})
+        },
+        async loadAvailableCorpora({dispatch}) {
+            try {
+                await dispatch("initCorpora")
+                logger.log('Query parameters loaded successfully.')
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+        async loadEgoNetwork({state}, pane) {
+            function assignValuesFromState(network, networkID) {
+                network.id = networkID
+                network.targetWordId = state[pane].selectedTargetword.id
+                network.corpus = state[pane].selectedCorpus
+                network.subcorpus = state[pane].selectedSubcorpus
+                network.text = state[pane].selectedTargetword.text
+                network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year)
+            }
+
+            let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year
+
+            try {
+                const response = await axios.post(graphqlEndpoint,
+                    getNetworkQuery(state[pane].selectedTargetword.id, year_param));
+                const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year
+                let network = response.data.data.getNetwork;
+
+                assignValuesFromState(network, networkID);
+
+                const payload = {
+                    pane: pane,
+                    network: network
+                }
+
+                this.commit('main/addEgoNetwork', payload);
+                logger.log('Ego Network loaded successfully.')
+
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+        async loadUpdatedEgoNetwork(state, {network: oldNetwork, pane: pane}) {
+            try {
+
+                const response = await axios.post(graphqlEndpoint,
+                    getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
+
+                const networkID = oldNetwork.targetWordId + oldNetwork.year
+                let updatedNetwork = response.data.data.getNetwork;
+
+                updatedNetwork.id = networkID
+                updatedNetwork.targetWordId = oldNetwork.targetWordId
+                updatedNetwork.corpus = oldNetwork.corpus
+                updatedNetwork.subcorpus = oldNetwork.subcorpus
+                updatedNetwork.text = oldNetwork.text
+                updatedNetwork.possibleYears = oldNetwork.possibleYears
+                logger.log('Ego Network %s updated successfully.', networkID)
+
+                this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+        async downloadMetricsAsCSV({state}, nodes) {
+            let data = nodesToJSON(state, nodes);
+            const options = {
+                filename: "DYLEN_Export",
+                fieldSeparator: ',',
+                quoteStrings: '"',
+                decimalSeparator: '.',
+                showLabels: true,
+                showTitle: false,
+                useTextFile: false,
+                useBom: true,
+                useKeysAsHeaders: true,
+            };
+
+            const csvExporter = new ExportToCsv(options);
+            csvExporter.generateCsv(data);
+        },
+        async downloadMetricsAsJSON({state}, nodes) {
+            let exportName = "DYLEN_Export";
+            let data = nodesToJSON(state, nodes);
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            var downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", exportName + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+    },
     namespaced: true,
     state: {
         selectionColors: ["#1E88E5", "#D81B60"],
-        availableQueryParams: [],
+        availableCorpora: [],
+        availableSourcesByCorpus: {},
+        availableTargetwordsByCorpusAndSource: {},
         pane1: {
             selectedCorpus: {id: '', name: '', sources: []},
             selectedSubcorpus: {id: '', name: '', targetWords: []},
@@ -76,13 +204,32 @@ const mainModule = {
         }
     },
     mutations: {
+        loadCorpora(state, payload) {
+            state.availableCorpora = payload.corpora;
+        },
+        loadSourcesOfCorpus(state, payload) {
+            Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources);
+        },
+        loadTargetwordsOfCorpusAndSource(state, payload) {
+            if (!state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus]) {
+                Vue.set(state.availableTargetwordsByCorpusAndSource, state[payload.pane].selectedCorpus, {});
+            }
+            Vue.set(state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus], state[payload.pane].selectedSubcorpus, payload.targetWords);
+        },
+        selectInitValues(state, payload) {
+            state[payload.pane].selectedCorpus = state.availableCorpora[0];
+            state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+        },
+        selectInitTargetWord(state, payload) {
+            state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0]
+            state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0]
+        },
         changeSelectedCorpus(state, payload) {
             if (payload.corpus) {
                 state[payload.pane].selectedCorpus = payload.corpus;
             } else {
-                state[payload.pane].selectedCorpus = state[payload.pane].availableQueryParams[0];
+                state[payload.pane].selectedCorpus = state[payload.pane].availableCorpora()[0];
             }
-            this.commit('main/changeSelectedSubcorpus', {pane: payload.pane});
         },
         changeSelectedSubcorpus(state, payload) {
             if (payload.subcorpus) {
@@ -90,7 +237,6 @@ const mainModule = {
             } else {
                 state[payload.pane].selectedSubcorpus = state[payload.pane].selectedCorpus.sources[0];
             }
-            this.commit('main/changeSelectedTargetword', {pane: payload.pane});
         },
         changeSelectedTargetword(state, payload) {
             if (payload.targetword) {
@@ -114,7 +260,6 @@ const mainModule = {
             let payloadIndex = state["nodeMetrics"].selectedNodes.indexOf(payload);
             state["nodeMetrics"].selectedNodes.splice(payloadIndex, 1);
         },
-        // TODO: check if this is still used.
         addEgoNetwork(state, payload) {
             state[payload['pane']].selectedNetwork = payload.network
         },
@@ -126,9 +271,15 @@ const mainModule = {
     },
     getters: {
         selectionColors: (state) => state.selectionColors,
-        availableQueryParams: (state) => state.availableQueryParams,
+        availableCorpora: (state) => state.availableCorpora,
         selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
+        availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
         selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
+        targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => {
+            if (!state.availableTargetwordsByCorpusAndSource[corpus] || !state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus])
+                return []
+            return state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus]
+        },
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
         getPane: (state) => (pane) => state[pane],
@@ -138,103 +289,7 @@ const mainModule = {
         linkOptions: (state) => state.linkOptions,
         tableOptions: (state) => state.tableOptions,
     },
-    actions: {
-        async loadAvailableQueryParams({state}) {
-            try {
-                const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
-                state.availableQueryParams = response.data.data.allAvailableCorpora;
-
-                state.pane1.selectedCorpus = response.data.data.allAvailableCorpora[0];
-                state.pane1.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
-                state.pane1.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
-                state.pane1.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
-
-                state.pane2.selectedCorpus = response.data.data.allAvailableCorpora[0];
-                state.pane2.selectedSubcorpus = response.data.data.allAvailableCorpora[0].sources[0];
-                state.pane2.selectedTargetword = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0];
-                state.pane2.selectedYear = response.data.data.allAvailableCorpora[0].sources[0].targetWords[0].networks[0]
-                logger.log('Query parameters loaded successfully.')
-            } catch (error) {
-                logger.error(error);
-            }
-        },
-        async loadEgoNetwork({state}, pane) {
-            let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year
-
-            try {
-                const response = await axios.post(graphqlEndpoint,
-                    getNetworkQuery(state[pane].selectedTargetword.id, year_param));
-                const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year
-                let network = response.data.data.getNetwork;
-                network.id = networkID
-                network.targetWordId = state[pane].selectedTargetword.id
-                network.corpus = state[pane].selectedCorpus.name
-                network.subcorpus = state[pane].selectedSubcorpus.name
-                network.text = state[pane].selectedTargetword.text
-                network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year)
-                logger.log('Ego Network loaded successfully.')
-
-                const payload = {
-                    pane: pane,
-                    network: network
-                }
-                this.commit('main/addEgoNetwork', payload);
-            } catch (error) {
-                logger.error(error);
-            }
-        },
-        async loadUpdatedEgoNetwork(state, {network: oldNetwork, pane: pane}) {
-            try {
-
-                const response = await axios.post(graphqlEndpoint,
-                    getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
-
-                const networkID = oldNetwork.targetWordId + oldNetwork.year
-                let updatedNetwork = response.data.data.getNetwork;
-
-                updatedNetwork.id = networkID
-                updatedNetwork.targetWordId = oldNetwork.targetWordId
-                updatedNetwork.corpus = oldNetwork.corpus
-                updatedNetwork.subcorpus = oldNetwork.subcorpus
-                updatedNetwork.text = oldNetwork.text
-                updatedNetwork.possibleYears = oldNetwork.possibleYears
-                logger.log('Ego Network %s updated successfully.', networkID)
-
-                this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
-            } catch (error) {
-                logger.error(error);
-            }
-        },
-        async downloadMetricsAsCSV({state}, nodes){
-            let data = nodesToJSON(state, nodes);
-              const options = { 
-                filename: "DYLEN_Export",
-                fieldSeparator: ',',
-                quoteStrings: '"',
-                decimalSeparator: '.',
-                showLabels: true, 
-                showTitle: false,
-                useTextFile: false,
-                useBom: true,
-                useKeysAsHeaders: true,
-              };
-             
-            const csvExporter = new ExportToCsv(options);
-            csvExporter.generateCsv(data);
-        },
-        async downloadMetricsAsJSON({state}, nodes){
-            let exportName = "DYLEN_Export";
-            let data = nodesToJSON(state, nodes);
-            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-            var downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href",     dataStr);
-            downloadAnchorNode.setAttribute("download", exportName + ".json");
-            document.body.appendChild(downloadAnchorNode); // required for firefox
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        }
-    },
-    setPosColor({state}, posTag, colorCode){
+    setPosColor({state}, posTag, colorCode) {
         state.posColors[posTag] = colorCode;
     }
 }
@@ -250,7 +305,7 @@ const sautoModule = {
     actions: {
         async connect({state}) {
             if (state.sauto) {
-                console.log(props.sautoURI);
+                logger.log(props.sautoURI);
                 state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
                 state.connection.onerror = function (event) {
                     logger.error(event);

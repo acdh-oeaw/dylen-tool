@@ -108,7 +108,6 @@ export default {
     defineChartSize() {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
-      console.log(heightRefElem.clientHeight);
 
       const chartHeight = heightRefElem.clientHeight * 0.7;
       const chartWidth = widthRefElem.clientWidth / 1.08;
@@ -179,7 +178,7 @@ export default {
             _pane: this.pane,
           });
         }
-        for (const link of network.connections) {
+        for (const link of network.edges) {
           links.push({
             sid: network.id + '_' + link.node1,
             tid: network.id + '_' + link.node2,
