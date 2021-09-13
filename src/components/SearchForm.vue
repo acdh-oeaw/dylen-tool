@@ -182,6 +182,7 @@ export default {
       },
       set(val) {
         if (val) this.$store.commit('main/changeSelectedSubcorpus', {subcorpus: val, pane: this.queryPane});
+        if (val) this.$store.dispatch('main/loadTargetWords', this.queryPane)
       }
     },
     availableTargetwords: {
