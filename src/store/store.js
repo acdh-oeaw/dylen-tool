@@ -42,9 +42,9 @@ const mainModule = {
                 corpora: response.data.data.allAvailableCorpora
             }
             this.commit('main/loadCorpora', corporaPayload);
-            await dispatch("initSources")
+            await dispatch("loadSources")
         },
-        async initSources({dispatch, state}) {
+        async loadSources({dispatch, state}) {
             for (const corpus of state.availableCorpora) {
                 const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus))
                 const sourcesPayload = {
@@ -56,10 +56,11 @@ const mainModule = {
             this.commit("main/selectInitValues", {pane: "pane1"})
             this.commit("main/selectInitValues", {pane: "pane2"})
 
-            await dispatch("initTargetwords", "pane1")
-            await dispatch("initTargetwords", "pane2")
+            await dispatch("loadTargetWords", "pane1")
+            await dispatch("loadTargetWords", "pane2")
+
         },
-        async initTargetwords({state}, pane) {
+        async loadTargetWords({state}, pane) {
             const targetwordsResponse = await axios.post(graphqlEndpoint,
                 getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0, 20))
             const payload = {
@@ -67,8 +68,7 @@ const mainModule = {
                 targetWords: targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
             }
             this.commit("main/loadTargetwordsOfCorpusAndSource", payload)
-            this.commit("main/selectInitTargetWord", {pane: "pane1"})
-            this.commit("main/selectInitTargetWord", {pane: "pane2"})
+            this.commit("main/selectInitTargetWord", {pane: pane})
         },
         async loadAvailableCorpora({dispatch}) {
             try {
@@ -232,17 +232,13 @@ const mainModule = {
             }
         },
         changeSelectedSubcorpus(state, payload) {
-            if (payload.subcorpus) {
-                state[payload.pane].selectedSubcorpus = payload.subcorpus;
-            } else {
-                state[payload.pane].selectedSubcorpus = state[payload.pane].selectedCorpus.sources[0];
-            }
+            state[payload.pane].selectedSubcorpus = payload.subcorpus? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
         },
         changeSelectedTargetword(state, payload) {
             if (payload.targetword) {
                 state[payload.pane].selectedTargetword = payload.targetword;
             } else {
-                state[payload.pane].selectedTargetword = state[payload.pane].selectedSubcorpus.targetWords[0];
+                state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0]
             }
             this.commit('main/changeSelectedYear', {pane: payload.pane});
         },
