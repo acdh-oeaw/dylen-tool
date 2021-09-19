@@ -6,7 +6,8 @@ import {
     allAvailableCorporaQuery,
     getNetworkQuery,
     getSoucesByCorpusQuery,
-    getNetworksByCorpusAndSource
+    getNetworksByCorpusAndSource,
+    getAutocompleteSuggestionsQuery
 } from "@/queries/queries";
 import {ExportToCsv} from 'export-to-csv';
 
@@ -132,6 +133,12 @@ const mainModule = {
                 logger.error(error);
             }
         },
+        async loadAutocompleteSuggestions({state}, {pane}) {
+            const targetwordsResponse = await axios.post(graphqlEndpoint,
+                getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
+            this.commit("main/setAutocompleteSuggestions", {suggestions: targetwordsResponse.data.data.getAutocompleteSuggestions, pane: pane});
+            
+        },
         async downloadMetricsAsCSV({state}, nodes) {
             let data = nodesToJSON(state, nodes);
             const options = {
@@ -172,14 +179,18 @@ const mainModule = {
             selectedSubcorpus: {id: '', name: '', targetWords: []},
             selectedTargetword: {id: '', text: ''},
             selectedYear: null,
-            selectedNetwork: null
+            selectedNetwork: null,
+            searchTerm: null,
+            autocompleteSuggestions: []
         },
         pane2: {
             selectedCorpus: {id: '', name: '', sources: []},
             selectedSubcorpus: {id: '', name: '', targetWords: []},
             selectedTargetword: {id: '', text: ''},
             selectedYear: null,
-            selectedNetwork: null
+            selectedNetwork: null,
+            searchTerm: null,
+            autocompleteSuggestions: []
         },
         nodeMetrics: {
             selectedNodes: []
@@ -242,6 +253,14 @@ const mainModule = {
             }
             this.commit('main/changeSelectedYear', {pane: payload.pane});
         },
+        changeSearchTerm(state, payload) {
+            if (payload.targetword) {
+                state[payload.pane].searchTerm = payload.targetword;
+            } else {
+                state[payload.pane].searchTerm = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0]
+            }
+            this.dispatch('main/loadAutocompleteSuggestions', {pane: payload.pane});
+        },
         changeSelectedYear(state, payload) {
             if (payload.year) {
                 state[payload.pane].selectedYear = payload.year;
@@ -262,6 +281,9 @@ const mainModule = {
         updateEgoNetwork(state, payload) {
             state[payload.pane].selectedNetwork = payload.networkObj
             logger.log("Updated Ego Network for pane " + payload.pane)
+        },
+        setAutocompleteSuggestions(state, payload) {
+            state[payload.pane].autocompleteSuggestions = payload.suggestions;
         }
 
     },
@@ -278,6 +300,8 @@ const mainModule = {
         },
         selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
         selectedYear: (state) => (pane) => state[pane].selectedYear,
+        searchTerm: (state) => (pane) => state[pane].searchTerm,
+        autocompleteSuggestions: (state) => (pane) => state[pane].autocompleteSuggestions,
         getPane: (state) => (pane) => state[pane],
         selectedNodesForMetrics: (state) => state["nodeMetrics"].selectedNodes,
         posColors: (state) => state.posColors,
