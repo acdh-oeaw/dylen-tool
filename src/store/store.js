@@ -6,7 +6,7 @@ import {
   allAvailableCorporaQuery,
   getNetworkQuery,
   getSoucesByCorpusQuery,
-  getNetworksByCorpusAndSource,
+  getNetworksByCorpusAndSource
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -17,12 +17,12 @@ const graphqlEndpoint = props.graphqlEndpoint;
 const logger = require('../helpers/logger');
 
 const nodesToJSON = (state, nodes) => {
-  return nodes.map((node) => {
+  return nodes.map(node => {
     let tableEntry = {
       Word: node.name,
       Network: `${state[node._pane].selectedTargetword.text} (${
         state[node._pane].selectedNetwork.year
-      })`,
+      })`
     };
     for (let key in node._metrics) tableEntry[key] = node._metrics[key];
 
@@ -38,7 +38,7 @@ const mainModule = {
         allAvailableCorporaQuery
       );
       const corporaPayload = {
-        corpora: response.data.data.allAvailableCorpora,
+        corpora: response.data.data.allAvailableCorpora
       };
       this.commit('main/loadCorpora', corporaPayload);
       await dispatch('loadSources');
@@ -51,7 +51,7 @@ const mainModule = {
         );
         const sourcesPayload = {
           corpus: corpus,
-          sources: sourceResponse.data.data.getSourcesByCorpus,
+          sources: sourceResponse.data.data.getSourcesByCorpus
         };
         this.commit('main/loadSourcesOfCorpus', sourcesPayload);
       }
@@ -74,8 +74,7 @@ const mainModule = {
       const payload = {
         pane: pane,
         targetWords:
-          targetwordsResponse.data.data.getNetworksByCorpusAndSource
-            .targetWords,
+          targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
       };
       this.commit('main/loadTargetwordsOfCorpusAndSource', payload);
       this.commit('main/selectInitTargetWord', { pane: pane });
@@ -96,7 +95,7 @@ const mainModule = {
         network.subcorpus = state[pane].selectedSubcorpus;
         network.text = state[pane].selectedTargetword.text;
         network.possibleYears = state[pane].selectedTargetword.networks.map(
-          (n) => n.year
+          n => n.year
         );
       }
 
@@ -117,7 +116,7 @@ const mainModule = {
 
         const payload = {
           pane: pane,
-          network: network,
+          network: network
         };
 
         this.commit('main/addEgoNetwork', payload);
@@ -146,7 +145,7 @@ const mainModule = {
 
         this.commit('main/updateEgoNetwork', {
           networkObj: updatedNetwork,
-          pane: pane,
+          pane: pane
         });
       } catch (error) {
         logger.error(error);
@@ -163,7 +162,7 @@ const mainModule = {
         showTitle: false,
         useTextFile: false,
         useBom: true,
-        useKeysAsHeaders: true,
+        useKeysAsHeaders: true
       };
 
       const csvExporter = new ExportToCsv(options);
@@ -181,7 +180,7 @@ const mainModule = {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
-    },
+    }
   },
   namespaced: true,
   state: {
@@ -194,36 +193,36 @@ const mainModule = {
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
-      selectedNetwork: null,
+      selectedNetwork: null
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
-      selectedNetwork: null,
+      selectedNetwork: null
     },
     nodeMetrics: {
-      selectedNodes: [],
+      selectedNodes: []
     },
     posColors: {
       noun: '#aa0000',
       verb: '#000088',
       adjective: '#f18e04',
-      proper_noun: '#000000',
+      proper_noun: '#000000'
     },
     labelOptions: {
       fontSize: 12,
       bold: false,
-      background: true,
+      background: true
     },
     linkOptions: {
-      opacity: 0.25,
+      opacity: 0.25
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: true,
-    },
+      selectedOnTop: true
+    }
   },
   mutations: {
     loadCorpora(state, payload) {
@@ -311,16 +310,16 @@ const mainModule = {
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
-    },
+    }
   },
   getters: {
-    selectionColors: (state) => state.selectionColors,
-    availableCorpora: (state) => state.availableCorpora,
-    selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
-    availableSourcesByCorpus: (state) => (selectedCorpus) =>
+    selectionColors: state => state.selectionColors,
+    availableCorpora: state => state.availableCorpora,
+    selectedCorpus: state => pane => state[pane].selectedCorpus,
+    availableSourcesByCorpus: state => selectedCorpus =>
       state['availableSourcesByCorpus'][selectedCorpus],
-    selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
-    targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => {
+    selectedSubcorpus: state => pane => state[pane].selectedSubcorpus,
+    targetwordsOfCorpusAndSource: state => (corpus, selectedSubcorpus) => {
       if (
         !state.availableTargetwordsByCorpusAndSource[corpus] ||
         !state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus]
@@ -330,18 +329,18 @@ const mainModule = {
         selectedSubcorpus
       ];
     },
-    selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
-    selectedYear: (state) => (pane) => state[pane].selectedYear,
-    getPane: (state) => (pane) => state[pane],
-    selectedNodesForMetrics: (state) => state['nodeMetrics'].selectedNodes,
-    posColors: (state) => state.posColors,
-    labelOptions: (state) => state.labelOptions,
-    linkOptions: (state) => state.linkOptions,
-    tableOptions: (state) => state.tableOptions,
+    selectedTargetword: state => pane => state[pane].selectedTargetword,
+    selectedYear: state => pane => state[pane].selectedYear,
+    getPane: state => pane => state[pane],
+    selectedNodesForMetrics: state => state['nodeMetrics'].selectedNodes,
+    posColors: state => state.posColors,
+    labelOptions: state => state.labelOptions,
+    linkOptions: state => state.linkOptions,
+    tableOptions: state => state.tableOptions
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
-  },
+  }
 };
 
 const sautoModule = {
@@ -349,17 +348,17 @@ const sautoModule = {
   state: {
     connection: null,
     lastOverElement: null,
-    sauto: false,
+    sauto: false
   },
   actions: {
     async connect({ state }) {
       if (state.sauto) {
         logger.log(props.sautoURI);
         state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
-        state.connection.onerror = function (event) {
+        state.connection.onerror = function(event) {
           logger.error(event);
         };
-        state.connection.onopen = function () {
+        state.connection.onopen = function() {
           logger.log('Connection with Sauto backed established successfully.');
         };
       }
@@ -394,14 +393,14 @@ const sautoModule = {
       //send mouse scroll
       scroll.type = 'Scroll';
       state.connection.send(JSON.stringify(scroll));
-    },
-  },
+    }
+  }
 };
 const store = new Vuex.Store({
   modules: {
     main: mainModule,
-    sauto: sautoModule,
-  },
+    sauto: sautoModule
+  }
 });
 
 Vue.mixin({
@@ -415,7 +414,7 @@ Vue.mixin({
 
       const mouseOver = {
         id: element.getAttribute('data-sauto-id'),
-        timestamp: Date.now(),
+        timestamp: Date.now()
       };
       this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
     },
@@ -443,7 +442,7 @@ Vue.mixin({
 
       const scroll = {
         id: element.getAttribute('data-sauto-id'),
-        height: event.deltaY,
+        height: event.deltaY
       };
 
       this.$store.dispatch('sauto/handleScroll', { scroll });
@@ -469,7 +468,7 @@ Vue.mixin({
 
       const positions = {
         x: (x * 100) / elementSizes.width,
-        y: (y * 100) / elementSizes.height,
+        y: (y * 100) / elementSizes.height
       };
       return positions;
     },
@@ -482,8 +481,8 @@ Vue.mixin({
         );
       }
       return element;
-    },
-  },
+    }
+  }
 });
 
 export default store;
