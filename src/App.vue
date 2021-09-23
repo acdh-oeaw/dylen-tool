@@ -6,6 +6,7 @@
     @mousemove="mouseMove"
     @click="mouseClick"
     @wheel="scroll"
+    @keypress="keyPress"
   >
     <div
       ref="main"
