@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN echo "ENVIRONMENT=$ENVIRONMENT" > .env
+RUN echo "VUE_APP_ENVIRONMENT=$ENVIRONMENT" > .env
 RUN npm run build
 
 # production stage
