@@ -3,31 +3,24 @@
     ref="con"
     fluid
     class="mt-2 h-100"
-    style="background-color: white;"
+    style="background-color: white"
   >
-    <b-row
-      lg="12"
-      class="pt-2 h-100"
-      @mouseover="mouseOver"
-    >
+    <b-row lg="12" class="pt-2 h-100" @mouseover="mouseOver">
       <b-col class="h-100">
         <b-button-group class="float-right">
-          <b-dropdown
-            id="dropdown-1"
-            v-if="nodes && showTable"
-            no-caret
-            right
-          >
+          <b-dropdown id="dropdown-1" v-if="nodes && showTable" no-caret right>
             <template #button-content>
-              <b-icon icon="download"></b-icon><span class="sr-only">Download</span>
+              <b-icon icon="download"></b-icon>
+              <span class="sr-only">Download</span>
             </template>
-            <b-dropdown-item-button @click="csvExport">Export CSV</b-dropdown-item-button>
-            <b-dropdown-item-button @click="jsonExport">Export JSON</b-dropdown-item-button>
+            <b-dropdown-item-button @click="csvExport"
+              >Export CSV</b-dropdown-item-button
+            >
+            <b-dropdown-item-button @click="jsonExport"
+              >Export JSON</b-dropdown-item-button
+            >
           </b-dropdown>
-          <b-button
-            :pressed.sync="showTable"
-            variant="outline-secondary"
-          >
+          <b-button :pressed.sync="showTable" variant="outline-secondary">
             <b-icon icon="table"></b-icon>
           </b-button>
         </b-button-group>
@@ -44,17 +37,16 @@
           :all-nodes="allNodes"
           :options="options"
         ></metrics-table>
-
       </b-col>
     </b-row>
   </b-container>
-
 </template>
 
 <script>
 import ParallelCoordinates from '@/components/ParallelCoordinates';
 import MetricsTable from '@/components/MetricsTable';
-import logger from '../helpers/logger'
+import logger from '../helpers/logger';
+
 export default {
   name: 'NodeMetrics',
   components: { ParallelCoordinates, MetricsTable },
@@ -139,5 +131,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

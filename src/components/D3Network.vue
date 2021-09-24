@@ -21,19 +21,9 @@
         Select all nodes
       </b-form-checkbox>
     </div>
-    <svg
-      ref="svg"
-      class="line-chart"
-      :viewBox="viewBox"
-    >
+    <svg ref="svg" class="line-chart" :viewBox="viewBox">
       <defs>
-        <filter
-          x="0"
-          y="0"
-          width="1"
-          height="1"
-          id="solid"
-        >
+        <filter x="0" y="0" width="1" height="1" id="solid">
           <feFlood flood-color="white" />
           <feComposite in="SourceGraphic" />
         </filter>
@@ -44,12 +34,12 @@
         <g class="labels"></g>
       </g>
     </svg>
-
   </div>
 </template>
 
 <script>
 import * as d3 from 'd3';
+
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options'],
@@ -368,6 +358,7 @@ export default {
 svg .labels text {
   cursor: default;
 }
+
 .controls-container {
   position: absolute;
   background: #fff;

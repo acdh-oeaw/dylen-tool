@@ -1,42 +1,25 @@
 <template>
   <b-row class="h-100">
-    <b-col
-      class="h-100"
-      md="6"
-    >
+    <b-col class="h-100" md="6">
       <b-row class="h-50">
-        <b-col
-          class="h-100"
-          md="12"
-        >
+        <b-col class="h-100" md="12">
           <NetworkGraph
-            v-if="networkCount>=1"
+            v-if="networkCount >= 1"
             ref="networkGraph"
             pane="pane1"
           />
         </b-col>
       </b-row>
       <b-row class="h-50">
-        <b-col
-          class="h-100"
-          md="12"
-        >
-          <NetworkGraph
-            v-if="networkCount===2"
-            pane="pane2"
-          />
+        <b-col class="h-100" md="12">
+          <NetworkGraph v-if="networkCount === 2" pane="pane2" />
         </b-col>
       </b-row>
-
     </b-col>
-    <b-col
-      class="h-100"
-      md="6"
-    >
+    <b-col class="h-100" md="6">
       <b-row class="h-50">
         <b-col class="h-100">
-          <NodeMetrics>
-          </NodeMetrics>
+          <NodeMetrics> </NodeMetrics>
         </b-col>
       </b-row>
     </b-col>
@@ -57,10 +40,10 @@ export default {
   computed: {
     networkCount() {
       let count = 0;
-      const network1 =
-        this.$store.getters['main/getPane']('pane1').selectedNetwork;
-      const network2 =
-        this.$store.getters['main/getPane']('pane2').selectedNetwork;
+      const network1 = this.$store.getters['main/getPane']('pane1')
+        .selectedNetwork;
+      const network2 = this.$store.getters['main/getPane']('pane2')
+        .selectedNetwork;
 
       if (network1) {
         count++;
@@ -76,5 +59,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

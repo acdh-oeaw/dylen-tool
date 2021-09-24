@@ -7,36 +7,17 @@
     @click="mouseClick"
     @wheel="scroll"
   >
-    <div
-      ref="main"
-      class="main full"
-    >
-      <b-container
-        class="pt-1 pb-5 h-100"
-        fluid
-      >
+    <div ref="main" class="main full">
+      <b-container class="pt-1 pb-5 h-100" fluid>
         <b-row>
           <b-col>
-            <top-navigation
-              class="mb-20"
-              style="min-height: 72px"
-            >
+            <top-navigation class="mb-20" style="min-height: 72px">
             </top-navigation>
           </b-col>
         </b-row>
-        <b-row
-          xl="12"
-          class="h-100"
-        >
-          <b-col
-            class="h-100"
-            xl="12"
-          >
-            <div
-              class="h-100"
-              @mouseover="mouseOver"
-              data-sauto-id="results"
-            >
+        <b-row xl="12" class="h-100">
+          <b-col class="h-100" xl="12">
+            <div class="h-100" @mouseover="mouseOver" data-sauto-id="results">
               <Results />
             </div>
           </b-col>
@@ -45,14 +26,8 @@
       </b-container>
     </div>
 
-    <div
-      ref="sidebar"
-      class="sidebar collapsed"
-    >
-      <div
-        class="px-4 py-3"
-        style="width: 300px"
-      >
+    <div ref="sidebar" class="sidebar collapsed">
+      <div class="px-4 py-3" style="width: 300px">
         <b-button
           type="button"
           class="close"
@@ -63,19 +38,12 @@
           <span aria-hidden="true">×</span>
         </b-button>
         <h4 class="mt-3">Part-of-speech colors</h4>
-        <b-row
-          v-for="key in Object.keys(posColors)"
-          :key="key"
-          class="my-3"
-        >
-          <b-col>{{
-            key[0].toUpperCase() + key.slice(1).replace('_', ' ')
-          }}</b-col>
+        <b-row v-for="key in Object.keys(posColors)" :key="key" class="my-3">
+          <b-col
+            >{{ key[0].toUpperCase() + key.slice(1).replace('_', ' ') }}
+          </b-col>
           <b-col>
-            <b-form-input
-              type="color"
-              v-model="posColors[key]"
-            ></b-form-input>
+            <b-form-input type="color" v-model="posColors[key]"></b-form-input>
           </b-col>
         </b-row>
         <h4 class="mt-3">Node label options</h4>
@@ -99,12 +67,14 @@
         <b-row>
           <b-col>White label background</b-col>
           <b-col>
-            <b-form-checkbox v-model="labelOptions.background"></b-form-checkbox>
+            <b-form-checkbox
+              v-model="labelOptions.background"
+            ></b-form-checkbox>
           </b-col>
         </b-row>
         <h4 class="mt-3">Link options</h4>
         <b-row>
-          <b-col>Opacity: {{linkOptions.opacity}}</b-col>
+          <b-col>Opacity: {{ linkOptions.opacity }}</b-col>
           <b-col>
             <b-form-input
               type="range"
@@ -119,7 +89,10 @@
         </b-row>
         <h4 class="mt-3">Table options</h4>
         <b-row>
-          <b-col>Number of digits to display: {{tableOptions.digits > 10 ? 'all' : tableOptions.digits}}</b-col>
+          <b-col
+            >Number of digits to display:
+            {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}</b-col
+          >
           <b-col>
             <b-form-input
               type="range"
@@ -130,14 +103,12 @@
               :step="1"
             >
             </b-form-input>
-
           </b-col>
         </b-row>
         <b-row>
           <b-col>Show selected words on top</b-col>
           <b-col>
-            <b-check v-model="tableOptions.selectedOnTop">
-            </b-check>
+            <b-check v-model="tableOptions.selectedOnTop"> </b-check>
           </b-col>
         </b-row>
       </div>
@@ -220,6 +191,7 @@ body {
   border-left: 5px solid grey;
   background-color: white;
 }
+
 .sidebar.collapsed {
   width: 0;
   margin-right: -5px;
@@ -231,9 +203,11 @@ body {
   /*  padding: 20px; */
   height: 100%;
 }
+
 .main.full {
   margin-right: 0;
 }
+
 @media screen and (max-width: 576px) {
   .main {
     margin-right: 0px;
