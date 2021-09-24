@@ -111,7 +111,7 @@ build-prod:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
-    ENVIRONMENT: "dev"
+    ENVIRONMENT: "prod"
   services:
     - name: docker:19-dind
       command: ["--mtu=1450"]
