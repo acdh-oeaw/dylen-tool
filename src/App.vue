@@ -106,8 +106,8 @@
         </b-row>
         <h4 class="mt-3">Table options</h4>
         <b-row>
-          <b-col
-            >Number of digits to display:
+          <b-col>
+            Number of digits to display:
             {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
           </b-col>
           <b-col>
