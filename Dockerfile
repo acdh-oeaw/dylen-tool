@@ -8,7 +8,6 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 RUN echo "ENVIRONMENT=$ENVIRONMENT" > .env
-RUN cat .env
 RUN npm run build
 
 # production stage
