@@ -108,8 +108,8 @@
         <b-row>
           <b-col
             >Number of digits to display:
-            {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}</b-col
-          >
+            {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
+          </b-col>
           <b-col>
             <b-form-input
               data-sauto-id="digits-slider-option"

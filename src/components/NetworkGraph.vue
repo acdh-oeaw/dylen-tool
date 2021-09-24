@@ -3,14 +3,16 @@
     ref="con"
     fluid
     class="mt-2"
-    style="background-color: white;"
+    style="background-color: white"
     v-if="egoNetwork"
   >
     <b-row class="h-10">
-
       <b-col>
         <b-row align-h="center">
-          <span><b>{{ egoNetwork.text }}</b> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</span>
+          <span
+            ><b>{{ egoNetwork.text }}</b> ({{ egoNetwork.corpus }} /
+            {{ egoNetwork.subcorpus }})</span
+          >
         </b-row>
       </b-col>
     </b-row>
@@ -159,9 +161,8 @@ export default {
   },
   computed: {
     egoNetwork() {
-      const network = this.$store.getters['main/getPane'](
-        this.pane
-      ).selectedNetwork;
+      const network = this.$store.getters['main/getPane'](this.pane)
+        .selectedNetwork;
       const nodes = [];
       const links = [];
       let selectedNetwork;
