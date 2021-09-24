@@ -35,6 +35,7 @@
       <b-row class="h-100" align-v="center">
         <b-col v-if="!secondForm">
           <b-button
+            data-sauto-id="second-query-button"
             v-if="firstForm && !secondForm"
             size="sm"
             variant="secondary"

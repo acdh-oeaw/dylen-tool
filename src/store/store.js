@@ -355,12 +355,18 @@ const sautoModule = {
     async connect({ state }) {
       if (state.sauto) {
         logger.log(props.sautoURI);
-        state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
+        state.connection = new WebSocket(props.sautoURI);
         state.connection.onerror = function (event) {
           logger.error(event);
         };
         state.connection.onopen = function () {
           logger.log('Connection with Sauto backed established successfully.');
+          state.connection.send(
+            JSON.stringify({
+              appVersion: props.appVersion,
+              type: 'VersionInfo',
+            })
+          );
         };
       }
     },
