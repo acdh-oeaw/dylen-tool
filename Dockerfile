@@ -1,7 +1,7 @@
 # build stage
 FROM node:lts-alpine as build-stage
 
-ARG ENVIRONMENT=$ENVIRONMENT
+ARG ENVIRONMENT
 
 WORKDIR /app
 COPY package*.json ./
