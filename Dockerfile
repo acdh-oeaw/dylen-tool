@@ -1,9 +1,13 @@
 # build stage
 FROM node:lts-alpine as build-stage
+
+ARG ENVIRONMENT
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN echo "VUE_APP_ENVIRONMENT=$ENVIRONMENT" > .env
 RUN npm run build
 
 # production stage
