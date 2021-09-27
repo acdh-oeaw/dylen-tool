@@ -407,7 +407,14 @@ Vue.mixin({
       const element = this.getNearestSautoId(event.target);
 
       click.id = element.getAttribute('data-sauto-id');
+
+      //hacky workaround for double registered clicks
+      if(click.id === "ignore"){
+        return;
+      }
       click.timestamp = Date.now();
+
+      console.log(click)
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },

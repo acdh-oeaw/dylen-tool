@@ -99,7 +99,10 @@
         </b-row>
         <b-row>
           <b-col>Bold</b-col>
-          <b-col>
+          <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
+          <b-col
+            data-sauto-id='ignore'
+          >
             <b-form-checkbox
               data-sauto-id='bold-checkbox-option'
               v-model='labelOptions.bold'
@@ -108,7 +111,9 @@
         </b-row>
         <b-row>
           <b-col>White label background</b-col>
-          <b-col>
+          <b-col
+            data-sauto-id='ignore'
+          >
             <b-form-checkbox
               data-sauto-id='white-label-checkbox-option'
               v-model='labelOptions.background'
@@ -152,7 +157,9 @@
         </b-row>
         <b-row>
           <b-col>Show selected words on top</b-col>
-          <b-col>
+          <b-col
+            data-sauto-id='ignore'
+          >
             <b-check
               data-sauto-id='selected-words-top-checkbox-option'
               v-model='tableOptions.selectedOnTop'
