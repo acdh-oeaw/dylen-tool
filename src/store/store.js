@@ -412,10 +412,21 @@ Vue.mixin({
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
     calculateMousePosition(event) {
+      let clientX = event.clientX;
+      let clientY = event.clientY;
+
+      //there is a bug with selects which register mouse position as 0,0 when clicked on
+      //so i take the element position instead of click position in such cases
+      if (clientX === 0 && clientY === 0) {
+        const rect = event.target.getBoundingClientRect();
+        clientX = rect.x;
+        clientY = rect.y;
+      }
+
       //get mouse position in percentage relative to top element size
       const elementSizes = this.$refs.app.getBoundingClientRect();
-      const x = event.clientX - elementSizes.left;
-      const y = event.clientY - elementSizes.top;
+      const x = clientX - elementSizes.left;
+      const y = clientY - elementSizes.top;
 
       const positions = {
         x: (x * 100) / elementSizes.width,
