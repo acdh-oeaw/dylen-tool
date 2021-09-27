@@ -1,7 +1,7 @@
 export const allAvailableCorporaQuery = {
   query: `{
         allAvailableCorpora
-    }`,
+    }`
 };
 
 export function getNetworksByCorpusAndSource(corpus, source, page, size) {
@@ -19,7 +19,7 @@ export function getNetworksByCorpusAndSource(corpus, source, page, size) {
                                 }
                             }
                         }
-                    }`,
+                    }`
   };
   return query;
 }
@@ -28,7 +28,7 @@ export function getSoucesByCorpusQuery(corpus) {
   const query = {
     query: `{
             getSourcesByCorpus(corpus: "${corpus}")
-        }`,
+        }`
   };
   return query;
 }
@@ -61,7 +61,7 @@ export function getNetworkQuery(targetwordId, year) {
                     similarity
                 }
             }
-          }`,
+          }`
   };
   return query;
 }

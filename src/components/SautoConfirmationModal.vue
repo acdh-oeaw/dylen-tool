@@ -9,7 +9,7 @@
       no-close-on-backdrop
       hide-header-close
     >
-      <template #modal-header> MASTER'S THESIS DATA </template>
+      <template #modal-header> MASTER'S THESIS DATA</template>
       <div class="d-block">
         <p>
           In the scope of a Master's Thesis about usability and user
@@ -45,31 +45,31 @@
 </template>
 
 <script>
-import logger from '../helpers/logger';
+  import logger from '../helpers/logger';
 
-export default {
-  name: 'SautoConfirmationModal',
-  props: {},
-  data() {
-    return {
-      modalShow: true,
-    };
-  },
-  mounted() {},
-  methods: {
-    agreeSauto(agreed) {
-      logger.log('User agreed to Sauto: ' + agreed);
-      this.$store.dispatch('sauto/agree', { agreed });
-      this.modalShow = false;
+  export default {
+    name: 'SautoConfirmationModal',
+    props: {},
+    data() {
+      return {
+        modalShow: true
+      };
     },
-  },
-  computed: {},
-  watch: {},
-};
+    mounted() {},
+    methods: {
+      agreeSauto(agreed) {
+        logger.log('User agreed to Sauto: ' + agreed);
+        this.$store.dispatch('sauto/agree', { agreed });
+        this.modalShow = false;
+      }
+    },
+    computed: {},
+    watch: {}
+  };
 </script>
 <style scoped>
-/deep/ .modal-header-center {
-  display: flex;
-  justify-content: center;
-}
+  /deep/ .modal-header-center {
+    display: flex;
+    justify-content: center;
+  }
 </style>

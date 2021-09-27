@@ -43,45 +43,45 @@
       </b-row>
     </b-col>
     <b-col xl="1" align-self="center">
-      <b-button class="float-right" @click="toggleSideBar"> Settings </b-button>
+      <b-button class="float-right" @click="toggleSideBar"> Settings</b-button>
     </b-col>
   </b-row>
 </template>
 
 <script>
-import SearchForm from '@/components/SearchForm';
+  import SearchForm from '@/components/SearchForm';
 
-export default {
-  name: 'TopNavigation',
-  components: {
-    SearchForm,
-  },
-  data() {
-    return {
-      firstForm: true,
-      secondForm: false,
-    };
-  },
-  methods: {
-    queryButtonClicked(button) {
-      if (button === 1) {
-        this.firstForm = true;
-      } else if (button === 2) {
-        this.secondForm = true;
+  export default {
+    name: 'TopNavigation',
+    components: {
+      SearchForm
+    },
+    data() {
+      return {
+        firstForm: true,
+        secondForm: false
+      };
+    },
+    methods: {
+      queryButtonClicked(button) {
+        if (button === 1) {
+          this.firstForm = true;
+        } else if (button === 2) {
+          this.secondForm = true;
+        }
+      },
+      toggleSideBar() {
+        this.$parent.$refs.sidebar.classList.toggle('collapsed');
+        this.$parent.$refs.main.classList.toggle('full');
       }
-    },
-    toggleSideBar() {
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
-    },
-  },
-};
+    }
+  };
 </script>
 
 <style>
-.top-nav {
-  height: 100%;
-  border-bottom: solid thick;
-  border-bottom-color: grey;
-}
+  .top-nav {
+    height: 100%;
+    border-bottom: solid thick;
+    border-bottom-color: grey;
+  }
 </style>

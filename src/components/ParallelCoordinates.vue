@@ -26,9 +26,9 @@
             :transform="`translate(${scaleX(scale[0])},0)`"
           ></g>
           <text
-            :transform="`translate(${scaleX(scale[0])},${
-              scale[1].range()[0] + 12
-            })`"
+            :transform="
+              `translate(${scaleX(scale[0])},${scale[1].range()[0] + 12})`
+            "
             style="text-anchor: middle"
             font-size="12"
             fill="black"
@@ -53,12 +53,14 @@
           :key="node.id + node._pane"
           :d="generateLine(node)"
           fill="none"
-          :stroke="`${getLineColor(node)}${
-            hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'
-          }`"
+          :stroke="
+            `${getLineColor(node)}${
+              hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'
+            }`
+          "
           :stroke-width="hoverNodes.indexOf(node) >= 0 ? 4 : 1"
-          @mouseenter="(e) => onMouseEnter(e, node)"
-          @mouseleave="(e) => onMouseLeave(e, node)"
+          @mouseenter="e => onMouseEnter(e, node)"
+          @mouseleave="e => onMouseLeave(e, node)"
         />
       </g>
       <g class="x_axis"></g>
@@ -76,7 +78,7 @@
             "
             height="12"
             :fill="
-              nodeGroup.find((node) => hoverNodes.indexOf(node) >= 0)
+              nodeGroup.find(node => hoverNodes.indexOf(node) >= 0)
                 ? 'white'
                 : 'none'
             "
@@ -88,9 +90,9 @@
             fill="black"
             :x="
               scaleX(Object.keys(scaleY)[0]) -
-              8 -
-              (nodeGroup.length - 1) * 12 +
-              nodeIdx * 12
+                8 -
+                (nodeGroup.length - 1) * 12 +
+                nodeIdx * 12
             "
             :y="
               Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx]) + 4
@@ -102,8 +104,8 @@
               dx="0.25em"
               dy="6"
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
-              @mouseenter="(e) => onMouseEnter(e, node)"
-              @mouseleave="(e) => onMouseLeave(e, node)"
+              @mouseenter="e => onMouseEnter(e, node)"
+              @mouseleave="e => onMouseLeave(e, node)"
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -118,8 +120,8 @@
               font-size="8"
               style="cursor: pointer"
               @click="deselectNode(node)"
-              @mouseenter="(e) => onMouseEnter(e, node)"
-              @mouseleave="(e) => onMouseLeave(e, node)"
+              @mouseenter="e => onMouseEnter(e, node)"
+              @mouseleave="e => onMouseLeave(e, node)"
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -143,7 +145,7 @@
             :x="scaleX(Object.keys(scaleY)[Object.keys(scaleY).length - 1])"
             :width="
               options.size.w -
-              scaleX(Object.keys(scaleY)[Object.keys(scaleY).length - 1])
+                scaleX(Object.keys(scaleY)[Object.keys(scaleY).length - 1])
             "
             :y="
               Object.values(scaleY)[Object.keys(scaleY).length - 1](
@@ -152,7 +154,7 @@
             "
             height="12"
             :fill="
-              nodeGroup.find((node) => hoverNodes.indexOf(node) >= 0)
+              nodeGroup.find(node => hoverNodes.indexOf(node) >= 0)
                 ? 'white'
                 : 'none'
             "
@@ -164,9 +166,9 @@
             fill="black"
             :x="
               scaleX(Object.keys(scaleY)[Object.keys(scaleY).length - 1]) +
-              2 +
-              (nodeGroup.length - 1) * 12 -
-              nodeIdx * 12
+                2 +
+                (nodeGroup.length - 1) * 12 -
+                nodeIdx * 12
             "
             :y="
               Object.values(scaleY)[Object.keys(scaleY).length - 1](
@@ -179,8 +181,8 @@
             <tspan
               dx="0.25em"
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
-              @mouseenter="(e) => onMouseEnter(e, node)"
-              @mouseleave="(e) => onMouseLeave(e, node)"
+              @mouseenter="e => onMouseEnter(e, node)"
+              @mouseleave="e => onMouseLeave(e, node)"
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -195,8 +197,8 @@
               font-size="8"
               style="cursor: pointer"
               @click="deselectNode(node)"
-              @mouseenter="(e) => onMouseEnter(e, node)"
-              @mouseleave="(e) => onMouseLeave(e, node)"
+              @mouseenter="e => onMouseEnter(e, node)"
+              @mouseleave="e => onMouseLeave(e, node)"
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -214,185 +216,185 @@
   </svg>
 </template>
 <script>
-import * as d3 from 'd3';
+  import * as d3 from 'd3';
 
-export default {
-  name: 'ParallelCoordinates',
-  props: ['netNodes', 'options'],
-  data() {
-    return {
-      hoverNodes: [],
-      svgPadding: {
-        top: 20,
-        right: 120,
-        bottom: 50,
-        left: 120,
+  export default {
+    name: 'ParallelCoordinates',
+    props: ['netNodes', 'options'],
+    data() {
+      return {
+        hoverNodes: [],
+        svgPadding: {
+          top: 20,
+          right: 120,
+          bottom: 50,
+          left: 120
+        }
+      };
+    },
+    computed: {
+      viewBox() {
+        return `0 0 ${this.options.size.w} ${this.options.size.h}`;
       },
-    };
-  },
-  computed: {
-    viewBox() {
-      return `0 0 ${this.options.size.w} ${this.options.size.h}`;
+      chartSize() {
+        return [
+          this.options.size.w - this.svgPadding.right,
+          this.options.size.h - this.svgPadding.bottom
+        ];
+      },
+      metrics() {
+        return [
+          ...new Set(this.netNodes.map(n => Object.keys(n._metrics)).flat())
+        ];
+      },
+      scaleY() {
+        let scale = {};
+        this.metrics.forEach(metric => {
+          scale[metric] = d3
+            .scaleLinear()
+            .domain([
+              0,
+              /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
+              d3.max(this.netNodes, entry => entry._metrics[metric]) * 1.1
+            ])
+            .range([this.chartSize[1], this.svgPadding.top]);
+        });
+        return scale;
+      },
+      scaleX() {
+        return d3
+          .scalePoint()
+          .domain(this.metrics)
+          .range([this.svgPadding.left, this.chartSize[0]]);
+      },
+      lineGenerator() {
+        return d3
+          .line()
+          .x(d => this.scaleX(d[0]))
+          .y(d => this.scaleY[d[0]](d[1]));
+        //.curve(d3.curveCardinal.tension(0.75));
+      },
+      groupedNodesPane1() {
+        let nodeGroup = {};
+        this.netNodes
+          .filter(n => n._pane == 'pane1')
+          .forEach(n => {
+            let nodeVal = n._metrics[Object.keys(this.scaleY)[0]];
+            if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
+            nodeGroup[nodeVal].push(n);
+          });
+        return nodeGroup;
+      },
+      groupedNodesPane2() {
+        let nodeGroup = {};
+        this.netNodes
+          .filter(n => n._pane == 'pane2')
+          .forEach(n => {
+            let nodeVal =
+              n._metrics[
+                Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
+              ];
+            if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
+            nodeGroup[nodeVal].push(n);
+          });
+        return nodeGroup;
+      },
+      nonOverlappingNodesLeft() {
+        return this.netNodes.filter(
+          node =>
+            this.netNodes
+              .filter(n => n._pane == 'pane1')
+              .filter(n => {
+                let nodeVal = Object.values(this.scaleY)[0](
+                  node._metrics[Object.keys(this.scaleY)[0]]
+                );
+                let nVal = Object.values(this.scaleY)[0](
+                  n._metrics[Object.keys(this.scaleY)[0]]
+                );
+                return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
+              }).length == 1
+        );
+      },
+      nonOverlappingNodesRight() {
+        return this.netNodes.filter(
+          node =>
+            this.netNodes
+              .filter(n => n._pane == 'pane2')
+              .filter(n => {
+                let nodeVal = Object.values(this.scaleY)[
+                  Object.values(this.scaleY).length - 1
+                ](
+                  node._metrics[
+                    Object.keys(this.scaleY)[
+                      Object.values(this.scaleY).length - 1
+                    ]
+                  ]
+                );
+                let nVal = Object.values(this.scaleY)[
+                  Object.values(this.scaleY).length - 1
+                ](
+                  n._metrics[
+                    Object.keys(this.scaleY)[
+                      Object.values(this.scaleY).length - 1
+                    ]
+                  ]
+                );
+                return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
+              }).length == 1
+        );
+      }
     },
-    chartSize() {
-      return [
-        this.options.size.w - this.svgPadding.right,
-        this.options.size.h - this.svgPadding.bottom,
-      ];
+    methods: {
+      generateLine(node) {
+        return this.lineGenerator(Object.entries(node._metrics));
+      },
+      camelCaseToSpaces(text) {
+        let result = text.replace(/([A-Z])/g, ' $1');
+        return result.charAt(0).toUpperCase() + result.slice(1);
+      },
+      getLineColor(node) {
+        if (node._pane == 'pane1')
+          return this.$store.getters['main/selectionColors'][0];
+        if (node._pane == 'pane2')
+          return this.$store.getters['main/selectionColors'][1];
+        return 'black';
+      },
+      onMouseEnter(e, node) {
+        if (this.hoverNodes.indexOf(node) < 0) this.hoverNodes.push(node);
+      },
+      onMouseLeave(e, node) {
+        if (this.hoverNodes.indexOf(node) >= 0)
+          this.hoverNodes.splice(this.hoverNodes.indexOf(node), 1);
+      },
+      deselectNode(node) {
+        this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+      }
     },
-    metrics() {
-      return [
-        ...new Set(this.netNodes.map((n) => Object.keys(n._metrics)).flat()),
-      ];
-    },
-    scaleY() {
-      let scale = {};
-      this.metrics.forEach((metric) => {
-        scale[metric] = d3
-          .scaleLinear()
-          .domain([
-            0,
-            /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
-            d3.max(this.netNodes, (entry) => entry._metrics[metric]) * 1.1,
+    directives: {
+      axis(el, binding) {
+        const axis = binding.arg;
+        const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
+        const methodArg = binding.value;
+        d3.select(el).call(
+          d3[axisMethod](methodArg).tickValues([
+            methodArg.domain()[0],
+            methodArg.domain()[1]
           ])
-          .range([this.chartSize[1], this.svgPadding.top]);
-      });
-      return scale;
-    },
-    scaleX() {
-      return d3
-        .scalePoint()
-        .domain(this.metrics)
-        .range([this.svgPadding.left, this.chartSize[0]]);
-    },
-    lineGenerator() {
-      return d3
-        .line()
-        .x((d) => this.scaleX(d[0]))
-        .y((d) => this.scaleY[d[0]](d[1]));
-      //.curve(d3.curveCardinal.tension(0.75));
-    },
-    groupedNodesPane1() {
-      let nodeGroup = {};
-      this.netNodes
-        .filter((n) => n._pane == 'pane1')
-        .forEach((n) => {
-          let nodeVal = n._metrics[Object.keys(this.scaleY)[0]];
-          if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
-          nodeGroup[nodeVal].push(n);
-        });
-      return nodeGroup;
-    },
-    groupedNodesPane2() {
-      let nodeGroup = {};
-      this.netNodes
-        .filter((n) => n._pane == 'pane2')
-        .forEach((n) => {
-          let nodeVal =
-            n._metrics[
-              Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-            ];
-          if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
-          nodeGroup[nodeVal].push(n);
-        });
-      return nodeGroup;
-    },
-    nonOverlappingNodesLeft() {
-      return this.netNodes.filter(
-        (node) =>
-          this.netNodes
-            .filter((n) => n._pane == 'pane1')
-            .filter((n) => {
-              let nodeVal = Object.values(this.scaleY)[0](
-                node._metrics[Object.keys(this.scaleY)[0]]
-              );
-              let nVal = Object.values(this.scaleY)[0](
-                n._metrics[Object.keys(this.scaleY)[0]]
-              );
-              return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
-            }).length == 1
-      );
-    },
-    nonOverlappingNodesRight() {
-      return this.netNodes.filter(
-        (node) =>
-          this.netNodes
-            .filter((n) => n._pane == 'pane2')
-            .filter((n) => {
-              let nodeVal = Object.values(this.scaleY)[
-                Object.values(this.scaleY).length - 1
-              ](
-                node._metrics[
-                  Object.keys(this.scaleY)[
-                    Object.values(this.scaleY).length - 1
-                  ]
-                ]
-              );
-              let nVal = Object.values(this.scaleY)[
-                Object.values(this.scaleY).length - 1
-              ](
-                n._metrics[
-                  Object.keys(this.scaleY)[
-                    Object.values(this.scaleY).length - 1
-                  ]
-                ]
-              );
-              return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
-            }).length == 1
-      );
-    },
-  },
-  methods: {
-    generateLine(node) {
-      return this.lineGenerator(Object.entries(node._metrics));
-    },
-    camelCaseToSpaces(text) {
-      let result = text.replace(/([A-Z])/g, ' $1');
-      return result.charAt(0).toUpperCase() + result.slice(1);
-    },
-    getLineColor(node) {
-      if (node._pane == 'pane1')
-        return this.$store.getters['main/selectionColors'][0];
-      if (node._pane == 'pane2')
-        return this.$store.getters['main/selectionColors'][1];
-      return 'black';
-    },
-    onMouseEnter(e, node) {
-      if (this.hoverNodes.indexOf(node) < 0) this.hoverNodes.push(node);
-    },
-    onMouseLeave(e, node) {
-      if (this.hoverNodes.indexOf(node) >= 0)
-        this.hoverNodes.splice(this.hoverNodes.indexOf(node), 1);
-    },
-    deselectNode(node) {
-      this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
-    },
-  },
-  directives: {
-    axis(el, binding) {
-      const axis = binding.arg;
-      const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
-      const methodArg = binding.value;
-      d3.select(el).call(
-        d3[axisMethod](methodArg).tickValues([
-          methodArg.domain()[0],
-          methodArg.domain()[1],
-        ])
-      );
-    },
-  },
-};
+        );
+      }
+    }
+  };
 </script>
 
 <style>
-.y_axis path,
-.y_axis line {
-  stroke: #ccc;
-}
+  .y_axis path,
+  .y_axis line {
+    stroke: #ccc;
+  }
 
-.y_axis .tick text {
-  transform: translate(9px, -6px);
-  text-anchor: middle;
-  font-weight: bold;
-}
+  .y_axis .tick text {
+    transform: translate(9px, -6px);
+    text-anchor: middle;
+    font-weight: bold;
+  }
 </style>

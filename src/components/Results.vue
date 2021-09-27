@@ -19,7 +19,7 @@
     <b-col class="h-100" md="6">
       <b-row class="h-50">
         <b-col class="h-100">
-          <NodeMetrics> </NodeMetrics>
+          <NodeMetrics></NodeMetrics>
         </b-col>
       </b-row>
     </b-col>
@@ -27,36 +27,36 @@
 </template>
 
 <script>
-import NetworkGraph from '@/components/NetworkGraph';
-import NodeMetrics from '@/components/NodeMetrics';
+  import NetworkGraph from '@/components/NetworkGraph';
+  import NodeMetrics from '@/components/NodeMetrics';
 
-export default {
-  name: 'Results',
-  props: ['pane'],
-  components: {
-    NodeMetrics,
-    NetworkGraph,
-  },
-  computed: {
-    networkCount() {
-      let count = 0;
-      const network1 = this.$store.getters['main/getPane']('pane1')
-        .selectedNetwork;
-      const network2 = this.$store.getters['main/getPane']('pane2')
-        .selectedNetwork;
-
-      if (network1) {
-        count++;
-      }
-      if (network2) {
-        count++;
-      }
-
-      return count;
+  export default {
+    name: 'Results',
+    props: ['pane'],
+    components: {
+      NodeMetrics,
+      NetworkGraph
     },
-  },
-  mounted() {},
-};
+    computed: {
+      networkCount() {
+        let count = 0;
+        const network1 = this.$store.getters['main/getPane']('pane1')
+          .selectedNetwork;
+        const network2 = this.$store.getters['main/getPane']('pane2')
+          .selectedNetwork;
+
+        if (network1) {
+          count++;
+        }
+        if (network2) {
+          count++;
+        }
+
+        return count;
+      }
+    },
+    mounted() {}
+  };
 </script>
 
 <style></style>

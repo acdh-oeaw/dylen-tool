@@ -91,8 +91,8 @@
         <b-row>
           <b-col
             >Number of digits to display:
-            {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}</b-col
-          >
+            {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
+          </b-col>
           <b-col>
             <b-form-input
               type="range"
@@ -108,7 +108,7 @@
         <b-row>
           <b-col>Show selected words on top</b-col>
           <b-col>
-            <b-check v-model="tableOptions.selectedOnTop"> </b-check>
+            <b-check v-model="tableOptions.selectedOnTop"></b-check>
           </b-col>
         </b-row>
       </div>
@@ -117,100 +117,100 @@
 </template>
 
 <script>
-import Results from '@/components/Results';
-import Modal from '@/components/SautoConfirmationModal';
-import TopNavigation from '@/components/TopNavigation';
+  import Results from '@/components/Results';
+  import Modal from '@/components/SautoConfirmationModal';
+  import TopNavigation from '@/components/TopNavigation';
 
-export default {
-  name: 'App',
-  components: {
-    TopNavigation,
-    Results,
-    Modal,
-  },
-  created: function () {
-    this.$store.dispatch('main/loadAvailableCorpora');
-  },
-  computed: {
-    posColors: {
-      get() {
-        return this.$store.getters['main/posColors'];
+  export default {
+    name: 'App',
+    components: {
+      TopNavigation,
+      Results,
+      Modal
+    },
+    created: function() {
+      this.$store.dispatch('main/loadAvailableCorpora');
+    },
+    computed: {
+      posColors: {
+        get() {
+          return this.$store.getters['main/posColors'];
+        }
       },
-    },
-    labelOptions: {
-      get() {
-        return this.$store.getters['main/labelOptions'];
+      labelOptions: {
+        get() {
+          return this.$store.getters['main/labelOptions'];
+        }
       },
-    },
-    linkOptions: {
-      get() {
-        return this.$store.getters['main/linkOptions'];
+      linkOptions: {
+        get() {
+          return this.$store.getters['main/linkOptions'];
+        }
       },
+      tableOptions: {
+        get() {
+          return this.$store.getters['main/tableOptions'];
+        }
+      }
     },
-    tableOptions: {
-      get() {
-        return this.$store.getters['main/tableOptions'];
-      },
-    },
-  },
-  methods: {
-    toggleSideBar() {
-      this.$refs.sidebar.classList.toggle('collapsed');
-      this.$refs.main.classList.toggle('full');
-    },
-  },
-};
+    methods: {
+      toggleSideBar() {
+        this.$refs.sidebar.classList.toggle('collapsed');
+        this.$refs.main.classList.toggle('full');
+      }
+    }
+  };
 </script>
 
 <style>
-#app {
-  /*
+  #app {
+    /*
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   */
-  color: #2c3e50;
-  margin-top: 20px;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-.sidebar {
-  z-index: 6;
-  height: 100%; /* 100% Full-height */
-  width: 300px; /* 0 width - change this with JavaScript */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Stay on top */
-  top: 0;
-  right: 0;
-  overflow-x: hidden; /* Disable horizontal scroll */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-  border-left: 5px solid grey;
-  background-color: white;
-}
-
-.sidebar.collapsed {
-  width: 0;
-  margin-right: -5px;
-}
-
-.main {
-  margin-right: 300px;
-  transition: margin-right 0.5s; /* If you want a transition effect */
-  /*  padding: 20px; */
-  height: 100%;
-}
-
-.main.full {
-  margin-right: 0;
-}
-
-@media screen and (max-width: 576px) {
-  .main {
-    margin-right: 0px;
+    color: #2c3e50;
+    margin-top: 20px;
   }
-}
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  .sidebar {
+    z-index: 6;
+    height: 100%; /* 100% Full-height */
+    width: 300px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0;
+    right: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    border-left: 5px solid grey;
+    background-color: white;
+  }
+
+  .sidebar.collapsed {
+    width: 0;
+    margin-right: -5px;
+  }
+
+  .main {
+    margin-right: 300px;
+    transition: margin-right 0.5s; /* If you want a transition effect */
+    /*  padding: 20px; */
+    height: 100%;
+  }
+
+  .main.full {
+    margin-right: 0;
+  }
+
+  @media screen and (max-width: 576px) {
+    .main {
+      margin-right: 0px;
+    }
+  }
 </style>

@@ -119,118 +119,118 @@
 </template>
 
 <script>
-export default {
-  name: 'SearchForm',
-  props: ['isSidebar', 'pane', 'withLabels'],
-  data() {
-    return {
-      corpusEdit: false,
-      subcorpusEdit: false,
-      targetwordEdit: false,
-      yearEdit: false,
-    };
-  },
-  mounted() {},
-  methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
+  export default {
+    name: 'SearchForm',
+    props: ['isSidebar', 'pane', 'withLabels'],
+    data() {
+      return {
+        corpusEdit: false,
+        subcorpusEdit: false,
+        targetwordEdit: false,
+        yearEdit: false
+      };
     },
-  },
-  computed: {
-    queryPane() {
-      if (this.pane) return this.pane;
-
-      let count = 0;
-      const network1 = this.$store.getters['main/getPane']('pane1')
-        .selectedNetwork;
-      const network2 = this.$store.getters['main/getPane']('pane2')
-        .selectedNetwork;
-
-      if (network1 || network2) {
-        count++;
+    mounted() {},
+    methods: {
+      onSubmit(evt) {
+        evt.preventDefault();
+        this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
       }
+    },
+    computed: {
+      queryPane() {
+        if (this.pane) return this.pane;
 
-      if (count > 0) return 'pane2';
-      return 'pane1';
+        let count = 0;
+        const network1 = this.$store.getters['main/getPane']('pane1')
+          .selectedNetwork;
+        const network2 = this.$store.getters['main/getPane']('pane2')
+          .selectedNetwork;
+
+        if (network1 || network2) {
+          count++;
+        }
+
+        if (count > 0) return 'pane2';
+        return 'pane1';
+      },
+      availableCorpora: {
+        get() {
+          return this.$store.getters['main/availableCorpora'];
+        }
+      },
+      selectedCorpus: {
+        get() {
+          return this.$store.getters['main/selectedCorpus'](this.queryPane);
+        },
+        set(val) {
+          if (val)
+            this.$store.commit('main/changeSelectedCorpus', {
+              corpus: val,
+              pane: this.queryPane
+            });
+        }
+      },
+      availableSources: {
+        get() {
+          return this.$store.getters['main/availableSourcesByCorpus'](
+            this.selectedCorpus
+          );
+        }
+      },
+      selectedSubcorpus: {
+        get() {
+          return this.$store.getters['main/selectedSubcorpus'](this.queryPane);
+        },
+        set(val) {
+          if (val)
+            this.$store.commit('main/changeSelectedSubcorpus', {
+              subcorpus: val,
+              pane: this.queryPane
+            });
+          if (val) this.$store.dispatch('main/loadTargetWords', this.queryPane);
+        }
+      },
+      availableTargetwords: {
+        get() {
+          return this.$store.getters['main/targetwordsOfCorpusAndSource'](
+            this.selectedCorpus,
+            this.selectedSubcorpus
+          );
+        }
+      },
+      selectedTargetword: {
+        get() {
+          return this.$store.getters['main/selectedTargetword'](this.queryPane);
+        },
+        set(val) {
+          if (val)
+            this.$store.commit('main/changeSelectedTargetword', {
+              targetword: val,
+              pane: this.queryPane
+            });
+        }
+      },
+      selectedYear: {
+        get() {
+          return this.$store.getters['main/selectedYear'](this.queryPane);
+        },
+        set(val) {
+          if (val)
+            this.$store.commit('main/changeSelectedYear', {
+              year: val,
+              pane: this.queryPane
+            });
+        }
+      }
     },
-    availableCorpora: {
-      get() {
-        return this.$store.getters['main/availableCorpora'];
-      },
-    },
-    selectedCorpus: {
-      get() {
-        return this.$store.getters['main/selectedCorpus'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedCorpus', {
-            corpus: val,
-            pane: this.queryPane,
-          });
-      },
-    },
-    availableSources: {
-      get() {
-        return this.$store.getters['main/availableSourcesByCorpus'](
-          this.selectedCorpus
-        );
-      },
-    },
-    selectedSubcorpus: {
-      get() {
-        return this.$store.getters['main/selectedSubcorpus'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedSubcorpus', {
-            subcorpus: val,
-            pane: this.queryPane,
-          });
-        if (val) this.$store.dispatch('main/loadTargetWords', this.queryPane);
-      },
-    },
-    availableTargetwords: {
-      get() {
-        return this.$store.getters['main/targetwordsOfCorpusAndSource'](
-          this.selectedCorpus,
-          this.selectedSubcorpus
-        );
-      },
-    },
-    selectedTargetword: {
-      get() {
-        return this.$store.getters['main/selectedTargetword'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedTargetword', {
-            targetword: val,
-            pane: this.queryPane,
-          });
-      },
-    },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane,
-          });
-      },
-    },
-  },
-  watch: {},
-};
+    watch: {}
+  };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.form-group {
-  margin-bottom: 0rem;
-}
+  .form-group {
+    margin-bottom: 0rem;
+  }
 </style>
