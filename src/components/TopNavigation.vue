@@ -1,6 +1,14 @@
 <template>
-  <b-row xl='12' class='top-nav' align-h='center' align-v='stretch'>
-    <b-col xl='1' align-self='center'>
+  <b-row
+    xl='12'
+    class='top-nav'
+    align-h='center'
+    align-v='stretch'
+  >
+    <b-col
+      xl='1'
+      align-self='center'
+    >
       <h2><b>DYLEN</b></h2>
     </b-col>
     <b-col
@@ -10,7 +18,11 @@
       xl='5'
       align-self='stretch'
     >
-      <b-row class='h-100' align-h='center' align-v='stretch'>
+      <b-row
+        class='h-100'
+        align-h='center'
+        align-v='stretch'
+      >
         <b-col>
           <b-row>
             <b-col>
@@ -32,7 +44,10 @@
       xl='5'
       align-self='stretch'
     >
-      <b-row class='h-100' align-v='center'>
+      <b-row
+        class='h-100'
+        align-v='center'
+      >
         <b-col v-if='!secondForm'>
           <b-button
             data-sauto-id='second-query-button'
@@ -55,7 +70,10 @@
         <b-col xl='1'></b-col>
       </b-row>
     </b-col>
-    <b-col xl='1' align-self='center'>
+    <b-col
+      xl='1'
+      align-self='center'
+    >
       <b-button
         data-sauto-id='settings-button'
         class='float-right'

@@ -21,9 +21,19 @@
         Select all nodes
       </b-form-checkbox>
     </div>
-    <svg ref='svg' class='line-chart' :viewBox='viewBox'>
+    <svg
+      ref='svg'
+      class='line-chart'
+      :viewBox='viewBox'
+    >
       <defs>
-        <filter x='0' y='0' width='1' height='1' id='solid'>
+        <filter
+          x='0'
+          y='0'
+          width='1'
+          height='1'
+          id='solid'
+        >
           <feFlood flood-color='white' />
           <feComposite in='SourceGraphic' />
         </filter>

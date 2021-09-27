@@ -10,11 +10,12 @@
     sort-icon-left
     class='h-100'
   >
+
     <template #cell(selected)='row'>
       <b-button
         variant='none'
         class='mx-auto'
-        @click='() => addOrRemoveSelectedNode(row.item.node)'
+        @click=' () => addOrRemoveSelectedNode(row.item.node)'
       >
         <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
       </b-button>
@@ -115,4 +116,9 @@ export default {
 };
 </script>
 
+<<<<<<< HEAD
 <style></style>
+=======
+<style>
+</style>
+>>>>>>> reformat

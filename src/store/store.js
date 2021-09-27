@@ -20,11 +20,15 @@ const nodesToJSON = (state, nodes) => {
   return nodes.map((node) => {
     let tableEntry = {
       Word: node.name,
-      Network: `${state[node._pane].selectedTargetword.text} (${
+      Network: `${
+        state[node._pane].selectedTargetword.text
+      } (${
         state[node._pane].selectedNetwork.year
       })`
+
     };
-    for (let key in node._metrics) tableEntry[key] = node._metrics[key];
+    for (let key in node._metrics)
+      tableEntry[key] = node._metrics[key];
 
     return tableEntry;
   });
@@ -33,10 +37,7 @@ const nodesToJSON = (state, nodes) => {
 const mainModule = {
   actions: {
     async initCorpora({ dispatch }) {
-      const response = await axios.post(
-        graphqlEndpoint,
-        allAvailableCorporaQuery
-      );
+      const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
       const corporaPayload = {
         corpora: response.data.data.allAvailableCorpora
       };
@@ -45,10 +46,7 @@ const mainModule = {
     },
     async loadSources({ dispatch, state }) {
       for (const corpus of state.availableCorpora) {
-        const sourceResponse = await axios.post(
-          graphqlEndpoint,
-          getSoucesByCorpusQuery(corpus)
-        );
+        const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus));
         const sourcesPayload = {
           corpus: corpus,
           sources: sourceResponse.data.data.getSourcesByCorpus
@@ -60,22 +58,14 @@ const mainModule = {
 
       await dispatch('loadTargetWords', 'pane1');
       await dispatch('loadTargetWords', 'pane2');
+
     },
     async loadTargetWords({ state }, pane) {
-      const targetwordsResponse = await axios.post(
-        graphqlEndpoint,
-        getNetworksByCorpusAndSource(
-          state[pane].selectedCorpus,
-          state[pane].selectedSubcorpus,
-          0,
-          20
-        )
-      );
+      const targetwordsResponse = await axios.post(graphqlEndpoint,
+        getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0, 20));
       const payload = {
         pane: pane,
-        targetWords:
-        targetwordsResponse.data.data.getNetworksByCorpusAndSource
-          .targetWords
+        targetWords: targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
       };
       this.commit('main/loadTargetwordsOfCorpusAndSource', payload);
       this.commit('main/selectInitTargetWord', { pane: pane });
@@ -95,22 +85,15 @@ const mainModule = {
         network.corpus = state[pane].selectedCorpus;
         network.subcorpus = state[pane].selectedSubcorpus;
         network.text = state[pane].selectedTargetword.text;
-        network.possibleYears = state[pane].selectedTargetword.networks.map(
-          (n) => n.year
-        );
+        network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year);
       }
 
-      let year_param = state[pane].selectedYear
-        ? state[pane].selectedYear.year
-        : state[pane].selectedTargetword.networks[0].year;
+      let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
       try {
-        const response = await axios.post(
-          graphqlEndpoint,
-          getNetworkQuery(state[pane].selectedTargetword.id, year_param)
-        );
-        const networkID =
-          state[pane].selectedTargetword.id + state[pane].selectedYear.year;
+        const response = await axios.post(graphqlEndpoint,
+          getNetworkQuery(state[pane].selectedTargetword.id, year_param));
+        const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
         let network = response.data.data.getNetwork;
 
         assignValuesFromState(network, networkID);
@@ -128,10 +111,8 @@ const mainModule = {
     },
     async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
       try {
-        const response = await axios.post(
-          graphqlEndpoint,
-          getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year)
-        );
+        const response = await axios.post(graphqlEndpoint,
+          getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
 
         const networkID = oldNetwork.targetWordId + oldNetwork.year;
         let updatedNetwork = response.data.data.getNetwork;
@@ -144,10 +125,7 @@ const mainModule = {
         updatedNetwork.possibleYears = oldNetwork.possibleYears;
         logger.log('Ego Network %s updated successfully.', networkID);
 
-        this.commit('main/updateEgoNetwork', {
-          networkObj: updatedNetwork,
-          pane: pane
-        });
+        this.commit('main/updateEgoNetwork', { networkObj: updatedNetwork, pane: pane });
       } catch (error) {
         logger.error(error);
       }
@@ -172,9 +150,7 @@ const mainModule = {
     async downloadMetricsAsJSON({ state }, nodes) {
       let exportName = 'DYLEN_Export';
       let data = nodesToJSON(state, nodes);
-      var dataStr =
-        'data:text/json;charset=utf-8,' +
-        encodeURIComponent(JSON.stringify(data));
+      var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
       var downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute('href', dataStr);
       downloadAnchorNode.setAttribute('download', exportName + '.json');
@@ -233,60 +209,34 @@ const mainModule = {
       Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources);
     },
     loadTargetwordsOfCorpusAndSource(state, payload) {
-      if (
-        !state.availableTargetwordsByCorpusAndSource[
-          state[payload.pane].selectedCorpus
-          ]
-      ) {
-        Vue.set(
-          state.availableTargetwordsByCorpusAndSource,
-          state[payload.pane].selectedCorpus,
-          {}
-        );
+      if (!state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus]) {
+        Vue.set(state.availableTargetwordsByCorpusAndSource, state[payload.pane].selectedCorpus, {});
       }
-      Vue.set(
-        state.availableTargetwordsByCorpusAndSource[
-          state[payload.pane].selectedCorpus
-          ],
-        state[payload.pane].selectedSubcorpus,
-        payload.targetWords
-      );
+      Vue.set(state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus], state[payload.pane].selectedSubcorpus, payload.targetWords);
     },
     selectInitValues(state, payload) {
       state[payload.pane].selectedCorpus = state.availableCorpora[0];
-      state[payload.pane].selectedSubcorpus =
-        state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+      state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
     },
     selectInitTargetWord(state, payload) {
-      state[payload.pane].selectedTargetword =
-        state.availableTargetwordsByCorpusAndSource[
-          state[payload.pane].selectedCorpus
-          ][state[payload.pane].selectedSubcorpus][0];
-      state[payload.pane].selectedYear =
-        state[payload.pane].selectedTargetword.networks[0];
+      state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+      state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
     },
     changeSelectedCorpus(state, payload) {
       if (payload.corpus) {
         state[payload.pane].selectedCorpus = payload.corpus;
       } else {
-        state[payload.pane].selectedCorpus = state[
-          payload.pane
-          ].availableCorpora()[0];
+        state[payload.pane].selectedCorpus = state[payload.pane].availableCorpora()[0];
       }
     },
     changeSelectedSubcorpus(state, payload) {
-      state[payload.pane].selectedSubcorpus = payload.subcorpus
-        ? payload.subcorpus
-        : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+      state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
     },
     changeSelectedTargetword(state, payload) {
       if (payload.targetword) {
         state[payload.pane].selectedTargetword = payload.targetword;
       } else {
-        state[payload.pane].selectedTargetword =
-          state.availableTargetwordsByCorpusAndSource[
-            state[payload.pane].selectedCorpus
-            ][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
       this.commit('main/changeSelectedYear', { pane: payload.pane });
     },
@@ -294,8 +244,7 @@ const mainModule = {
       if (payload.year) {
         state[payload.pane].selectedYear = payload.year;
       } else {
-        state[payload.pane].selectedYear =
-          state[payload.pane].selectedTargetword.networks[0];
+        state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
       }
     },
     addSelectedNodeForNodeMetrics(state, payload) {
@@ -312,23 +261,18 @@ const mainModule = {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
     }
+
   },
   getters: {
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
-    availableSourcesByCorpus: (state) => (selectedCorpus) =>
-      state['availableSourcesByCorpus'][selectedCorpus],
+    availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
     selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
     targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => {
-      if (
-        !state.availableTargetwordsByCorpusAndSource[corpus] ||
-        !state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus]
-      )
+      if (!state.availableTargetwordsByCorpusAndSource[corpus] || !state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus])
         return [];
-      return state.availableTargetwordsByCorpusAndSource[corpus][
-        selectedSubcorpus
-        ];
+      return state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus];
     },
     selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
     selectedYear: (state) => (pane) => state[pane].selectedYear,

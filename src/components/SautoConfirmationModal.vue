@@ -7,9 +7,10 @@
       hide-footer
       no-close-on-esc
       no-close-on-backdrop
-      hide-header-close
-    >
-      <template #modal-header> MASTER'S THESIS DATA</template>
+      hide-header-close>
+      <template #modal-header>
+        MASTER'S THESIS DATA
+      </template>
       <div class='d-block'>
         <p>
           In the scope of a Master's Thesis about usability and user
@@ -67,6 +68,7 @@ export default {
   computed: {},
   watch: {}
 };
+
 </script>
 <style scoped>
 /deep/ .modal-header-center {

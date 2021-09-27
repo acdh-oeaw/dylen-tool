@@ -6,19 +6,37 @@
     @mousemove='mouseMove'
     @click='mouseClick'
     @wheel='scroll'
-    @keypress='keyPress'
   >
-    <div ref='main' class='main full'>
-      <b-container class='pt-1 pb-5 h-100' fluid>
+    <div
+      ref='main'
+      class='main full'
+    >
+      <b-container
+        class='pt-1 pb-5 h-100'
+        fluid
+      >
         <b-row>
           <b-col>
-            <top-navigation class='mb-20' style='min-height: 72px'>
+            <top-navigation
+              class='mb-20'
+              style='min-height: 72px'
+            >
             </top-navigation>
           </b-col>
         </b-row>
-        <b-row xl='12' class='h-100'>
-          <b-col class='h-100' xl='12'>
-            <div class='h-100' @mouseover='mouseOver' data-sauto-id='results'>
+        <b-row
+          xl='12'
+          class='h-100'
+        >
+          <b-col
+            class='h-100'
+            xl='12'
+          >
+            <div
+              class='h-100'
+              @mouseover='mouseOver'
+              data-sauto-id='results'
+            >
               <Results />
             </div>
           </b-col>
@@ -33,7 +51,10 @@
       @mouseover='mouseOver'
       data-sauto-id='sidebar'
     >
-      <div class='px-4 py-3' style='width: 300px'>
+      <div
+        class='px-4 py-3'
+        style='width: 300px'
+      >
         <b-button
           type='button'
           class='close'
@@ -45,9 +66,14 @@
           <span aria-hidden='true'>×</span>
         </b-button>
         <h4 class='mt-3'>Part-of-speech colors</h4>
-        <b-row v-for='key in Object.keys(posColors)' :key='key' class='my-3'>
-          <b-col
-          >{{ key[0].toUpperCase() + key.slice(1).replace('_', ' ') }}
+        <b-row
+          v-for='key in Object.keys(posColors)'
+          :key='key'
+          class='my-3'
+        >
+          <b-col>{{
+              key[0].toUpperCase() + key.slice(1).replace('_', ' ')
+            }}
           </b-col>
           <b-col>
             <b-form-input

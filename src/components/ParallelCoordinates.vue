@@ -1,35 +1,75 @@
 <template>
+<<<<<<< HEAD
   <svg ref='svg' class='parallel-coordinates' :viewBox='viewBox'>
     <defs>
       <filter x='0' y='0' width='1' height='1' id='solid'>
+=======
+  <svg
+    ref='svg'
+    class='parallel-coordinates'
+    :viewBox='viewBox'
+  >
+    <defs>
+      <filter
+        x='0'
+        y='0'
+        width='1'
+        height='1'
+        id='solid'
+      >
+>>>>>>> reformat
         <feFlood flood-color='white' />
         <feComposite in='SourceGraphic' />
       </filter>
     </defs>
     <g>
+<<<<<<< HEAD
       <g class='grid' v-if='netNodes.length > 0'>
+=======
+      <g
+        class='grid'
+        v-if='netNodes.length > 0'
+      >
+>>>>>>> reformat
         <line
           v-for='i in 10'
           :key='`horizontal${i}`'
           :x1='scaleX.range()[0]'
           :x2='scaleX.range()[1]'
+<<<<<<< HEAD
           :y1='svgPadding.top + ((i - 1) * (chartSize[1] - svgPadding.top)) / 9'
           :y2='svgPadding.top + ((i - 1) * (chartSize[1] - svgPadding.top)) / 9'
+=======
+          :y1='svgPadding.top + (i-1)*(chartSize[1]-svgPadding.top)/9'
+          :y2='svgPadding.top + (i-1)*(chartSize[1]-svgPadding.top)/9'
+>>>>>>> reformat
           stroke-width='1'
           stroke='#ccc'
         />
       </g>
       <g class='y_axis'>
+<<<<<<< HEAD
         <g v-for='scale in Object.entries(scaleY)' :key='scale[0]'>
+=======
+        <g
+          v-for='scale in Object.entries(scaleY)'
+          :key='scale[0]'
+        >
+>>>>>>> reformat
           <g
             v-axis:y='scale[1]'
             :transform='`translate(${scaleX(scale[0])},0)`'
           ></g>
           <text
+<<<<<<< HEAD
             :transform='`translate(${scaleX(scale[0])},${
               scale[1].range()[0] + 12
             })`'
             style='text-anchor: middle'
+=======
+            :transform='`translate(${scaleX(scale[0])},${scale[1].range()[0]+12})`'
+            style='text-anchor: middle;'
+>>>>>>> reformat
             font-size='12'
             fill='black'
             font-weight='bold'
@@ -39,14 +79,19 @@
               :key='line'
               x='0'
               :dy="idx == 0 ? '1em' : '1.2em'"
+<<<<<<< HEAD
             >
               {{ line }}
+=======
+            >{{ line }}
+>>>>>>> reformat
             </tspan>
           </text>
         </g>
       </g>
       <g class='lines'>
         <path
+<<<<<<< HEAD
           v-for='node in netNodes
             .slice()
             .sort((a, b) => hoverNodes.indexOf(a) - hoverNodes.indexOf(b))'
@@ -56,6 +101,13 @@
           :stroke="`${getLineColor(node)}${
             hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'
           }`"
+=======
+          v-for='node in netNodes.slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))'
+          :key='node.id + node._pane'
+          :d='generateLine(node)'
+          fill='none'
+          :stroke="`${getLineColor(node)}${hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'}`"
+>>>>>>> reformat
           :stroke-width='hoverNodes.indexOf(node) >= 0 ? 4 : 1'
           @mouseenter='(e) => onMouseEnter(e, node)'
           @mouseleave='(e) => onMouseLeave(e, node)'
@@ -71,6 +123,7 @@
           <rect
             x='0'
             :width='scaleX(Object.keys(scaleY)[0])'
+<<<<<<< HEAD
             :y='
               Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx]) - 6
             '
@@ -96,6 +149,20 @@
               Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx]) + 4
             '
             style='text-anchor: end'
+=======
+            :y='Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])-6'
+            height='12'
+            :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
+          />
+          <text
+            v-for='(node, nodeIdx) in nodeGroup'
+            :key='idx+node.id'
+            font-size='12'
+            fill='black'
+            :x='scaleX(Object.keys(scaleY)[0]) - 8 - (nodeGroup.length-1) * 12 + nodeIdx*12'
+            :y='Object.values(scaleY)[0](Object.keys(groupedNodesPane1)[idx])+4 '
+            style='text-anchor: end;'
+>>>>>>> reformat
             :filter="hoverNodes.indexOf(node) >= 0 ? 'url(#solid)' : ''"
           >
             <tspan
@@ -105,6 +172,7 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
+<<<<<<< HEAD
               {{
                 hoverNodes.indexOf(node) >= 0 ||
                 (nodeGroup.length == 1 &&
@@ -112,15 +180,23 @@
                   ? node.name
                   : '×'
               }}
+=======
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : '×' }}
+>>>>>>> reformat
             </tspan>
             <tspan
               dy='-6'
               font-size='8'
+<<<<<<< HEAD
               style='cursor: pointer'
+=======
+              style='cursor: pointer;'
+>>>>>>> reformat
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
+<<<<<<< HEAD
               {{
                 hoverNodes.indexOf(node) >= 0 ||
                 (nodeGroup.length == 1 &&
@@ -128,6 +204,9 @@
                   ? '❌'
                   : ''
               }}
+=======
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? '❌' : '' }}
+>>>>>>> reformat
               <title>Deselect</title>
             </tspan>
             <!-- </g> -->
@@ -140,6 +219,7 @@
           :key="idx + ' label right'"
         >
           <rect
+<<<<<<< HEAD
             :x='scaleX(Object.keys(scaleY)[Object.keys(scaleY).length - 1])'
             :width='
               options.size.w -
@@ -174,6 +254,22 @@
               ) + 4
             '
             style='text-anchor: start'
+=======
+            :x='scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])'
+            :width='options.size.w-scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])'
+            :y='Object.values(scaleY)[Object.keys(scaleY).length -1](Object.keys(groupedNodesPane2)[idx])-6'
+            height='12'
+            :fill="nodeGroup.find(node => hoverNodes.indexOf(node) >= 0) ? 'white' : 'none'"
+          />
+          <text
+            v-for='(node, nodeIdx) in nodeGroup'
+            :key='idx+node.id'
+            font-size='12'
+            fill='black'
+            :x='scaleX(Object.keys(scaleY)[Object.keys(scaleY).length -1])+2+(nodeGroup.length -1)*12-nodeIdx*12'
+            :y='Object.values(scaleY)[Object.keys(scaleY).length -1](Object.keys(groupedNodesPane2)[idx])+4'
+            style='text-anchor: start;'
+>>>>>>> reformat
             :filter="hoverNodes.indexOf(node) >= 0 ? 'url(#solid)' : ''"
           >
             <tspan
@@ -182,6 +278,7 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
+<<<<<<< HEAD
               {{
                 hoverNodes.indexOf(node) >= 0 ||
                 (nodeGroup.length == 1 &&
@@ -189,15 +286,23 @@
                   ? node.name
                   : '×'
               }}
+=======
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×' }}
+>>>>>>> reformat
             </tspan>
             <tspan
               dy='-6'
               font-size='8'
+<<<<<<< HEAD
               style='cursor: pointer'
+=======
+              style='cursor: pointer;'
+>>>>>>> reformat
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
+<<<<<<< HEAD
               {{
                 hoverNodes.indexOf(node) >= 0 ||
                 (nodeGroup.length == 1 &&
@@ -205,6 +310,9 @@
                   ? '❌'
                   : ''
               }}
+=======
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
+>>>>>>> reformat
               <title>Deselect</title>
             </tspan>
           </text>
