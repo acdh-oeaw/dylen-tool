@@ -6,6 +6,7 @@
     @mousemove='mouseMove'
     @click='mouseClick'
     @wheel='scroll'
+    data-sauto-id='root'
   >
     <div
       ref='main'

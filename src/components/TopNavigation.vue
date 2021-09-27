@@ -4,6 +4,7 @@
     class='top-nav'
     align-h='center'
     align-v='stretch'
+    data-sauto-id='top-navigation'
   >
     <b-col
       xl='1'
