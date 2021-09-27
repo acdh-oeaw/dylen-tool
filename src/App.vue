@@ -1,24 +1,24 @@
 <template>
   <div
-    id="app"
-    ref="app"
-    style="margin-top: 0; height: 95%"
-    @mousemove="mouseMove"
-    @click="mouseClick"
-    @wheel="scroll"
-    @keypress="keyPress"
+    id='app'
+    ref='app'
+    style='margin-top: 0; height: 95%'
+    @mousemove='mouseMove'
+    @click='mouseClick'
+    @wheel='scroll'
+    @keypress='keyPress'
   >
-    <div ref="main" class="main full">
-      <b-container class="pt-1 pb-5 h-100" fluid>
+    <div ref='main' class='main full'>
+      <b-container class='pt-1 pb-5 h-100' fluid>
         <b-row>
           <b-col>
-            <top-navigation class="mb-20" style="min-height: 72px">
+            <top-navigation class='mb-20' style='min-height: 72px'>
             </top-navigation>
           </b-col>
         </b-row>
-        <b-row xl="12" class="h-100">
-          <b-col class="h-100" xl="12">
-            <div class="h-100" @mouseover="mouseOver" data-sauto-id="results">
+        <b-row xl='12' class='h-100'>
+          <b-col class='h-100' xl='12'>
+            <div class='h-100' @mouseover='mouseOver' data-sauto-id='results'>
               <Results />
             </div>
           </b-col>
@@ -28,44 +28,44 @@
     </div>
 
     <div
-      ref="sidebar"
-      class="sidebar collapsed"
-      @mouseover="mouseOver"
-      data-sauto-id="sidebar"
+      ref='sidebar'
+      class='sidebar collapsed'
+      @mouseover='mouseOver'
+      data-sauto-id='sidebar'
     >
-      <div class="px-4 py-3" style="width: 300px">
+      <div class='px-4 py-3' style='width: 300px'>
         <b-button
-          type="button"
-          class="close"
-          aria-label="Close"
-          variant="light"
-          @click="toggleSideBar"
-          data-sauto-id="sidebar-close-button"
+          type='button'
+          class='close'
+          aria-label='Close'
+          variant='light'
+          @click='toggleSideBar'
+          data-sauto-id='sidebar-close-button'
         >
-          <span aria-hidden="true">×</span>
+          <span aria-hidden='true'>×</span>
         </b-button>
-        <h4 class="mt-3">Part-of-speech colors</h4>
-        <b-row v-for="key in Object.keys(posColors)" :key="key" class="my-3">
+        <h4 class='mt-3'>Part-of-speech colors</h4>
+        <b-row v-for='key in Object.keys(posColors)' :key='key' class='my-3'>
           <b-col
-            >{{ key[0].toUpperCase() + key.slice(1).replace('_', ' ') }}
+          >{{ key[0].toUpperCase() + key.slice(1).replace('_', ' ') }}
           </b-col>
           <b-col>
             <b-form-input
               :data-sauto-id="'color-option-' + key"
-              type="color"
-              v-model="posColors[key]"
+              type='color'
+              v-model='posColors[key]'
             ></b-form-input>
           </b-col>
         </b-row>
-        <h4 class="mt-3">Node label options</h4>
+        <h4 class='mt-3'>Node label options</h4>
         <b-row>
           <b-col>Font size</b-col>
           <b-col>
             <b-form-input
-              data-sauto-id="font-option"
-              type="number"
-              v-model="labelOptions.fontSize"
-              :number="true"
+              data-sauto-id='font-option'
+              type='number'
+              v-model='labelOptions.fontSize'
+              :number='true'
             >
             </b-form-input>
           </b-col>
@@ -74,8 +74,8 @@
           <b-col>Bold</b-col>
           <b-col>
             <b-form-checkbox
-              data-sauto-id="bold-checkbox-option"
-              v-model="labelOptions.bold"
+              data-sauto-id='bold-checkbox-option'
+              v-model='labelOptions.bold'
             ></b-form-checkbox>
           </b-col>
         </b-row>
@@ -83,28 +83,28 @@
           <b-col>White label background</b-col>
           <b-col>
             <b-form-checkbox
-              data-sauto-id="white-label-checkbox-option"
-              v-model="labelOptions.background"
+              data-sauto-id='white-label-checkbox-option'
+              v-model='labelOptions.background'
             ></b-form-checkbox>
           </b-col>
         </b-row>
-        <h4 class="mt-3">Link options</h4>
+        <h4 class='mt-3'>Link options</h4>
         <b-row>
           <b-col>Opacity: {{ linkOptions.opacity }}</b-col>
           <b-col>
             <b-form-input
-              data-sauto-id="opacity-slider-option"
-              type="range"
-              v-model="linkOptions.opacity"
-              :number="true"
-              :min="0"
-              :max="1"
-              :step="0.1"
+              data-sauto-id='opacity-slider-option'
+              type='range'
+              v-model='linkOptions.opacity'
+              :number='true'
+              :min='0'
+              :max='1'
+              :step='0.1'
             >
             </b-form-input>
           </b-col>
         </b-row>
-        <h4 class="mt-3">Table options</h4>
+        <h4 class='mt-3'>Table options</h4>
         <b-row>
           <b-col>
             Number of digits to display:
@@ -112,13 +112,13 @@
           </b-col>
           <b-col>
             <b-form-input
-              data-sauto-id="digits-slider-option"
-              type="range"
-              v-model="tableOptions.digits"
-              :number="true"
-              :min="0"
-              :max="11"
-              :step="1"
+              data-sauto-id='digits-slider-option'
+              type='range'
+              v-model='tableOptions.digits'
+              :number='true'
+              :min='0'
+              :max='11'
+              :step='1'
             >
             </b-form-input>
           </b-col>
@@ -127,8 +127,8 @@
           <b-col>Show selected words on top</b-col>
           <b-col>
             <b-check
-              data-sauto-id="selected-words-top-checkbox-option"
-              v-model="tableOptions.selectedOnTop"
+              data-sauto-id='selected-words-top-checkbox-option'
+              v-model='tableOptions.selectedOnTop'
             >
             </b-check>
           </b-col>
@@ -148,39 +148,39 @@ export default {
   components: {
     TopNavigation,
     Results,
-    Modal,
+    Modal
   },
-  created: function () {
+  created: function() {
     this.$store.dispatch('main/loadAvailableCorpora');
   },
   computed: {
     posColors: {
       get() {
         return this.$store.getters['main/posColors'];
-      },
+      }
     },
     labelOptions: {
       get() {
         return this.$store.getters['main/labelOptions'];
-      },
+      }
     },
     linkOptions: {
       get() {
         return this.$store.getters['main/linkOptions'];
-      },
+      }
     },
     tableOptions: {
       get() {
         return this.$store.getters['main/tableOptions'];
-      },
-    },
+      }
+    }
   },
   methods: {
     toggleSideBar() {
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
-    },
-  },
+    }
+  }
 };
 </script>
 

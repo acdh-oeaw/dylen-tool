@@ -6,7 +6,7 @@ import {
   allAvailableCorporaQuery,
   getNetworkQuery,
   getSoucesByCorpusQuery,
-  getNetworksByCorpusAndSource,
+  getNetworksByCorpusAndSource
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -22,7 +22,7 @@ const nodesToJSON = (state, nodes) => {
       Word: node.name,
       Network: `${state[node._pane].selectedTargetword.text} (${
         state[node._pane].selectedNetwork.year
-      })`,
+      })`
     };
     for (let key in node._metrics) tableEntry[key] = node._metrics[key];
 
@@ -38,7 +38,7 @@ const mainModule = {
         allAvailableCorporaQuery
       );
       const corporaPayload = {
-        corpora: response.data.data.allAvailableCorpora,
+        corpora: response.data.data.allAvailableCorpora
       };
       this.commit('main/loadCorpora', corporaPayload);
       await dispatch('loadSources');
@@ -51,7 +51,7 @@ const mainModule = {
         );
         const sourcesPayload = {
           corpus: corpus,
-          sources: sourceResponse.data.data.getSourcesByCorpus,
+          sources: sourceResponse.data.data.getSourcesByCorpus
         };
         this.commit('main/loadSourcesOfCorpus', sourcesPayload);
       }
@@ -74,8 +74,8 @@ const mainModule = {
       const payload = {
         pane: pane,
         targetWords:
-          targetwordsResponse.data.data.getNetworksByCorpusAndSource
-            .targetWords,
+        targetwordsResponse.data.data.getNetworksByCorpusAndSource
+          .targetWords
       };
       this.commit('main/loadTargetwordsOfCorpusAndSource', payload);
       this.commit('main/selectInitTargetWord', { pane: pane });
@@ -117,7 +117,7 @@ const mainModule = {
 
         const payload = {
           pane: pane,
-          network: network,
+          network: network
         };
 
         this.commit('main/addEgoNetwork', payload);
@@ -146,7 +146,7 @@ const mainModule = {
 
         this.commit('main/updateEgoNetwork', {
           networkObj: updatedNetwork,
-          pane: pane,
+          pane: pane
         });
       } catch (error) {
         logger.error(error);
@@ -163,7 +163,7 @@ const mainModule = {
         showTitle: false,
         useTextFile: false,
         useBom: true,
-        useKeysAsHeaders: true,
+        useKeysAsHeaders: true
       };
 
       const csvExporter = new ExportToCsv(options);
@@ -181,7 +181,7 @@ const mainModule = {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
-    },
+    }
   },
   namespaced: true,
   state: {
@@ -194,36 +194,36 @@ const mainModule = {
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
-      selectedNetwork: null,
+      selectedNetwork: null
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
-      selectedNetwork: null,
+      selectedNetwork: null
     },
     nodeMetrics: {
-      selectedNodes: [],
+      selectedNodes: []
     },
     posColors: {
       noun: '#aa0000',
       verb: '#000088',
       adjective: '#f18e04',
-      proper_noun: '#000000',
+      proper_noun: '#000000'
     },
     labelOptions: {
       fontSize: 12,
       bold: false,
-      background: true,
+      background: true
     },
     linkOptions: {
-      opacity: 0.25,
+      opacity: 0.25
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: true,
-    },
+      selectedOnTop: true
+    }
   },
   mutations: {
     loadCorpora(state, payload) {
@@ -236,7 +236,7 @@ const mainModule = {
       if (
         !state.availableTargetwordsByCorpusAndSource[
           state[payload.pane].selectedCorpus
-        ]
+          ]
       ) {
         Vue.set(
           state.availableTargetwordsByCorpusAndSource,
@@ -247,7 +247,7 @@ const mainModule = {
       Vue.set(
         state.availableTargetwordsByCorpusAndSource[
           state[payload.pane].selectedCorpus
-        ],
+          ],
         state[payload.pane].selectedSubcorpus,
         payload.targetWords
       );
@@ -261,7 +261,7 @@ const mainModule = {
       state[payload.pane].selectedTargetword =
         state.availableTargetwordsByCorpusAndSource[
           state[payload.pane].selectedCorpus
-        ][state[payload.pane].selectedSubcorpus][0];
+          ][state[payload.pane].selectedSubcorpus][0];
       state[payload.pane].selectedYear =
         state[payload.pane].selectedTargetword.networks[0];
     },
@@ -271,7 +271,7 @@ const mainModule = {
       } else {
         state[payload.pane].selectedCorpus = state[
           payload.pane
-        ].availableCorpora()[0];
+          ].availableCorpora()[0];
       }
     },
     changeSelectedSubcorpus(state, payload) {
@@ -286,7 +286,7 @@ const mainModule = {
         state[payload.pane].selectedTargetword =
           state.availableTargetwordsByCorpusAndSource[
             state[payload.pane].selectedCorpus
-          ][state[payload.pane].selectedSubcorpus][0];
+            ][state[payload.pane].selectedSubcorpus][0];
       }
       this.commit('main/changeSelectedYear', { pane: payload.pane });
     },
@@ -311,7 +311,7 @@ const mainModule = {
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
-    },
+    }
   },
   getters: {
     selectionColors: (state) => state.selectionColors,
@@ -328,7 +328,7 @@ const mainModule = {
         return [];
       return state.availableTargetwordsByCorpusAndSource[corpus][
         selectedSubcorpus
-      ];
+        ];
     },
     selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
     selectedYear: (state) => (pane) => state[pane].selectedYear,
@@ -337,11 +337,11 @@ const mainModule = {
     posColors: (state) => state.posColors,
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
-    tableOptions: (state) => state.tableOptions,
+    tableOptions: (state) => state.tableOptions
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
-  },
+  }
 };
 
 const sautoModule = {
@@ -349,22 +349,22 @@ const sautoModule = {
   state: {
     connection: null,
     lastOverElement: null,
-    sauto: false,
+    sauto: false
   },
   actions: {
     async connect({ state }) {
       if (state.sauto) {
         logger.log(props.sautoURI);
         state.connection = new WebSocket(props.sautoURI);
-        state.connection.onerror = function (event) {
+        state.connection.onerror = function(event) {
           logger.error(event);
         };
-        state.connection.onopen = function () {
+        state.connection.onopen = function() {
           logger.log('Connection with Sauto backed established successfully.');
           state.connection.send(
             JSON.stringify({
               appVersion: props.appVersion,
-              type: 'VersionInfo',
+              type: 'VersionInfo'
             })
           );
         };
@@ -400,14 +400,14 @@ const sautoModule = {
       //send mouse scroll
       scroll.type = 'Scroll';
       state.connection.send(JSON.stringify(scroll));
-    },
-  },
+    }
+  }
 };
 const store = new Vuex.Store({
   modules: {
     main: mainModule,
-    sauto: sautoModule,
-  },
+    sauto: sautoModule
+  }
 });
 
 Vue.mixin({
@@ -421,7 +421,7 @@ Vue.mixin({
 
       const mouseOver = {
         id: element.getAttribute('data-sauto-id'),
-        timestamp: Date.now(),
+        timestamp: Date.now()
       };
       this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
     },
@@ -449,7 +449,7 @@ Vue.mixin({
 
       const scroll = {
         id: element.getAttribute('data-sauto-id'),
-        height: event.deltaY,
+        height: event.deltaY
       };
 
       this.$store.dispatch('sauto/handleScroll', { scroll });
@@ -475,7 +475,7 @@ Vue.mixin({
 
       const positions = {
         x: (x * 100) / elementSizes.width,
-        y: (y * 100) / elementSizes.height,
+        y: (y * 100) / elementSizes.height
       };
       return positions;
     },
@@ -485,11 +485,11 @@ Vue.mixin({
         while (
           (element = element.parentElement) &&
           !element.getAttribute('data-sauto-id')
-        );
+          ) ;
       }
       return element;
-    },
-  },
+    }
+  }
 });
 
 export default store;

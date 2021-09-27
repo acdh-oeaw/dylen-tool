@@ -1,25 +1,25 @@
 <template>
-  <b-row class="h-100">
-    <b-col class="h-100" md="6">
-      <b-row class="h-50">
-        <b-col class="h-100" md="12">
+  <b-row class='h-100'>
+    <b-col class='h-100' md='6'>
+      <b-row class='h-50'>
+        <b-col class='h-100' md='12'>
           <NetworkGraph
-            v-if="networkCount >= 1"
-            ref="networkGraph"
-            pane="pane1"
+            v-if='networkCount >= 1'
+            ref='networkGraph'
+            pane='pane1'
           />
         </b-col>
       </b-row>
-      <b-row class="h-50">
-        <b-col class="h-100" md="12">
-          <NetworkGraph v-if="networkCount === 2" pane="pane2" />
+      <b-row class='h-50'>
+        <b-col class='h-100' md='12'>
+          <NetworkGraph v-if='networkCount === 2' pane='pane2' />
         </b-col>
       </b-row>
     </b-col>
-    <b-col class="h-100" md="6">
-      <b-row class="h-50">
-        <b-col class="h-100">
-          <NodeMetrics> </NodeMetrics>
+    <b-col class='h-100' md='6'>
+      <b-row class='h-50'>
+        <b-col class='h-100'>
+          <NodeMetrics></NodeMetrics>
         </b-col>
       </b-row>
     </b-col>
@@ -35,7 +35,7 @@ export default {
   props: ['pane'],
   components: {
     NodeMetrics,
-    NetworkGraph,
+    NetworkGraph
   },
   computed: {
     networkCount() {
@@ -53,9 +53,10 @@ export default {
       }
 
       return count;
-    },
+    }
   },
-  mounted() {},
+  mounted() {
+  }
 };
 </script>
 
