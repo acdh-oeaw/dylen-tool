@@ -1,30 +1,30 @@
 <template>
   <b-table
-    :items="tableData"
-    :fields="fields"
-    :responsive="true"
+    :items='tableData'
+    :fields='fields'
+    :responsive='true'
     :sort-by="'word'"
-    :sort-compare="sortCompare"
-    sticky-header="100%"
+    :sort-compare='sortCompare'
+    sticky-header='100%'
     small
     sort-icon-left
-    class="h-100"
+    class='h-100'
   >
 
-    <template #cell(selected)="row">
+    <template #cell(selected)='row'>
       <b-button
-        variant="none"
-        class="mx-auto"
-        @click=" () => addOrRemoveSelectedNode(row.item.node)"
+        variant='none'
+        class='mx-auto'
+        @click=' () => addOrRemoveSelectedNode(row.item.node)'
       >
         <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
       </b-button>
     </template>
-    <template #cell(word)="row">
-      <span>{{row.item.word}}</span>
+    <template #cell(word)='row'>
+      <span>{{ row.item.word }}</span>
     </template>
-    <template #cell(network)="row">
-      <span :style="`color: ${row.item.color}`">{{row.item.network}}</span>
+    <template #cell(network)='row'>
+      <span :style='`color: ${row.item.color}`'>{{ row.item.network }}</span>
     </template>
   </b-table>
 </template>
@@ -50,7 +50,7 @@ export default {
             this.$store.getters['main/getPane'](node._pane).selectedNetwork.year
           }`,
           color: this.getLineColor(node),
-          node: node,
+          node: node
         };
         let maxDigits = this.tableOptions.digits;
         for (let key in node._metrics)
@@ -58,9 +58,9 @@ export default {
             maxDigits > 10
               ? node._metrics[key]
               : Math.round(
-                  (node._metrics[key] + Number.EPSILON) *
-                    Math.pow(10, maxDigits)
-                ) / Math.pow(10, maxDigits);
+              (node._metrics[key] + Number.EPSILON) *
+              Math.pow(10, maxDigits)
+            ) / Math.pow(10, maxDigits);
         return tableEntry;
       });
     },
@@ -72,7 +72,7 @@ export default {
           fields.push({ key, sortable: true });
       }
       return fields;
-    },
+    }
   },
   methods: {
     getLineColor(node) {
@@ -111,8 +111,8 @@ export default {
           ? a[key].localeCompare(b[key])
           : a[key] - b[key];
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

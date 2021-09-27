@@ -1,53 +1,53 @@
 <template>
   <b-container
-    ref="con"
+    ref='con'
     fluid
-    class="mt-2"
-    style="background-color: white;"
-    v-if="egoNetwork"
+    class='mt-2'
+    style='background-color: white;'
+    v-if='egoNetwork'
   >
-    <b-row class="h-10">
+    <b-row class='h-10'>
 
       <b-col>
-        <b-row align-h="center">
+        <b-row align-h='center'>
           <span><b>{{ egoNetwork.text }}</b> ({{ egoNetwork.corpus }} / {{ egoNetwork.subcorpus }})</span>
         </b-row>
       </b-col>
     </b-row>
     <b-row
-      lg="12"
-      class="pt-2 h-70"
-      v-bind="egoNetwork"
-      :key="egoNetwork.id"
-      @mouseover="mouseOver"
+      lg='12'
+      class='pt-2 h-70'
+      v-bind='egoNetwork'
+      :key='egoNetwork.id'
+      @mouseover='mouseOver'
       :data-sauto-id="'network-' + egoNetwork.id"
     >
       <b-col>
         <d3-network
-          ref="egoChart"
-          class="network-wrapper"
-          :net-nodes="egoNetwork.nodes"
-          :net-links="egoNetwork.links"
-          :options="options"
+          ref='egoChart'
+          class='network-wrapper'
+          :net-nodes='egoNetwork.nodes'
+          :net-links='egoNetwork.links'
+          :options='options'
         />
       </b-col>
     </b-row>
-    <b-row class="h-20 pb-2">
-      <b-col xl="2"></b-col>
-      <b-col class="pl-5 year-slider-row">
+    <b-row class='h-20 pb-2'>
+      <b-col xl='2'></b-col>
+      <b-col class='pl-5 year-slider-row'>
         <VueSlider
-          ref="slider"
-          v-model="egoNetwork.year"
-          v-bind="sliderOptions"
-          :min="egoNetwork.possibleYears[0]"
-          :max="egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]"
-          :data="egoNetwork.possibleYears"
-          :process="false"
-          :lazy="true"
-          :adsorb="true"
-          :duration="0.3"
-          v-on:change="updateNetwork(egoNetwork)"
-          :marks="egoNetwork.possibleYears"
+          ref='slider'
+          v-model='egoNetwork.year'
+          v-bind='sliderOptions'
+          :min='egoNetwork.possibleYears[0]'
+          :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
+          :data='egoNetwork.possibleYears'
+          :process='false'
+          :lazy='true'
+          :adsorb='true'
+          :duration='0.3'
+          v-on:change='updateNetwork(egoNetwork)'
+          :marks='egoNetwork.possibleYears'
           :tooltip="'none'"
         />
       </b-col>
@@ -66,7 +66,7 @@ export default {
   name: 'NetworkGraph',
   components: {
     D3Network,
-    VueSlider,
+    VueSlider
   },
   props: ['pane'],
   data() {
@@ -82,17 +82,17 @@ export default {
         canvas: false,
         size: {
           h: 0,
-          w: 0,
-        },
+          w: 0
+        }
       },
       sliderOptions: {
-        dotSize: 15,
+        dotSize: 15
       },
       chartColors: [
         ['#2b6ca3', '#65add2', '#b0efff'],
-        ['#a36c23', '#d59c1e', '#ffd20b'],
+        ['#a36c23', '#d59c1e', '#ffd20b']
       ],
-      allNodesSelected: false,
+      allNodesSelected: false
     };
   },
   created() {
@@ -120,7 +120,7 @@ export default {
         //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
         this.$store.dispatch('main/loadUpdatedEgoNetwork', {
           network: network,
-          pane: this.pane,
+          pane: this.pane
         });
         this.allNodesSelected = false;
         this.deselectAllNodes();
@@ -155,7 +155,7 @@ export default {
         .forEach((node) => {
           this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
         });
-    },
+    }
   },
   computed: {
     egoNetwork() {
@@ -175,13 +175,13 @@ export default {
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
             _metrics: node.metrics,
-            _pane: this.pane,
+            _pane: this.pane
           });
         }
         for (const link of network.edges) {
           links.push({
             sid: network.id + '_' + link.node1,
-            tid: network.id + '_' + link.node2,
+            tid: network.id + '_' + link.node2
           });
         }
         selectedNetwork = {
@@ -194,17 +194,17 @@ export default {
           threshold: network.threshold,
           corpus: network.corpus,
           subcorpus: network.subcorpus,
-          targetWordId: network.targetWordId,
+          targetWordId: network.targetWordId
         };
       }
       return selectedNetwork;
-    },
+    }
   },
-  watch: {},
+  watch: {}
 };
 </script>
 
-<style src="vue-d3-network/dist/vue-d3-network.css"></style>
+<style src='vue-d3-network/dist/vue-d3-network.css'></style>
 
 <style scoped>
 .link {
@@ -229,7 +229,7 @@ export default {
   bottom: 0;
 }
 </style>
-<style lang="scss">
+<style lang='scss'>
 .year-slider-row {
   font-size: 0.9rem;
   min-height: 50px;

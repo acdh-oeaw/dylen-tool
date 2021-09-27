@@ -1,47 +1,47 @@
 <template>
   <div>
-    <div class="controls-container">
+    <div class='controls-container'>
       <b-button
-        @click="() => onZoomButtonClick(1.25)"
-        variant="outline-secondary"
+        @click='() => onZoomButtonClick(1.25)'
+        variant='outline-secondary'
       >
-        <b-icon icon="zoom-in"></b-icon>
+        <b-icon icon='zoom-in'></b-icon>
       </b-button>
       <b-button
-        @click="() => onZoomButtonClick(0.75)"
-        variant="outline-secondary"
+        @click='() => onZoomButtonClick(0.75)'
+        variant='outline-secondary'
       >
-        <b-icon icon="zoom-out"></b-icon>
+        <b-icon icon='zoom-out'></b-icon>
       </b-button>
       <b-form-checkbox
-        class="b-0"
-        v-model="allNodesSelected"
-        @change="selectionCheckboxChanged"
+        class='b-0'
+        v-model='allNodesSelected'
+        @change='selectionCheckboxChanged'
       >
         Select all nodes
       </b-form-checkbox>
     </div>
     <svg
-      ref="svg"
-      class="line-chart"
-      :viewBox="viewBox"
+      ref='svg'
+      class='line-chart'
+      :viewBox='viewBox'
     >
       <defs>
         <filter
-          x="0"
-          y="0"
-          width="1"
-          height="1"
-          id="solid"
+          x='0'
+          y='0'
+          width='1'
+          height='1'
+          id='solid'
         >
-          <feFlood flood-color="white" />
-          <feComposite in="SourceGraphic" />
+          <feFlood flood-color='white' />
+          <feComposite in='SourceGraphic' />
         </filter>
       </defs>
       <g>
-        <g class="links"></g>
-        <g class="nodes"></g>
-        <g class="labels"></g>
+        <g class='links'></g>
+        <g class='nodes'></g>
+        <g class='labels'></g>
       </g>
     </svg>
 
@@ -50,6 +50,7 @@
 
 <script>
 import * as d3 from 'd3';
+
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options'],
@@ -63,32 +64,32 @@ export default {
       links: [],
       svg: {},
       allNodesSelected: false,
-      focusedNode: [],
+      focusedNode: []
     };
   },
   watch: {
-    netNodes: function (_, oldNodes) {
+    netNodes: function(_, oldNodes) {
       this.deselectOldNodes(oldNodes);
       this.updateSimulation();
     },
-    netLinks: function () {
+    netLinks: function() {
       this.updateSimulation();
     },
     size: {
       handler() {
         this.initNetwork();
       },
-      deep: true,
+      deep: true
     },
-    selectedNodes: function () {
+    selectedNodes: function() {
       this.simulation.restart();
     },
     options: {
       handler() {
         this.simulation.restart();
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   computed: {
     size() {
@@ -186,7 +187,7 @@ export default {
         .filter((link) => link.target == this.focusedNode)
         .map((link) => link.source);
       return [this.focusedNode].concat(targets).concat(sources);
-    },
+    }
   },
   methods: {
     focusNode(node) {
@@ -278,7 +279,7 @@ export default {
           : scaledX,
         y: this.options.boundingBox
           ? Math.max(r, Math.min(height - r, scaledY))
-          : scaledY,
+          : scaledY
       };
     },
     applyScaleAndTransform() {
@@ -354,20 +355,21 @@ export default {
       if (node._pane == 'pane2')
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
-    },
+    }
   },
   mounted() {
     this.initNetwork();
   },
   beforeDestroy() {
     this.deselectAllNodes();
-  },
+  }
 };
 </script>
 <style>
 svg .labels text {
   cursor: default;
 }
+
 .controls-container {
   position: absolute;
   background: #fff;
