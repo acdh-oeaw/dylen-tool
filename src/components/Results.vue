@@ -56,10 +56,8 @@ export default {
   computed: {
     networkCount() {
       let count = 0;
-      const network1 = this.$store.getters['main/getPane']('pane1')
-        .selectedNetwork;
-      const network2 = this.$store.getters['main/getPane']('pane2')
-        .selectedNetwork;
+      const network1 = this.$store.getters['main/getPane']('pane1').selectedNetwork;
+      const network2 = this.$store.getters['main/getPane']('pane2').selectedNetwork;
 
       if (network1) {
         count++;

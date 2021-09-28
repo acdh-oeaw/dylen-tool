@@ -154,8 +154,7 @@ export default {
       yearEdit: false
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     onSubmit(evt) {
       evt.preventDefault();

@@ -102,8 +102,7 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : '×'
-              }}
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : '×' }}
             </tspan>
             <tspan
               dy='-6'
@@ -113,8 +112,7 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? '❌' : ''
-              }}
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? '❌' : '' }}
               <title>Deselect</title>
             </tspan>
             <!-- </g> -->
@@ -149,8 +147,7 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×'
-              }}
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×' }}
             </tspan>
             <tspan
               dy='-6'
@@ -160,8 +157,7 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : ''
-              }}
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
               <title>Deselect</title>
             </tspan>
           </text>

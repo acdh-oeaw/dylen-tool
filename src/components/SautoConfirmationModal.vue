@@ -13,14 +13,10 @@
       </template>
       <div class='d-block'>
         <p>
-          In the scope of a Master's Thesis about usability and user
-          friendliness, your usage of this web application will be captured.
-          <b
-          >NO information about your identity, device or location will be
-            captured or saved.</b
-          >
-          Please accept, if you want to support the research for the Master's
-          Thesis.
+          In the scope of a Master's Thesis about usability and user friendliness, your usage of this web application
+          will be captured.
+          <b>NO information about your identity, device or location will be captured or saved.</b>
+          Please accept, if you want to support the research for the Master's Thesis.
         </p>
       </div>
       <div class='row justify-content-around'>
