@@ -1,12 +1,12 @@
 export const allAvailableCorporaQuery = {
-    query: `{
+  query: `{
         allAvailableCorpora
     }`
 };
 
 export function getNetworksByCorpusAndSource(corpus, source, page, size) {
-    const query = {
-                    query: `{
+  const query = {
+    query: `{
                         getNetworksByCorpusAndSource(corpus: "${corpus}", source: "${source}", page: ${page}, size: ${size}) {
                             sliceNumber
                             hasNext
@@ -20,22 +20,22 @@ export function getNetworksByCorpusAndSource(corpus, source, page, size) {
                             }
                         }
                     }`
-                }
-        return query;
-    }
+  };
+  return query;
+}
 
 export function getSoucesByCorpusQuery(corpus) {
-    const query = {
-        query: `{
+  const query = {
+    query: `{
             getSourcesByCorpus(corpus: "${corpus}")
         }`
-    }
-    return query;
+  };
+  return query;
 }
 
 export function getNetworkQuery(targetwordId, year) {
-    const query = {
-        query:`{
+  const query = {
+    query: `{
             getNetwork(targetword_id: "${targetwordId}", year:${year}){
                 year
                 nodes {
@@ -62,8 +62,8 @@ export function getNetworkQuery(targetwordId, year) {
                 }
             }
           }`
-    }
-    return query;
+  };
+  return query;
 }
 
 export function getAutocompleteSuggestionsQuery(corpus, source, term){
