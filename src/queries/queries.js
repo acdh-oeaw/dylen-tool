@@ -65,3 +65,20 @@ export function getNetworkQuery(targetwordId, year) {
   };
   return query;
 }
+
+export function getAutocompleteSuggestionsQuery(corpus, source, term){
+    const query = {
+        query: `{
+            getAutocompleteSuggestions(corpus: "${corpus}", source: "${source}", searchTerm: "${term}") {
+                id
+                text
+                pos
+                networks {
+                    year
+                }
+            }
+        }`
+    }
+    return query;
+    
+}
