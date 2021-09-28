@@ -116,9 +116,4 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
 <style></style>
-=======
-<style>
-</style>
->>>>>>> reformat
