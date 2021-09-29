@@ -4,22 +4,29 @@
       <b-button
         @click='() => onZoomButtonClick(1.25)'
         variant='outline-secondary'
+        :data-sauto-id="'zoom-in-button-'+this.pane"
       >
         <b-icon icon='zoom-in'></b-icon>
       </b-button>
       <b-button
         @click='() => onZoomButtonClick(0.75)'
         variant='outline-secondary'
+        :data-sauto-id="'zoom-out-button-'+this.pane"
       >
         <b-icon icon='zoom-out'></b-icon>
       </b-button>
-      <b-form-checkbox
-        class='b-0'
-        v-model='allNodesSelected'
-        @change='selectionCheckboxChanged'
+      <div
+        data-sauto-id='ignore'
       >
-        Select all nodes
-      </b-form-checkbox>
+        <b-form-checkbox
+          class='b-0'
+          v-model='allNodesSelected'
+          @change='selectionCheckboxChanged'
+          :data-sauto-id="'select-all-checkbox-'+this.pane"
+        >
+          Select all nodes
+        </b-form-checkbox>
+      </div>
     </div>
     <svg
       ref='svg'
@@ -52,7 +59,7 @@ import * as d3 from 'd3';
 
 export default {
   name: 'D3Network',
-  props: ['netNodes', 'netLinks', 'options'],
+  props: ['netNodes', 'netLinks', 'options', 'pane'],
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),
