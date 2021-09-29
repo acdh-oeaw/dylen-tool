@@ -349,7 +349,8 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
       d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
-      // console.log(event) //todo
+
+      this.dragStart(event.sourceEvent)
     },
 
     dragged(event, d) {
@@ -363,7 +364,8 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
-      // console.log(event) //todo
+
+      this.dragEnd(event.sourceEvent,this.pane+"-node-"+d.name)
     },
     getLineColor(node) {
       if (node._pane == 'pane1')

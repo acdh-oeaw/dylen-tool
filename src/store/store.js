@@ -321,7 +321,8 @@ const sautoModule = {
     connection: null,
     lastOverElement: null,
     sauto: false,
-    size: {}
+    size: null,
+    currentDrag: null
   },
   actions: {
     setBoundingClientRect({ state }, { size }) {
@@ -370,6 +371,11 @@ const sautoModule = {
       //send mouse click
       click.type = 'MouseClick';
       state.connection.send(JSON.stringify(click));
+    },
+    async handleDrag({ state }, { drag }) {
+      //send mouse drag and drop
+      drag.type = 'Drag';
+      state.connection.send(JSON.stringify(drag));
     },
     async handleScroll({ state }, { scroll }) {
       //send mouse scroll
@@ -450,6 +456,33 @@ export var mixin = {
       console.log(click);
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
+    },
+    dragStart(event) {
+      if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+
+      const dragStart = this.calculateMousePosition(event);
+      dragStart.timestamp = Date.now();
+
+      this.$store.state.sauto.currentDrag = {start: dragStart};
+    },
+    dragEnd(event, sautoId) {
+      if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+      const dragEnd = this.calculateMousePosition(event);
+
+      dragEnd.timestamp = Date.now();
+
+      let drag = this.$store.state.sauto.currentDrag;
+      drag.id = sautoId;
+      drag.end = dragEnd;
+
+      console.log(drag);
+
+      this.$store.dispatch('sauto/handleDrag', { drag });
+      this.$store.state.sauto.currentDrag = null;
     },
     calculateMousePosition(event) {
       let clientX = event.clientX;
