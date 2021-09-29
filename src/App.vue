@@ -184,8 +184,15 @@ export default {
     Results,
     Modal
   },
-  created: function() {
+  created() {
     this.$store.dispatch('main/loadAvailableCorpora');
+    window.addEventListener("resize", this.screenResizeHandler);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.screenResizeHandler);
+  },
+  mounted(){
+    this.screenResizeHandler();
   },
   computed: {
     posColors: {
@@ -213,6 +220,10 @@ export default {
     toggleSideBar() {
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
+    },
+    screenResizeHandler() {
+      const size = this.$refs.app.getBoundingClientRect();
+      this.$store.dispatch('sauto/setBoundingClientRect', {size});
     }
   }
 };

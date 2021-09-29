@@ -19,7 +19,7 @@
       v-bind='egoNetwork'
       :key='egoNetwork.id'
       @mouseover='mouseOver'
-      :data-sauto-id="'network-' + this.pane"
+      data-sauto-id="ignore"
     >
       <b-col>
         <d3-network

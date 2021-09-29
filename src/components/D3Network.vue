@@ -56,10 +56,12 @@
 
 <script>
 import * as d3 from 'd3';
+import { mixin } from '@/store/store';
 
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options', 'pane'],
+  mixins: [mixin],
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),
@@ -128,7 +130,10 @@ export default {
             : 1
         )
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index))
+        .on('click', (event, d) => {
+          this.addOrRemoveSelectedNode(d.index);
+          this.mouseClick(event,this.pane+"-node-"+d.name)
+        })
         .on('mouseenter', (event, d) => this.focusNode(d))
         .on('mouseleave', () => this.defocusNode());
 
@@ -164,7 +169,10 @@ export default {
             ? 'url(#solid)'
             : ''
         )
-        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
+        .on('click', (event, d) => {
+          this.addOrRemoveSelectedNode(d.index);
+          this.mouseClick(event,this.pane+"-label-"+d.name)
+        })
       return l;
     },
     link() {
@@ -341,6 +349,7 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
       d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
+      // console.log(event) //todo
     },
 
     dragged(event, d) {
@@ -354,6 +363,7 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+      // console.log(event) //todo
     },
     getLineColor(node) {
       if (node._pane == 'pane1')
