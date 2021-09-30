@@ -106,14 +106,12 @@ const mainModule = {
 
         this.commit('main/addEgoNetwork', payload);
         logger.log('Ego Network loaded successfully.');
-
       } catch (error) {
         logger.error(error);
       }
     },
     async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
       try {
-
         const response = await axios.post(graphqlEndpoint,
           getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
 
@@ -317,7 +315,6 @@ const mainModule = {
   }
 };
 
-
 const sautoModule = {
   namespaced: true,
   state: {
@@ -329,12 +326,18 @@ const sautoModule = {
     async connect({ state }) {
       if (state.sauto) {
         logger.log(props.sautoURI);
-        state.connection = new WebSocket(props.sautoURI); //todo get url from properties file
+        state.connection = new WebSocket(props.sautoURI);
         state.connection.onerror = function(event) {
           logger.error(event);
         };
         state.connection.onopen = function() {
           logger.log('Connection with Sauto backed established successfully.');
+          state.connection.send(
+            JSON.stringify({
+              appVersion: props.appVersion,
+              type: 'VersionInfo'
+            })
+          );
         };
       }
     },
@@ -393,6 +396,13 @@ Vue.mixin({
       };
       this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
     },
+    keyPress(event) {
+      if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+
+      console.log(event);
+    },
     mouseMove(event) {
       if (this.$store.state.sauto.sauto === false) {
         return;
@@ -424,15 +434,33 @@ Vue.mixin({
       const element = this.getNearestSautoId(event.target);
 
       click.id = element.getAttribute('data-sauto-id');
+
+      //hacky workaround for double registered clicks
+      if(click.id === "ignore"){
+        return;
+      }
       click.timestamp = Date.now();
+
+      console.log(click)
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
     calculateMousePosition(event) {
+      let clientX = event.clientX;
+      let clientY = event.clientY;
+
+      //there is a bug with selects which register mouse position as 0,0 when clicked on
+      //so i take the element position instead of click position in such cases
+      if (clientX === 0 && clientY === 0) {
+        const rect = event.target.getBoundingClientRect();
+        clientX = rect.x;
+        clientY = rect.y;
+      }
+
       //get mouse position in percentage relative to top element size
       const elementSizes = this.$refs.app.getBoundingClientRect();
-      const x = event.clientX - elementSizes.left;
-      const y = event.clientY - elementSizes.top;
+      const x = clientX - elementSizes.left;
+      const y = clientY - elementSizes.top;
 
       const positions = {
         x: (x * 100) / elementSizes.width,

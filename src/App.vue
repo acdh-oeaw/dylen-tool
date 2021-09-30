@@ -6,6 +6,7 @@
     @mousemove='mouseMove'
     @click='mouseClick'
     @wheel='scroll'
+    data-sauto-id='root'
   >
     <div
       ref='main'
@@ -48,6 +49,8 @@
     <div
       ref='sidebar'
       class='sidebar collapsed'
+      @mouseover='mouseOver'
+      data-sauto-id='sidebar'
     >
       <div
         class='px-4 py-3'
@@ -59,6 +62,7 @@
           aria-label='Close'
           variant='light'
           @click='toggleSideBar'
+          data-sauto-id='sidebar-close-button'
         >
           <span aria-hidden='true'>×</span>
         </b-button>
@@ -74,6 +78,7 @@
           </b-col>
           <b-col>
             <b-form-input
+              :data-sauto-id="'color-option-' + key"
               type='color'
               v-model='posColors[key]'
             ></b-form-input>
@@ -84,6 +89,7 @@
           <b-col>Font size</b-col>
           <b-col>
             <b-form-input
+              data-sauto-id='font-option'
               type='number'
               v-model='labelOptions.fontSize'
               :number='true'
@@ -93,14 +99,25 @@
         </b-row>
         <b-row>
           <b-col>Bold</b-col>
-          <b-col>
-            <b-form-checkbox v-model='labelOptions.bold'></b-form-checkbox>
+          <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
+          <b-col
+            data-sauto-id='ignore'
+          >
+            <b-form-checkbox
+              data-sauto-id='bold-checkbox-option'
+              v-model='labelOptions.bold'
+            ></b-form-checkbox>
           </b-col>
         </b-row>
         <b-row>
           <b-col>White label background</b-col>
-          <b-col>
-            <b-form-checkbox v-model='labelOptions.background'></b-form-checkbox>
+          <b-col
+            data-sauto-id='ignore'
+          >
+            <b-form-checkbox
+              data-sauto-id='white-label-checkbox-option'
+              v-model='labelOptions.background'
+            ></b-form-checkbox>
           </b-col>
         </b-row>
         <h4 class='mt-3'>Link options</h4>
@@ -108,6 +125,7 @@
           <b-col>Opacity: {{ linkOptions.opacity }}</b-col>
           <b-col>
             <b-form-input
+              data-sauto-id='opacity-slider-option'
               type='range'
               v-model='linkOptions.opacity'
               :number='true'
@@ -120,9 +138,13 @@
         </b-row>
         <h4 class='mt-3'>Table options</h4>
         <b-row>
-          <b-col>Number of digits to display: {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}</b-col>
+          <b-col>
+            Number of digits to display:
+            {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
+          </b-col>
           <b-col>
             <b-form-input
+              data-sauto-id='digits-slider-option'
               type='range'
               v-model='tableOptions.digits'
               :number='true'
@@ -131,13 +153,17 @@
               :step='1'
             >
             </b-form-input>
-
           </b-col>
         </b-row>
         <b-row>
           <b-col>Show selected words on top</b-col>
-          <b-col>
-            <b-check v-model='tableOptions.selectedOnTop'>
+          <b-col
+            data-sauto-id='ignore'
+          >
+            <b-check
+              data-sauto-id='selected-words-top-checkbox-option'
+              v-model='tableOptions.selectedOnTop'
+            >
             </b-check>
           </b-col>
         </b-row>

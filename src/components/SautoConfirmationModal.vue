@@ -24,20 +24,21 @@
           variant='danger'
           class='col-4 mt-3'
           block
-          @click='agreeSauto(false)'>
+          @click='agreeSauto(false)'
+        >
           Decline
         </b-button>
         <b-button
           variant='success'
           class='col-4 mt-3'
           block
-          @click='agreeSauto(true)'>
+          @click='agreeSauto(true)'
+        >
           Accept
         </b-button>
       </div>
     </b-modal>
   </div>
-
 </template>
 
 <script>
@@ -52,7 +53,6 @@ export default {
     };
   },
   mounted() {
-
   },
   methods: {
     agreeSauto(agreed) {

@@ -1,26 +1,26 @@
 <template>
-  <b-form @submit="onSubmit">
+  <b-form @submit='onSubmit'>
     <b-row>
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectCorpus"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectCorpus'
       >
         <b-form-group
-          id="select-corpus-group-viz"
-          label="Corpus: "
-          label-size="sm"
-          label-cols-xl="4"
+          id='select-corpus-group-viz'
+          label='Corpus: '
+          label-size='sm'
+          label-cols-xl='4'
         >
           <b-form-select
-            size="sm"
-            v-model="selectedCorpus"
-            data-sauto-id="selectCorpus"
+            size='sm'
+            v-model='selectedCorpus'
+            data-sauto-id='selectCorpus'
           >
             <b-form-select-option
-              v-for="option in availableCorpora"
-              v-bind:key="option"
-              v-bind:value="option"
+              v-for='option in availableCorpora'
+              v-bind:key='option'
+              v-bind:value='option'
               :data-sauto-id="'corpusOption-'+option"
             >
               {{ option }}
@@ -29,26 +29,26 @@
         </b-form-group>
       </b-col>
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectSubCorpus"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectSubCorpus'
       >
         <b-form-group
-          id="select-subcorpus-group-viz"
-          label="Subcorpus:"
-          label-size="sm"
-          label-cols-xl="4"
-          label-for="select-subcorpus"
+          id='select-subcorpus-group-viz'
+          label='Subcorpus:'
+          label-size='sm'
+          label-cols-xl='4'
+          label-for='select-subcorpus'
         >
           <b-form-select
-            size="sm"
-            v-model="selectedSubcorpus"
-            data-sauto-id="selectSubCorpus"
+            size='sm'
+            v-model='selectedSubcorpus'
+            data-sauto-id='selectSubCorpus'
           >
             <b-form-select-option
-              v-for="option in availableSources"
-              v-bind:key="option"
-              v-bind:value="option"
+              v-for='option in availableSources'
+              v-bind:key='option'
+              v-bind:value='option'
               :data-sauto-id="'subCorpusOption-'+option"
             >
               {{ option }}
@@ -56,37 +56,36 @@
           </b-form-select>
         </b-form-group>
       </b-col>
-
     </b-row>
     <b-row>
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectTargetword"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectTargetword'
       >
         <b-form-group
-          id="select-targetword-group-biz"
-          label="Targetword:"
-          label-size="sm"
-          label-cols-xl="4"
-          label-for="select-targetword"
-          label-align-lg="left"
+          id='select-targetword-group-biz'
+          label='Targetword:'
+          label-size='sm'
+          label-cols-xl='4'
+          label-for='select-targetword'
+          label-align-lg='left'
         >
           <b-form-input
-            size="sm"
-            v-model="searchTerm"
-            data-sauto-id="selectTargetWord"
-            :list="`datalist-${pane}`"
-            @change="setTargetWord"
+            size='sm'
+            v-model='searchTerm'
+            data-sauto-id='selectTargetWord'
+            :list='`datalist-${pane}`'
+            @change='setTargetWord'
           ></b-form-input>
-          <datalist :id="`datalist-${pane}`">
+          <datalist :id='`datalist-${pane}`'>
             <option
-              v-for="option in availableTargetwords"
-              v-bind:key="option.text+option.pos"
-              v-bind:value="option.text"
+              v-for='option in availableTargetwords'
+              v-bind:key='option.text+option.pos'
+              v-bind:value='option.text'
               :data-sauto-id="'targetWord-'+option.text"
             >
-              {{ option.pos.split("_").join(" ")}}
+              {{ option.pos.split('_').join(' ') }}
             </option>
           </datalist>
           <!-- {{availableTargetwords}} -->
@@ -94,31 +93,31 @@
       </b-col>
 
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectYear"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectYear'
       >
         <b-form-group
-          id="select-year-group-viz"
-          label="Year:"
-          label-for="select-year"
-          label-size="sm"
-          label-cols-xl="4"
-          label-align-lg="left"
+          id='select-year-group-viz'
+          label='Year:'
+          label-for='select-year'
+          label-size='sm'
+          label-cols-xl='4'
+          label-align-lg='left'
         >
           <div
-            @mouseover="mouseOver"
-            data-sauto-id="selectYear"
+            @mouseover='mouseOver'
+            data-sauto-id='selectYear'
           >
             <b-form-select
-              size="sm"
-              v-model="selectedYear"
-              data-sauto-id="selectYear"
+              size='sm'
+              v-model='selectedYear'
+              data-sauto-id='selectYear'
             >
               <b-form-select-option
-                v-for="option in selectedTargetword.networks"
-                v-bind:key="option.year"
-                v-bind:value="option"
+                v-for='option in selectedTargetword.networks'
+                v-bind:key='option.year'
+                v-bind:value='option'
                 :data-sauto-id="'year-'+option.year"
               >
                 {{ option.year }}
@@ -127,13 +126,13 @@
           </div>
         </b-form-group>
       </b-col>
-      <b-col xl="auto">
+      <b-col xl='auto'>
         <b-button
-          size="sm"
-          type="submit"
-          variant="secondary"
-          data-sauto-id="queryButton"
-          @mouseover="mouseOver"
+          size='sm'
+          type='submit'
+          variant='secondary'
+          data-sauto-id='queryButton'
+          @mouseover='mouseOver'
         >
           Query
         </b-button>
@@ -152,7 +151,7 @@ export default {
       corpusEdit: false,
       subcorpusEdit: false,
       targetwordEdit: false,
-      yearEdit: false,
+      yearEdit: false
     };
   },
   mounted() {},
@@ -166,7 +165,7 @@ export default {
         (t) => t.text == this.searchTerm
       );
       this.selectedTargetword = target;
-    },
+    }
   },
   computed: {
     queryPane() {
@@ -188,7 +187,7 @@ export default {
     availableCorpora: {
       get() {
         return this.$store.getters['main/availableCorpora'];
-      },
+      }
     },
     selectedCorpus: {
       get() {
@@ -198,16 +197,16 @@ export default {
         if (val)
           this.$store.commit('main/changeSelectedCorpus', {
             corpus: val,
-            pane: this.queryPane,
+            pane: this.queryPane
           });
-      },
+      }
     },
     availableSources: {
       get() {
         return this.$store.getters['main/availableSourcesByCorpus'](
           this.selectedCorpus
         );
-      },
+      }
     },
     selectedSubcorpus: {
       get() {
@@ -217,17 +216,17 @@ export default {
         if (val)
           this.$store.commit('main/changeSelectedSubcorpus', {
             subcorpus: val,
-            pane: this.queryPane,
+            pane: this.queryPane
           });
         if (val) this.$store.dispatch('main/loadTargetWords', this.queryPane);
-      },
+      }
     },
     availableTargetwords: {
       get() {
         return this.$store.getters['main/autocompleteSuggestions'](
           this.queryPane
         );
-      },
+      }
     },
     selectedTargetword: {
       get() {
@@ -237,9 +236,9 @@ export default {
         if (val)
           this.$store.commit('main/changeSelectedTargetword', {
             targetword: val,
-            pane: this.queryPane,
+            pane: this.queryPane
           });
-      },
+      }
     },
     searchTerm: {
       get() {
@@ -249,9 +248,9 @@ export default {
         if (val)
           this.$store.commit('main/changeSearchTerm', {
             targetword: val,
-            pane: this.queryPane,
+            pane: this.queryPane
           });
-      },
+      }
     },
     selectedYear: {
       get() {
@@ -261,12 +260,12 @@ export default {
         if (val)
           this.$store.commit('main/changeSelectedYear', {
             year: val,
-            pane: this.queryPane,
+            pane: this.queryPane
           });
-      },
-    },
+      }
+    }
   },
-  watch: {},
+  watch: {}
 };
 </script>
 
