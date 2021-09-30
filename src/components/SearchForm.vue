@@ -1,7 +1,11 @@
 <template>
   <b-form @submit="onSubmit">
     <b-row>
-      <b-col xl="5" @mouseover="mouseOver" data-sauto-id="selectCorpus">
+      <b-col
+        xl="5"
+        @mouseover="mouseOver"
+        data-sauto-id="selectCorpus"
+      >
         <b-form-group
           id="select-corpus-group-viz"
           label="Corpus: "
@@ -24,7 +28,11 @@
           </b-form-select>
         </b-form-group>
       </b-col>
-      <b-col xl="5" @mouseover="mouseOver" data-sauto-id="selectSubCorpus">
+      <b-col
+        xl="5"
+        @mouseover="mouseOver"
+        data-sauto-id="selectSubCorpus"
+      >
         <b-form-group
           id="select-subcorpus-group-viz"
           label="Subcorpus:"
@@ -50,7 +58,11 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col xl="5" @mouseover="mouseOver" data-sauto-id="selectTargetword">
+      <b-col
+        xl="5"
+        @mouseover="mouseOver"
+        data-sauto-id="selectTargetword"
+      >
         <b-form-group
           id="select-targetword-group-biz"
           label="Targetword:"
@@ -81,7 +93,11 @@
         </b-form-group>
       </b-col>
 
-      <b-col xl="5" @mouseover="mouseOver" data-sauto-id="selectYear">
+      <b-col
+        xl="5"
+        @mouseover="mouseOver"
+        data-sauto-id="selectYear"
+      >
         <b-form-group
           id="select-year-group-viz"
           label="Year:"
@@ -90,7 +106,10 @@
           label-cols-xl="4"
           label-align-lg="left"
         >
-          <div @mouseover="mouseOver" data-sauto-id="selectYear">
+          <div
+            @mouseover="mouseOver"
+            data-sauto-id="selectYear"
+          >
             <b-form-select
               size="sm"
               v-model="selectedYear"
