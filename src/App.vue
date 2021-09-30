@@ -186,12 +186,12 @@ export default {
   },
   created() {
     this.$store.dispatch('main/loadAvailableCorpora');
-    window.addEventListener("resize", this.screenResizeHandler);
+    window.addEventListener('resize', this.screenResizeHandler);
   },
   destroyed() {
-    window.removeEventListener("resize", this.screenResizeHandler);
+    window.removeEventListener('resize', this.screenResizeHandler);
   },
-  mounted(){
+  mounted() {
     this.screenResizeHandler();
   },
   computed: {
@@ -223,7 +223,7 @@ export default {
     },
     screenResizeHandler() {
       const size = this.$refs.app.getBoundingClientRect();
-      this.$store.dispatch('sauto/setBoundingClientRect', {size});
+      this.$store.dispatch('sauto/setBoundingClientRect', { size });
     }
   }
 };

@@ -53,7 +53,6 @@
 <script>
 import ParallelCoordinates from '@/components/ParallelCoordinates';
 import MetricsTable from '@/components/MetricsTable';
-import logger from '../helpers/logger';
 
 export default {
   name: 'NodeMetrics',
@@ -84,7 +83,6 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = (this.$refs.parCoords || this.$refs.table).$el
         .parentElement;
-      logger.log(heightRefElem.clientHeight);
 
       const chartHeight = heightRefElem.clientHeight * 1.0;
       const chartWidth = widthRefElem?.clientWidth / 1.08;
