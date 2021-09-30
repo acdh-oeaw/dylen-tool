@@ -19,7 +19,7 @@
       v-bind='egoNetwork'
       :key='egoNetwork.id'
       @mouseover='mouseOver'
-      data-sauto-id="ignore"
+      data-sauto-id='ignore'
     >
       <b-col>
         <d3-network
@@ -34,7 +34,7 @@
     </b-row>
     <b-row class='h-20 pb-2'>
       <b-col xl='2'></b-col>
-      <b-col class='pl-5 year-slider-row'>
+      <b-col class='pl-5 year-slider-row' data-sauto-id='ignore'>
         <VueSlider
           ref='slider'
           v-model='egoNetwork.year'
@@ -47,6 +47,7 @@
           :adsorb='true'
           :duration='0.3'
           v-on:change='updateNetwork(egoNetwork)'
+          v-on:click.native='handleYearClick'
           :marks='egoNetwork.possibleYears'
           :tooltip="'none'"
         />
@@ -92,7 +93,8 @@ export default {
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b']
       ],
-      allNodesSelected: false
+      allNodesSelected: false,
+      currentYear: 0
     };
   },
   created() {
@@ -115,20 +117,19 @@ export default {
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
     },
-    updateNetwork(network) {
-      if (this.currentYear !== network.year) {
-        //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-        this.$store.dispatch('main/loadUpdatedEgoNetwork', {
-          network: network,
-          pane: this.pane
-        });
-        this.allNodesSelected = false;
-        this.deselectAllNodes();
-      }
+    handleYearClick(event) {
+      console.log(event)
+      // this.mouseClick(event, 'year-slider-' + this.pane + '-' + this.currentYear);
     },
-    saveYear(year) {
-      //save the current year at the start of the drag and if the year is the same at the end, dont send a call
-      this.currentYear = year;
+    updateNetwork(network) {
+      this.currentYear=network.year;
+      //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
+      this.$store.dispatch('main/loadUpdatedEgoNetwork', {
+        network: network,
+        pane: this.pane
+      });
+      this.allNodesSelected = false;
+      this.deselectAllNodes();
     },
     selectionCheckboxChanged() {
       if (this.allNodesSelected) this.selectAllNodes();

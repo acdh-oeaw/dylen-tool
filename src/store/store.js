@@ -479,8 +479,6 @@ export var mixin = {
       drag.id = sautoId;
       drag.end = dragEnd;
 
-      console.log(drag);
-
       this.$store.dispatch('sauto/handleDrag', { drag });
       this.$store.state.sauto.currentDrag = null;
     },
