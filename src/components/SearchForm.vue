@@ -78,6 +78,7 @@
             data-sauto-id="selectTargetWord"
             :list="`datalist-${pane}`"
             @change="setTargetWord"
+            autocomplete="off"
           ></b-form-input>
           <datalist :id="`datalist-${pane}`">
             <option
@@ -133,6 +134,7 @@
           type="submit"
           variant="secondary"
           data-sauto-id="queryButton"
+          :disabled="!searchTerm || searchTerm.length == 0"
           @mouseover="mouseOver"
         >
           Query
@@ -145,8 +147,8 @@
 
 <script>
 export default {
-  name: 'SearchForm',
-  props: ['isSidebar', 'pane', 'withLabels'],
+  name: "SearchForm",
+  props: ["isSidebar", "pane", "withLabels"],
   data() {
     return {
       corpusEdit: false,
@@ -159,7 +161,7 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
+      this.$store.dispatch("main/loadEgoNetwork", this.queryPane);
     },
     setTargetWord() {
       let target = this.availableTargetwords.find(
@@ -174,29 +176,29 @@ export default {
 
       let count = 0;
       const network1 =
-        this.$store.getters['main/getPane']('pane1').selectedNetwork;
+        this.$store.getters["main/getPane"]("pane1").selectedNetwork;
       const network2 =
-        this.$store.getters['main/getPane']('pane2').selectedNetwork;
+        this.$store.getters["main/getPane"]("pane2").selectedNetwork;
 
       if (network1 || network2) {
         count++;
       }
 
-      if (count > 0) return 'pane2';
-      return 'pane1';
+      if (count > 0) return "pane2";
+      return "pane1";
     },
     availableCorpora: {
       get() {
-        return this.$store.getters['main/availableCorpora'];
+        return this.$store.getters["main/availableCorpora"];
       },
     },
     selectedCorpus: {
       get() {
-        return this.$store.getters['main/selectedCorpus'](this.queryPane);
+        return this.$store.getters["main/selectedCorpus"](this.queryPane);
       },
       set(val) {
         if (val)
-          this.$store.commit('main/changeSelectedCorpus', {
+          this.$store.commit("main/changeSelectedCorpus", {
             corpus: val,
             pane: this.queryPane,
           });
@@ -204,38 +206,38 @@ export default {
     },
     availableSources: {
       get() {
-        return this.$store.getters['main/availableSourcesByCorpus'](
+        return this.$store.getters["main/availableSourcesByCorpus"](
           this.selectedCorpus
         );
       },
     },
     selectedSubcorpus: {
       get() {
-        return this.$store.getters['main/selectedSubcorpus'](this.queryPane);
+        return this.$store.getters["main/selectedSubcorpus"](this.queryPane);
       },
       set(val) {
         if (val)
-          this.$store.commit('main/changeSelectedSubcorpus', {
+          this.$store.commit("main/changeSelectedSubcorpus", {
             subcorpus: val,
             pane: this.queryPane,
           });
-        if (val) this.$store.dispatch('main/loadTargetWords', this.queryPane);
+        if (val) this.$store.dispatch("main/loadTargetWords", this.queryPane);
       },
     },
     availableTargetwords: {
       get() {
-        return this.$store.getters['main/autocompleteSuggestions'](
+        return this.$store.getters["main/autocompleteSuggestions"](
           this.queryPane
         );
       },
     },
     selectedTargetword: {
       get() {
-        return this.$store.getters['main/selectedTargetword'](this.queryPane);
+        return this.$store.getters["main/selectedTargetword"](this.queryPane);
       },
       set(val) {
         if (val)
-          this.$store.commit('main/changeSelectedTargetword', {
+          this.$store.commit("main/changeSelectedTargetword", {
             targetword: val,
             pane: this.queryPane,
           });
@@ -243,23 +245,22 @@ export default {
     },
     searchTerm: {
       get() {
-        return this.$store.getters['main/searchTerm'](this.queryPane);
+        return this.$store.getters["main/searchTerm"](this.queryPane);
       },
       set(val) {
-        if (val)
-          this.$store.commit('main/changeSearchTerm', {
-            targetword: val,
-            pane: this.queryPane,
-          });
+        this.$store.commit("main/changeSearchTerm", {
+          targetword: val,
+          pane: this.queryPane,
+        });
       },
     },
     selectedYear: {
       get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
+        return this.$store.getters["main/selectedYear"](this.queryPane);
       },
       set(val) {
         if (val)
-          this.$store.commit('main/changeSelectedYear', {
+          this.$store.commit("main/changeSelectedYear", {
             year: val,
             pane: this.queryPane,
           });
