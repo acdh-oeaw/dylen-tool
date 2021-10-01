@@ -37,8 +37,17 @@
               class='h-100'
               @mouseover='mouseOver'
               data-sauto-id='results'
+              v-if='!this.$store.state.main.showInfo'
             >
               <Results />
+            </div>
+            <div
+              class='h-100'
+              @mouseover='mouseOver'
+              data-sauto-id='info'
+              v-if='this.$store.state.main.showInfo'
+            >
+              <Info />
             </div>
           </b-col>
         </b-row>
@@ -176,13 +185,18 @@
 import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
 import TopNavigation from '@/components/TopNavigation';
+import Info from '@/components/Info';
 
 export default {
   name: 'App',
   components: {
     TopNavigation,
     Results,
-    Modal
+    Modal,
+    Info
+  },
+  data() {
+    return {};
   },
   created() {
     this.$store.dispatch('main/loadAvailableCorpora');

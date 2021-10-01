@@ -213,7 +213,8 @@ const mainModule = {
     tableOptions: {
       digits: 3,
       selectedOnTop: true
-    }
+    },
+    showInfo: true
   },
   mutations: {
     loadCorpora(state, payload) {
@@ -261,7 +262,7 @@ const mainModule = {
       } else {
         state[payload.pane].searchTerm = ""; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
-      
+
     },
     changeSelectedYear(state, payload) {
       if (payload.year) {
@@ -286,8 +287,10 @@ const mainModule = {
     },
     setAutocompleteSuggestions(state, payload) {
       state[payload.pane].autocompleteSuggestions = payload.suggestions;
+    },
+    setShowInfo(state, payload){
+      state.showInfo = payload.showInfo;
     }
-
   },
   getters: {
     selectionColors: (state) => state.selectionColors,
