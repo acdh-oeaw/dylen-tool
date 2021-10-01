@@ -443,9 +443,7 @@ export var mixin = {
       }
       const click = this.calculateMousePosition(event);
 
-      const element = this.getNearestSautoId(event.target);
-
-      click.id = sautoId ? sautoId : element.getAttribute('data-sauto-id');
+      click.id = sautoId ? sautoId : this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
 
       //hacky workaround for double registered clicks
       if (click.id === 'ignore') {

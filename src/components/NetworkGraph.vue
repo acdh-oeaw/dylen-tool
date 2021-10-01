@@ -33,33 +33,32 @@
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
-      <b-col xl='2'></b-col>
+      <!--      <b-col xl='2'></b-col>-->
       <b-col class='pl-5 year-slider-row' data-sauto-id='ignore'>
-        <VueSlider
-          ref='slider'
-          v-model='egoNetwork.year'
-          v-bind='sliderOptions'
-          :min='egoNetwork.possibleYears[0]'
-          :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
-          :data='egoNetwork.possibleYears'
-          :process='false'
-          :lazy='true'
-          :adsorb='true'
-          :duration='0.3'
-          v-on:change='updateNetwork(egoNetwork)'
-          v-on:click.native='handleYearClick'
-          :marks='egoNetwork.possibleYears'
-          :tooltip="'none'"
-        />
+        <div ref='sliderDiv'>
+          <vue-slider
+            ref='slider'
+            v-model='egoNetwork.year'
+            v-bind='sliderOptions'
+            :min='egoNetwork.possibleYears[0]'
+            :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
+            :data='egoNetwork.possibleYears'
+            :process='false'
+            :lazy='true'
+            :adsorb='true'
+            :duration='0.3'
+            v-on:change='handleChange'
+            :marks='egoNetwork.possibleYears'
+            :tooltip="'none'"
+          />
+        </div>
       </b-col>
     </b-row>
   </b-container>
 </template>
-
+<!--v-on:change='updateNetwork(egoNetwork)'-->
 <script>
-//import D3Network from 'vue-d3-network'
 import D3Network from './D3Network';
-import 'vue-range-component/dist/vue-range-slider.css';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
 
@@ -93,8 +92,8 @@ export default {
         ['#2b6ca3', '#65add2', '#b0efff'],
         ['#a36c23', '#d59c1e', '#ffd20b']
       ],
-      allNodesSelected: false,
-      currentYear: 0
+      allNodesSelected: false
+
     };
   },
   created() {
@@ -117,12 +116,30 @@ export default {
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
     },
-    handleYearClick(event) {
-      console.log(event)
-      // this.mouseClick(event, 'year-slider-' + this.pane + '-' + this.currentYear);
+    handleChange(value) {
+      this.updateNetwork(this.egoNetwork);
+      const position = this.calculateSliderPosition(value);
+      this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);
+    },
+    calculateSliderPosition(value) {
+      //im sorry for this hacky workaround but vue slider doesnt register clicks on labels
+      const sizes = this.$refs.sliderDiv.getBoundingClientRect();
+      //x, y, width, height
+      const clientY = sizes.y + sizes.height / 2;
+      //indexes:   1 ---i-- array.length , where i is index of value
+      //positions: 0 ---p-- width        , where p is position of i
+      //and the rest is basic proportion calculation
+      const arrayLength = this.egoNetwork.possibleYears.length;
+      const index = this.egoNetwork.possibleYears.indexOf(value);
+      const clientX = (((index + 1) * sizes.width) / arrayLength) + sizes.x;
+      //this calculation works with an error margin of couple of pixels
+      //to be honest im disgusted and proud of this method
+      return {
+        clientX,
+        clientY
+      };
     },
     updateNetwork(network) {
-      this.currentYear=network.year;
       //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
       this.$store.dispatch('main/loadUpdatedEgoNetwork', {
         network: network,
