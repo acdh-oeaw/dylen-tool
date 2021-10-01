@@ -321,9 +321,14 @@ const sautoModule = {
   state: {
     connection: null,
     lastOverElement: null,
-    sauto: false
+    sauto: false,
+    size: null,
+    currentDrag: null
   },
   actions: {
+    setBoundingClientRect({ state }, { size }) {
+      state.size = size;
+    },
     async connect({ state }) {
       if (state.sauto) {
         logger.log(props.sautoURI);
@@ -368,6 +373,11 @@ const sautoModule = {
       click.type = 'MouseClick';
       state.connection.send(JSON.stringify(click));
     },
+    async handleDrag({ state }, { drag }) {
+      //send mouse drag and drop
+      drag.type = 'Drag';
+      state.connection.send(JSON.stringify(drag));
+    },
     async handleScroll({ state }, { scroll }) {
       //send mouse scroll
       scroll.type = 'Scroll';
@@ -382,7 +392,7 @@ const store = new Vuex.Store({
   }
 });
 
-Vue.mixin({
+export var mixin = {
   methods: {
     mouseOver(event) {
       if (this.$store.state.sauto.sauto === false) {
@@ -397,7 +407,9 @@ Vue.mixin({
       };
       this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
     },
+    //todo drag and drop
     keyPress(event) {
+      //todo
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
@@ -426,7 +438,7 @@ Vue.mixin({
 
       this.$store.dispatch('sauto/handleScroll', { scroll });
     },
-    mouseClick(event) {
+    mouseClick(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
@@ -434,17 +446,44 @@ Vue.mixin({
 
       const element = this.getNearestSautoId(event.target);
 
-      click.id = element.getAttribute('data-sauto-id');
+      click.id = sautoId ? sautoId : element.getAttribute('data-sauto-id');
 
       //hacky workaround for double registered clicks
-      if(click.id === "ignore"){
+      if (click.id === 'ignore') {
         return;
       }
       click.timestamp = Date.now();
 
-      console.log(click)
+      console.log(click);
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
+    },
+    dragStart(event) {
+      if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+
+      const dragStart = this.calculateMousePosition(event);
+      dragStart.timestamp = Date.now();
+
+      this.$store.state.sauto.currentDrag = {start: dragStart};
+    },
+    dragEnd(event, sautoId) {
+      if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+      const dragEnd = this.calculateMousePosition(event);
+
+      dragEnd.timestamp = Date.now();
+
+      let drag = this.$store.state.sauto.currentDrag;
+      drag.id = sautoId;
+      drag.end = dragEnd;
+
+      console.log(drag);
+
+      this.$store.dispatch('sauto/handleDrag', { drag });
+      this.$store.state.sauto.currentDrag = null;
     },
     calculateMousePosition(event) {
       let clientX = event.clientX;
@@ -459,7 +498,7 @@ Vue.mixin({
       }
 
       //get mouse position in percentage relative to top element size
-      const elementSizes = this.$refs.app.getBoundingClientRect();
+      const elementSizes = this.$store.state.sauto.size;
       const x = clientX - elementSizes.left;
       const y = clientY - elementSizes.top;
 
@@ -480,6 +519,8 @@ Vue.mixin({
       return element;
     }
   }
-});
+};
+
+Vue.mixin(mixin);
 
 export default store;
