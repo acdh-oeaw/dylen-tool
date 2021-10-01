@@ -19,7 +19,7 @@
       v-bind='egoNetwork'
       :key='egoNetwork.id'
       @mouseover='mouseOver'
-      :data-sauto-id="'network-' + egoNetwork.id"
+      data-sauto-id="ignore"
     >
       <b-col>
         <d3-network
@@ -28,6 +28,7 @@
           :net-nodes='egoNetwork.nodes'
           :net-links='egoNetwork.links'
           :options='options'
+          :pane='this.pane'
         />
       </b-col>
     </b-row>

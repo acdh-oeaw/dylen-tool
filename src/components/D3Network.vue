@@ -4,22 +4,29 @@
       <b-button
         @click='() => onZoomButtonClick(1.25)'
         variant='outline-secondary'
+        :data-sauto-id="'zoom-in-button-'+this.pane"
       >
         <b-icon icon='zoom-in'></b-icon>
       </b-button>
       <b-button
         @click='() => onZoomButtonClick(0.75)'
         variant='outline-secondary'
+        :data-sauto-id="'zoom-out-button-'+this.pane"
       >
         <b-icon icon='zoom-out'></b-icon>
       </b-button>
-      <b-form-checkbox
-        class='b-0'
-        v-model='allNodesSelected'
-        @change='selectionCheckboxChanged'
+      <div
+        data-sauto-id='ignore'
       >
-        Select all nodes
-      </b-form-checkbox>
+        <b-form-checkbox
+          class='b-0'
+          v-model='allNodesSelected'
+          @change='selectionCheckboxChanged'
+          :data-sauto-id="'select-all-checkbox-'+this.pane"
+        >
+          Select all nodes
+        </b-form-checkbox>
+      </div>
     </div>
     <svg
       ref='svg'
@@ -49,10 +56,12 @@
 
 <script>
 import * as d3 from 'd3';
+import { mixin } from '@/store/store';
 
 export default {
   name: 'D3Network',
-  props: ['netNodes', 'netLinks', 'options'],
+  props: ['netNodes', 'netLinks', 'options', 'pane'],
+  mixins: [mixin],
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),
@@ -121,7 +130,10 @@ export default {
             : 1
         )
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
-        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index))
+        .on('click', (event, d) => {
+          this.addOrRemoveSelectedNode(d.index);
+          this.mouseClick(event,this.pane+"-node-"+d.name)
+        })
         .on('mouseenter', (event, d) => this.focusNode(d))
         .on('mouseleave', () => this.defocusNode());
 
@@ -157,7 +169,10 @@ export default {
             ? 'url(#solid)'
             : ''
         )
-        .on('click', (event, d) => this.addOrRemoveSelectedNode(d.index));
+        .on('click', (event, d) => {
+          this.addOrRemoveSelectedNode(d.index);
+          this.mouseClick(event,this.pane+"-label-"+d.name)
+        })
       return l;
     },
     link() {
@@ -334,6 +349,8 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
       d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
+
+      this.dragStart(event.sourceEvent)
     },
 
     dragged(event, d) {
@@ -347,6 +364,8 @@ export default {
       if (!event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+
+      this.dragEnd(event.sourceEvent,this.pane+"-node-"+d.name)
     },
     getLineColor(node) {
       if (node._pane == 'pane1')
