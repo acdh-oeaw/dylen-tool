@@ -22,8 +22,8 @@
               <b-icon icon='download'></b-icon>
               <span class='sr-only'>Download</span>
             </template>
-            <b-dropdown-item-button @click='csvExport'>Export CSV</b-dropdown-item-button>
-            <b-dropdown-item-button @click='jsonExport'>Export JSON</b-dropdown-item-button>
+            <b-dropdown-item-button data-sauto-id="export-csv-button" @click='csvExport'>Export CSV</b-dropdown-item-button>
+            <b-dropdown-item-button data-sauto-id="export-json-button" @click='jsonExport'>Export JSON</b-dropdown-item-button>
           </b-dropdown>
           <b-button
             :pressed.sync='showTable'
