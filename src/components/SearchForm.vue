@@ -18,10 +18,10 @@
             data-sauto-id='selectCorpus'
           >
             <b-form-select-option
-              v-for='option in availableCorpora'
-              v-bind:key='option'
-              v-bind:value='option'
-              :data-sauto-id="'corpusOption-'+option"
+              v-for="option in availableCorpora"
+              v-bind:key="option"
+              v-bind:value="option"
+              :data-sauto-id="'corpusOption-' + option"
             >
               {{ option }}
             </b-form-select-option>
@@ -46,10 +46,10 @@
             data-sauto-id='selectSubCorpus'
           >
             <b-form-select-option
-              v-for='option in availableSources'
-              v-bind:key='option'
-              v-bind:value='option'
-              :data-sauto-id="'subCorpusOption-'+option"
+              v-for="option in availableSources"
+              v-bind:key="option"
+              v-bind:value="option"
+              :data-sauto-id="'subCorpusOption-' + option"
             >
               {{ option }}
             </b-form-select-option>
@@ -72,18 +72,19 @@
           label-align-lg='left'
         >
           <b-form-input
-            size='sm'
-            v-model='searchTerm'
-            data-sauto-id='selectTargetWord'
-            :list='`datalist-${pane}`'
-            @change='setTargetWord'
+            size="sm"
+            v-model="searchTerm"
+            data-sauto-id="selectTargetWord"
+            :list="`datalist-${pane}`"
+            @change="setTargetWord"
+            autocomplete="off"
           ></b-form-input>
           <datalist :id='`datalist-${pane}`'>
             <option
-              v-for='option in availableTargetwords'
-              v-bind:key='option.text+option.pos'
-              v-bind:value='option.text'
-              :data-sauto-id="'targetWord-'+option.text"
+              v-for="option in availableTargetwords"
+              v-bind:key="option.text + option.pos"
+              v-bind:value="option.text"
+              :data-sauto-id="'targetWord-' + option.text"
             >
               {{ option.pos.split('_').join(' ') }}
             </option>
@@ -115,10 +116,10 @@
               data-sauto-id='selectYear'
             >
               <b-form-select-option
-                v-for='option in selectedTargetword.networks'
-                v-bind:key='option.year'
-                v-bind:value='option'
-                :data-sauto-id="'year-'+option.year"
+                v-for="option in selectedTargetword.networks"
+                v-bind:key="option.year"
+                v-bind:value="option"
+                :data-sauto-id="'year-' + option.year"
               >
                 {{ option.year }}
               </b-form-select-option>
@@ -128,17 +129,17 @@
       </b-col>
       <b-col xl='auto'>
         <b-button
-          size='sm'
-          type='submit'
-          variant='secondary'
-          data-sauto-id='queryButton'
-          @mouseover='mouseOver'
+          size="sm"
+          type="submit"
+          variant="secondary"
+          data-sauto-id="queryButton"
+          :disabled="!searchTerm || searchTerm.length == 0"
+          @mouseover="mouseOver"
         >
           Query
         </b-button>
       </b-col>
     </b-row>
-
   </b-form>
 </template>
 
@@ -245,11 +246,10 @@ export default {
         return this.$store.getters['main/searchTerm'](this.queryPane);
       },
       set(val) {
-        if (val)
-          this.$store.commit('main/changeSearchTerm', {
-            targetword: val,
-            pane: this.queryPane
-          });
+        this.$store.commit('main/changeSearchTerm', {
+          targetword: val,
+          pane: this.queryPane
+        });
       }
     },
     selectedYear: {
@@ -269,7 +269,7 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 .form-group {
   margin-bottom: 0rem;

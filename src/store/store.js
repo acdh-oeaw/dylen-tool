@@ -257,10 +257,11 @@ const mainModule = {
     changeSearchTerm(state, payload) {
       if (payload.targetword) {
         state[payload.pane].searchTerm = payload.targetword;
+        this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
       } else {
-        state[payload.pane].searchTerm = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].searchTerm = ""; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
-      this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
+      
     },
     changeSelectedYear(state, payload) {
       if (payload.year) {
