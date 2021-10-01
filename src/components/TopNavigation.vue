@@ -82,6 +82,7 @@
           data-sauto-id='show-info-button'
           variant='secondary'
           @click='updateShowInfo'
+          class='mr-1'
         >
           <b-icon icon='info'></b-icon>
         </b-button>
