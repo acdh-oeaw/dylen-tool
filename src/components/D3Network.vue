@@ -44,7 +44,6 @@
         <g class='labels'></g>
       </g>
     </svg>
-
   </div>
 </template>
 

@@ -45,11 +45,9 @@
           :all-nodes='allNodes'
           :options='options'
         ></metrics-table>
-
       </b-col>
     </b-row>
   </b-container>
-
 </template>
 
 <script>
@@ -141,5 +139,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

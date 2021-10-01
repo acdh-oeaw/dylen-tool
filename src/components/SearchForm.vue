@@ -1,21 +1,21 @@
 <template>
-  <b-form @submit="onSubmit">
+  <b-form @submit='onSubmit'>
     <b-row>
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectCorpus"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectCorpus'
       >
         <b-form-group
-          id="select-corpus-group-viz"
-          label="Corpus: "
-          label-size="sm"
-          label-cols-xl="4"
+          id='select-corpus-group-viz'
+          label='Corpus: '
+          label-size='sm'
+          label-cols-xl='4'
         >
           <b-form-select
-            size="sm"
-            v-model="selectedCorpus"
-            data-sauto-id="selectCorpus"
+            size='sm'
+            v-model='selectedCorpus'
+            data-sauto-id='selectCorpus'
           >
             <b-form-select-option
               v-for="option in availableCorpora"
@@ -29,21 +29,21 @@
         </b-form-group>
       </b-col>
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectSubCorpus"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectSubCorpus'
       >
         <b-form-group
-          id="select-subcorpus-group-viz"
-          label="Subcorpus:"
-          label-size="sm"
-          label-cols-xl="4"
-          label-for="select-subcorpus"
+          id='select-subcorpus-group-viz'
+          label='Subcorpus:'
+          label-size='sm'
+          label-cols-xl='4'
+          label-for='select-subcorpus'
         >
           <b-form-select
-            size="sm"
-            v-model="selectedSubcorpus"
-            data-sauto-id="selectSubCorpus"
+            size='sm'
+            v-model='selectedSubcorpus'
+            data-sauto-id='selectSubCorpus'
           >
             <b-form-select-option
               v-for="option in availableSources"
@@ -59,17 +59,17 @@
     </b-row>
     <b-row>
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectTargetword"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectTargetword'
       >
         <b-form-group
-          id="select-targetword-group-biz"
-          label="Targetword:"
-          label-size="sm"
-          label-cols-xl="4"
-          label-for="select-targetword"
-          label-align-lg="left"
+          id='select-targetword-group-biz'
+          label='Targetword:'
+          label-size='sm'
+          label-cols-xl='4'
+          label-for='select-targetword'
+          label-align-lg='left'
         >
           <b-form-input
             size="sm"
@@ -79,7 +79,7 @@
             @change="setTargetWord"
             autocomplete="off"
           ></b-form-input>
-          <datalist :id="`datalist-${pane}`">
+          <datalist :id='`datalist-${pane}`'>
             <option
               v-for="option in availableTargetwords"
               v-bind:key="option.text + option.pos"
@@ -94,26 +94,26 @@
       </b-col>
 
       <b-col
-        xl="5"
-        @mouseover="mouseOver"
-        data-sauto-id="selectYear"
+        xl='5'
+        @mouseover='mouseOver'
+        data-sauto-id='selectYear'
       >
         <b-form-group
-          id="select-year-group-viz"
-          label="Year:"
-          label-for="select-year"
-          label-size="sm"
-          label-cols-xl="4"
-          label-align-lg="left"
+          id='select-year-group-viz'
+          label='Year:'
+          label-for='select-year'
+          label-size='sm'
+          label-cols-xl='4'
+          label-align-lg='left'
         >
           <div
-            @mouseover="mouseOver"
-            data-sauto-id="selectYear"
+            @mouseover='mouseOver'
+            data-sauto-id='selectYear'
           >
             <b-form-select
-              size="sm"
-              v-model="selectedYear"
-              data-sauto-id="selectYear"
+              size='sm'
+              v-model='selectedYear'
+              data-sauto-id='selectYear'
             >
               <b-form-select-option
                 v-for="option in selectedTargetword.networks"
@@ -127,7 +127,7 @@
           </div>
         </b-form-group>
       </b-col>
-      <b-col xl="auto">
+      <b-col xl='auto'>
         <b-button
           size="sm"
           type="submit"

@@ -53,7 +53,8 @@
               :key='line'
               x='0'
               :dy="idx == 0 ? '1em' : '1.2em'"
-            >{{ line }}
+            >
+              {{ line }}
             </tspan>
           </text>
         </g>
@@ -106,7 +107,7 @@
             <tspan
               dy='-6'
               font-size='8'
-              style='cursor: pointer;'
+              style='cursor: pointer'
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
@@ -115,7 +116,6 @@
               <title>Deselect</title>
             </tspan>
             <!-- </g> -->
-
           </text>
         </g>
       </g>
@@ -152,7 +152,7 @@
             <tspan
               dy='-6'
               font-size='8'
-              style='cursor: pointer;'
+              style='cursor: pointer'
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'

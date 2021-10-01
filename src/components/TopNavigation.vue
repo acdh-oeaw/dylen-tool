@@ -4,6 +4,7 @@
     class='top-nav'
     align-h='center'
     align-v='stretch'
+    data-sauto-id='top-navigation'
   >
     <b-col
       xl='1'
@@ -12,6 +13,8 @@
       <h2><b>DYLEN</b></h2>
     </b-col>
     <b-col
+      @mouseover='mouseOver'
+      data-sauto-id='search-form-1'
       class='pb-1'
       xl='5'
       align-self='stretch'
@@ -36,6 +39,8 @@
       </b-row>
     </b-col>
     <b-col
+      @mouseover='mouseOver'
+      data-sauto-id='search-form-2'
       class='pb-1'
       xl='5'
       align-self='stretch'
@@ -46,6 +51,7 @@
       >
         <b-col v-if='!secondForm'>
           <b-button
+            data-sauto-id='second-query-button'
             v-if='firstForm && !secondForm'
             size='sm'
             variant='secondary'
@@ -70,9 +76,11 @@
       align-self='center'
     >
       <b-button
+        data-sauto-id='settings-button'
         class='float-right'
         @click='toggleSideBar'
-      > Settings
+      >
+        Settings
       </b-button>
     </b-col>
   </b-row>
