@@ -28,6 +28,7 @@
           <b-button
             :pressed.sync='showTable'
             variant='outline-secondary'
+            data-sauto-id='table-button'
           >
             <b-icon icon='table'></b-icon>
           </b-button>

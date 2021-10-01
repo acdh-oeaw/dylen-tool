@@ -212,7 +212,7 @@ const mainModule = {
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: true
+      selectedOnTop: false
     }
   },
   mutations: {
@@ -261,7 +261,7 @@ const mainModule = {
       } else {
         state[payload.pane].searchTerm = ""; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
-      
+
     },
     changeSelectedYear(state, payload) {
       if (payload.year) {
