@@ -4,10 +4,10 @@ import axios from 'axios';
 import props from '../properties/propertiesLoader';
 import {
   allAvailableCorporaQuery,
+  getAutocompleteSuggestionsQuery,
   getNetworkQuery,
-  getSoucesByCorpusQuery,
   getNetworksByCorpusAndSource,
-  getAutocompleteSuggestionsQuery
+  getSoucesByCorpusQuery
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -408,27 +408,21 @@ export var mixin = {
       const movement = this.calculateMousePosition(event);
       this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
-    //todo drag and drop
-    keyPress(event) {
+    keyPress() {//event as param
       //todo
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
-
-      console.log(event);
     },
-    scroll(event) {
+    scroll(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
-
-      const element = this.getNearestSautoId(event.target);
-
       const scroll = {
-        id: element.getAttribute('data-sauto-id'),
+        id: sautoId ? sautoId : this.getNearestSautoId(event.target).getAttribute('data-sauto-id'),
+        timestamp: Date.now(),
         height: event.deltaY
       };
-
       this.$store.dispatch('sauto/handleScroll', { scroll });
     },
     mouseClick(event, sautoId) {
@@ -445,7 +439,7 @@ export var mixin = {
       }
       click.timestamp = Date.now();
 
-      console.log(click);
+      // console.log(click);
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
