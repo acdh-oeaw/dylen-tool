@@ -259,7 +259,7 @@ const mainModule = {
         state[payload.pane].searchTerm = payload.targetword;
         this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
       } else {
-        state[payload.pane].searchTerm = ""; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
 
     },
@@ -464,7 +464,7 @@ export var mixin = {
       const dragStart = this.calculateMousePosition(event);
       dragStart.timestamp = Date.now();
 
-      this.$store.state.sauto.currentDrag = {start: dragStart};
+      this.$store.state.sauto.currentDrag = { start: dragStart };
     },
     dragEnd(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
