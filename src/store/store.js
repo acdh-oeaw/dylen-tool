@@ -359,14 +359,7 @@ const sautoModule = {
       state.connection.send(JSON.stringify(movement));
     },
     async handleMouseOver({ state }, { mouseOver }) {
-      //send if mouseover new component
-      if (mouseOver.id !== null) {
-        if (mouseOver.id !== state.lastOverElement) {
-          mouseOver.type = 'MouseOver';
-          state.connection.send(JSON.stringify(mouseOver));
-          state.lastOverElement = mouseOver.id;
-        }
-      }
+      state.connection.send(JSON.stringify(mouseOver));
     },
     async handleMouseClick({ state }, { click }) {
       //send mouse click
@@ -394,18 +387,26 @@ const store = new Vuex.Store({
 
 export var mixin = {
   methods: {
-    mouseOver(event) {
+    mouseMove(event) {
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
 
-      const element = this.getNearestSautoId(event.target);
+      const sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
 
-      const mouseOver = {
-        id: element.getAttribute('data-sauto-id'),
-        timestamp: Date.now()
-      };
-      this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
+      //send if mouseover new component
+      if (sautoId !== this.$store.state.lastOverElement) {
+        const mouseOver = {
+          id: sautoId,
+          type: 'MouseOver',
+          timestamp: Date.now()
+        };
+        this.$store.state.lastOverElement = sautoId;
+        this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
+      }
+
+      const movement = this.calculateMousePosition(event);
+      this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
     //todo drag and drop
     keyPress(event) {
@@ -415,14 +416,6 @@ export var mixin = {
       }
 
       console.log(event);
-    },
-    mouseMove(event) {
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
-
-      const movement = this.calculateMousePosition(event);
-      this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
     scroll(event) {
       if (this.$store.state.sauto.sauto === false) {

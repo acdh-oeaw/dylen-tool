@@ -8,7 +8,6 @@
     <b-row
       lg='12'
       class='pt-2 h-100'
-      @mouseover='mouseOver'
     >
       <b-col class='h-100'>
         <b-button-group class='float-right'>

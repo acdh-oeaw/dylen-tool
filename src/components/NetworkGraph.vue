@@ -18,7 +18,6 @@
       class='pt-2 h-70'
       v-bind='egoNetwork'
       :key='egoNetwork.id'
-      @mouseover='mouseOver'
       data-sauto-id='ignore'
     >
       <b-col>

@@ -13,7 +13,6 @@
       <h2><b>DYLEN</b></h2>
     </b-col>
     <b-col
-      @mouseover='mouseOver'
       data-sauto-id='search-form-1'
       class='pb-1'
       xl='5'
@@ -39,7 +38,6 @@
       </b-row>
     </b-col>
     <b-col
-      @mouseover='mouseOver'
       data-sauto-id='search-form-2'
       class='pb-1'
       xl='5'
