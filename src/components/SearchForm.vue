@@ -86,7 +86,7 @@
               v-bind:value="option.text"
               :data-sauto-id="'targetWord-' + option.text"
             >
-              {{ option.pos.split('_').join(' ') }}
+              <!--  {{ option.pos.split('_').join(' ') }} -->
             </option>
           </datalist>
           <!-- {{availableTargetwords}} -->
