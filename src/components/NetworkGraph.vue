@@ -18,8 +18,7 @@
       class='pt-2 h-70'
       v-bind='egoNetwork'
       :key='egoNetwork.id'
-      @mouseover='mouseOver'
-      data-sauto-id="ignore"
+      data-sauto-id='ignore'
     >
       <b-col>
         <d3-network
@@ -33,32 +32,32 @@
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
-      <b-col xl='2'></b-col>
-      <b-col class='pl-5 year-slider-row'>
-        <VueSlider
-          ref='slider'
-          v-model='egoNetwork.year'
-          v-bind='sliderOptions'
-          :min='egoNetwork.possibleYears[0]'
-          :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
-          :data='egoNetwork.possibleYears'
-          :process='false'
-          :lazy='true'
-          :adsorb='true'
-          :duration='0.3'
-          v-on:change='updateNetwork(egoNetwork)'
-          :marks='egoNetwork.possibleYears'
-          :tooltip="'none'"
-        />
+      <!--      <b-col xl='2'></b-col>-->
+      <b-col class='pl-5 year-slider-row' data-sauto-id='ignore'>
+        <div ref='sliderDiv'>
+          <vue-slider
+            ref='slider'
+            v-model='egoNetwork.year'
+            v-bind='sliderOptions'
+            :min='egoNetwork.possibleYears[0]'
+            :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
+            :data='egoNetwork.possibleYears'
+            :process='false'
+            :lazy='true'
+            :adsorb='true'
+            :duration='0.3'
+            v-on:change='handleChange'
+            :marks='egoNetwork.possibleYears'
+            :tooltip="'none'"
+          />
+        </div>
       </b-col>
     </b-row>
   </b-container>
 </template>
-
+<!--v-on:change='updateNetwork(egoNetwork)'-->
 <script>
-//import D3Network from 'vue-d3-network'
 import D3Network from './D3Network';
-import 'vue-range-component/dist/vue-range-slider.css';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
 
@@ -93,6 +92,7 @@ export default {
         ['#a36c23', '#d59c1e', '#ffd20b']
       ],
       allNodesSelected: false
+
     };
   },
   created() {
@@ -115,20 +115,37 @@ export default {
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
     },
-    updateNetwork(network) {
-      if (this.currentYear !== network.year) {
-        //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-        this.$store.dispatch('main/loadUpdatedEgoNetwork', {
-          network: network,
-          pane: this.pane
-        });
-        this.allNodesSelected = false;
-        this.deselectAllNodes();
-      }
+    handleChange(value) {
+      this.updateNetwork(this.egoNetwork);
+      const position = this.calculateSliderPosition(value);
+      this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);
     },
-    saveYear(year) {
-      //save the current year at the start of the drag and if the year is the same at the end, dont send a call
-      this.currentYear = year;
+    calculateSliderPosition(value) {
+      //im sorry for this hacky workaround but vue slider doesnt register clicks on labels
+      const sizes = this.$refs.sliderDiv.getBoundingClientRect();
+      //x, y, width, height
+      const clientY = sizes.y + sizes.height / 2;
+      //indexes:   1 ---i-- array.length , where i is index of value
+      //positions: 0 ---p-- width        , where p is position of i
+      //and the rest is basic proportion calculation
+      const arrayLength = this.egoNetwork.possibleYears.length;
+      const index = this.egoNetwork.possibleYears.indexOf(value);
+      const clientX = (((index + 1) * sizes.width) / arrayLength) + sizes.x;
+      //this calculation works with an error margin of couple of pixels
+      //to be honest im disgusted and proud of this method
+      return {
+        clientX,
+        clientY
+      };
+    },
+    updateNetwork(network) {
+      //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
+      this.$store.dispatch('main/loadUpdatedEgoNetwork', {
+        network: network,
+        pane: this.pane
+      });
+      this.allNodesSelected = false;
+      this.deselectAllNodes();
     },
     selectionCheckboxChanged() {
       if (this.allNodesSelected) this.selectAllNodes();

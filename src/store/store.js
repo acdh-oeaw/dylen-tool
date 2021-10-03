@@ -4,10 +4,10 @@ import axios from 'axios';
 import props from '../properties/propertiesLoader';
 import {
   allAvailableCorporaQuery,
+  getAutocompleteSuggestionsQuery,
   getNetworkQuery,
-  getSoucesByCorpusQuery,
   getNetworksByCorpusAndSource,
-  getAutocompleteSuggestionsQuery
+  getSoucesByCorpusQuery
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -212,7 +212,7 @@ const mainModule = {
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: true
+      selectedOnTop: false
     }
   },
   mutations: {
@@ -259,9 +259,9 @@ const mainModule = {
         state[payload.pane].searchTerm = payload.targetword;
         this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
       } else {
-        state[payload.pane].searchTerm = ""; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
-      
+
     },
     changeSelectedYear(state, payload) {
       if (payload.year) {
@@ -359,14 +359,7 @@ const sautoModule = {
       state.connection.send(JSON.stringify(movement));
     },
     async handleMouseOver({ state }, { mouseOver }) {
-      //send if mouseover new component
-      if (mouseOver.id !== null) {
-        if (mouseOver.id !== state.lastOverElement) {
-          mouseOver.type = 'MouseOver';
-          state.connection.send(JSON.stringify(mouseOver));
-          state.lastOverElement = mouseOver.id;
-        }
-      }
+      state.connection.send(JSON.stringify(mouseOver));
     },
     async handleMouseClick({ state }, { click }) {
       //send mouse click
@@ -394,48 +387,42 @@ const store = new Vuex.Store({
 
 export var mixin = {
   methods: {
-    mouseOver(event) {
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
-
-      const element = this.getNearestSautoId(event.target);
-
-      const mouseOver = {
-        id: element.getAttribute('data-sauto-id'),
-        timestamp: Date.now()
-      };
-      this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
-    },
-    //todo drag and drop
-    keyPress(event) {
-      //todo
-      if (this.$store.state.sauto.sauto === false) {
-        return;
-      }
-
-      console.log(event);
-    },
     mouseMove(event) {
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
 
+      const sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
+
+      //send if mouseover new component
+      if (sautoId !== this.$store.state.lastOverElement) {
+        const mouseOver = {
+          id: sautoId,
+          type: 'MouseOver',
+          timestamp: Date.now()
+        };
+        this.$store.state.lastOverElement = sautoId;
+        this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
+      }
+
       const movement = this.calculateMousePosition(event);
       this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
-    scroll(event) {
+    keyPress() {//event as param
+      //todo
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
-
-      const element = this.getNearestSautoId(event.target);
-
+    },
+    scroll(event, sautoId) {
+      if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
       const scroll = {
-        id: element.getAttribute('data-sauto-id'),
+        id: sautoId ? sautoId : this.getNearestSautoId(event.target).getAttribute('data-sauto-id'),
+        timestamp: Date.now(),
         height: event.deltaY
       };
-
       this.$store.dispatch('sauto/handleScroll', { scroll });
     },
     mouseClick(event, sautoId) {
@@ -444,9 +431,7 @@ export var mixin = {
       }
       const click = this.calculateMousePosition(event);
 
-      const element = this.getNearestSautoId(event.target);
-
-      click.id = sautoId ? sautoId : element.getAttribute('data-sauto-id');
+      click.id = sautoId ? sautoId : this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
 
       //hacky workaround for double registered clicks
       if (click.id === 'ignore') {
@@ -454,7 +439,7 @@ export var mixin = {
       }
       click.timestamp = Date.now();
 
-      console.log(click);
+      // console.log(click);
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
@@ -466,7 +451,7 @@ export var mixin = {
       const dragStart = this.calculateMousePosition(event);
       dragStart.timestamp = Date.now();
 
-      this.$store.state.sauto.currentDrag = {start: dragStart};
+      this.$store.state.sauto.currentDrag = { start: dragStart };
     },
     dragEnd(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
@@ -479,8 +464,6 @@ export var mixin = {
       let drag = this.$store.state.sauto.currentDrag;
       drag.id = sautoId;
       drag.end = dragEnd;
-
-      console.log(drag);
 
       this.$store.dispatch('sauto/handleDrag', { drag });
       this.$store.state.sauto.currentDrag = null;

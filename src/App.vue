@@ -35,7 +35,6 @@
           >
             <div
               class='h-100'
-              @mouseover='mouseOver'
               data-sauto-id='results'
             >
               <Results />
@@ -49,7 +48,6 @@
     <div
       ref='sidebar'
       class='sidebar collapsed'
-      @mouseover='mouseOver'
       data-sauto-id='sidebar'
     >
       <div

@@ -132,7 +132,7 @@ export default {
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
-          this.mouseClick(event,this.pane+"-node-"+d.name)
+          this.mouseClick(event, this.pane + '-node-' + d.name);
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
         .on('mouseleave', () => this.defocusNode());
@@ -171,8 +171,8 @@ export default {
         )
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
-          this.mouseClick(event,this.pane+"-label-"+d.name)
-        })
+          this.mouseClick(event, this.pane + '-label-' + d.name);
+        });
       return l;
     },
     link() {
@@ -314,6 +314,9 @@ export default {
           .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {
+      if (event.sourceEvent !== null && event.sourceEvent.type === 'wheel') {
+        this.scroll(event.sourceEvent, 'network-' + this.pane);
+      }
       this.scaleFactor = event.transform.k;
       this.translation = [event.transform.x, event.transform.y];
       this.applyScaleAndTransform();
@@ -350,7 +353,7 @@ export default {
       d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
       d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
 
-      this.dragStart(event.sourceEvent)
+      this.dragStart(event.sourceEvent);
     },
 
     dragged(event, d) {
@@ -365,7 +368,7 @@ export default {
       d.fx = null;
       d.fy = null;
 
-      this.dragEnd(event.sourceEvent,this.pane+"-node-"+d.name)
+      this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {
       if (node._pane == 'pane1')
