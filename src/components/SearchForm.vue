@@ -129,7 +129,7 @@
           variant="secondary"
           data-sauto-id="queryButton"
           :disabled="!searchTerm || searchTerm.length == 0"
-          @click='setShowInfo(false)'
+          @click='setShowInfo'
         >
           Query
         </b-button>
@@ -162,9 +162,9 @@ export default {
       );
       this.selectedTargetword = target;
     },
-    setShowInfo(showInfo) {
+    setShowInfo() {
       this.$emit('showInfoButton', true)
-      this.$store.commit('main/setShowInfo', { showInfo });
+      this.$store.commit('main/setShowInfo', { showInfo: false });
     }
   },
   computed: {

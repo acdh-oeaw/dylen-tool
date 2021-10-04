@@ -42,7 +42,6 @@
             </div>
             <div
               class='h-100'
-              @mouseover='mouseOver'
               data-sauto-id='info'
               v-if='this.$store.state.main.showInfo'
             >

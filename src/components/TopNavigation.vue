@@ -127,8 +127,8 @@ export default {
     updateShowInfo() {
       this.$store.commit('main/setShowInfo', { showInfo: !this.$store.state.main.showInfo });
     },
-    setShowInfoButton() {
-      this.showInfoButton=true;
+    setShowInfoButton(showInfoButton) {
+      this.showInfoButton=showInfoButton;
     }
   }
 };

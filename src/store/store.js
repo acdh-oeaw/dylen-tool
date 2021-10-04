@@ -168,6 +168,7 @@ const mainModule = {
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
     }
+
   },
   namespaced: true,
   state: {
@@ -288,7 +289,7 @@ const mainModule = {
     setAutocompleteSuggestions(state, payload) {
       state[payload.pane].autocompleteSuggestions = payload.suggestions;
     },
-    setShowInfo(state, payload){
+    setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
     }
   },
