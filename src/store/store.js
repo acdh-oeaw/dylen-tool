@@ -212,8 +212,9 @@ const mainModule = {
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: false
-    }
+      selectedOnTop: true
+    },
+    showInfo: true
   },
   mutations: {
     loadCorpora(state, payload) {
@@ -286,8 +287,10 @@ const mainModule = {
     },
     setAutocompleteSuggestions(state, payload) {
       state[payload.pane].autocompleteSuggestions = payload.suggestions;
+    },
+    setShowInfo(state, payload){
+      state.showInfo = payload.showInfo;
     }
-
   },
   getters: {
     selectionColors: (state) => state.selectionColors,
