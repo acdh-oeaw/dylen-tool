@@ -69,7 +69,6 @@ const mainModule = {
         targetWords: targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
       };
       this.commit('main/loadTargetwordsOfCorpusAndSource', payload);
-      this.commit('main/selectInitTargetWord', { pane: pane });
     },
     async loadAvailableCorpora({ dispatch }) {
       try {
