@@ -75,6 +75,7 @@
             data-sauto-id="selectTargetWord"
             :list="`datalist-${pane}`"
             @change="handleTargetWordChange"
+            @keypress='this.keyPress'
             autocomplete="off"
           ></b-form-input>
           <datalist :id='`datalist-${pane}`'>
