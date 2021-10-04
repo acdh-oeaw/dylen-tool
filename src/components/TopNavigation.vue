@@ -27,7 +27,6 @@
           <b-row>
             <b-col>
               <search-form
-                @showInfoButton='setShowInfoButton'
                 :with-labels='false'
                 :pane="'pane' + 1"
                 :is-sidebar='false'
@@ -67,31 +66,20 @@
           >
           </search-form>
         </b-col>
+        <b-col xl='1'></b-col>
       </b-row>
     </b-col>
     <b-col
       xl='1'
       align-self='center'
     >
-      <b-row>
-        <b-button
-          v-if='showInfoButton'
-          ref='showInfoButton'
-          data-sauto-id='show-info-button'
-          variant='secondary'
-          @click='updateShowInfo'
-          class='mr-1'
-        >
-          <b-icon icon='info'></b-icon>
-        </b-button>
-        <b-button
-          data-sauto-id='settings-button'
-          class='float-right'
-          @click='toggleSideBar'
-        >
-          Settings
-        </b-button>
-      </b-row>
+      <b-button
+        data-sauto-id='settings-button'
+        class='float-right'
+        @click='toggleSideBar'
+      >
+        Settings
+      </b-button>
     </b-col>
   </b-row>
 </template>
@@ -104,12 +92,10 @@ export default {
   components: {
     SearchForm
   },
-  props: ['showInfo'],
   data() {
     return {
       firstForm: true,
-      secondForm: false,
-      showInfoButton: false
+      secondForm: false
     };
   },
   methods: {
@@ -123,12 +109,6 @@ export default {
     toggleSideBar() {
       this.$parent.$refs.sidebar.classList.toggle('collapsed');
       this.$parent.$refs.main.classList.toggle('full');
-    },
-    updateShowInfo() {
-      this.$store.commit('main/setShowInfo', { showInfo: !this.$store.state.main.showInfo });
-    },
-    setShowInfoButton() {
-      this.showInfoButton=true;
     }
   }
 };
