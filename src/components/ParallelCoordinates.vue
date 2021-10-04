@@ -3,6 +3,7 @@
     ref='svg'
     class='parallel-coordinates'
     :viewBox='viewBox'
+    data-sauto-id='parallel-coordinates'
   >
     <defs>
       <filter
@@ -102,7 +103,8 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : '×' }}
+              {{ hoverNodes.indexOf(node) >= 0 ||
+            (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? node.name : '×' }}
             </tspan>
             <tspan
               dy='-6'
@@ -111,8 +113,10 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
+              :data-sauto-id='"x-button-parallel-coordinates-" + node.name'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? '❌' : '' }}
+              {{ hoverNodes.indexOf(node) >= 0 ||
+            (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? '❌' : '' }}
               <title>Deselect</title>
             </tspan>
             <!-- </g> -->
@@ -147,7 +151,8 @@
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×' }}
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×'
+              }}
             </tspan>
             <tspan
               dy='-6'
@@ -156,8 +161,10 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
+              :data-sauto-id='"x-button-parallel-coordinates-" + node.name'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
+              {{ hoverNodes.indexOf(node) >= 0 ||
+            (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
               <title>Deselect</title>
             </tspan>
           </text>
@@ -318,6 +325,7 @@ export default {
         this.hoverNodes.splice(this.hoverNodes.indexOf(node), 1);
     },
     deselectNode(node) {
+      // this.mouseClick(event, 'x-button-parallel-coordinates-' + node.name);
       this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
     }
   },

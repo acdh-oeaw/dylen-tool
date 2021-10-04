@@ -3,7 +3,6 @@
     <b-row>
       <b-col
         xl='5'
-        @mouseover='mouseOver'
         data-sauto-id='selectCorpus'
       >
         <b-form-group
@@ -30,7 +29,6 @@
       </b-col>
       <b-col
         xl='5'
-        @mouseover='mouseOver'
         data-sauto-id='selectSubCorpus'
       >
         <b-form-group
@@ -60,7 +58,6 @@
     <b-row>
       <b-col
         xl='5'
-        @mouseover='mouseOver'
         data-sauto-id='selectTargetword'
       >
         <b-form-group
@@ -86,7 +83,7 @@
               v-bind:value="option.text"
               :data-sauto-id="'targetWord-' + option.text"
             >
-              {{ option.pos.split('_').join(' ') }}
+              <!--  {{ option.pos.split('_').join(' ') }} -->
             </option>
           </datalist>
           <!-- {{availableTargetwords}} -->
@@ -95,7 +92,6 @@
 
       <b-col
         xl='5'
-        @mouseover='mouseOver'
         data-sauto-id='selectYear'
       >
         <b-form-group
@@ -107,7 +103,6 @@
           label-align-lg='left'
         >
           <div
-            @mouseover='mouseOver'
             data-sauto-id='selectYear'
           >
             <b-form-select
@@ -134,7 +129,6 @@
           variant="secondary"
           data-sauto-id="queryButton"
           :disabled="!searchTerm || searchTerm.length == 0"
-          @mouseover="mouseOver"
           @click='setShowInfo(false)'
         >
           Query

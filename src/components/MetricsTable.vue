@@ -9,16 +9,19 @@
     small
     sort-icon-left
     class='h-100'
+    data-sauto-id='table'
   >
 
     <template #cell(selected)='row'>
-      <b-button
-        variant='none'
-        class='mx-auto'
-        @click=' () => addOrRemoveSelectedNode(row.item.node)'
-      >
-        <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
-      </b-button>
+      <div data-sauto-id='ignore'>
+        <b-button
+          variant='none'
+          class='mx-auto'
+          @click=' (event) => addOrRemoveSelectedNodeAndHandleClick(event, row.item.node)'
+        >
+          <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
+        </b-button>
+      </div>
     </template>
     <template #cell(word)='row'>
       <span>{{ row.item.word }}</span>
@@ -87,7 +90,7 @@ export default {
         (n) => n.id == node.id && n._pane == node._pane
       );
     },
-    addOrRemoveSelectedNode(node) {
+    addOrRemoveSelectedNodeAndHandleClick(event, node) {
       let foundSelected = this.checkSelected(node);
       if (foundSelected) {
         this.$store.commit(
@@ -97,6 +100,8 @@ export default {
       } else {
         this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
       }
+
+      this.mouseClick(event, 'table-item-' + node.name);
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {

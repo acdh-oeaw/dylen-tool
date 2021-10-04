@@ -35,7 +35,6 @@
           >
             <div
               class='h-100'
-              @mouseover='mouseOver'
               data-sauto-id='results'
               v-if='!this.$store.state.main.showInfo'
             >
@@ -58,7 +57,6 @@
     <div
       ref='sidebar'
       class='sidebar collapsed'
-      @mouseover='mouseOver'
       data-sauto-id='sidebar'
     >
       <div

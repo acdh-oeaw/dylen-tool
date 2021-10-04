@@ -8,7 +8,6 @@
     <b-row
       lg='12'
       class='pt-2 h-100'
-      @mouseover='mouseOver'
     >
       <b-col class='h-100'>
         <b-button-group class='float-right'>
@@ -22,12 +21,13 @@
               <b-icon icon='download'></b-icon>
               <span class='sr-only'>Download</span>
             </template>
-            <b-dropdown-item-button @click='csvExport'>Export CSV</b-dropdown-item-button>
-            <b-dropdown-item-button @click='jsonExport'>Export JSON</b-dropdown-item-button>
+            <b-dropdown-item-button data-sauto-id="export-csv-button" @click='csvExport'>Export CSV</b-dropdown-item-button>
+            <b-dropdown-item-button data-sauto-id="export-json-button" @click='jsonExport'>Export JSON</b-dropdown-item-button>
           </b-dropdown>
           <b-button
             :pressed.sync='showTable'
             variant='outline-secondary'
+            data-sauto-id='table-button'
           >
             <b-icon icon='table'></b-icon>
           </b-button>
