@@ -122,13 +122,14 @@
           </div>
         </b-form-group>
       </b-col>
-      <b-col xl='auto'>
+      <b-col xl='1'>
         <b-button
           size="sm"
           type="submit"
           variant="secondary"
           data-sauto-id="queryButton"
           :disabled="!searchTerm || searchTerm.length == 0"
+          @click='setShowInfo(false)'
         >
           Query
         </b-button>
@@ -160,6 +161,10 @@ export default {
         (t) => t.text == this.searchTerm
       );
       this.selectedTargetword = target;
+    },
+    setShowInfo(showInfo) {
+      this.$emit('showInfoButton', true)
+      this.$store.commit('main/setShowInfo', { showInfo });
     }
   },
   computed: {
