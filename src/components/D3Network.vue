@@ -15,9 +15,7 @@
       >
         <b-icon icon='zoom-out'></b-icon>
       </b-button>
-      <div
-        data-sauto-id='ignore'
-      >
+      <div data-sauto-id='ignore'>
         <b-form-checkbox
           class='b-0'
           v-model='allNodesSelected'
@@ -76,11 +74,11 @@ export default {
     };
   },
   watch: {
-    netNodes: function(_, oldNodes) {
+    netNodes: function (_, oldNodes) {
       this.deselectOldNodes(oldNodes);
       this.updateSimulation();
     },
-    netLinks: function() {
+    netLinks: function () {
       this.updateSimulation();
     },
     size: {
@@ -89,7 +87,7 @@ export default {
       },
       deep: true
     },
-    selectedNodes: function() {
+    selectedNodes: function () {
       this.simulation.restart();
     },
     options: {
@@ -138,13 +136,6 @@ export default {
         .on('mouseleave', () => this.defocusNode());
 
       n.append('title').text((d) => d.name);
-      n.call(
-        d3
-          .drag()
-          .on('start', this.dragstarted)
-          .on('drag', this.dragged)
-          .on('end', this.dragended)
-      );
 
       return n;
     },
@@ -173,6 +164,13 @@ export default {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-label-' + d.name);
         });
+      l.call(
+        d3
+          .drag()
+          .on('start', this.dragstarted)
+          .on('drag', this.dragged)
+          .on('end', this.dragended)
+      );
       return l;
     },
     link() {
