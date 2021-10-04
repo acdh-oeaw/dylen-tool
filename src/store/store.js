@@ -213,7 +213,7 @@ const mainModule = {
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: true
+      selectedOnTop: false
     },
     showInfo: true
   },
@@ -443,7 +443,7 @@ export var mixin = {
       }
       click.timestamp = Date.now();
 
-      // console.log(click);
+      console.log(click);
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
