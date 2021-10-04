@@ -69,7 +69,7 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      allNodesSelected: false,
+      allNodesSelected: true,
       focusedNode: []
     };
   },
@@ -271,6 +271,7 @@ export default {
     initNetwork() {
       this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
       this.updateSimulation();
+      this.selectAllNodes();
     },
     onZoomButtonClick(zoomFactor = 1) {
       this.d3Zoom.scaleBy(
