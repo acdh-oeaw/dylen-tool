@@ -213,7 +213,7 @@ const mainModule = {
     },
     tableOptions: {
       digits: 3,
-      selectedOnTop: true
+      selectedOnTop: false
     },
     showInfo: true
   },
@@ -365,6 +365,9 @@ const sautoModule = {
     async handleMouseOver({ state }, { mouseOver }) {
       state.connection.send(JSON.stringify(mouseOver));
     },
+    async handleKeyPress({ state }, { keyPress }) {
+      state.connection.send(JSON.stringify(keyPress));
+    },
     async handleMouseClick({ state }, { click }) {
       //send mouse click
       click.type = 'MouseClick';
@@ -412,11 +415,21 @@ export var mixin = {
       const movement = this.calculateMousePosition(event);
       this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
-    keyPress() {//event as param
-      //todo
+    keyPress(event) {
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
+
+      //currently im logging only keypress on searchTargetWord input and nothing else, so id is that.
+      const keyPress = {
+        id: 'selectTargetWord',
+        type: "KeyPress",
+        timestamp: Date.now(),
+        key: event.key,
+        charCode: event.charCode
+      };
+
+      this.$store.dispatch('sauto/handleKeyPress', { keyPress });
     },
     scroll(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
@@ -443,7 +456,7 @@ export var mixin = {
       }
       click.timestamp = Date.now();
 
-      // console.log(click);
+      console.log(click);
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },

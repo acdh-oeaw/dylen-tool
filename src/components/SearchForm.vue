@@ -69,11 +69,13 @@
           label-align-lg='left'
         >
           <b-form-input
+            ref='selectTargetWord'
             size="sm"
             v-model="searchTerm"
             data-sauto-id="selectTargetWord"
             :list="`datalist-${pane}`"
-            @change="setTargetWord"
+            @change="handleTargetWordChange"
+            @keypress='this.keyPress'
             autocomplete="off"
           ></b-form-input>
           <datalist :id='`datalist-${pane}`'>
@@ -81,7 +83,6 @@
               v-for="option in availableTargetwords"
               v-bind:key="option.text + option.pos"
               v-bind:value="option.text"
-              :data-sauto-id="'targetWord-' + option.text"
             >
               <!--  {{ option.pos.split('_').join(' ') }} -->
             </option>
@@ -156,11 +157,18 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
     },
-    setTargetWord() {
-      let target = this.availableTargetwords.find(
-        (t) => t.text == this.searchTerm
+    handleTargetWordChange() {
+      const target = this.availableTargetwords.find(
+        (t) => t.text === this.searchTerm
       );
       this.selectedTargetword = target;
+
+      const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
+      const event = {
+        clientX: rect.x,
+        clientY: rect.y
+      }
+      this.mouseClick(event,"selectTargetWord-option-"+this.searchTerm)
     },
     setShowInfo() {
       this.$emit('showInfoButton', true)

@@ -325,7 +325,6 @@ export default {
         this.hoverNodes.splice(this.hoverNodes.indexOf(node), 1);
     },
     deselectNode(node) {
-      // this.mouseClick(event, 'x-button-parallel-coordinates-' + node.name);
       this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
     }
   },
