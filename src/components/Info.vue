@@ -3,14 +3,13 @@
     <b-col xl='6'>
       <p>
         DYLEN is a research project which aims to gain insights to the dynamics of the Austrian German lexicon in the
-        last 20 years and to measure the influence of politicians on language change.
+        last 20 years and to measure the semantic change of language.
       </p>
       <p>You can use the search panel above to display various information about target words from various copora and
         subcorpora in graph, chart and table form.</p>
-      <div>There are two corpora available to choose from:
+      <div>There is one corpus available
         <ul>
           <li>Austrian Media Corpus (AMC):</li>
-          <li>The Corpus of Austrian Parliamentary Records (ParlAT)</li>
         </ul>
       </div>
       <p>You can read more about the project here: <a
