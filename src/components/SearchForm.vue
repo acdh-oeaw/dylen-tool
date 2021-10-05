@@ -74,6 +74,7 @@
             v-model="searchTerm"
             data-sauto-id="selectTargetWord"
             :list="`datalist-${pane}`"
+            :style="!hasSuggestions ? { 'color': 'red' } : null"
             @change="handleTargetWordChange"
             @keypress='this.keyPress'
             autocomplete="off"
@@ -84,10 +85,9 @@
               v-bind:key="option.text + option.pos"
               v-bind:value="option.text"
             >
-              <!--  {{ option.pos.split('_').join(' ') }} -->
+              {{option.text + ' (' + option.pos + ')'}}
             </option>
           </datalist>
-          <!-- {{availableTargetwords}} -->
         </b-form-group>
       </b-col>
 
@@ -128,8 +128,8 @@
           size="sm"
           type="submit"
           variant="secondary"
-          data-sauto-id="queryButton"
-          :disabled="!searchTerm || searchTerm.length == 0"
+          :data-sauto-id='"queryButton-"+this.pane'
+          :disabled="!queryButtonActive"
           @click='setShowInfo'
         >
           Query
@@ -157,10 +157,11 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
     },
+    findSearchTermInAvailableTargetwords() {
+      return this.availableTargetwords.find((t) => t.text === this.searchTerm);
+    },
     handleTargetWordChange() {
-      const target = this.availableTargetwords.find(
-        (t) => t.text === this.searchTerm
-      );
+      const target = this.findSearchTermInAvailableTargetwords()
       this.selectedTargetword = target;
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
@@ -176,6 +177,18 @@ export default {
     }
   },
   computed: {
+    queryButtonActive() {
+      if (!this.searchTerm || this.searchTerm.length === 0 || !this.findSearchTermInAvailableTargetwords()) {
+        return false
+      }
+      return true
+    },
+    hasSuggestions() {
+      if(this.availableTargetwords.length === 0 && this.searchTerm) {
+        return false
+      }
+      return true
+    },
     queryPane() {
       if (this.pane) return this.pane;
 
