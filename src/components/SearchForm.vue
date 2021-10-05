@@ -128,7 +128,7 @@
           size="sm"
           type="submit"
           variant="secondary"
-          data-sauto-id="queryButton"
+          :data-sauto-id='"queryButton-"+this.pane'
           :disabled="!searchTerm || searchTerm.length == 0"
           @click='setShowInfo'
         >

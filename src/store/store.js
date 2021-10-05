@@ -455,8 +455,6 @@ export var mixin = {
       }
       click.timestamp = Date.now();
 
-      console.log(click);
-
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
     dragStart(event) {
