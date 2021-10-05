@@ -121,8 +121,8 @@ export default {
       }
     },
     handleSortChanged(value) {
-      //todo click
-      console.log(this.calculateSliderPosition(value.sortBy));
+      const event = this.calculateSliderPosition(value.sortBy);
+      this.mouseClick(event, 'table-sort-' + value.sortBy);
     },
     calculateSliderPosition(value) {
       //im sorry for this hacky workaround but table header doesnt register clicks (when sorting)
