@@ -157,10 +157,11 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
     },
+    findSearchTermInAvailableTargetwords() {
+      return this.availableTargetwords.find((t) => t.text === this.searchTerm);
+    },
     handleTargetWordChange() {
-      const target = this.availableTargetwords.find(
-        (t) => t.text === this.searchTerm
-      );
+      const target = this.findSearchTermInAvailableTargetwords()
       this.selectedTargetword = target;
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
@@ -177,7 +178,7 @@ export default {
   },
   computed: {
     queryButtonActive() {
-      if (!this.searchTerm || this.searchTerm.length === 0 || !(this.availableTargetwords.find((t) => t.text === this.searchTerm))) {
+      if (!this.searchTerm || this.searchTerm.length === 0 || !this.findSearchTermInAvailableTargetwords()) {
         return false
       }
       return true
