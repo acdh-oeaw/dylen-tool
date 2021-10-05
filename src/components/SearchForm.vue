@@ -3,7 +3,6 @@
     <b-row>
       <b-col
         xl='5'
-        data-sauto-id='selectCorpus'
       >
         <b-form-group
           id='select-corpus-group-viz'
@@ -14,12 +13,12 @@
           <b-form-select
             size='sm'
             v-model='selectedCorpus'
-            data-sauto-id='selectCorpus'
+            :data-sauto-id="'selectCorpus-'+this.pane"
           >
             <b-form-select-option
-              v-for="option in availableCorpora"
-              v-bind:key="option"
-              v-bind:value="option"
+              v-for='option in availableCorpora'
+              v-bind:key='option'
+              v-bind:value='option'
               :data-sauto-id="'corpusOption-' + option"
             >
               {{ option }}
@@ -29,7 +28,6 @@
       </b-col>
       <b-col
         xl='5'
-        data-sauto-id='selectSubCorpus'
       >
         <b-form-group
           id='select-subcorpus-group-viz'
@@ -41,12 +39,12 @@
           <b-form-select
             size='sm'
             v-model='selectedSubcorpus'
-            data-sauto-id='selectSubCorpus'
+            :data-sauto-id="'selectSubCorpus-'+this.pane"
           >
             <b-form-select-option
-              v-for="option in availableSources"
-              v-bind:key="option"
-              v-bind:value="option"
+              v-for='option in availableSources'
+              v-bind:key='option'
+              v-bind:value='option'
               :data-sauto-id="'subCorpusOption-' + option"
             >
               {{ option }}
@@ -58,7 +56,6 @@
     <b-row>
       <b-col
         xl='5'
-        data-sauto-id='selectTargetword'
       >
         <b-form-group
           id='select-targetword-group-biz'
@@ -70,22 +67,22 @@
         >
           <b-form-input
             ref='selectTargetWord'
-            size="sm"
-            v-model="searchTerm"
-            data-sauto-id="selectTargetWord"
-            :list="`datalist-${pane}`"
+            size='sm'
+            v-model='searchTerm'
+            :data-sauto-id="'selectTargetword-'+this.pane"
+            :list='`datalist-${pane}`'
             :style="!hasSuggestions ? { 'color': 'red' } : null"
-            @change="handleTargetWordChange"
+            @change='handleTargetWordChange'
             @keypress='this.keyPress'
-            autocomplete="off"
+            autocomplete='off'
           ></b-form-input>
           <datalist :id='`datalist-${pane}`'>
             <option
-              v-for="option in availableTargetwords"
-              v-bind:key="option.text + option.pos"
-              v-bind:value="option.text"
+              v-for='option in availableTargetwords'
+              v-bind:key='option.text + option.pos'
+              v-bind:value='option.text'
             >
-              {{option.text + ' (' + option.pos + ')'}}
+              {{ option.text + ' (' + option.pos + ')' }}
             </option>
           </datalist>
         </b-form-group>
@@ -93,7 +90,6 @@
 
       <b-col
         xl='5'
-        data-sauto-id='selectYear'
       >
         <b-form-group
           id='select-year-group-viz'
@@ -103,33 +99,30 @@
           label-cols-xl='4'
           label-align-lg='left'
         >
-          <div
-            data-sauto-id='selectYear'
+          <b-form-select
+            size='sm'
+            v-model='selectedYear'
+            :data-sauto-id="'selectYear-'+this.pane"
           >
-            <b-form-select
-              size='sm'
-              v-model='selectedYear'
-              data-sauto-id='selectYear'
+            <!--              data-sauto-id="selectYear"-->
+            <b-form-select-option
+              v-for='option in selectedTargetword.networks'
+              v-bind:key='option.year'
+              v-bind:value='option'
+              :data-sauto-id="'year-' + option.year"
             >
-              <b-form-select-option
-                v-for="option in selectedTargetword.networks"
-                v-bind:key="option.year"
-                v-bind:value="option"
-                :data-sauto-id="'year-' + option.year"
-              >
-                {{ option.year }}
-              </b-form-select-option>
-            </b-form-select>
-          </div>
+              {{ option.year }}
+            </b-form-select-option>
+          </b-form-select>
         </b-form-group>
       </b-col>
       <b-col xl='1'>
         <b-button
-          size="sm"
-          type="submit"
-          variant="secondary"
+          size='sm'
+          type='submit'
+          variant='secondary'
           :data-sauto-id='"queryButton-"+this.pane'
-          :disabled="!queryButtonActive"
+          :disabled='!queryButtonActive'
           @click='setShowInfo'
         >
           Query
@@ -151,7 +144,8 @@ export default {
       yearEdit: false
     };
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
@@ -161,33 +155,33 @@ export default {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
     },
     handleTargetWordChange() {
-      const target = this.findSearchTermInAvailableTargetwords()
+      const target = this.findSearchTermInAvailableTargetwords();
       this.selectedTargetword = target;
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
       const event = {
         clientX: rect.x,
         clientY: rect.y
-      }
-      this.mouseClick(event,"selectTargetWord-option-"+this.searchTerm)
+      };
+      this.mouseClick(event, 'selectTargetWord-option-' + this.searchTerm);
     },
     setShowInfo() {
-      this.$emit('showInfoButton', true)
+      this.$emit('showInfoButton', true);
       this.$store.commit('main/setShowInfo', { showInfo: false });
     }
   },
   computed: {
     queryButtonActive() {
       if (!this.searchTerm || this.searchTerm.length === 0 || !this.findSearchTermInAvailableTargetwords()) {
-        return false
+        return false;
       }
-      return true
+      return true;
     },
     hasSuggestions() {
-      if(this.availableTargetwords.length === 0 && this.searchTerm) {
-        return false
+      if (this.availableTargetwords.length === 0 && this.searchTerm) {
+        return false;
       }
-      return true
+      return true;
     },
     queryPane() {
       if (this.pane) return this.pane;
