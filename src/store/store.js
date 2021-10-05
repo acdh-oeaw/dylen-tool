@@ -398,6 +398,8 @@ export var mixin = {
         return;
       }
 
+      const timestamp = Date.now();
+
       const sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
 
       //send if mouseover new component
@@ -405,13 +407,14 @@ export var mixin = {
         const mouseOver = {
           id: sautoId,
           type: 'MouseOver',
-          timestamp: Date.now()
+          timestamp: timestamp
         };
         this.$store.state.lastOverElement = sautoId;
         this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
       }
 
       const movement = this.calculateMousePosition(event);
+      movement.timestamp = timestamp;
       this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
     keyPress(event) {
@@ -422,7 +425,7 @@ export var mixin = {
       //currently im logging only keypress on searchTargetWord input and nothing else, so id is that.
       const keyPress = {
         id: 'selectTargetWord',
-        type: "KeyPress",
+        type: 'KeyPress',
         timestamp: Date.now(),
         key: event.key,
         charCode: event.charCode
