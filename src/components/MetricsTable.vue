@@ -1,35 +1,38 @@
 <template>
-  <b-table
-    :items='tableData'
-    :fields='fields'
-    :responsive='true'
-    :sort-by="'word'"
-    :sort-compare='sortCompare'
-    sticky-header='100%'
-    small
-    sort-icon-left
-    class='h-100'
-    data-sauto-id='table'
-  >
+  <div ref='table'>
+    <b-table
+      :items='tableData'
+      :fields='fields'
+      :responsive='true'
+      :sort-by="'word'"
+      :sort-compare='sortCompare'
+      sticky-header='100%'
+      small
+      sort-icon-left
+      class='h-100'
+      data-sauto-id='table'
+      @sort-changed='handleSortChanged'
+    >
 
-    <template #cell(selected)='row'>
-      <div data-sauto-id='ignore'>
-        <b-button
-          variant='none'
-          class='mx-auto'
-          @click=' (event) => addOrRemoveSelectedNodeAndHandleClick(event, row.item.node)'
-        >
-          <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
-        </b-button>
-      </div>
-    </template>
-    <template #cell(word)='row'>
-      <span>{{ row.item.word }}</span>
-    </template>
-    <template #cell(network)='row'>
-      <span :style='`color: ${row.item.color}`'>{{ row.item.network }}</span>
-    </template>
-  </b-table>
+      <template #cell(selected)='row'>
+        <div data-sauto-id='ignore'>
+          <b-button
+            variant='none'
+            class='mx-auto'
+            @click=' (event) => addOrRemoveSelectedNodeAndHandleClick(event, row.item.node)'
+          >
+            <b-icon :icon="row.item.selected ? 'check-square' : 'square'"></b-icon>
+          </b-button>
+        </div>
+      </template>
+      <template #cell(word)='row'>
+        <span>{{ row.item.word }}</span>
+      </template>
+      <template #cell(network)='row'>
+        <span :style='`color: ${row.item.color}`'>{{ row.item.network }}</span>
+      </template>
+    </b-table>
+  </div>
 </template>
 <script>
 export default {
@@ -116,6 +119,33 @@ export default {
           ? a[key].localeCompare(b[key])
           : a[key] - b[key];
       }
+    },
+    handleSortChanged(value) {
+      //todo click
+      console.log(this.calculateSliderPosition(value.sortBy));
+    },
+    calculateSliderPosition(value) {
+      //im sorry for this hacky workaround but table header doesnt register clicks (when sorting)
+      const sizes = this.$refs.table.getBoundingClientRect();
+      //x, y, width, height
+      const clientY = sizes.y + 10;
+      //indexes:   1 ---i-- array.length , where i is index of value
+      //positions: 0 ---p-- width        , where p is position of i
+      //and the rest is basic proportion calculation
+      const arrayLength = this.fields.length;
+      let i = 0;
+      for (i = 0; i < this.fields.length; i++) {
+        if (this.fields[i].key === value) {
+          break;
+        }
+      }
+      const clientX = (((i + 1) * sizes.width) / arrayLength) + sizes.x;
+      //this calculation works with an error margin of couple of pixels
+      //to be honest im disgusted and proud of this method
+      return {
+        clientX,
+        clientY
+      };
     }
   }
 };
