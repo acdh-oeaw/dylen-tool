@@ -1,5 +1,5 @@
 <template>
-  <div ref='table'>
+  <div ref='table' class='h-100'>
     <b-table
       :items='tableData'
       :fields='fields'
@@ -13,7 +13,6 @@
       data-sauto-id='table'
       @sort-changed='handleSortChanged'
     >
-
       <template #cell(selected)='row'>
         <div data-sauto-id='ignore'>
           <b-button
