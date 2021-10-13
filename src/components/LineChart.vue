@@ -5,7 +5,6 @@
     :viewBox='viewBox'
     data-sauto-id='line-chart'
   >
-
   </svg>
 </template>
 <script>

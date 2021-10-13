@@ -38,6 +38,12 @@
           </NodeMetrics>
         </b-col>
       </b-row>
+      <b-row class='h-50'>
+        <b-col class='h-100'>
+          <time-series>
+          </time-series>
+        </b-col>
+      </b-row>
     </b-col>
   </b-row>
 </template>
@@ -45,19 +51,23 @@
 <script>
 import NetworkGraph from '@/components/NetworkGraph';
 import NodeMetrics from '@/components/NodeMetrics';
+import TimeSeries from '@/components/TimeSeries';
 
 export default {
   name: 'Results',
   props: ['pane'],
   components: {
     NodeMetrics,
-    NetworkGraph
+    NetworkGraph,
+    TimeSeries
   },
   computed: {
     networkCount() {
       let count = 0;
-      const network1 = this.$store.getters['main/getPane']('pane1').selectedNetwork;
-      const network2 = this.$store.getters['main/getPane']('pane2').selectedNetwork;
+      const network1 =
+        this.$store.getters['main/getPane']('pane1').selectedNetwork;
+      const network2 =
+        this.$store.getters['main/getPane']('pane2').selectedNetwork;
 
       if (network1) {
         count++;
@@ -69,8 +79,7 @@ export default {
       return count;
     }
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>
 
