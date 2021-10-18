@@ -19,7 +19,8 @@
         <LineChart
           ref="lineChart"
           :options='options'
-          :data="timeSeries[selectedMetric]"
+          :data="selectedTimeSeriesData"
+          :colors="lineColors"
         ></LineChart>
       </b-col>
     </b-row>
@@ -28,12 +29,11 @@
 
 <script>
 import LineChart from '@/components/LineChart';
-import data from '@/Arbeit-n_ts.json';
 
 export default {
-  name: 'NodeMetrics',
+  name: 'TimeSeries',
   components: { LineChart },
-  props: ['pane'],
+  props: ['panes'],
   data() {
     return {
       options: {
@@ -42,7 +42,6 @@ export default {
           w: 0
         }
       },
-      timeSeries: data.time_series,
       selectedMetric: 'freq_diff_norm'
     };
   },
@@ -80,8 +79,27 @@ export default {
     }
   },
   computed: {
+    lineColors() {
+      return this.$store.getters['main/selectionColors'];
+    },
+    timeSeriesData() {
+      return ['pane1', 'pane2'].map((p) =>
+        this.$store.getters['main/timeSeriesData'](p)
+      );
+    },
+    selectedTimeSeriesData() {
+      return this.timeSeriesData.map(
+        (targetword) => targetword[this.selectedMetric]
+      );
+    },
     metricOptions() {
-      return Object.keys(this.timeSeries).map((key) => {
+      return [
+        ...new Set(
+          this.timeSeriesData
+            .map((targetword) => Object.keys(targetword))
+            .flat()
+        )
+      ].map((key) => {
         return {
           value: key,
           text: key

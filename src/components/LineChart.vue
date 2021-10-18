@@ -8,22 +8,22 @@
     <g class='y_axis'>
       <g
         v-axis:y='scaleY'
-        :transform='`translate(${scaleX(0)},0)`'
+        :transform='`translate(${svgPadding.left},0)`'
       ></g>
     </g>
     <g class='x_axis'>
       <g
         v-axis:x='scaleX'
-        :transform='`translate(0,${scaleY(0)})`'
+        :transform='`translate(0,${chartSize[1]})`'
       ></g>
     </g>
     <g class='lines'>
       <path
-        v-for='(targetword, idx) in [data]'
+        v-for='(targetword, idx) in data'
         :key='`timeSeries${idx}`'
         :d='generateLine(targetword)'
         fill='none'
-        stroke="black"
+        :stroke="colors[idx]"
       />
     </g>
   </svg>
@@ -33,7 +33,7 @@ import * as d3 from 'd3';
 
 export default {
   name: 'LineChart',
-  props: ['data', 'options'],
+  props: ['data', 'options', 'colors'],
   data() {
     return {
       hoverNodes: [],
@@ -59,22 +59,22 @@ export default {
       return d3
         .scaleLinear()
         .domain([
-          0,
           /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
-          d3.max(this.data, (e) => e) * 1.1
+          d3.min(this.data.flat(), (e) => e) * 0.9,
+          d3.max(this.data.flat(), (e) => e) * 1.1
         ])
         .range([this.chartSize[1], this.svgPadding.top]);
     },
     scaleX() {
       return d3
         .scalePoint()
-        .domain([...Array(this.data.length).keys()])
+        .domain([...Array(this.data[0].length).keys()].map((val) => val + 1997))
         .range([this.svgPadding.left, this.chartSize[0]]);
     },
     lineGenerator() {
       return d3
         .line()
-        .x((_, idx) => this.scaleX(idx))
+        .x((_, idx) => this.scaleX(idx + 1997))
         .y((d) => this.scaleY(d))
         .curve(d3.curveCardinal.tension(0.5));
     }
@@ -102,12 +102,12 @@ export default {
     axis(el, binding) {
       const axis = binding.arg;
       const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
+      const tickFilter = { x: (d) => d % 2 == 0, y: false }[axis];
       const methodArg = binding.value;
       d3.select(el).call(
-        d3[axisMethod](methodArg) /* .tickValues([
-          methodArg.domain()[0],
-          methodArg.domain()[1]
-        ]) */
+        d3[axisMethod](methodArg).tickValues(
+          tickFilter ? methodArg.domain().filter(tickFilter) : methodArg.ticks()
+        )
       );
     }
   }
@@ -116,7 +116,9 @@ export default {
 
 <style>
 .y_axis path,
-.y_axis line {
+.x_axis path,
+.y_axis line,
+.x_axis line {
   stroke: #ccc;
 }
 

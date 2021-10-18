@@ -10,6 +10,8 @@ import {
   getSoucesByCorpusQuery
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
+import arbeits_ts from '@/Arbeit-n_ts.json';
+import random_ts from '@/Random-n_ts.json';
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
@@ -34,6 +36,8 @@ const nodesToJSON = (state, nodes) => {
     return tableEntry;
   });
 };
+
+console.log(arbeits_ts)
 
 const mainModule = {
   actions: {
@@ -182,7 +186,8 @@ const mainModule = {
       selectedYear: null,
       selectedNetwork: null,
       searchTerm: null,
-      autocompleteSuggestions: []
+      autocompleteSuggestions: [],
+      timeSeriesData: arbeits_ts.time_series //TODO: change when API is ready
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -191,7 +196,8 @@ const mainModule = {
       selectedYear: null,
       selectedNetwork: null,
       searchTerm: null,
-      autocompleteSuggestions: []
+      autocompleteSuggestions: [],
+      timeSeriesData: random_ts.time_series //TODO: change when API is ready
     },
     nodeMetrics: {
       selectedNodes: []
@@ -312,7 +318,8 @@ const mainModule = {
     posColors: (state) => state.posColors,
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
-    tableOptions: (state) => state.tableOptions
+    tableOptions: (state) => state.tableOptions,
+    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
