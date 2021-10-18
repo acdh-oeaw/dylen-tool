@@ -5,6 +5,27 @@
     :viewBox='viewBox'
     data-sauto-id='line-chart'
   >
+    <g class='y_axis'>
+      <g
+        v-axis:y='scaleY'
+        :transform='`translate(${scaleX(0)},0)`'
+      ></g>
+    </g>
+    <g class='x_axis'>
+      <g
+        v-axis:x='scaleX'
+        :transform='`translate(0,${scaleY(0)})`'
+      ></g>
+    </g>
+    <g class='lines'>
+      <path
+        v-for='(targetword, idx) in [data]'
+        :key='`timeSeries${idx}`'
+        :d='generateLine(targetword)'
+        fill='none'
+        stroke="black"
+      />
+    </g>
   </svg>
 </template>
 <script>
@@ -12,15 +33,15 @@ import * as d3 from 'd3';
 
 export default {
   name: 'LineChart',
-  props: ['netNodes', 'options'],
+  props: ['data', 'options'],
   data() {
     return {
       hoverNodes: [],
       svgPadding: {
         top: 20,
-        right: 120,
+        right: 5,
         bottom: 50,
-        left: 120
+        left: 10
       }
     };
   },
@@ -35,36 +56,32 @@ export default {
       ];
     },
     scaleY() {
-      let scale = {};
-      this.metrics.forEach((metric) => {
-        scale[metric] = d3
-          .scaleLinear()
-          .domain([
-            0,
-            /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
-            d3.max(this.netNodes, (entry) => entry._metrics[metric]) * 1.1
-          ])
-          .range([this.chartSize[1], this.svgPadding.top]);
-      });
-      return scale;
+      return d3
+        .scaleLinear()
+        .domain([
+          0,
+          /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
+          d3.max(this.data, (e) => e) * 1.1
+        ])
+        .range([this.chartSize[1], this.svgPadding.top]);
     },
     scaleX() {
       return d3
         .scalePoint()
-        .domain(this.metrics)
+        .domain([...Array(this.data.length).keys()])
         .range([this.svgPadding.left, this.chartSize[0]]);
     },
     lineGenerator() {
       return d3
         .line()
-        .x((d) => this.scaleX(d[0]))
-        .y((d) => this.scaleY[d[0]](d[1]));
-      //.curve(d3.curveCardinal.tension(0.75));
+        .x((_, idx) => this.scaleX(idx))
+        .y((d) => this.scaleY(d))
+        .curve(d3.curveCardinal.tension(0.5));
     }
   },
   methods: {
-    generateLine(node) {
-      return this.lineGenerator(Object.entries(node._metrics));
+    generateLine(targetword) {
+      return this.lineGenerator(targetword);
     },
     getLineColor(node) {
       if (node._pane == 'pane1')
@@ -87,10 +104,10 @@ export default {
       const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
       const methodArg = binding.value;
       d3.select(el).call(
-        d3[axisMethod](methodArg).tickValues([
+        d3[axisMethod](methodArg) /* .tickValues([
           methodArg.domain()[0],
           methodArg.domain()[1]
-        ])
+        ]) */
       );
     }
   }

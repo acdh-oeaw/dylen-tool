@@ -214,7 +214,7 @@ const mainModule = {
       digits: 3,
       selectedOnTop: false
     },
-    showInfo: true
+    showInfo: false //just for development
   },
   mutations: {
     loadCorpora(state, payload) {

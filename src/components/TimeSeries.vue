@@ -10,10 +10,16 @@
       class='pt-2 h-100'
     >
       <b-col class='h-100'>
+        <b-select
+          v-model="selectedMetric"
+          :options="metricOptions"
+        >
+
+        </b-select>
         <LineChart
           ref="lineChart"
-          :net-nodes='nodes'
           :options='options'
+          :data="timeSeries[selectedMetric]"
         ></LineChart>
       </b-col>
     </b-row>
@@ -22,6 +28,7 @@
 
 <script>
 import LineChart from '@/components/LineChart';
+import data from '@/Arbeit-n_ts.json';
 
 export default {
   name: 'NodeMetrics',
@@ -35,7 +42,8 @@ export default {
           w: 0
         }
       },
-      showTable: false
+      timeSeries: data.time_series,
+      selectedMetric: 'freq_diff_norm'
     };
   },
   created() {
@@ -43,6 +51,7 @@ export default {
   },
   mounted() {
     this.defineChartSize();
+    console.log(this.timeSeries);
   },
   methods: {
     resizeHandler() {
@@ -71,28 +80,13 @@ export default {
     }
   },
   computed: {
-    nodes() {
-      return this.$store.getters['main/selectedNodesForMetrics'];
-    },
-    allNodes() {
-      let nodes = [];
-      const networks = [
-        this.$store.getters['main/getPane']('pane1')?.selectedNetwork,
-        this.$store.getters['main/getPane']('pane2')?.selectedNetwork
-      ];
-      networks.forEach((network, idx) => {
-        if (network) {
-          for (const node of network.nodes) {
-            nodes.push({
-              id: network.id + '_' + node.id,
-              name: node.text,
-              _metrics: node.metrics,
-              _pane: `pane${idx + 1}`
-            });
-          }
-        }
+    metricOptions() {
+      return Object.keys(this.timeSeries).map((key) => {
+        return {
+          value: key,
+          text: key
+        };
       });
-      return nodes;
     }
   },
   watch: {}
