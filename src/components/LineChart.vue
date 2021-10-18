@@ -70,7 +70,7 @@ export default {
         top: 20,
         right: 15,
         bottom: 50,
-        left: 10
+        left: 40
       }
     };
   },
@@ -197,9 +197,14 @@ export default {
   stroke: #ccc;
 }
 
-.y_axis .tick text {
-  transform: translate(9px, -6px);
-  text-anchor: middle;
-  font-weight: bold;
+.line-chart .y_axis .tick text {
+  transform: translate(0px, 0px);
+  text-anchor: end;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.line-chart .x_axis .tick text {
+  font-size: 14px;
 }
 </style>
