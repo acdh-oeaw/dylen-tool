@@ -170,6 +170,36 @@
           </text>
         </g>
       </g>
+      <g class="targetwordLabels">
+        <g v-if="Object.values(groupedNodesPane1).length > 0">
+          <text
+            :y="svgPadding.top"
+            :x="svgPadding.left/2"
+            text-anchor="middle"
+            :fill="targetWordLabelLeft.color"
+          >
+            <tspan :x="svgPadding.left/2">{{targetWordLabelLeft.text}}</tspan>
+            <tspan
+              dy="14"
+              :x="svgPadding.left/2"
+            >({{targetWordLabelLeft.year}})</tspan>
+          </text>
+        </g>
+        <g v-if="Object.values(groupedNodesPane2).length > 0">
+          <text
+            :y="svgPadding.top"
+            :x="chartSize[0]+svgPadding.right/2"
+            text-anchor="middle"
+            :fill="targetWordLabelRight.color"
+          >
+            <tspan :x="chartSize[0]+svgPadding.right/2">{{targetWordLabelRight.text}}</tspan>
+            <tspan
+              dy="14"
+              :x="chartSize[0]+svgPadding.right/2"
+            >({{targetWordLabelRight.year}})</tspan>
+          </text>
+        </g>
+      </g>
     </g>
   </svg>
 </template>
@@ -251,7 +281,7 @@ export default {
           let nodeVal =
             n._metrics[
               Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-              ];
+            ];
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
           nodeGroup[nodeVal].push(n);
         });
@@ -280,26 +310,40 @@ export default {
             .filter((n) => n._pane == 'pane2')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 node._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               let nVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 n._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
       );
+    },
+    targetWordLabelLeft() {
+      return {
+        text: this.$store.getters['main/selectedTargetword']('pane1').text,
+        year: this.$store.getters['main/selectedYear']('pane1')?.year,
+        color: this.$store.getters['main/selectionColors'][0]
+      };
+    },
+    targetWordLabelRight() {
+      return {
+        text: this.$store.getters['main/selectedTargetword']('pane2').text,
+        year: this.$store.getters['main/selectedYear']('pane2')?.year,
+        color: this.$store.getters['main/selectionColors'][1]
+      };
     }
   },
   methods: {
@@ -354,5 +398,9 @@ export default {
   transform: translate(9px, -6px);
   text-anchor: middle;
   font-weight: bold;
+}
+
+.targetwordLabels text {
+  font-size: 12px;
 }
 </style>
