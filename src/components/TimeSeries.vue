@@ -21,6 +21,7 @@
           :options='options'
           :data="selectedTimeSeriesData"
           :colors="lineColors"
+          :labels="labels"
         ></LineChart>
       </b-col>
     </b-row>
@@ -81,6 +82,11 @@ export default {
   computed: {
     lineColors() {
       return this.$store.getters['main/selectionColors'];
+    },
+    labels() {
+      return ['pane1', 'pane2'].map(
+        (p) => this.$store.getters['main/selectedTargetword'](p)?.text
+      );
     },
     timeSeriesData() {
       return ['pane1', 'pane2'].map((p) =>

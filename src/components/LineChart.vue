@@ -21,7 +21,7 @@
           text-anchor="end"
           alignment-baseline="middle"
           style="font-weight: normal;"
-        >Targetword {{idx}}</text>
+        >{{labels[idx]}}</text>
       </g>
     </g>
     <g class='y_axis'>
@@ -81,7 +81,7 @@ import * as d3 from 'd3';
 
 export default {
   name: 'LineChart',
-  props: ['data', 'options', 'colors'],
+  props: ['data', 'options', 'colors', 'labels'],
   data() {
     return {
       hoverNodes: [],
