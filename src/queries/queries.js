@@ -18,13 +18,16 @@ export function getNetworksByCorpusAndSource(corpus, source, page, size) {
                                     year
                                 }
                             }
+                            
+                        
+                        
                         }
                     }`
   };
   return query;
 }
 
-export function getSoucesByCorpusQuery(corpus) {
+export function getSourcesByCorpusQuery(corpus) {
   const query = {
     query: `{
             getSourcesByCorpus(corpus: "${corpus}")
@@ -66,6 +69,51 @@ export function getNetworkQuery(targetwordId, year) {
   return query;
 }
 
+export function getTargetWordByIdQuery(targetwordId) {
+  const query = {
+    query: `{
+      getTargetWordById(targetword_id: "${targetwordId}") {
+          id
+          text
+          pos
+          networks {
+              id
+              year
+          }
+          timeSeries {
+              freqDiffNorm {
+                  firstYear
+                  lastYear
+                  previousYear
+              }
+              jaccardSimilarity {
+                  firstYear
+                  lastYear
+                  previousYear
+              }
+              frobeniusSimilarity {
+                  firstYear
+                  lastYear
+                  previousYear
+              }
+              rankdcgSimilarity {
+                  firstYear
+                  lastYear
+                  previousYear
+              }
+              localNeighbourhoodSimilarity {
+                  firstYear
+                  lastYear
+                  previousYear
+              }
+          }
+      }
+  }
+  `
+  };
+  return query;
+}
+
 export function getAutocompleteSuggestionsQuery(corpus, source, term){
     const query = {
         query: `{
@@ -82,3 +130,6 @@ export function getAutocompleteSuggestionsQuery(corpus, source, term){
     return query;
     
 }
+
+
+

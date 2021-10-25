@@ -5,9 +5,11 @@ import props from '../properties/propertiesLoader';
 import {
   allAvailableCorporaQuery,
   getAutocompleteSuggestionsQuery,
-  getNetworkQuery,
+  /* getNetworkQuery, */
   getNetworksByCorpusAndSource,
-  getSoucesByCorpusQuery
+  getSourcesByCorpusQuery,
+  getTargetWordByIdQuery
+  
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 import arbeits_ts from '@/Arbeit-n_ts.json';
@@ -37,8 +39,6 @@ const nodesToJSON = (state, nodes) => {
   });
 };
 
-console.log(arbeits_ts)
-
 const mainModule = {
   actions: {
     async initCorpora({ dispatch }) {
@@ -51,7 +51,7 @@ const mainModule = {
     },
     async loadSources({ dispatch, state }) {
       for (const corpus of state.availableCorpora) {
-        const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus));
+        const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus));
         const sourcesPayload = {
           corpus: corpus,
           sources: sourceResponse.data.data.getSourcesByCorpus
@@ -92,11 +92,12 @@ const mainModule = {
         network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year);
       }
 
-      let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
+      //let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
       try {
         const response = await axios.post(graphqlEndpoint,
-          getNetworkQuery(state[pane].selectedTargetword.id, year_param));
+          getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+          console.log(response)
         const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
         let network = response.data.data.getNetwork;
 
@@ -116,7 +117,7 @@ const mainModule = {
     async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
       try {
         const response = await axios.post(graphqlEndpoint,
-          getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
+          getTargetWordByIdQuery(oldNetwork.targetWordId));
 
         const networkID = oldNetwork.targetWordId + oldNetwork.year;
         let updatedNetwork = response.data.data.getNetwork;
