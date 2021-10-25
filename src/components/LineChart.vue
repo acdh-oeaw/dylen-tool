@@ -5,6 +5,25 @@
     :viewBox='viewBox'
     data-sauto-id='line-chart'
   >
+    <g class="legend">
+      <g
+        v-for='(targetword, idx) in data'
+        :key='`legend${idx}`'
+        :stroke="colors[idx]"
+        :transform="`translate(${chartSize[0]}, ${20*(idx+1)})`"
+      >
+        <!-- <circle
+          :fill="colors[idx]"
+          r="6"
+          cx="10"
+        /> -->
+        <text
+          text-anchor="end"
+          alignment-baseline="middle"
+          style="font-weight: normal;"
+        >Targetword {{idx}}</text>
+      </g>
+    </g>
     <g class='y_axis'>
       <g
         v-axis:y='scaleY'
