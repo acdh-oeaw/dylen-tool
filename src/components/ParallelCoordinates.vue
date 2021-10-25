@@ -251,7 +251,7 @@ export default {
           let nodeVal =
             n._metrics[
               Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-              ];
+            ];
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
           nodeGroup[nodeVal].push(n);
         });
@@ -280,22 +280,22 @@ export default {
             .filter((n) => n._pane == 'pane2')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 node._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               let nVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 n._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
@@ -308,7 +308,7 @@ export default {
     },
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');
-      return result.charAt(0).toUpperCase() + result.slice(1);
+      return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
     getLineColor(node) {
       if (node._pane == 'pane1')
