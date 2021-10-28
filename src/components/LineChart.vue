@@ -90,6 +90,7 @@ export default {
   },
   mounted() {
     console.log(this.data);
+    this.mouseout();
   },
   computed: {
     viewBox() {
@@ -157,7 +158,11 @@ export default {
       if (x0 != undefined && x0 >= 0)
         this.data.forEach((_, idx) => {
           let selectedData = this.data[idx].find((e) => e.year == x0);
-          if (!selectedData) return;
+          if (!selectedData) {
+            d3.select(this.$refs[`focus${idx}`][0]).style('opacity', 0);
+            d3.select(this.$refs[`focusText${idx}`][0]).style('opacity', 0);
+            return;
+          }
           d3.select(this.$refs[`focus${idx}`][0])
             .attr('cx', this.scaleX(x0))
             .attr('cy', this.scaleY(selectedData.value));
@@ -180,8 +185,8 @@ export default {
     },
     mouseout() {
       this.data.forEach((_, idx) => {
-        d3.select(this.$refs[`focus${idx}`][0]).style('opacity', 1);
-        d3.select(this.$refs[`focusText${idx}`][0]).style('opacity', 1);
+        d3.select(this.$refs[`focus${idx}`][0]).style('opacity', 0);
+        d3.select(this.$refs[`focusText${idx}`][0]).style('opacity', 0);
       });
     }
   },
@@ -189,7 +194,6 @@ export default {
     axis(el, binding) {
       const axis = binding.arg;
       const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
-      /* const tickFilter = { x: false, y: false }[axis]; */
       const tickFormat = { x: (d) => d, y: (d) => d }[axis];
       const methodArg = binding.value;
       d3.select(el).call(
