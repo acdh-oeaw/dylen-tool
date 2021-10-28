@@ -105,22 +105,25 @@ export default {
       return d3
         .scaleLinear()
         .domain([
-          d3.min(this.data.flat(), (e) => e) * 0.9,
-          d3.max(this.data.flat(), (e) => e) * 1.1
+          d3.min(this.data.flat(), (e) => e.value) * 0.9,
+          d3.max(this.data.flat(), (e) => e.value) * 1.1
         ])
         .range([this.chartSize[1], this.svgPadding.top]);
     },
     scaleX() {
       return d3
-        .scalePoint()
-        .domain([...Array(this.data[0].length).keys()].map((val) => val))
+        .scaleLinear()
+        .domain([
+          d3.min(this.data.flat(), (e) => e.year),
+          d3.max(this.data.flat(), (e) => e.year)
+        ])
         .range([this.svgPadding.left, this.chartSize[0]]);
     },
     lineGenerator() {
       return d3
         .line()
-        .x((_, idx) => this.scaleX(idx))
-        .y((d) => this.scaleY(d))
+        .x((d) => this.scaleX(d.year))
+        .y((d) => this.scaleY(d.value))
         .curve(d3.curveMonotoneX);
     }
   },
@@ -150,28 +153,26 @@ export default {
     },
     mousemove(event) {
       var xPos = d3.pointer(event)[0];
-      var domain = this.scaleX.domain();
-      var range = this.scaleX.range();
-      var rangePoints = d3.range(range[0], range[1], this.scaleX.step());
-      var x0 = domain[d3.bisect(rangePoints, xPos)];
+      var x0 = Math.round(this.scaleX.invert(xPos));
       if (x0 != undefined && x0 >= 0)
         this.data.forEach((_, idx) => {
-          let selectedData = this.data[idx][x0];
+          let selectedData = this.data[idx].find((e) => e.year == x0);
+          if (!selectedData) return;
           d3.select(this.$refs[`focus${idx}`][0])
             .attr('cx', this.scaleX(x0))
-            .attr('cy', this.scaleY(selectedData));
+            .attr('cy', this.scaleY(selectedData.value));
           d3.select(this.$refs[`focusText${idx}`][0])
             .html(
               'year: ' +
-                (1996 + x0) +
+                x0 +
                 ' - ' +
                 'value: ' +
-                Math.round(selectedData * 100) / 100
+                Math.round(selectedData.value * 100) / 100
             )
             .attr('x', this.scaleX(x0) + 15)
-            .attr('y', this.scaleY(selectedData))
+            .attr('y', this.scaleY(selectedData.value))
             .attr('text-anchor', 'start');
-          if (x0 > this.data[idx].length / 2)
+          if (xPos > this.scaleX.range()[1] / 2)
             d3.select(this.$refs[`focusText${idx}`][0])
               .attr('text-anchor', 'end')
               .attr('x', this.scaleX(x0) - 15);
@@ -188,16 +189,12 @@ export default {
     axis(el, binding) {
       const axis = binding.arg;
       const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
-      const tickFilter = { x: (d) => d % 2 == 0, y: false }[axis];
-      const tickFormat = { x: (d) => d + 1996, y: (d) => d }[axis];
+      /* const tickFilter = { x: false, y: false }[axis]; */
+      const tickFormat = { x: (d) => d, y: (d) => d }[axis];
       const methodArg = binding.value;
       d3.select(el).call(
         d3[axisMethod](methodArg)
-          .tickValues(
-            tickFilter
-              ? methodArg.domain().filter(tickFilter)
-              : methodArg.ticks()
-          )
+          .tickValues(methodArg.ticks())
           .tickFormat(tickFormat)
       );
     }

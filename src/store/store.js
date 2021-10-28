@@ -173,12 +173,36 @@ const mainModule = {
       downloadAnchorNode.remove();
     },
     async loadTimeSeriesData({ state }, pane) {
-            try {
+        function zipTimeSeriesAndYears(timeSeries, years){
+          let newTimeSeries = {};
+          Object.keys(timeSeries).forEach(key => {
+            newTimeSeries[key] = {};
+            Object.keys(timeSeries[key]).forEach(metric => {
+              let initIdx = 0;
+              switch (metric){
+                case "firstYear": initIdx = 1; break;
+                case "lastYear": initIdx = 0; break;
+                case "previousYear": initIdx = 1; break;
+              }
+              let zippedArray = timeSeries[key][metric].map((val, idx) => {
+                return {
+                  year: years[idx+initIdx],
+                  value: val
+                }
+              })
+              newTimeSeries[key][metric] = zippedArray;
+            })
+          })
+          return newTimeSeries;
+        }
+        try {
         const response = await axios.post(graphqlEndpoint,
           getTargetWordByIdQuery(state[pane].selectedTargetword.id));
         console.log(response)
-        let data = response.data.data.getTargetWordById.timeSeries;
-          console.log(data)
+        let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
+        let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
+        let data = zipTimeSeriesAndYears(timeSeries, years);  
+        console.log(data)
         const payload = {
           pane: pane,
           data: data

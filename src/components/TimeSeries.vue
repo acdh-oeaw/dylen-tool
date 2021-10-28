@@ -102,12 +102,15 @@ export default {
       );
     },
     selectedTimeSeriesData() {
-      return this.timeSeriesData
-        .filter((d) => d[this.selectedMetric])
-        .map(
-          (targetword) =>
-            targetword[this.selectedMetric][this.selectedRelativeTo]
-        );
+      return (
+        this.timeSeriesData
+          //.filter((d) => d[this.selectedMetric])
+          .map((targetword) =>
+            targetword[this.selectedMetric]
+              ? targetword[this.selectedMetric][this.selectedRelativeTo]
+              : []
+          )
+      );
     },
     metricOptions() {
       return [
