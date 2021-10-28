@@ -173,31 +173,41 @@
       <g class="targetwordLabels">
         <g v-if="Object.values(groupedNodesPane1).length > 0">
           <text
-            :y="svgPadding.top"
-            :x="svgPadding.left/2"
-            text-anchor="middle"
+            :y="svgPadding.top - 3"
+            :x="2"
+            text-anchor="start"
             :fill="targetWordLabelLeft.color"
           >
-            <tspan :x="svgPadding.left/2">{{targetWordLabelLeft.text}}</tspan>
-            <tspan
-              dy="14"
-              :x="svgPadding.left/2"
-            >({{targetWordLabelLeft.year}})</tspan>
+            <tspan>{{targetWordLabelLeft.text}}</tspan>
+            <tspan dx="2">({{targetWordLabelLeft.year}})</tspan>
           </text>
+          <line
+            x1="0"
+            :x2="svgPadding.left"
+            :y1="svgPadding.top"
+            :y2="svgPadding.top"
+            :stroke="targetWordLabelLeft.color"
+            stroke-width="1"
+          />
         </g>
         <g v-if="Object.values(groupedNodesPane2).length > 0">
           <text
-            :y="svgPadding.top"
-            :x="chartSize[0]+svgPadding.right/2"
-            text-anchor="middle"
+            :y="svgPadding.top - 3"
+            :x="chartSize[0]+svgPadding.right"
+            text-anchor="end"
             :fill="targetWordLabelRight.color"
           >
-            <tspan :x="chartSize[0]+svgPadding.right/2">{{targetWordLabelRight.text}}</tspan>
-            <tspan
-              dy="14"
-              :x="chartSize[0]+svgPadding.right/2"
-            >({{targetWordLabelRight.year}})</tspan>
+            <tspan>{{targetWordLabelRight.text}}</tspan>
+            <tspan dx="2">({{targetWordLabelRight.year}})</tspan>
           </text>
+          <line
+            :x1="chartSize[0]"
+            :x2="chartSize[0]+svgPadding.right"
+            :y1="svgPadding.top"
+            :y2="svgPadding.top"
+            :stroke="targetWordLabelRight.color"
+            stroke-width="1"
+          />
         </g>
       </g>
     </g>
@@ -213,7 +223,7 @@ export default {
     return {
       hoverNodes: [],
       svgPadding: {
-        top: 20,
+        top: 25,
         right: 120,
         bottom: 50,
         left: 120
@@ -401,6 +411,7 @@ export default {
 }
 
 .targetwordLabels text {
-  font-size: 12px;
+  font-size: 10px;
+  font-weight: bold;
 }
 </style>
