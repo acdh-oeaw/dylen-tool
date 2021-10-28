@@ -14,6 +14,7 @@
           class="w-50"
           v-model="selectedMetric"
           :options="metricOptions"
+          size="sm"
         >
 
         </b-select>
@@ -21,6 +22,7 @@
           class="w-50"
           v-model="selectedRelativeTo"
           :options="relativeToOptions"
+          size="sm"
         >
 
         </b-select>
@@ -69,7 +71,7 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.lineChart.$el.parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 1.0;
+      const chartHeight = heightRefElem.clientHeight * 0.8;
       const chartWidth = widthRefElem?.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
@@ -122,7 +124,7 @@ export default {
       ].map((key) => {
         return {
           value: key,
-          text: key
+          text: 'Metric: ' + key
         };
       });
     },
@@ -140,7 +142,7 @@ export default {
       ].map((key) => {
         return {
           value: key,
-          text: key
+          text: 'Relative to: ' + key
         };
       });
     }

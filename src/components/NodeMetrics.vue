@@ -21,8 +21,14 @@
               <b-icon icon='download'></b-icon>
               <span class='sr-only'>Download</span>
             </template>
-            <b-dropdown-item-button data-sauto-id="export-csv-button" @click='csvExport'>Export CSV</b-dropdown-item-button>
-            <b-dropdown-item-button data-sauto-id="export-json-button" @click='jsonExport'>Export JSON</b-dropdown-item-button>
+            <b-dropdown-item-button
+              data-sauto-id="export-csv-button"
+              @click='csvExport'
+            >Export CSV</b-dropdown-item-button>
+            <b-dropdown-item-button
+              data-sauto-id="export-json-button"
+              @click='jsonExport'
+            >Export JSON</b-dropdown-item-button>
           </b-dropdown>
           <b-button
             :pressed.sync='showTable'
@@ -84,7 +90,7 @@ export default {
       const widthRefElem = (this.$refs.parCoords || this.$refs.table).$el
         .parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 1.0;
+      const chartHeight = heightRefElem.clientHeight * 0.8;
       const chartWidth = widthRefElem?.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
