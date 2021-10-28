@@ -12,8 +12,6 @@ import {
   
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
-/* import arbeits_ts from '@/Arbeit-n_ts.json';
-import random_ts from '@/Random-n_ts.json'; */
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
@@ -263,7 +261,7 @@ const mainModule = {
       digits: 3,
       selectedOnTop: false
     },
-    showInfo: false //just for development
+    showInfo: true
   },
   mutations: {
     loadCorpora(state, payload) {

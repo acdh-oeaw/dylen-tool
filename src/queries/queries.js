@@ -17,10 +17,7 @@ export function getNetworksByCorpusAndSource(corpus, source, page, size) {
                                 networks {
                                     year
                                 }
-                            }
-                            
-                        
-                        
+                            }                  
                         }
                     }`
   };
