@@ -93,6 +93,9 @@ export default {
       }
     };
   },
+  mounted() {
+    console.log(this.data);
+  },
   computed: {
     viewBox() {
       return `0 0 ${this.options.size.w} ${this.options.size.h}`;

@@ -11,8 +11,16 @@
     >
       <b-col class='h-100'>
         <b-select
+          class="w-50"
           v-model="selectedMetric"
           :options="metricOptions"
+        >
+
+        </b-select>
+        <b-select
+          class="w-50"
+          v-model="selectedRelativeTo"
+          :options="relativeToOptions"
         >
 
         </b-select>
@@ -43,7 +51,8 @@ export default {
           w: 0
         }
       },
-      selectedMetric: 'freq_diff_norm'
+      selectedMetric: 'freqDiffNorm',
+      selectedRelativeTo: 'firstYear'
     };
   },
   created() {
@@ -51,7 +60,6 @@ export default {
   },
   mounted() {
     this.defineChartSize();
-    console.log(this.timeSeries);
   },
   methods: {
     resizeHandler() {
@@ -94,9 +102,12 @@ export default {
       );
     },
     selectedTimeSeriesData() {
-      return this.timeSeriesData.map(
-        (targetword) => targetword[this.selectedMetric]
-      );
+      return this.timeSeriesData
+        .filter((d) => d[this.selectedMetric])
+        .map(
+          (targetword) =>
+            targetword[this.selectedMetric][this.selectedRelativeTo]
+        );
     },
     metricOptions() {
       return [
@@ -104,6 +115,24 @@ export default {
           this.timeSeriesData
             .map((targetword) => Object.keys(targetword))
             .flat()
+        )
+      ].map((key) => {
+        return {
+          value: key,
+          text: key
+        };
+      });
+    },
+    relativeToOptions() {
+      return [
+        ...new Set(
+          this.timeSeriesData
+            .map((targetword) =>
+              Object.values(targetword).map((subSeries) =>
+                Object.keys(subSeries)
+              )
+            )
+            .flat(2)
         )
       ].map((key) => {
         return {

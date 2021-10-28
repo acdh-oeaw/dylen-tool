@@ -5,15 +5,15 @@ import props from '../properties/propertiesLoader';
 import {
   allAvailableCorporaQuery,
   getAutocompleteSuggestionsQuery,
-  /* getNetworkQuery, */
+  getNetworkQuery,
   getNetworksByCorpusAndSource,
   getSourcesByCorpusQuery,
   getTargetWordByIdQuery
   
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
-import arbeits_ts from '@/Arbeit-n_ts.json';
-import random_ts from '@/Random-n_ts.json';
+/* import arbeits_ts from '@/Arbeit-n_ts.json';
+import random_ts from '@/Random-n_ts.json'; */
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
@@ -92,12 +92,11 @@ const mainModule = {
         network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year);
       }
 
-      //let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
+      let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
       try {
         const response = await axios.post(graphqlEndpoint,
-          getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-          console.log(response)
+          getNetworkQuery(state[pane].selectedTargetword.id, year_param));
         const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
         let network = response.data.data.getNetwork;
 
@@ -117,7 +116,7 @@ const mainModule = {
     async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
       try {
         const response = await axios.post(graphqlEndpoint,
-          getTargetWordByIdQuery(oldNetwork.targetWordId));
+          getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
 
         const networkID = oldNetwork.targetWordId + oldNetwork.year;
         let updatedNetwork = response.data.data.getNetwork;
@@ -135,6 +134,7 @@ const mainModule = {
         logger.error(error);
       }
     },
+
     async loadAutocompleteSuggestions({ state }, { pane }) {
       const targetwordsResponse = await axios.post(graphqlEndpoint,
         getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
@@ -171,7 +171,25 @@ const mainModule = {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
-    }
+    },
+    async loadTimeSeriesData({ state }, pane) {
+            try {
+        const response = await axios.post(graphqlEndpoint,
+          getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+        console.log(response)
+        let data = response.data.data.getTargetWordById.timeSeries;
+          console.log(data)
+        const payload = {
+          pane: pane,
+          data: data
+        };
+
+        this.commit('main/addTimeSeriesData', payload);
+        logger.log('Ego Network loaded successfully.');
+      } catch (error) {
+        logger.error(error);
+      }
+    },
 
   },
   namespaced: true,
@@ -188,7 +206,7 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: arbeits_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -198,7 +216,7 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: random_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
     },
     nodeMetrics: {
       selectedNodes: []
@@ -297,6 +315,9 @@ const mainModule = {
     },
     setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
+    },
+    addTimeSeriesData(state, payload){
+      state[payload['pane']].timeSeriesData = payload.data;
     }
   },
   getters: {

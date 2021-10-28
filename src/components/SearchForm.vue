@@ -1,9 +1,7 @@
 <template>
   <b-form @submit='onSubmit'>
     <b-row>
-      <b-col
-        xl='5'
-      >
+      <b-col xl='5'>
         <b-form-group
           id='select-corpus-group-viz'
           label='Corpus: '
@@ -26,9 +24,7 @@
           </b-form-select>
         </b-form-group>
       </b-col>
-      <b-col
-        xl='5'
-      >
+      <b-col xl='5'>
         <b-form-group
           id='select-subcorpus-group-viz'
           label='Subcorpus:'
@@ -54,9 +50,7 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col
-        xl='5'
-      >
+      <b-col xl='5'>
         <b-form-group
           id='select-targetword-group-biz'
           label='Targetword:'
@@ -88,9 +82,7 @@
         </b-form-group>
       </b-col>
 
-      <b-col
-        xl='5'
-      >
+      <b-col xl='5'>
         <b-form-group
           id='select-year-group-viz'
           label='Year:'
@@ -144,12 +136,12 @@ export default {
       yearEdit: false
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
+      this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
     },
     findSearchTermInAvailableTargetwords() {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
@@ -172,7 +164,11 @@ export default {
   },
   computed: {
     queryButtonActive() {
-      if (!this.searchTerm || this.searchTerm.length === 0 || !this.findSearchTermInAvailableTargetwords()) {
+      if (
+        !this.searchTerm ||
+        this.searchTerm.length === 0 ||
+        !this.findSearchTermInAvailableTargetwords()
+      ) {
         return false;
       }
       return true;
