@@ -12,11 +12,6 @@
         :stroke="colors[idx]"
         :transform="`translate(${chartSize[0]}, ${20*(idx+1)})`"
       >
-        <!-- <circle
-          :fill="colors[idx]"
-          r="6"
-          cx="10"
-        /> -->
         <text
           text-anchor="end"
           alignment-baseline="middle"
@@ -110,7 +105,6 @@ export default {
       return d3
         .scaleLinear()
         .domain([
-          /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
           d3.min(this.data.flat(), (e) => e) * 0.9,
           d3.max(this.data.flat(), (e) => e) * 1.1
         ])
@@ -127,7 +121,7 @@ export default {
         .line()
         .x((_, idx) => this.scaleX(idx))
         .y((d) => this.scaleY(d))
-        .curve(d3.curveCardinal.tension(0.5));
+        .curve(d3.curveMonotoneX);
     }
   },
   methods: {
