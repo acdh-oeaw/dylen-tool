@@ -40,6 +40,7 @@
       </b-row>
       <b-row class='h-50'>
         <b-col class='h-100'>
+          <hr/>
           <TimeSeries :panes="['pane1', 'pane2']">
           </TimeSeries>
         </b-col>

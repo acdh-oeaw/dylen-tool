@@ -6,6 +6,12 @@
     style='background-color: white;'
   >
     <b-row
+        class='text-center'
+        align-h='center'
+    >
+      <b-col><b>Node Metrics Comparison</b></b-col>
+    </b-row>
+    <b-row
       lg='12'
       class='pt-2 h-100'
     >
