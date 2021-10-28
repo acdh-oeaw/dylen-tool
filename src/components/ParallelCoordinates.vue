@@ -170,6 +170,46 @@
           </text>
         </g>
       </g>
+      <g class="targetwordLabels">
+        <g v-if="Object.values(groupedNodesPane1).length > 0">
+          <text
+            :y="svgPadding.top - 3"
+            :x="2"
+            text-anchor="start"
+            :fill="targetWordLabelLeft.color"
+          >
+            <tspan>{{targetWordLabelLeft.text}}</tspan>
+            <tspan dx="2">({{targetWordLabelLeft.year}})</tspan>
+          </text>
+          <line
+            x1="0"
+            :x2="svgPadding.left"
+            :y1="svgPadding.top"
+            :y2="svgPadding.top"
+            :stroke="targetWordLabelLeft.color"
+            stroke-width="1"
+          />
+        </g>
+        <g v-if="Object.values(groupedNodesPane2).length > 0">
+          <text
+            :y="svgPadding.top - 3"
+            :x="chartSize[0]+svgPadding.right"
+            text-anchor="end"
+            :fill="targetWordLabelRight.color"
+          >
+            <tspan>{{targetWordLabelRight.text}}</tspan>
+            <tspan dx="2">({{targetWordLabelRight.year}})</tspan>
+          </text>
+          <line
+            :x1="chartSize[0]"
+            :x2="chartSize[0]+svgPadding.right"
+            :y1="svgPadding.top"
+            :y2="svgPadding.top"
+            :stroke="targetWordLabelRight.color"
+            stroke-width="1"
+          />
+        </g>
+      </g>
     </g>
   </svg>
 </template>
@@ -183,7 +223,7 @@ export default {
     return {
       hoverNodes: [],
       svgPadding: {
-        top: 20,
+        top: 25,
         right: 120,
         bottom: 50,
         left: 120
@@ -300,6 +340,20 @@ export default {
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
       );
+    },
+    targetWordLabelLeft() {
+      return {
+        text: this.$store.getters['main/selectedTargetword']('pane1').text,
+        year: this.$store.getters['main/selectedYear']('pane1')?.year,
+        color: this.$store.getters['main/selectionColors'][0]
+      };
+    },
+    targetWordLabelRight() {
+      return {
+        text: this.$store.getters['main/selectedTargetword']('pane2').text,
+        year: this.$store.getters['main/selectedYear']('pane2')?.year,
+        color: this.$store.getters['main/selectionColors'][1]
+      };
     }
   },
   methods: {
@@ -353,6 +407,11 @@ export default {
 .y_axis .tick text {
   transform: translate(9px, -6px);
   text-anchor: middle;
+  font-weight: bold;
+}
+
+.targetwordLabels text {
+  font-size: 10px;
   font-weight: bold;
 }
 </style>
