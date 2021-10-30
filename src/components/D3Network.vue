@@ -193,10 +193,10 @@ export default {
     },
     highlightedNodes() {
       let targets = this.links
-        .filter((link) => link.source == this.focusedNode)
+        .filter((link) => link.source === this.focusedNode)
         .map((link) => link.target);
       let sources = this.links
-        .filter((link) => link.target == this.focusedNode)
+        .filter((link) => link.target === this.focusedNode)
         .map((link) => link.source);
       return [this.focusedNode].concat(targets).concat(sources);
     }
@@ -211,14 +211,14 @@ export default {
       this.simulation.restart();
     },
     isFocused(node) {
-      return node.source == this.focusedNode || node.target == this.focusedNode;
+      return node.source === this.focusedNode || node.target === this.focusedNode;
     },
     addOrRemoveSelectedNode(node) {
       if (
         this.selectedNodes.find(
           (n) =>
-            n.id == this.netNodes[node].id &&
-            n._pane == this.netNodes[node]._pane
+            n.id === this.netNodes[node].id &&
+            n._pane === this.netNodes[node]._pane
         )
       ) {
         this.$store.commit(
@@ -233,15 +233,17 @@ export default {
       }
     },
     selectionCheckboxChanged() {
-      if (this.allNodesSelected) this.selectAllNodes();
-      else this.deselectAllNodes();
+      if (this.allNodesSelected)
+        this.selectAllNodes();
+      else
+        this.deselectAllNodes();
     },
     selectAllNodes() {
       this.netNodes
         .filter(
           (node) =>
             !this.$store.getters['main/selectedNodesForMetrics'].find(
-              (n) => n.id == node.id && n._pane == node._pane
+              (n) => n.id === node.id && n._pane === node._pane
             )
         )
         .forEach((node) => {
@@ -252,7 +254,7 @@ export default {
       this.netNodes
         .filter((node) =>
           this.$store.getters['main/selectedNodesForMetrics'].find(
-            (n) => n.id == node.id && n._pane == node._pane
+            (n) => n.id === node.id && n._pane === node._pane
           )
         )
         .forEach((node) => {
