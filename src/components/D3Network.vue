@@ -18,7 +18,7 @@
       <div data-sauto-id='ignore'>
         <b-form-checkbox
           class='b-0'
-          v-model='allNodesSelected'
+          v-model='isAllSelected'
           @change='selectionCheckboxChanged'
           :data-sauto-id="'select-all-checkbox-'+this.pane"
         >
@@ -69,7 +69,6 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      allNodesSelected: true,
       focusedNode: []
     };
   },
@@ -98,6 +97,19 @@ export default {
     }
   },
   computed: {
+    isAllSelected: {
+      get: function() {
+        let selectedSize = this.netNodes
+            .filter((node) => this.$store.getters['main/selectedNodesForMetrics'].find(
+                (n) => n.id === node.id && n._pane === node._pane
+                )
+            ).length
+        let allSize = this.netNodes.length
+        return selectedSize === allSize
+      },
+      set: function() {
+      }
+    },
     size() {
       return this.options.size;
     },
@@ -233,10 +245,10 @@ export default {
       }
     },
     selectionCheckboxChanged() {
-      if (this.allNodesSelected)
-        this.selectAllNodes();
-      else
+      if (this.isAllSelected)
         this.deselectAllNodes();
+      else
+        this.selectAllNodes();
     },
     selectAllNodes() {
       this.netNodes
@@ -265,8 +277,8 @@ export default {
       return Boolean(
         this.selectedNodes.find(
           (n) =>
-            n.id == this.netNodes[node].id &&
-            n._pane == this.netNodes[node]._pane
+            n.id === this.netNodes[node].id &&
+            n._pane === this.netNodes[node]._pane
         )
       );
     },
@@ -372,9 +384,9 @@ export default {
       this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {
-      if (node._pane == 'pane1')
+      if (node._pane === 'pane1')
         return this.$store.getters['main/selectionColors'][0];
-      if (node._pane == 'pane2')
+      if (node._pane === 'pane2')
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
     }
