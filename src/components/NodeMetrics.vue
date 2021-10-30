@@ -35,7 +35,8 @@
         <parallel-coordinates
           ref='parCoords'
           v-if='nodes && !showTable'
-          :net-nodes='nodes'
+          :all-nodes='allNodes'
+          :selected-nodes='nodes'
           :options='options'
         ></parallel-coordinates>
         <metrics-table

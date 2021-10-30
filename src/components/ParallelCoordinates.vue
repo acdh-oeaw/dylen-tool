@@ -20,7 +20,7 @@
     <g>
       <g
         class='grid'
-        v-if='netNodes.length > 0'
+        v-if='selectedNodes.length > 0'
       >
         <line
           v-for='i in 10'
@@ -62,7 +62,7 @@
       </g>
       <g class='lines'>
         <path
-          v-for='node in netNodes.slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))'
+          v-for='node in selectedNodes.slice().sort((a,b) => hoverNodes.indexOf(a)-hoverNodes.indexOf(b))'
           :key='node.id + node._pane'
           :d='generateLine(node)'
           fill='none'
@@ -173,7 +173,7 @@
       <g class="targetwordLabels">
         <g v-if="Object.values(groupedNodesPane1).length > 0">
           <text
-            :y="svgPadding.top - 3"
+            :y="svgPadding.top - 20"
             :x="2"
             text-anchor="start"
             :fill="targetWordLabelLeft.color"
@@ -189,6 +189,22 @@
             :stroke="targetWordLabelLeft.color"
             stroke-width="1"
           />
+          <text
+              :y="svgPadding.top - 3"
+              :x="2"
+              text-anchor="start"
+              @click='selectAllNodes()'
+          >
+            <tspan>select all</tspan>
+          </text>
+          <text
+              :y="svgPadding.top - 3"
+              :x="50"
+              text-anchor="start"
+              @click='deselectAllNodes()'
+          >
+            <tspan> | deselect all</tspan>
+          </text>
         </g>
         <g v-if="Object.values(groupedNodesPane2).length > 0">
           <text
@@ -218,15 +234,15 @@ import * as d3 from 'd3';
 
 export default {
   name: 'ParallelCoordinates',
-  props: ['netNodes', 'options'],
+  props: ['allNodes','selectedNodes', 'options'],
   data() {
     return {
       hoverNodes: [],
       svgPadding: {
-        top: 25,
-        right: 120,
+        top: 35,
+        right: 140,
         bottom: 50,
-        left: 120
+        left: 140
       }
     };
   },
@@ -242,7 +258,7 @@ export default {
     },
     metrics() {
       return [
-        ...new Set(this.netNodes.map((n) => Object.keys(n._metrics)).flat())
+        ...new Set(this.selectedNodes.map((n) => Object.keys(n._metrics)).flat())
       ];
     },
     scaleY() {
@@ -253,7 +269,7 @@ export default {
           .domain([
             0,
             /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
-            d3.max(this.netNodes, (entry) => entry._metrics[metric]) * 1.1
+            d3.max(this.selectedNodes, (entry) => entry._metrics[metric]) * 1.1
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
       });
@@ -274,8 +290,8 @@ export default {
     },
     groupedNodesPane1() {
       let nodeGroup = {};
-      this.netNodes
-        .filter((n) => n._pane == 'pane1')
+      this.selectedNodes
+        .filter((n) => n._pane === 'pane1')
         .forEach((n) => {
           let nodeVal = n._metrics[Object.keys(this.scaleY)[0]];
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
@@ -285,8 +301,9 @@ export default {
     },
     groupedNodesPane2() {
       let nodeGroup = {};
-      this.netNodes
-        .filter((n) => n._pane == 'pane2')
+
+      this.selectedNodes
+        .filter((n) => n._pane === 'pane2')
         .forEach((n) => {
           let nodeVal =
             n._metrics[
@@ -295,12 +312,13 @@ export default {
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
           nodeGroup[nodeVal].push(n);
         });
+
       return nodeGroup;
     },
     nonOverlappingNodesLeft() {
-      return this.netNodes.filter(
+      return this.selectedNodes.filter(
         (node) =>
-          this.netNodes
+          this.selectedNodes
             .filter((n) => n._pane == 'pane1')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[0](
@@ -314,9 +332,9 @@ export default {
       );
     },
     nonOverlappingNodesRight() {
-      return this.netNodes.filter(
+      return this.selectedNodes.filter(
         (node) =>
-          this.netNodes
+          this.selectedNodes
             .filter((n) => n._pane == 'pane2')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[
@@ -365,9 +383,9 @@ export default {
       return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
     getLineColor(node) {
-      if (node._pane == 'pane1')
+      if (node._pane === 'pane1')
         return this.$store.getters['main/selectionColors'][0];
-      if (node._pane == 'pane2')
+      if (node._pane === 'pane2')
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
     },
@@ -380,6 +398,21 @@ export default {
     },
     deselectNode(node) {
       this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+    },
+    selectAllNodes() {
+      this.allNodes
+          .filter((node) => this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) === -1)
+          .forEach((node) => {
+            console.log(node)
+            this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+          });
+    },
+    deselectAllNodes() {
+      this.allNodes
+          .filter((node) => this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) > -1)
+          .forEach((node) => {
+            this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+          });
     }
   },
   directives: {
