@@ -190,31 +190,69 @@
             stroke-width="1"
           />
           <text
+              id="selectAll"
               :y="svgPadding.top - 3"
               :x="2"
               text-anchor="start"
-              @click='selectAllNodes()'
+              fill="#3161F5"
+              @click="selectAllNodes('pane1')"
           >
             <tspan>select all</tspan>
           </text>
           <text
               :y="svgPadding.top - 3"
-              :x="50"
+              :x="52"
               text-anchor="start"
-              @click='deselectAllNodes()'
           >
-            <tspan> | deselect all</tspan>
+            <tspan> | </tspan>
+          </text>
+          <text
+              id="deselectAll"
+              :y="svgPadding.top - 3"
+              :x="60"
+              text-anchor="start"
+              fill="#3161F5"
+              @click="deselectAllNodes('pane1')"
+          >
+            <tspan>deselect all</tspan>
           </text>
         </g>
         <g v-if="Object.values(groupedNodesPane2).length > 0">
           <text
-            :y="svgPadding.top - 3"
+            :y="svgPadding.top - 20"
             :x="chartSize[0]+svgPadding.right"
             text-anchor="end"
             :fill="targetWordLabelRight.color"
           >
             <tspan>{{targetWordLabelRight.text}}</tspan>
             <tspan dx="2">({{targetWordLabelRight.year}})</tspan>
+          </text>
+          <text
+              id="selectAll"
+              :y="svgPadding.top - 3"
+              :x="chartSize[0]+svgPadding.right - 120"
+              text-anchor="start"
+              fill="#3161F5"
+              @click="selectAllNodes('pane2')"
+          >
+            <tspan>select all</tspan>
+          </text>
+          <text
+              :y="svgPadding.top - 3"
+              :x="chartSize[0]+svgPadding.right - 67"
+              text-anchor="start"
+          >
+            <tspan> | </tspan>
+          </text>
+          <text
+              id="deselectAll"
+              :y="svgPadding.top - 3"
+              :x="chartSize[0]+svgPadding.right - 60"
+              text-anchor="start"
+              fill="#3161F5"
+              @click="deselectAllNodes('pane2')"
+          >
+            <tspan>deselect all</tspan>
           </text>
           <line
             :x1="chartSize[0]"
@@ -399,17 +437,17 @@ export default {
     deselectNode(node) {
       this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
     },
-    selectAllNodes() {
+    selectAllNodes(pane) {
       this.allNodes
-          .filter((node) => this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) === -1)
+          .filter((node) => (node._pane === pane) && (this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) === -1))
           .forEach((node) => {
             console.log(node)
             this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
           });
     },
-    deselectAllNodes() {
+    deselectAllNodes(pane) {
       this.allNodes
-          .filter((node) => this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) > -1)
+          .filter((node) => (node._pane === pane) && (this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) > -1))
           .forEach((node) => {
             this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
           });
@@ -446,5 +484,11 @@ export default {
 .targetwordLabels text {
   font-size: 10px;
   font-weight: bold;
+}
+#selectAll:hover {
+  fill: red;
+}
+#deselectAll:hover {
+  fill: red;
 }
 </style>
