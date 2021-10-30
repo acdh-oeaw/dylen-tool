@@ -22,7 +22,7 @@
           @change='selectionCheckboxChanged'
           :data-sauto-id="'select-all-checkbox-'+this.pane"
         >
-          Select all nodes
+          select all
         </b-form-checkbox>
       </div>
     </div>
