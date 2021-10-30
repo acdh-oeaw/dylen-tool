@@ -1,21 +1,26 @@
 <template>
   <div>
     <div class='controls-container'>
-      <b-button
-        @click='() => onZoomButtonClick(1.25)'
-        variant='outline-secondary'
-        :data-sauto-id="'zoom-in-button-'+this.pane"
-      >
-        <b-icon icon='zoom-in'></b-icon>
-      </b-button>
-      <b-button
-        @click='() => onZoomButtonClick(0.75)'
-        variant='outline-secondary'
-        :data-sauto-id="'zoom-out-button-'+this.pane"
-      >
-        <b-icon icon='zoom-out'></b-icon>
-      </b-button>
-      <div data-sauto-id='ignore'>
+      <div>
+        <b-button
+            @click='() => onZoomButtonClick(1.25)'
+            variant='outline-secondary'
+            :data-sauto-id="'zoom-in-button-'+this.pane"
+        >
+          <b-icon icon='zoom-in'></b-icon>
+        </b-button>
+      </div>
+      <div>
+        <b-button
+            @click='() => onZoomButtonClick(0.75)'
+            variant='outline-secondary'
+            :data-sauto-id="'zoom-out-button-'+this.pane"
+        >
+          <b-icon icon='zoom-out'></b-icon>
+        </b-button>
+      </div>
+
+      <div class='ego-checkbox' data-sauto-id='ignore'>
         <b-form-checkbox
           class='b-0'
           v-model='isAllSelected'
@@ -407,5 +412,13 @@ svg .labels text {
 .controls-container {
   position: absolute;
   background: #fff;
+  margin-left: auto;
+  margin-right: 0;
+}
+.ego-checkbox {
+  margin-left: 0.8em;
+}
+.btn {
+  border: none !important;
 }
 </style>
