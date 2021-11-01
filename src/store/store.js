@@ -241,7 +241,7 @@ const mainModule = {
       if (payload.corpus) {
         state[payload.pane].selectedCorpus = payload.corpus;
       } else {
-        state[payload.pane].selectedCorpus = state[payload.pane].availableCorpora()[0];
+        state[payload.pane].selectedCorpus = state.availableCorpora[0];
       }
     },
     changeSelectedSubcorpus(state, payload) {
@@ -251,7 +251,7 @@ const mainModule = {
       if (payload.targetword) {
         state[payload.pane].selectedTargetword = payload.targetword;
       } else {
-        state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].selectedTargetword = { id: '', text: '' }
       }
       this.commit('main/changeSelectedYear', { pane: payload.pane });
     },
@@ -268,7 +268,7 @@ const mainModule = {
       if (payload.year) {
         state[payload.pane].selectedYear = payload.year;
       } else {
-        state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
+        state[payload.pane].selectedYear = null;
       }
     },
     addSelectedNodeForNodeMetrics(state, payload) {
