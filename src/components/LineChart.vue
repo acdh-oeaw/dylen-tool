@@ -198,7 +198,7 @@ export default {
               selectedData.value <= indicatorValues[Math.abs(idx - 1)].value;
             d3.select(this.$refs[`focusText${idx}`][0]).attr(
               'y',
-              this.scaleY(selectedData.value) + Math.pow(-1, smaller) * yOffset
+              this.scaleY(selectedData.value) - Math.pow(-1, smaller) * yOffset
             );
           }
         });
