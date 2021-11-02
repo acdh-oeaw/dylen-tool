@@ -324,7 +324,18 @@ const mainModule = {
     posColors: (state) => state.posColors,
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
-    tableOptions: (state) => state.tableOptions
+    tableOptions: (state) => state.tableOptions,
+    numberOfNetworksVisualised: (state) => {
+      let count = 0;
+      if (state['pane1'].selectedNetwork) {
+        count++;
+      }
+      if (state['pane1'].selectedNetwork) {
+        count++;
+      }
+
+      return count;
+    }
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
