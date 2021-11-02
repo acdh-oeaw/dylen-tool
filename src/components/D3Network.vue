@@ -1,28 +1,38 @@
 <template>
   <div>
     <div class='controls-container'>
-      <b-button
-        @click='() => onZoomButtonClick(1.25)'
-        variant='outline-secondary'
-        :data-sauto-id="'zoom-in-button-'+this.pane"
+      <div>
+        <b-button
+          @click='() => onZoomButtonClick(1.25)'
+          variant='outline-secondary'
+          :data-sauto-id="'zoom-in-button-'+this.pane"
+        >
+          <b-icon icon='zoom-in'></b-icon>
+        </b-button>
+      </div>
+      <div>
+        <b-button
+          @click='() => onZoomButtonClick(0.75)'
+          variant='outline-secondary'
+          :data-sauto-id="'zoom-out-button-'+this.pane"
+        >
+          <b-icon icon='zoom-out'></b-icon>
+        </b-button>
+      </div>
+
+    </div>
+    <div class="checkbox-container">
+      <div
+        class='ego-checkbox'
+        data-sauto-id='ignore'
       >
-        <b-icon icon='zoom-in'></b-icon>
-      </b-button>
-      <b-button
-        @click='() => onZoomButtonClick(0.75)'
-        variant='outline-secondary'
-        :data-sauto-id="'zoom-out-button-'+this.pane"
-      >
-        <b-icon icon='zoom-out'></b-icon>
-      </b-button>
-      <div data-sauto-id='ignore'>
         <b-form-checkbox
           class='b-0'
-          v-model='allNodesSelected'
+          v-model='isAllSelected'
           @change='selectionCheckboxChanged'
           :data-sauto-id="'select-all-checkbox-'+this.pane"
         >
-          Select all nodes
+          select all
         </b-form-checkbox>
       </div>
     </div>
@@ -69,7 +79,6 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      allNodesSelected: true,
       focusedNode: []
     };
   },
@@ -98,6 +107,18 @@ export default {
     }
   },
   computed: {
+    isAllSelected: {
+      get: function () {
+        let selectedSize = this.netNodes.filter((node) =>
+          this.$store.getters['main/selectedNodesForMetrics'].find(
+            (n) => n.id === node.id && n._pane === node._pane
+          )
+        ).length;
+        let allSize = this.netNodes.length;
+        return selectedSize === allSize;
+      },
+      set: function () {}
+    },
     size() {
       return this.options.size;
     },
@@ -193,10 +214,10 @@ export default {
     },
     highlightedNodes() {
       let targets = this.links
-        .filter((link) => link.source == this.focusedNode)
+        .filter((link) => link.source === this.focusedNode)
         .map((link) => link.target);
       let sources = this.links
-        .filter((link) => link.target == this.focusedNode)
+        .filter((link) => link.target === this.focusedNode)
         .map((link) => link.source);
       return [this.focusedNode].concat(targets).concat(sources);
     }
@@ -211,14 +232,16 @@ export default {
       this.simulation.restart();
     },
     isFocused(node) {
-      return node.source == this.focusedNode || node.target == this.focusedNode;
+      return (
+        node.source === this.focusedNode || node.target === this.focusedNode
+      );
     },
     addOrRemoveSelectedNode(node) {
       if (
         this.selectedNodes.find(
           (n) =>
-            n.id == this.netNodes[node].id &&
-            n._pane == this.netNodes[node]._pane
+            n.id === this.netNodes[node].id &&
+            n._pane === this.netNodes[node]._pane
         )
       ) {
         this.$store.commit(
@@ -233,15 +256,15 @@ export default {
       }
     },
     selectionCheckboxChanged() {
-      if (this.allNodesSelected) this.selectAllNodes();
-      else this.deselectAllNodes();
+      if (this.isAllSelected) this.deselectAllNodes();
+      else this.selectAllNodes();
     },
     selectAllNodes() {
       this.netNodes
         .filter(
           (node) =>
             !this.$store.getters['main/selectedNodesForMetrics'].find(
-              (n) => n.id == node.id && n._pane == node._pane
+              (n) => n.id === node.id && n._pane === node._pane
             )
         )
         .forEach((node) => {
@@ -252,7 +275,7 @@ export default {
       this.netNodes
         .filter((node) =>
           this.$store.getters['main/selectedNodesForMetrics'].find(
-            (n) => n.id == node.id && n._pane == node._pane
+            (n) => n.id === node.id && n._pane === node._pane
           )
         )
         .forEach((node) => {
@@ -263,8 +286,8 @@ export default {
       return Boolean(
         this.selectedNodes.find(
           (n) =>
-            n.id == this.netNodes[node].id &&
-            n._pane == this.netNodes[node]._pane
+            n.id === this.netNodes[node].id &&
+            n._pane === this.netNodes[node]._pane
         )
       );
     },
@@ -370,9 +393,9 @@ export default {
       this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {
-      if (node._pane == 'pane1')
+      if (node._pane === 'pane1')
         return this.$store.getters['main/selectionColors'][0];
-      if (node._pane == 'pane2')
+      if (node._pane === 'pane2')
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
     }
@@ -390,8 +413,20 @@ svg .labels text {
   cursor: default;
 }
 
-.controls-container {
+.controls-container,
+.checkbox-container {
   position: absolute;
-  background: #fff;
+  background: rgba(255, 255, 255, 1);
+  right: 0;
+  margin-right: 1.2em;
+}
+.controls-container {
+  bottom: 0.2em;
+}
+/* .ego-checkbox {
+  margin-right: 0.8em;
+} */
+.btn {
+  border: none !important;
 }
 </style>
