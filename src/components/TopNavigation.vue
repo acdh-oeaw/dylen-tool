@@ -50,6 +50,7 @@
       >
         <b-col v-if='!showSecondForm'>
           <b-button
+            pill
             data-sauto-id='second-query-button'
             v-if='showSecondButton'
             size='sm'
