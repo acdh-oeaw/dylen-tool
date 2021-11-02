@@ -128,6 +128,7 @@ const mainModule = {
         logger.log('Ego Network %s updated successfully.', networkID);
 
         this.commit('main/updateEgoNetwork', { networkObj: updatedNetwork, pane: pane });
+        this.commit('main/changeSelectedYear', {pane:pane, year: updatedNetwork})
       } catch (error) {
         logger.error(error);
       }
