@@ -176,6 +176,9 @@ export default {
       this.$store.commit('main/changeSecondFormVisibility', {
         pane: this.queryPane
       })
+      this.$store.commit('main/resetTimeSeries', {
+        pane: this.queryPane
+      })
       console.log('initialised')
     }
   },

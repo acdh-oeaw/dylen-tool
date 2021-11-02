@@ -360,6 +360,9 @@ const mainModule = {
     },
     addTimeSeriesData(state, payload){
       state[payload['pane']].timeSeriesData = payload.data;
+    },
+    resetTimeSeries(state, payload) {
+      state[payload['pane']].timeSeriesData = {};
     }
   },
   getters: {

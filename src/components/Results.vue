@@ -28,7 +28,7 @@
         </b-col>
       </b-row>
     </b-col>
-    <b-col
+    <b-col v-if='showFirstGraph || showSecondGraph'
       class='h-100'
       md='6'
     >
