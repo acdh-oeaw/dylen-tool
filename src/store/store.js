@@ -175,6 +175,9 @@ const mainModule = {
     availableCorpora: [],
     availableSourcesByCorpus: {},
     availableTargetwordsByCorpusAndSource: {},
+    topNav: {
+      secondForm: false
+    },
     pane1: {
       selectedCorpus: { id: '', name: '', sources: [] },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
@@ -217,6 +220,11 @@ const mainModule = {
     showInfo: true
   },
   mutations: {
+    changeSecondFormVisibility(state, payload) {
+      if (payload.pane === 'pane2') {
+        state.topNav.secondForm = !state.topNav.secondForm
+      }
+    },
     loadCorpora(state, payload) {
       state.availableCorpora = payload.corpora;
     },
@@ -316,6 +324,7 @@ const mainModule = {
       return state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus];
     },
     selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
+    selectedNetwork: (state) => (pane) => state[pane].selectedNetwork,
     selectedYear: (state) => (pane) => state[pane].selectedYear,
     searchTerm: (state) => (pane) => state[pane].searchTerm,
     autocompleteSuggestions: (state) => (pane) => state[pane].autocompleteSuggestions,
@@ -330,12 +339,13 @@ const mainModule = {
       if (state['pane1'].selectedNetwork) {
         count++;
       }
-      if (state['pane1'].selectedNetwork) {
+      if (state['pane2'].selectedNetwork) {
         count++;
       }
 
       return count;
-    }
+    },
+    secondFormVisibility: (state) => state['topNav'].secondForm
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;

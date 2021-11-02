@@ -48,10 +48,10 @@
         class='h-100'
         align-v='center'
       >
-        <b-col v-if='!secondForm'>
+        <b-col v-if='!showSecondForm'>
           <b-button
             data-sauto-id='second-query-button'
-            v-if='firstForm && !secondForm'
+            v-if='showSecondButton'
             size='sm'
             variant='secondary'
             v-on:click='queryButtonClicked(2)'
@@ -59,7 +59,7 @@
             <b>+</b>
           </b-button>
         </b-col>
-        <b-col v-else>
+        <b-col v-if='showSecondForm'>
           <search-form
             :with-labels='false'
             :pane="'pane' + 2"
@@ -112,12 +112,26 @@ export default {
       showInfoButton: false
     };
   },
+  computed: {
+    showSecondButton() {
+      let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
+      if (numberOfVisualisedNetworks > 0) {
+        return true;
+      }
+      return false;
+    },
+    showSecondForm() {
+      return this.$store.getters['main/secondFormVisibility']
+    }
+  },
   methods: {
     queryButtonClicked(button) {
       if (button === 1) {
         this.firstForm = true;
       } else if (button === 2) {
-        this.secondForm = true;
+        this.$store.commit('main/changeSecondFormVisibility', {
+          pane: 'pane2'
+        })
       }
     },
     toggleSideBar() {

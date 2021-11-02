@@ -175,6 +175,9 @@ export default {
         network: null,
         pane: this.queryPane
       })
+      this.$store.commit('main/changeSecondFormVisibility', {
+        pane: this.queryPane
+      })
       console.log('initialised')
     }
   },
