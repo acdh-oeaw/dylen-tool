@@ -6,14 +6,14 @@
     style='background-color: white;'
   >
     <b-row
-        class='text-center'
-        align-h='center'
+      class='text-center'
+      align-h='center'
     >
-      <b-col><b>Node Metrics Comparison</b></b-col>
+      <b-col class="h-10"><b>Node Metrics Comparison</b></b-col>
     </b-row>
     <b-row
       lg='12'
-      class='pt-2 h-100'
+      class='h-100'
     >
       <b-col class='h-100'>
         <b-button-group class='float-right'>
@@ -96,7 +96,7 @@ export default {
       const widthRefElem = (this.$refs.parCoords || this.$refs.table).$el
         .parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.8;
+      const chartHeight = heightRefElem.clientHeight * 0.9 - 50;
       const chartWidth = widthRefElem?.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
