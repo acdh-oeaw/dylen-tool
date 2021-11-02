@@ -186,12 +186,12 @@ export default {
   width: 100%;
 }
 .splitpanes--horizontal > .splitpanes__splitter {
-  width: 90%;
+  width: 100%;
   margin: auto;
 }
-.splitpanes--vertical > .splitpanes__splitter {
+/* .splitpanes--vertical > .splitpanes__splitter {
   top: 1%;
-}
+} */
 .splitpanes__pane {
   position: relative;
 }
