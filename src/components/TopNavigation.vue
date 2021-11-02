@@ -74,7 +74,7 @@
       xl='1'
       align-self='center'
     >
-      <b-row>
+      <b-row align-h='end'>
         <b-button
           v-if='showInfoButton'
           ref='showInfoButton'
@@ -87,10 +87,10 @@
         </b-button>
         <b-button
           data-sauto-id='settings-button'
-          class='float-right'
+          class='mr-2'
           @click='toggleSideBar'
         >
-          Settings
+          <b-icon icon='gear'></b-icon>
         </b-button>
       </b-row>
     </b-col>
