@@ -190,29 +190,29 @@
             stroke-width="1"
           />
           <text
-              id="selectAll"
-              :y="svgPadding.top - 3"
-              :x="2"
-              text-anchor="start"
-              fill="#3161F5"
-              @click="selectAllNodes('pane1')"
+            id="selectAll"
+            :y="svgPadding.top - 3"
+            :x="2"
+            text-anchor="start"
+            fill="#3161F5"
+            @click="selectAllNodes('pane1')"
           >
             <tspan>select all</tspan>
           </text>
           <text
-              :y="svgPadding.top - 3"
-              :x="52"
-              text-anchor="start"
+            :y="svgPadding.top - 3"
+            :x="52"
+            text-anchor="start"
           >
             <tspan> | </tspan>
           </text>
           <text
-              id="deselectAll"
-              :y="svgPadding.top - 3"
-              :x="60"
-              text-anchor="start"
-              fill="#3161F5"
-              @click="deselectAllNodes('pane1')"
+            id="deselectAll"
+            :y="svgPadding.top - 3"
+            :x="60"
+            text-anchor="start"
+            fill="#3161F5"
+            @click="deselectAllNodes('pane1')"
           >
             <tspan>deselect all</tspan>
           </text>
@@ -228,29 +228,29 @@
             <tspan dx="2">({{targetWordLabelRight.year}})</tspan>
           </text>
           <text
-              id="selectAll"
-              :y="svgPadding.top - 3"
-              :x="chartSize[0]+svgPadding.right - 120"
-              text-anchor="start"
-              fill="#3161F5"
-              @click="selectAllNodes('pane2')"
+            id="selectAll"
+            :y="svgPadding.top - 3"
+            :x="chartSize[0]+svgPadding.right - 120"
+            text-anchor="start"
+            fill="#3161F5"
+            @click="selectAllNodes('pane2')"
           >
             <tspan>select all</tspan>
           </text>
           <text
-              :y="svgPadding.top - 3"
-              :x="chartSize[0]+svgPadding.right - 67"
-              text-anchor="start"
+            :y="svgPadding.top - 3"
+            :x="chartSize[0]+svgPadding.right - 67"
+            text-anchor="start"
           >
             <tspan> | </tspan>
           </text>
           <text
-              id="deselectAll"
-              :y="svgPadding.top - 3"
-              :x="chartSize[0]+svgPadding.right - 60"
-              text-anchor="start"
-              fill="#3161F5"
-              @click="deselectAllNodes('pane2')"
+            id="deselectAll"
+            :y="svgPadding.top - 3"
+            :x="chartSize[0]+svgPadding.right - 60"
+            text-anchor="start"
+            fill="#3161F5"
+            @click="deselectAllNodes('pane2')"
           >
             <tspan>deselect all</tspan>
           </text>
@@ -272,7 +272,7 @@ import * as d3 from 'd3';
 
 export default {
   name: 'ParallelCoordinates',
-  props: ['allNodes','selectedNodes', 'options'],
+  props: ['allNodes', 'selectedNodes', 'options'],
   data() {
     return {
       hoverNodes: [],
@@ -296,7 +296,9 @@ export default {
     },
     metrics() {
       return [
-        ...new Set(this.selectedNodes.map((n) => Object.keys(n._metrics)).flat())
+        ...new Set(
+          this.selectedNodes.map((n) => Object.keys(n._metrics)).flat()
+        )
       ];
     },
     scaleY() {
@@ -439,18 +441,30 @@ export default {
     },
     selectAllNodes(pane) {
       this.allNodes
-          .filter((node) => (node._pane === pane) && (this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) === -1))
-          .forEach((node) => {
-            console.log(node)
-            this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
-          });
+        .filter(
+          (node) =>
+            node._pane === pane &&
+            this.$store.getters['main/selectedNodesForMetrics'].findIndex(
+              (n) => n.id === node.id
+            ) === -1
+        )
+        .forEach((node) => {
+          console.log(node);
+          this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
+        });
     },
     deselectAllNodes(pane) {
       this.allNodes
-          .filter((node) => (node._pane === pane) && (this.$store.getters['main/selectedNodesForMetrics'].findIndex(n => n.id === node.id) > -1))
-          .forEach((node) => {
-            this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
-          });
+        .filter(
+          (node) =>
+            node._pane === pane &&
+            this.$store.getters['main/selectedNodesForMetrics'].findIndex(
+              (n) => n.id === node.id
+            ) > -1
+        )
+        .forEach((node) => {
+          this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
+        });
     }
   },
   directives: {
@@ -487,8 +501,10 @@ export default {
 }
 #selectAll:hover {
   fill: red;
+  cursor: pointer;
 }
 #deselectAll:hover {
   fill: red;
+  cursor: pointer;
 }
 </style>
