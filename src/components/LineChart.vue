@@ -155,9 +155,21 @@ export default {
     mousemove(event) {
       var xPos = d3.pointer(event)[0];
       var x0 = Math.round(this.scaleX.invert(xPos));
-      if (x0 != undefined && x0 >= 0)
+      if (x0 != undefined && x0 >= 0) {
+        let indicatorValues = [];
+        let yOffset = 0;
         this.data.forEach((_, idx) => {
-          let selectedData = this.data[idx].find((e) => e.year == x0);
+          indicatorValues.push(this.data[idx].find((e) => e.year == x0));
+        });
+        if (indicatorValues.filter((i) => i != undefined).length == 2) {
+          let indicatorDistance = Math.abs(
+            this.scaleY(indicatorValues[0].value) -
+              this.scaleY(indicatorValues[1].value)
+          );
+          if (indicatorDistance <= 10) yOffset = 10;
+        }
+
+        indicatorValues.forEach((selectedData, idx) => {
           if (!selectedData) {
             d3.select(this.$refs[`focus${idx}`][0]).style('opacity', 0);
             d3.select(this.$refs[`focusText${idx}`][0]).style('opacity', 0);
@@ -181,7 +193,16 @@ export default {
             d3.select(this.$refs[`focusText${idx}`][0])
               .attr('text-anchor', 'end')
               .attr('x', this.scaleX(x0) - 15);
+          if (yOffset != 0) {
+            let smaller =
+              selectedData.value <= indicatorValues[Math.abs(idx - 1)].value;
+            d3.select(this.$refs[`focusText${idx}`][0]).attr(
+              'y',
+              this.scaleY(selectedData.value) + Math.pow(-1, smaller) * yOffset
+            );
+          }
         });
+      }
     },
     mouseout() {
       this.data.forEach((_, idx) => {
