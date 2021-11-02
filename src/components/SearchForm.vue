@@ -104,30 +104,6 @@
       <b-col
         xl='5'
       >
-        <b-form-group
-          id='select-year-group-viz'
-          label='Year:'
-          label-for='select-year'
-          label-size='sm'
-          label-cols-xl='4'
-          label-align-lg='left'
-        >
-          <b-form-select
-            size='sm'
-            v-model='selectedYear'
-            :data-sauto-id="'selectYear-'+this.pane"
-          >
-            <!--              data-sauto-id="selectYear"-->
-            <b-form-select-option
-              v-for='option in selectedTargetword.networks'
-              v-bind:key='option.year'
-              v-bind:value='option'
-              :data-sauto-id="'year-' + option.year"
-            >
-              {{ option.year }}
-            </b-form-select-option>
-          </b-form-select>
-        </b-form-group>
       </b-col>
       <b-col xl='1'>
         <b-button
@@ -199,10 +175,10 @@ export default {
         targetword: null,
         pane: this.queryPane
       });
-      this.$store.commit('main/changeSelectedYear', {
-        year: null,
+      this.$store.commit('main/resetSelectedNetwork', {
+        network: null,
         pane: this.queryPane
-      });
+      })
       console.log('initialised')
     }
   },

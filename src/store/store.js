@@ -248,12 +248,19 @@ const mainModule = {
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
     },
     changeSelectedTargetword(state, payload) {
+      let selectedYearPayload = {
+        pane: payload.pane,
+        reset: false
+      }
       if (payload.targetword) {
         state[payload.pane].selectedTargetword = payload.targetword;
+
       } else {
         state[payload.pane].selectedTargetword = { id: '', text: '' }
+        selectedYearPayload.reset = true;
       }
-      this.commit('main/changeSelectedYear', { pane: payload.pane });
+      this.commit('main/changeSelectedYear', selectedYearPayload);
+
     },
     changeSearchTerm(state, payload) {
       if (payload.targetword) {
@@ -267,8 +274,10 @@ const mainModule = {
     changeSelectedYear(state, payload) {
       if (payload.year) {
         state[payload.pane].selectedYear = payload.year;
-      } else {
+      } else if (payload.reset) {
         state[payload.pane].selectedYear = null;
+      } else {
+        state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
       }
     },
     addSelectedNodeForNodeMetrics(state, payload) {
@@ -280,6 +289,9 @@ const mainModule = {
     },
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
+    },
+    resetSelectedNetwork(state, payload) {
+      state[payload['pane']].selectedNetwork = null;
     },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
