@@ -6,20 +6,37 @@
       @resized="resized"
       @pane-maximize="resized"
     >
-      <pane>
+      <pane :size="(fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 100 : (fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 0 : 50">
         <splitpanes
           horizontal
           @resized="resized"
           @pane-maximize="resized"
         >
-          <pane>
+          <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+            <button
+              @click="() => toggleFullscreen('networkGraph1')"
+              class="fullscreen-button"
+              variant="light"
+            >
+              <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
+            </button>
             <NetworkGraph
               v-if='networkCount>=1'
               ref='networkGraph1'
               pane='pane1'
             />
           </pane>
-          <pane v-if='networkCount===2'>
+          <pane
+            v-if='networkCount===2'
+            :size="fullscreen['networkGraph2'] ? 100 : fullscreen['networkGraph1'] ? 0 : 50"
+          >
+            <button
+              @click="() => toggleFullscreen('networkGraph2')"
+              class="fullscreen-button"
+              variant="light"
+            >
+              <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
+            </button>
             <NetworkGraph
               ref='networkGraph2'
               pane='pane2'
@@ -27,17 +44,31 @@
           </pane>
         </splitpanes>
       </pane>
-      <pane>
+      <pane :size="(fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 100 : (fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 0 : 50">
         <splitpanes
           horizontal
           @resized="resized"
           @pane-maximize="resized"
         >
-          <pane>
+          <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
+            <button
+              @click="() => toggleFullscreen('nodeMetrics')"
+              class="fullscreen-button"
+              variant="light"
+            >
+              <b-icon :icon="fullscreen['nodeMetrics'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
+            </button>
             <NodeMetrics ref='nodeMetrics'>
             </NodeMetrics>
           </pane>
-          <pane>
+          <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
+            <button
+              @click="() => toggleFullscreen('timeSeries')"
+              class="fullscreen-button"
+              variant="light"
+            >
+              <b-icon :icon="fullscreen['timeSeries'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
+            </button>
             <TimeSeries
               :panes="['pane1', 'pane2']"
               ref='timeSeries'
@@ -70,7 +101,13 @@ export default {
   data() {
     return {
       mobile: false,
-      maxHeight: '100%'
+      maxHeight: '100%',
+      fullscreen: {
+        networkGraph1: 0,
+        networkGraph2: 0,
+        nodeMetrics: 0,
+        timeSeries: 0
+      }
     };
   },
   computed: {
@@ -112,6 +149,12 @@ export default {
         this.mobile = false;
         this.maxHeight = '100%';
       }
+    },
+    toggleFullscreen(idx) {
+      let current = this.fullscreen[idx];
+      for (let idx in this.fullscreen) this.fullscreen[idx] = 0;
+      this.fullscreen[idx] = 1 - current;
+      window.setTimeout(() => this.$refs[idx]?.resizeHandler(), 150);
     }
   }
 };
@@ -148,5 +191,15 @@ export default {
 }
 .splitpanes--vertical > .splitpanes__splitter {
   top: 1%;
+}
+.splitpanes__pane {
+  position: relative;
+}
+.fullscreen-button {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  background: transparent !important;
+  border: #d3d9df;
 }
 </style>
