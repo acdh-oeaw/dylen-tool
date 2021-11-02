@@ -3,24 +3,29 @@
     <div class='controls-container'>
       <div>
         <b-button
-            @click='() => onZoomButtonClick(1.25)'
-            variant='outline-secondary'
-            :data-sauto-id="'zoom-in-button-'+this.pane"
+          @click='() => onZoomButtonClick(1.25)'
+          variant='outline-secondary'
+          :data-sauto-id="'zoom-in-button-'+this.pane"
         >
           <b-icon icon='zoom-in'></b-icon>
         </b-button>
       </div>
       <div>
         <b-button
-            @click='() => onZoomButtonClick(0.75)'
-            variant='outline-secondary'
-            :data-sauto-id="'zoom-out-button-'+this.pane"
+          @click='() => onZoomButtonClick(0.75)'
+          variant='outline-secondary'
+          :data-sauto-id="'zoom-out-button-'+this.pane"
         >
           <b-icon icon='zoom-out'></b-icon>
         </b-button>
       </div>
 
-      <div class='ego-checkbox' data-sauto-id='ignore'>
+    </div>
+    <div class="checkbox-container">
+      <div
+        class='ego-checkbox'
+        data-sauto-id='ignore'
+      >
         <b-form-checkbox
           class='b-0'
           v-model='isAllSelected'
@@ -103,17 +108,16 @@ export default {
   },
   computed: {
     isAllSelected: {
-      get: function() {
-        let selectedSize = this.netNodes
-            .filter((node) => this.$store.getters['main/selectedNodesForMetrics'].find(
-                (n) => n.id === node.id && n._pane === node._pane
-                )
-            ).length
-        let allSize = this.netNodes.length
-        return selectedSize === allSize
+      get: function () {
+        let selectedSize = this.netNodes.filter((node) =>
+          this.$store.getters['main/selectedNodesForMetrics'].find(
+            (n) => n.id === node.id && n._pane === node._pane
+          )
+        ).length;
+        let allSize = this.netNodes.length;
+        return selectedSize === allSize;
       },
-      set: function() {
-      }
+      set: function () {}
     },
     size() {
       return this.options.size;
@@ -228,7 +232,9 @@ export default {
       this.simulation.restart();
     },
     isFocused(node) {
-      return node.source === this.focusedNode || node.target === this.focusedNode;
+      return (
+        node.source === this.focusedNode || node.target === this.focusedNode
+      );
     },
     addOrRemoveSelectedNode(node) {
       if (
@@ -250,10 +256,8 @@ export default {
       }
     },
     selectionCheckboxChanged() {
-      if (this.isAllSelected)
-        this.deselectAllNodes();
-      else
-        this.selectAllNodes();
+      if (this.isAllSelected) this.deselectAllNodes();
+      else this.selectAllNodes();
     },
     selectAllNodes() {
       this.netNodes
@@ -409,15 +413,19 @@ svg .labels text {
   cursor: default;
 }
 
-.controls-container {
+.controls-container,
+.checkbox-container {
   position: absolute;
-  background: #fff;
-  margin-left: auto;
-  margin-right: 0;
+  background: rgba(255, 255, 255, 1);
+  right: 0;
+  margin-right: 1.2em;
 }
-.ego-checkbox {
-  margin-left: 0.8em;
+.controls-container {
+  bottom: 0.2em;
 }
+/* .ego-checkbox {
+  margin-right: 0.8em;
+} */
 .btn {
   border: none !important;
 }
