@@ -1,5 +1,8 @@
 <template>
-  <div ref='table' class='h-100'>
+  <div
+    ref='table'
+    style="height: 85%;"
+  >
     <b-table
       :items='tableData'
       :fields='fields'
@@ -63,9 +66,9 @@ export default {
             maxDigits > 10
               ? node._metrics[key]
               : Math.round(
-              (node._metrics[key] + Number.EPSILON) *
-              Math.pow(10, maxDigits)
-            ) / Math.pow(10, maxDigits);
+                  (node._metrics[key] + Number.EPSILON) *
+                    Math.pow(10, maxDigits)
+                ) / Math.pow(10, maxDigits);
         return tableEntry;
       });
     },
@@ -138,7 +141,7 @@ export default {
           break;
         }
       }
-      const clientX = (((i + 1) * sizes.width) / arrayLength) + sizes.x;
+      const clientX = ((i + 1) * sizes.width) / arrayLength + sizes.x;
       //this calculation works with an error margin of couple of pixels
       //to be honest im disgusted and proud of this method
       return {

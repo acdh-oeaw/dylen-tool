@@ -7,7 +7,9 @@ import {
   getAutocompleteSuggestionsQuery,
   getNetworkQuery,
   getNetworksByCorpusAndSource,
-  getSoucesByCorpusQuery
+  getSourcesByCorpusQuery,
+  getTargetWordByIdQuery
+
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -47,7 +49,7 @@ const mainModule = {
     },
     async loadSources({ dispatch, state }) {
       for (const corpus of state.availableCorpora) {
-        const sourceResponse = await axios.post(graphqlEndpoint, getSoucesByCorpusQuery(corpus));
+        const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus));
         const sourcesPayload = {
           corpus: corpus,
           sources: sourceResponse.data.data.getSourcesByCorpus
@@ -130,6 +132,7 @@ const mainModule = {
         logger.error(error);
       }
     },
+
     async loadAutocompleteSuggestions({ state }, { pane }) {
       const targetwordsResponse = await axios.post(graphqlEndpoint,
         getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
@@ -166,7 +169,49 @@ const mainModule = {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
-    }
+    },
+    async loadTimeSeriesData({ state }, pane) {
+        function zipTimeSeriesAndYears(timeSeries, years){
+          let newTimeSeries = {};
+          Object.keys(timeSeries).forEach(key => {
+            newTimeSeries[key] = {};
+            Object.keys(timeSeries[key]).forEach(metric => {
+              let initIdx = 0;
+              switch (metric){
+                case "firstYear": initIdx = 1; break;
+                case "lastYear": initIdx = 0; break;
+                case "previousYear": initIdx = 1; break;
+              }
+              let zippedArray = timeSeries[key][metric].map((val, idx) => {
+                return {
+                  year: years[idx+initIdx],
+                  value: val
+                }
+              })
+              newTimeSeries[key][metric] = zippedArray;
+            })
+          })
+          return newTimeSeries;
+        }
+        try {
+        const response = await axios.post(graphqlEndpoint,
+          getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+        console.log(response)
+        let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
+        let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
+        let data = zipTimeSeriesAndYears(timeSeries, years);
+        console.log(data)
+        const payload = {
+          pane: pane,
+          data: data
+        };
+
+        this.commit('main/addTimeSeriesData', payload);
+        logger.log('Ego Network loaded successfully.');
+      } catch (error) {
+        logger.error(error);
+      }
+    },
 
   },
   namespaced: true,
@@ -185,7 +230,8 @@ const mainModule = {
       selectedYear: null,
       selectedNetwork: null,
       searchTerm: null,
-      autocompleteSuggestions: []
+      autocompleteSuggestions: [],
+      timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -194,7 +240,8 @@ const mainModule = {
       selectedYear: null,
       selectedNetwork: null,
       searchTerm: null,
-      autocompleteSuggestions: []
+      autocompleteSuggestions: [],
+      timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
     },
     nodeMetrics: {
       selectedNodes: []
@@ -310,6 +357,9 @@ const mainModule = {
     },
     setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
+    },
+    addTimeSeriesData(state, payload){
+      state[payload['pane']].timeSeriesData = payload.data;
     }
   },
   getters: {
@@ -345,7 +395,8 @@ const mainModule = {
 
       return count;
     },
-    secondFormVisibility: (state) => state['topNav'].secondForm
+    secondFormVisibility: (state) => state['topNav'].secondForm,
+    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
