@@ -21,7 +21,7 @@
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
-              v-if='networkCount>=1'
+              v-if='showFirstGraph'
               ref='networkGraph1'
               pane='pane1'
             />
@@ -38,13 +38,14 @@
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
+              v-if='showSecondGraph'
               ref='networkGraph2'
               pane='pane2'
             />
           </pane>
         </splitpanes>
       </pane>
-      <pane :size="(fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 100 : (fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 0 : 50">
+      <pane :size="(fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 100 : (fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 0 : 50" v-if='showFirstGraph || showSecondGraph'>
         <splitpanes
           horizontal
           @resized="resized"
@@ -78,6 +79,7 @@
         </splitpanes>
       </pane>
     </splitpanes>
+
   </b-row>
 </template>
 
@@ -112,20 +114,13 @@ export default {
   },
   computed: {
     networkCount() {
-      let count = 0;
-      const network1 =
-        this.$store.getters['main/getPane']('pane1').selectedNetwork;
-      const network2 =
-        this.$store.getters['main/getPane']('pane2').selectedNetwork;
-
-      if (network1) {
-        count++;
-      }
-      if (network2) {
-        count++;
-      }
-
-      return count;
+      return this.$store.getters['main/numberOfNetworksVisualised']
+    },
+    showFirstGraph() {
+      return this.$store.getters['main/selectedNetwork']('pane1') !== null
+    },
+    showSecondGraph() {
+      return this.$store.getters['main/selectedNetwork']('pane2') !== null
     }
   },
   mounted() {
