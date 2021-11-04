@@ -9,7 +9,7 @@ import {
   getNetworksByCorpusAndSource,
   getSourcesByCorpusQuery,
   getTargetWordByIdQuery
-  
+
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -128,6 +128,7 @@ const mainModule = {
         logger.log('Ego Network %s updated successfully.', networkID);
 
         this.commit('main/updateEgoNetwork', { networkObj: updatedNetwork, pane: pane });
+        this.commit('main/changeSelectedYear', {pane:pane, year: updatedNetwork})
       } catch (error) {
         logger.error(error);
       }
@@ -199,7 +200,7 @@ const mainModule = {
         console.log(response)
         let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
         let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
-        let data = zipTimeSeriesAndYears(timeSeries, years);  
+        let data = zipTimeSeriesAndYears(timeSeries, years);
         console.log(data)
         const payload = {
           pane: pane,
@@ -220,6 +221,9 @@ const mainModule = {
     availableCorpora: [],
     availableSourcesByCorpus: {},
     availableTargetwordsByCorpusAndSource: {},
+    topNav: {
+      secondForm: false
+    },
     pane1: {
       selectedCorpus: { id: '', name: '', sources: [] },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
@@ -264,6 +268,11 @@ const mainModule = {
     showInfo: true
   },
   mutations: {
+    changeSecondFormVisibility(state, payload) {
+      if (payload.pane === 'pane2') {
+        state.topNav.secondForm = !state.topNav.secondForm
+      }
+    },
     loadCorpora(state, payload) {
       state.availableCorpora = payload.corpora;
     },
@@ -288,19 +297,26 @@ const mainModule = {
       if (payload.corpus) {
         state[payload.pane].selectedCorpus = payload.corpus;
       } else {
-        state[payload.pane].selectedCorpus = state[payload.pane].availableCorpora()[0];
+        state[payload.pane].selectedCorpus = state.availableCorpora[0];
       }
     },
     changeSelectedSubcorpus(state, payload) {
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
     },
     changeSelectedTargetword(state, payload) {
+      let selectedYearPayload = {
+        pane: payload.pane,
+        reset: false
+      }
       if (payload.targetword) {
         state[payload.pane].selectedTargetword = payload.targetword;
+
       } else {
-        state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].selectedTargetword = { id: '', text: '' }
+        selectedYearPayload.reset = true;
       }
-      this.commit('main/changeSelectedYear', { pane: payload.pane });
+      this.commit('main/changeSelectedYear', selectedYearPayload);
+
     },
     changeSearchTerm(state, payload) {
       if (payload.targetword) {
@@ -314,6 +330,8 @@ const mainModule = {
     changeSelectedYear(state, payload) {
       if (payload.year) {
         state[payload.pane].selectedYear = payload.year;
+      } else if (payload.reset) {
+        state[payload.pane].selectedYear = null;
       } else {
         state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
       }
@@ -328,6 +346,9 @@ const mainModule = {
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
     },
+    resetSelectedNetwork(state, payload) {
+      state[payload['pane']].selectedNetwork = null;
+    },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
@@ -340,6 +361,9 @@ const mainModule = {
     },
     addTimeSeriesData(state, payload){
       state[payload['pane']].timeSeriesData = payload.data;
+    },
+    resetTimeSeries(state, payload) {
+      state[payload['pane']].timeSeriesData = {};
     }
   },
   getters: {
@@ -354,6 +378,7 @@ const mainModule = {
       return state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus];
     },
     selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
+    selectedNetwork: (state) => (pane) => state[pane].selectedNetwork,
     selectedYear: (state) => (pane) => state[pane].selectedYear,
     searchTerm: (state) => (pane) => state[pane].searchTerm,
     autocompleteSuggestions: (state) => (pane) => state[pane].autocompleteSuggestions,
@@ -363,7 +388,19 @@ const mainModule = {
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
     tableOptions: (state) => state.tableOptions,
-    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
+    numberOfNetworksVisualised: (state) => {
+      let count = 0;
+      if (state['pane1'].selectedNetwork) {
+        count++;
+      }
+      if (state['pane2'].selectedNetwork) {
+        count++;
+      }
+
+      return count;
+    },
+    secondFormVisibility: (state) => state['topNav'].secondForm,
+    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;

@@ -10,7 +10,7 @@
           md='12'
         >
           <NetworkGraph
-            v-if='networkCount>=1'
+            v-if='showFirstGraph'
             ref='networkGraph'
             pane='pane1'
           />
@@ -22,13 +22,13 @@
           md='12'
         >
           <NetworkGraph
-            v-if='networkCount===2'
+            v-if='showSecondGraph'
             pane='pane2'
           />
         </b-col>
       </b-row>
     </b-col>
-    <b-col
+    <b-col v-if='showFirstGraph || showSecondGraph'
       class='h-100'
       md='6'
     >
@@ -64,20 +64,13 @@ export default {
   },
   computed: {
     networkCount() {
-      let count = 0;
-      const network1 =
-        this.$store.getters['main/getPane']('pane1').selectedNetwork;
-      const network2 =
-        this.$store.getters['main/getPane']('pane2').selectedNetwork;
-
-      if (network1) {
-        count++;
-      }
-      if (network2) {
-        count++;
-      }
-
-      return count;
+      return this.$store.getters['main/numberOfNetworksVisualised']
+    },
+    showFirstGraph() {
+      return this.$store.getters['main/selectedNetwork']('pane1') !== null
+    },
+    showSecondGraph() {
+      return this.$store.getters['main/selectedNetwork']('pane2') !== null
     }
   },
   mounted() {}
