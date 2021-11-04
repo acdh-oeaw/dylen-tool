@@ -6,10 +6,10 @@
     style='background-color: white;'
   >
     <b-row
-        class='text-center'
-        align-h='center'
+      class='text-center'
+      align-h='center'
     >
-      <b-col><b>Semantic Change Analysis</b></b-col>
+      <b-col class="h-10"><b>Semantic Change Analysis</b></b-col>
     </b-row>
     <b-row
       lg='12'
@@ -77,7 +77,7 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.lineChart.$el.parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.8;
+      const chartHeight = heightRefElem.clientHeight * 0.9 - 30;
       const chartWidth = widthRefElem?.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;

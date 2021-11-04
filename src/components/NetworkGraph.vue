@@ -33,7 +33,10 @@
     </b-row>
     <b-row class='h-20 pb-2'>
       <!--      <b-col xl='2'></b-col>-->
-      <b-col class='pl-5 year-slider-row' data-sauto-id='ignore'>
+      <b-col
+        class='pl-5 year-slider-row'
+        data-sauto-id='ignore'
+      >
         <div ref='sliderDiv'>
           <vue-slider
             ref='slider'
@@ -92,7 +95,6 @@ export default {
         ['#a36c23', '#d59c1e', '#ffd20b']
       ],
       allNodesSelected: false
-
     };
   },
   created() {
@@ -109,7 +111,7 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.7;
+      const chartHeight = heightRefElem.clientHeight * 0.9 - 70;
       const chartWidth = widthRefElem.clientWidth / 1.08;
 
       if (chartHeight) this.options.size.h = chartHeight;
@@ -130,7 +132,7 @@ export default {
       //and the rest is basic proportion calculation
       const arrayLength = this.egoNetwork.possibleYears.length;
       const index = this.egoNetwork.possibleYears.indexOf(value);
-      const clientX = (((index + 1) * sizes.width) / arrayLength) + sizes.x;
+      const clientX = ((index + 1) * sizes.width) / arrayLength + sizes.x;
       //this calculation works with an error margin of couple of pixels
       //to be honest im disgusted and proud of this method
       return {
@@ -176,7 +178,9 @@ export default {
   },
   computed: {
     egoNetwork() {
-      const network = this.$store.getters['main/getPane'](this.pane).selectedNetwork;
+      const network = this.$store.getters['main/getPane'](
+        this.pane
+      ).selectedNetwork;
       const nodes = [];
       const links = [];
       let selectedNetwork;
@@ -196,7 +200,8 @@ export default {
         for (const link of network.edges) {
           links.push({
             sid: network.id + '_' + link.node1,
-            tid: network.id + '_' + link.node2
+            tid: network.id + '_' + link.node2,
+            similarity: link.similarity
           });
         }
         selectedNetwork = {
