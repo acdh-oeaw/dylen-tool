@@ -207,7 +207,9 @@ export default {
               this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
             })`
         )
-        .attr('stroke-width', (d) => (this.isFocused(d) ? 2 : 1));
+        .attr('stroke-width', (d) =>
+          /*  this.isFocused(d) ? 2 :  */ this.scaleThickness(d.similarity)
+        );
     },
     selectedNodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
@@ -220,6 +222,15 @@ export default {
         .filter((link) => link.target === this.focusedNode)
         .map((link) => link.source);
       return [this.focusedNode].concat(targets).concat(sources);
+    },
+    scaleThickness() {
+      return d3
+        .scaleLinear()
+        .domain([
+          d3.min(this.netLinks, (d) => d.similarity),
+          d3.max(this.netLinks, (d) => d.similarity)
+        ])
+        .range([0.3, 3]);
     }
   },
   methods: {
@@ -350,7 +361,7 @@ export default {
       if (width <= 0 || height <= 0) return;
       this.nodes = this.netNodes.map((d) => Object.create(d));
       this.links = this.netLinks.map((d) => {
-        return { source: d.sid, target: d.tid };
+        return { source: d.sid, target: d.tid, similarity: d.similarity };
       });
 
       this.simulation = d3
@@ -401,6 +412,8 @@ export default {
     }
   },
   mounted() {
+    console.log(this.netNodes);
+    console.log(this.netLinks);
     this.initNetwork();
   },
   beforeDestroy() {
