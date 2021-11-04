@@ -207,9 +207,7 @@ export default {
               this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
             })`
         )
-        .attr('stroke-width', (d) =>
-          /*  this.isFocused(d) ? 2 :  */ this.scaleThickness(d.similarity)
-        );
+        .attr('stroke-width', (d) => this.scaleThickness(d.similarity));
     },
     selectedNodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
@@ -373,7 +371,7 @@ export default {
             .id((d) => `${d.id}`)
             .distance(options.nodeDistance || 75)
         )
-        .force('charge', d3.forceManyBody() /* .strength(-this.force) */)
+        .force('charge', d3.forceManyBody())
         .force('center', d3.forceCenter(width / 2, height / 2));
 
       this.simulation.on('tick', () => {
@@ -434,9 +432,6 @@ svg .labels text {
 .controls-container {
   bottom: 0.2em;
 }
-/* .ego-checkbox {
-  margin-right: 0.8em;
-} */
 .btn {
   border: none !important;
 }
