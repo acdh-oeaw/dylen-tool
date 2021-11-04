@@ -282,6 +282,7 @@ const mainModule = {
     },
     selectInitTargetWord(state, payload) {
       state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+      state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
       state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
     },
     changeSelectedCorpus(state, payload) {
@@ -297,8 +298,10 @@ const mainModule = {
     changeSelectedTargetword(state, payload) {
       if (payload.targetword) {
         state[payload.pane].selectedTargetword = payload.targetword;
+        state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
       } else {
         state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+        state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
       }
       this.commit('main/changeSelectedYear', { pane: payload.pane });
     },
