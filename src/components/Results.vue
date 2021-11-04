@@ -27,7 +27,7 @@
             />
           </pane>
           <pane
-            v-if='networkCount===2'
+            v-if='showSecondGraph'
             :size="fullscreen['networkGraph2'] ? 100 : fullscreen['networkGraph1'] ? 0 : 50"
           >
             <button
@@ -38,7 +38,6 @@
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
-              v-if='showSecondGraph'
               ref='networkGraph2'
               pane='pane2'
             />
