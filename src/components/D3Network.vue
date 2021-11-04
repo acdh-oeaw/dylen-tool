@@ -412,8 +412,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.netNodes);
-    console.log(this.netLinks);
     this.initNetwork();
   },
   beforeDestroy() {
