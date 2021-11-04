@@ -207,7 +207,7 @@ export default {
               this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
             })`
         )
-        .attr('stroke-width', (d) => (this.isFocused(d) ? 2 : 1));
+        .attr('stroke-width', (d) => this.scaleThickness(d.similarity));
     },
     selectedNodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
@@ -220,6 +220,15 @@ export default {
         .filter((link) => link.target === this.focusedNode)
         .map((link) => link.source);
       return [this.focusedNode].concat(targets).concat(sources);
+    },
+    scaleThickness() {
+      return d3
+        .scaleLinear()
+        .domain([
+          d3.min(this.netLinks, (d) => d.similarity),
+          d3.max(this.netLinks, (d) => d.similarity)
+        ])
+        .range([0.3, 3]);
     }
   },
   methods: {
@@ -350,7 +359,7 @@ export default {
       if (width <= 0 || height <= 0) return;
       this.nodes = this.netNodes.map((d) => Object.create(d));
       this.links = this.netLinks.map((d) => {
-        return { source: d.sid, target: d.tid };
+        return { source: d.sid, target: d.tid, similarity: d.similarity };
       });
 
       this.simulation = d3
@@ -362,7 +371,7 @@ export default {
             .id((d) => `${d.id}`)
             .distance(options.nodeDistance || 75)
         )
-        .force('charge', d3.forceManyBody() /* .strength(-this.force) */)
+        .force('charge', d3.forceManyBody())
         .force('center', d3.forceCenter(width / 2, height / 2));
 
       this.simulation.on('tick', () => {
@@ -423,9 +432,6 @@ svg .labels text {
 .controls-container {
   bottom: 0.2em;
 }
-/* .ego-checkbox {
-  margin-right: 0.8em;
-} */
 .btn {
   border: none !important;
 }

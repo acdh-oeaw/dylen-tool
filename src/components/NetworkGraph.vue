@@ -200,7 +200,8 @@ export default {
         for (const link of network.edges) {
           links.push({
             sid: network.id + '_' + link.node1,
-            tid: network.id + '_' + link.node2
+            tid: network.id + '_' + link.node2,
+            similarity: link.similarity
           });
         }
         selectedNetwork = {
