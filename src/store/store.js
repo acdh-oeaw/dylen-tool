@@ -137,10 +137,27 @@ const mainModule = {
     async loadAutocompleteSuggestions({ state }, { pane }) {
       const targetwordsResponse = await axios.post(graphqlEndpoint,
         getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
-      this.commit('main/setAutocompleteSuggestions', {
+      console.log(targetwordsResponse.data.data.getAutocompleteSuggestions)
+        this.commit('main/setAutocompleteSuggestions', {
         suggestions: targetwordsResponse.data.data.getAutocompleteSuggestions,
         pane: pane
       });
+    },
+    async loadAutocompleteSuggestionsForNewSubCorpus({ state }, { pane }) {
+      const targetwordsResponse = await axios.post(graphqlEndpoint,
+        getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
+      const suggestions = targetwordsResponse.data.data.getAutocompleteSuggestions;
+      this.commit('main/setAutocompleteSuggestions', {
+        suggestions: suggestions,
+        pane: pane
+      });
+      const currentTargetword = state[pane].selectedTargetword;
+      let matchingSuggestion = suggestions.find(s => s.text == currentTargetword.text && s.pos == currentTargetword.pos);
+      this.commit('main/changeSelectedTargetword', {
+        targetword: matchingSuggestion,
+        pane: pane
+      });
+      
 
     },
     async downloadMetricsAsCSV({ state }, nodes) {
@@ -326,7 +343,6 @@ const mainModule = {
       } else {
         state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
-
     },
     changeSelectedYear(state, payload) {
       if (payload.year) {
