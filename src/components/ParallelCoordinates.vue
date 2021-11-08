@@ -18,10 +18,7 @@
       </filter>
     </defs>
     <g>
-      <g
-        class='grid'
-        v-if='selectedNodes.length > 0'
-      >
+      <g class='grid'>
         <line
           v-for='i in 10'
           :key='`horizontal${i}`'
@@ -171,7 +168,7 @@
         </g>
       </g>
       <g class="targetwordLabels">
-        <g v-if="Object.values(groupedNodesPane1).length > 0">
+        <g v-if="targetWordLabelLeft.text != ''">
           <text
             :y="svgPadding.top - 20"
             :x="2"
@@ -217,7 +214,7 @@
             <tspan>deselect all</tspan>
           </text>
         </g>
-        <g v-if="Object.values(groupedNodesPane2).length > 0">
+        <g v-if="targetWordLabelRight.text != ''">
           <text
             :y="svgPadding.top - 20"
             :x="chartSize[0]+svgPadding.right"
@@ -296,9 +293,7 @@ export default {
     },
     metrics() {
       return [
-        ...new Set(
-          this.selectedNodes.map((n) => Object.keys(n._metrics)).flat()
-        )
+        ...new Set(this.allNodes.map((n) => Object.keys(n._metrics)).flat())
       ];
     },
     scaleY() {
@@ -308,8 +303,12 @@ export default {
           .scaleLinear()
           .domain([
             0,
-            /* d3.min(this.netNodes, (entry) => entry._metrics[metric]) * 0.9, */
-            d3.max(this.selectedNodes, (entry) => entry._metrics[metric]) * 1.1
+            d3.max(
+              this.selectedNodes.length > 0
+                ? this.selectedNodes
+                : this.allNodes,
+              (entry) => entry._metrics[metric]
+            ) * 1.1
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
       });
@@ -449,7 +448,7 @@ export default {
             ) === -1
         )
         .forEach((node) => {
-          console.log(node);
+          //console.log(node);
           this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
         });
     },
