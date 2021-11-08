@@ -46,14 +46,14 @@
         </b-button-group>
         <parallel-coordinates
           ref='parCoords'
-          v-if='nodes && !showTable'
+          v-if='!showTable'
           :all-nodes='allNodes'
           :selected-nodes='nodes'
           :options='options'
         ></parallel-coordinates>
         <metrics-table
           ref='table'
-          v-if='nodes && showTable'
+          v-if='showTable'
           :selected-nodes='nodes'
           :all-nodes='allNodes'
           :options='options'
