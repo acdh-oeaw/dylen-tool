@@ -137,8 +137,7 @@ const mainModule = {
     async loadAutocompleteSuggestions({ state }, { pane }) {
       const targetwordsResponse = await axios.post(graphqlEndpoint,
         getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
-      console.log(targetwordsResponse.data.data.getAutocompleteSuggestions)
-        this.commit('main/setAutocompleteSuggestions', {
+      this.commit('main/setAutocompleteSuggestions', {
         suggestions: targetwordsResponse.data.data.getAutocompleteSuggestions,
         pane: pane
       });
@@ -214,11 +213,9 @@ const mainModule = {
         try {
         const response = await axios.post(graphqlEndpoint,
           getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-        console.log(response)
         let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
         let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
         let data = zipTimeSeriesAndYears(timeSeries, years);
-        console.log(data)
         const payload = {
           pane: pane,
           data: data
