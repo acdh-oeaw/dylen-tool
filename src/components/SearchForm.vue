@@ -242,6 +242,15 @@ export default {
             corpus: val,
             pane: this.queryPane
           });
+        if (val && this.searchTerm.length > 0) {
+          this.$store.dispatch(
+            'main/loadAutocompleteSuggestionsForNewSubCorpus',
+            {
+              targetword: this.searchTerm,
+              pane: this.queryPane
+            }
+          );
+        }
       }
     },
     availableSources: {
