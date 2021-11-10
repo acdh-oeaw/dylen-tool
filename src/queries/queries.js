@@ -113,16 +113,14 @@ export function getTargetWordByIdQuery(targetwordId) {
 
 export function getAutocompleteSuggestionsQuery(corpus, source, term){
     const query = {
-        query: `{
-            getAutocompleteSuggestions(corpus: "${corpus}", source: "${source}", searchTerm: "${term}") {
-                id
-                text
-                pos
-                networks {
-                    year
-                }
-            }
-        }`
+      "query":`{getAutocompleteSuggestions(corpus:"${corpus}", source:"${source}", searchTerm: "${term}", page: 0, size: 10) { 
+            id
+            corpus
+            source
+            pos
+            text
+       }
+      }`
     }
     return query;
     

@@ -66,7 +66,7 @@
             :data-sauto-id="'selectTargetword-'+this.pane"
             :list='`datalist-${pane}`'
             :style="!hasSuggestions ? { 'color': 'red' } : null"
-            @change='handleTargetWordChange'
+            @change='handleSearchTermSelect'
             @keypress='this.keyPress'
             autocomplete='off'
           ></b-form-input>
@@ -138,9 +138,10 @@ export default {
     findSearchTermInAvailableTargetwords() {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
     },
-    handleTargetWordChange() {
+    handleSearchTermSelect() {
       const target = this.findSearchTermInAvailableTargetwords();
-      this.selectedTargetword = target;
+      this.$store.dispatch('main/loadTargetwordBySearchTerm', {pane:this.queryPane, searchTerm: target} )
+      //this.selectedTargetword = target;
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
       const event = {
@@ -250,7 +251,6 @@ export default {
             subcorpus: val,
             pane: this.queryPane
           });
-        if (val) this.$store.dispatch('main/loadTargetWords', this.queryPane);
       }
     },
     availableTargetwords: {
@@ -258,6 +258,11 @@ export default {
         return this.$store.getters['main/autocompleteSuggestions'](
           this.queryPane
         );
+      }
+    },
+    getTargetwordById: {
+      get() {
+        return this.$store.getters['main/loadTargetwordById'](this.queryPane)
       }
     },
     selectedTargetword: {
@@ -278,7 +283,7 @@ export default {
       },
       set(val) {
         this.$store.commit('main/changeSearchTerm', {
-          targetword: val,
+          searchTerm: val,
           pane: this.queryPane
         });
       }
