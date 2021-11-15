@@ -34,7 +34,6 @@
         >
           select all
         </b-form-checkbox>
-        {{transform}}
       </div>
     </div>
     <svg
@@ -341,7 +340,6 @@ export default {
       const width = this.options.size.w;
       const height = this.options.size.h;
       const r = this.nodeSize / 2;
-      //console.log(this.transform.translate(d.x, d.y));
       let scaledX = this.transform.applyX(d.x);
       let scaledY = this.transform.applyY(d.y);
       return {
