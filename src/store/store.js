@@ -6,7 +6,6 @@ import {
   allAvailableCorporaQuery,
   getAutocompleteSuggestionsQuery,
   getNetworkQuery,
-  getNetworksByCorpusAndSource,
   getSourcesByCorpusQuery,
   getTargetWordByIdQuery
 
@@ -47,7 +46,7 @@ const mainModule = {
       this.commit('main/loadCorpora', corporaPayload);
       await dispatch('loadSources');
     },
-    async loadSources({ dispatch, state }) {
+    async loadSources({ state }) {
       for (const corpus of state.availableCorpora) {
         const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus));
         const sourcesPayload = {
@@ -59,19 +58,8 @@ const mainModule = {
       this.commit('main/selectInitValues', { pane: 'pane1' });
       this.commit('main/selectInitValues', { pane: 'pane2' });
 
-      await dispatch('loadTargetWords', 'pane1');
-      await dispatch('loadTargetWords', 'pane2');
+    },
 
-    },
-    async loadTargetWords({ state }, pane) {
-      const targetwordsResponse = await axios.post(graphqlEndpoint,
-        getNetworksByCorpusAndSource(state[pane].selectedCorpus, state[pane].selectedSubcorpus, 0, 20));
-      const payload = {
-        pane: pane,
-        targetWords: targetwordsResponse.data.data.getNetworksByCorpusAndSource.targetWords
-      };
-      this.commit('main/loadTargetwordsOfCorpusAndSource', payload);
-    },
     async loadAvailableCorpora({ dispatch }) {
       try {
         await dispatch('initCorpora');
@@ -135,10 +123,10 @@ const mainModule = {
     },
 
     async loadAutocompleteSuggestions({ state }, { pane }) {
-      const targetwordsResponse = await axios.post(graphqlEndpoint,
+      const suggestionsResponse = await axios.post(graphqlEndpoint,
         getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
       this.commit('main/setAutocompleteSuggestions', {
-        suggestions: targetwordsResponse.data.data.getAutocompleteSuggestions,
+        suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
         pane: pane
       });
     },
@@ -186,6 +174,19 @@ const mainModule = {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
+    },
+    async loadTargetwordBySearchTerm(state, payload) {
+      const response = await axios.post(graphqlEndpoint,
+          getTargetWordByIdQuery(payload.searchTerm.id));
+      console.log(response)
+      this.commit('main/changeSelectedTargetword', {pane: payload.pane, targetword: response.data.data.getTargetWordById});
+      return response
+    },
+    async loadTargetwordById({ state }, pane) {
+      const response = await axios.post(graphqlEndpoint,
+          getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+      console.log(response)
+      return response
     },
     async loadTimeSeriesData({ state }, pane) {
         function zipTimeSeriesAndYears(timeSeries, years){
@@ -293,20 +294,9 @@ const mainModule = {
     loadSourcesOfCorpus(state, payload) {
       Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources);
     },
-    loadTargetwordsOfCorpusAndSource(state, payload) {
-      if (!state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus]) {
-        Vue.set(state.availableTargetwordsByCorpusAndSource, state[payload.pane].selectedCorpus, {});
-      }
-      Vue.set(state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus], state[payload.pane].selectedSubcorpus, payload.targetWords);
-    },
     selectInitValues(state, payload) {
       state[payload.pane].selectedCorpus = state.availableCorpora[0];
       state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
-    },
-    selectInitTargetWord(state, payload) {
-      state[payload.pane].selectedTargetword = state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
-      state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
-      state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
     },
     changeSelectedCorpus(state, payload) {
       if (payload.corpus) {
@@ -317,6 +307,10 @@ const mainModule = {
     },
     changeSelectedSubcorpus(state, payload) {
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+    },
+    changeSelectedSearchTerm(state, payload) {
+      //state.availableTargetwordsByCorpusAndSource
+      console.log(state+payload)
     },
     changeSelectedTargetword(state, payload) {
       let selectedYearPayload = {
@@ -334,8 +328,8 @@ const mainModule = {
 
     },
     changeSearchTerm(state, payload) {
-      if (payload.targetword) {
-        state[payload.pane].searchTerm = payload.targetword;
+      if (payload.searchTerm) {
+        state[payload.pane].searchTerm = payload.searchTerm;
         this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
       } else {
         state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
@@ -386,11 +380,6 @@ const mainModule = {
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
     availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
     selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
-    targetwordsOfCorpusAndSource: (state) => (corpus, selectedSubcorpus) => {
-      if (!state.availableTargetwordsByCorpusAndSource[corpus] || !state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus])
-        return [];
-      return state.availableTargetwordsByCorpusAndSource[corpus][selectedSubcorpus];
-    },
     selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
     selectedNetwork: (state) => (pane) => state[pane].selectedNetwork,
     selectedYear: (state) => (pane) => state[pane].selectedYear,
