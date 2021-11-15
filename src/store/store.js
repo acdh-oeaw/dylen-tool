@@ -17,6 +17,10 @@ Vue.use(Vuex);
 
 const graphqlEndpoint = props.graphqlEndpoint;
 const logger = require('../helpers/logger');
+const corpusNameMapping = {
+  "AMC": "Austrian Media Corpus",
+  "ParlAT": "Corpus of Austrian Parliamentary Records"
+}
 
 const nodesToJSON = (state, nodes) => {
   return nodes.map((node) => {
@@ -48,9 +52,9 @@ const mainModule = {
     },
     async loadSources({ state }) {
       for (const corpus of state.availableCorpora) {
-        const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus));
+        const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus.id));
         const sourcesPayload = {
-          corpus: corpus,
+          corpus: corpus.id,
           sources: sourceResponse.data.data.getSourcesByCorpus
         };
         this.commit('main/loadSourcesOfCorpus', sourcesPayload);
@@ -124,7 +128,7 @@ const mainModule = {
 
     async loadAutocompleteSuggestions({ state }, { pane }) {
       const suggestionsResponse = await axios.post(graphqlEndpoint,
-        getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus, state[pane].searchTerm));
+        getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus, state[pane].searchTerm));
       this.commit('main/setAutocompleteSuggestions', {
         suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
         pane: pane
@@ -289,14 +293,20 @@ const mainModule = {
       }
     },
     loadCorpora(state, payload) {
-      state.availableCorpora = payload.corpora;
+      state.availableCorpora = payload.corpora.map(
+          corpus => {
+            return {
+              id: corpus,
+              name: corpusNameMapping[corpus]
+            }
+          });
     },
     loadSourcesOfCorpus(state, payload) {
       Vue.set(state.availableSourcesByCorpus, payload.corpus, payload.sources);
     },
     selectInitValues(state, payload) {
       state[payload.pane].selectedCorpus = state.availableCorpora[0];
-      state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+      state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
     },
     changeSelectedCorpus(state, payload) {
       if (payload.corpus) {
