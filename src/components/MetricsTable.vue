@@ -16,6 +16,15 @@
       data-sauto-id='table'
       @sort-changed='handleSortChanged'
     >
+      <template #head(selected)="">
+        <b-button
+          variant='none'
+          class='mx-auto'
+          @click=' (event) => selectionCheckboxChanged()'
+        >
+          <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
+        </b-button>
+      </template>
       <template #cell(selected)='row'>
         <div data-sauto-id='ignore'>
           <b-button
@@ -80,6 +89,18 @@ export default {
           fields.push({ key, sortable: true });
       }
       return fields;
+    },
+    isAllSelected: {
+      get: function () {
+        let selectedSize = this.tableData.filter((entry) =>
+          this.$store.getters['main/selectedNodesForMetrics'].find(
+            (n) => n.id === entry.node.id && n._pane === entry.node._pane
+          )
+        ).length;
+        let allSize = this.tableData.length;
+        return selectedSize === allSize;
+      },
+      set: function () {}
     }
   },
   methods: {
@@ -148,6 +169,37 @@ export default {
         clientX,
         clientY
       };
+    },
+    selectionCheckboxChanged() {
+      console.log(this.tableData);
+      if (this.isAllSelected) this.deselectAllNodes();
+      else this.selectAllNodes();
+    },
+    selectAllNodes() {
+      this.tableData
+        .filter(
+          (entry) =>
+            !this.$store.getters['main/selectedNodesForMetrics'].find(
+              (n) => n.id === entry.node.id && n._pane === entry.node._pane
+            )
+        )
+        .forEach((entry) => {
+          this.$store.commit('main/addSelectedNodeForNodeMetrics', entry.node);
+        });
+    },
+    deselectAllNodes() {
+      this.tableData
+        .filter((entry) =>
+          this.$store.getters['main/selectedNodesForMetrics'].find(
+            (n) => n.id === entry.node.id && n._pane === entry.node._pane
+          )
+        )
+        .forEach((entry) => {
+          this.$store.commit(
+            'main/removeSelectedNodeForNodeMetrics',
+            entry.node
+          );
+        });
     }
   }
 };
