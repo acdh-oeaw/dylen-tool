@@ -18,16 +18,17 @@ Vue.use(Vuex);
 const graphqlEndpoint = props.graphqlEndpoint;
 const logger = require('../helpers/logger');
 
-const nodesToJSON = (state, nodes) => {
-  return nodes.map((node) => {
+const nodesToJSON = (state, allNodes, selectedNodes) => {
+  return allNodes.map((node) => {
+    const selected = !!selectedNodes.find(n => n.id === node.id);
     let tableEntry = {
       Word: node.name,
+      Selected: selected,
       Network: `${
         state[node._pane].selectedTargetword.text
       } (${
         state[node._pane].selectedNetwork.year
       })`
-
     };
     for (let key in node._metrics)
       tableEntry[key] = node._metrics[key];
@@ -147,8 +148,8 @@ const mainModule = {
       
 
     },
-    async downloadMetricsAsCSV({ state }, nodes) {
-      let data = nodesToJSON(state, nodes);
+    async downloadMetricsAsCSV({ state }, payload) {
+      let data = nodesToJSON(state, payload.allNodes, payload.selectedNodes);
       const options = {
         filename: 'DYLEN_Export',
         fieldSeparator: ',',
@@ -164,9 +165,9 @@ const mainModule = {
       const csvExporter = new ExportToCsv(options);
       csvExporter.generateCsv(data);
     },
-    async downloadMetricsAsJSON({ state }, nodes) {
+    async downloadMetricsAsJSON({ state }, payload) {
       let exportName = 'DYLEN_Export';
-      let data = nodesToJSON(state, nodes);
+      let data = nodesToJSON(state, payload.allNodes, payload.selectedNodes);
       var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
       var downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute('href', dataStr);

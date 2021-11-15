@@ -115,10 +115,10 @@ export default {
       return nodes;
     },
     csvExport() {
-      this.$store.dispatch('main/downloadMetricsAsCSV', this.nodes);
+      this.$store.dispatch('main/downloadMetricsAsCSV', {allNodes:this.allNodes, selectedNodes: this.nodes});
     },
     jsonExport() {
-      this.$store.dispatch('main/downloadMetricsAsJSON', this.nodes);
+      this.$store.dispatch('main/downloadMetricsAsJSON', {allNodes:this.allNodes, selectedNodes: this.nodes});
     }
   },
   computed: {
