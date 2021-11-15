@@ -13,6 +13,31 @@
         </b-row>
       </b-col>
     </b-row>
+    <b-row class='h-20 pb-2'>
+      <!--      <b-col xl='2'></b-col>-->
+      <b-col
+          class='pl-5 year-slider-row'
+          data-sauto-id='ignore'
+      >
+        <div ref='sliderDiv'>
+          <vue-slider
+              ref='slider'
+              v-model='egoNetwork.year'
+              v-bind='sliderOptions'
+              :min='egoNetwork.possibleYears[0]'
+              :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
+              :data='egoNetwork.possibleYears'
+              :process='false'
+              :lazy='true'
+              :adsorb='true'
+              :duration='0.3'
+              v-on:change='handleChange'
+              :marks='egoNetwork.possibleYears'
+              :tooltip="'none'"
+          />
+        </div>
+      </b-col>
+    </b-row>
     <b-row
       lg='12'
       class='pt-2 h-70'
@@ -29,31 +54,6 @@
           :options='options'
           :pane='this.pane'
         />
-      </b-col>
-    </b-row>
-    <b-row class='h-20 pb-2'>
-      <!--      <b-col xl='2'></b-col>-->
-      <b-col
-        class='pl-5 year-slider-row'
-        data-sauto-id='ignore'
-      >
-        <div ref='sliderDiv'>
-          <vue-slider
-            ref='slider'
-            v-model='egoNetwork.year'
-            v-bind='sliderOptions'
-            :min='egoNetwork.possibleYears[0]'
-            :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
-            :data='egoNetwork.possibleYears'
-            :process='false'
-            :lazy='true'
-            :adsorb='true'
-            :duration='0.3'
-            v-on:change='handleChange'
-            :marks='egoNetwork.possibleYears'
-            :tooltip="'none'"
-          />
-        </div>
       </b-col>
     </b-row>
   </b-container>
@@ -260,7 +260,7 @@ export default {
     cursor: pointer;
 
     .vue-slider-rail {
-      background-color: grey;
+      background-color: lightgrey;
       border-radius: 25px;
       transition: background-color 0.3s;
     }
