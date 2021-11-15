@@ -56,7 +56,6 @@
       <g>
         <g class='links'></g>
         <g class='labels'></g>
-
         <g class='nodes'></g>
       </g>
     </svg>
@@ -164,7 +163,6 @@ export default {
           .on('drag', this.dragged)
           .on('end', this.dragended)
       );
-
       return n;
     },
     label() {
@@ -414,8 +412,6 @@ export default {
 
     dragended(event, d) {
       if (!event.active) this.simulation.alphaTarget(0);
-      /* d.fx = null;
-      d.fy = null; */
       this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {
@@ -428,7 +424,6 @@ export default {
   },
   mounted() {
     this.initNetwork();
-    console.log(this.transform);
   },
   beforeDestroy() {
     this.deselectAllNodes();
