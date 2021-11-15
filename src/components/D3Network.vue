@@ -414,8 +414,8 @@ export default {
 
     dragended(event, d) {
       if (!event.active) this.simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
+      /* d.fx = null;
+      d.fy = null; */
       this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {
