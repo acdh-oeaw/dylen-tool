@@ -9,7 +9,7 @@
       class='text-center'
       align-h='center'
     >
-      <b-col class="h-10"><b>Semantic Change Analysis</b></b-col>
+      <b-col class="h-10"><b>Time series Analysis</b></b-col>
     </b-row>
     <b-row
       lg='12'
