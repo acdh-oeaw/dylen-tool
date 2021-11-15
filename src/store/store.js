@@ -76,6 +76,7 @@ const mainModule = {
         network.subcorpus = state[pane].selectedSubcorpus;
         network.text = state[pane].selectedTargetword.text;
         network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year).sort();
+        network.pos = state[pane].selectedTargetword.pos;
       }
 
       let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
