@@ -39,11 +39,11 @@
           >
             <b-form-select-option
               v-for='option in availableSources'
-              v-bind:key='option'
+              v-bind:key='option.id'
               v-bind:value='option'
               :data-sauto-id="'subCorpusOption-' + option"
             >
-              {{ option }}
+              {{ option.name}}
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
@@ -152,7 +152,6 @@ export default {
     handleSearchTermSelect() {
       const target = this.findSearchTermInAvailableTargetwords();
       this.$store.dispatch('main/loadTargetwordBySearchTerm', {pane:this.queryPane, searchTerm: target} )
-      //this.selectedTargetword = target;
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
       const event = {
@@ -243,7 +242,7 @@ export default {
             corpus: val,
             pane: this.queryPane
           });
-        if (val && this.searchTerm.length > 0) {
+        if (val && this.searchTerm && this.searchTerm.length > 0) {
           this.$store.dispatch(
             'main/loadAutocompleteSuggestionsForNewSubCorpus',
             {
@@ -271,7 +270,7 @@ export default {
             subcorpus: val,
             pane: this.queryPane
           });
-        if (val && this.searchTerm.length > 0) {
+        if (val && this.searchTerm && this.searchTerm.length > 0) {
           this.$store.dispatch(
             'main/loadAutocompleteSuggestionsForNewSubCorpus',
             {
