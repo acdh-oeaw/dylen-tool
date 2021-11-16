@@ -105,7 +105,8 @@ export default {
   },
   computed: {
     focusedNode() {
-      return this.$store.getters['main/focusNode'];
+      let sharedNodes = this.$store.getters['main/focusNode'];
+      return this.nodes.filter(node => sharedNodes.indexOf(node.id) >= 0)
     },
     isAllSelected: {
       get: function () {
@@ -222,12 +223,15 @@ export default {
       return this.$store.getters['main/selectedNodesForMetrics'];
     },
     highlightedNodes() {
+      let sharedNodes = this.$store.getters['main/focusNode'];
+
       let targets = this.links
-        .filter((link) => this.focusedNode.indexOf(link.source.id) > 0)
+        .filter((link) => sharedNodes.indexOf(link.source.id) >= 0)
         .map((link) => link.target);
       let sources = this.links
-        .filter((link) => this.focusedNode.indexOf(link.target.id) > 0)
+        .filter((link) => sharedNodes.indexOf(link.target.id) >= 0)
         .map((link) => link.source);
+      this.focusedNode.forEach(node => console.log('focusedNode: ' + node.id))
       return this.focusedNode.concat(targets).concat(sources);
     },
     scaleThickness() {
@@ -245,8 +249,8 @@ export default {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
         let node = this.nodes[i];
         if (
-          event.sourceEvent.target == this.node._groups[0][i] ||
-          event.sourceEvent.target == this.label._groups[0][i]
+          event.sourceEvent.target === this.node._groups[0][i] ||
+          event.sourceEvent.target === this.label._groups[0][i]
         ) {
           node.x = this.transform.applyX(node.x);
           node.y = this.transform.applyY(node.y);
@@ -257,21 +261,25 @@ export default {
       return null;
     },
     focusNode(node) {
-      if (this.focusedNode.indexOf(node) < 0) {
+      let sharedNodes = this.$store.getters['main/focusNode'];
+      if (sharedNodes.indexOf(node) < 0) {
         console.log('focusNode not')
         this.$store.commit('main/addFocusNode', {node:node.id})
       }
       this.simulation.restart();
     },
     defocusNode(node) {
-      if (this.focusedNode.indexOf(node) >= 0)
+      let sharedNodes = this.$store.getters['main/focusNode'];
+      if (sharedNodes.indexOf(node.id) >= 0)
         this.$store.commit('main/removeFocusNode', {node:node.id})
       this.simulation.restart();
     },
     isFocused(node) {
       console.log('node.souce:' +  node)
+      let sharedNodes = this.$store.getters['main/focusNode'];
+
       return (
-          this.focusedNode.indexOf(node.source.id) > 0 || this.focusedNode.indexOf(node.target.id) > 0
+          sharedNodes.indexOf(node.source.id) > 0 || sharedNodes.indexOf(node.target.id) > 0
       );
     },
     addOrRemoveSelectedNode(node) {
