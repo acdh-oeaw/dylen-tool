@@ -282,8 +282,8 @@ export default {
   },
   computed: {
     hoverNodes() {
-      let sharedNodes =  this.$store.getters['main/focusNode'];
-      return this.selectedNodes.filter(node => sharedNodes.indexOf(node.id)>=0)
+      let sharedNode =  this.$store.getters['main/focusNode'];
+      return this.selectedNodes.filter(node => sharedNode === node.id)
     },
     viewBox() {
       return `0 0 ${this.options.size.w} ${this.options.size.h}`;
@@ -432,14 +432,14 @@ export default {
       return 'black';
     },
     onMouseEnter(e, node) {
-      let sharedNodes = this.$store.getters['main/focusNode']
-      if (sharedNodes.indexOf(node.id) < 0) {
+      let sharedNode = this.$store.getters['main/focusNode']
+      if (sharedNode !== node.id) {
         this.$store.commit('main/addFocusNode', {node:node.id})
       }
     },
     onMouseLeave(e, node) {
-      let sharedNodes = this.$store.getters['main/focusNode']
-      if (sharedNodes.indexOf(node.id) >= 0)
+      let sharedNode = this.$store.getters['main/focusNode']
+      if (sharedNode === node.id)
         this.$store.commit('main/removeFocusNode', {node:node.id})
     },
     deselectNode(node) {
@@ -455,7 +455,6 @@ export default {
             ) === -1
         )
         .forEach((node) => {
-          //console.log(node);
           this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
         });
     },
