@@ -24,14 +24,15 @@ const corpusNameMapping = {
 const sourceNameMapping = {
     "KURIER": "Kurier",
     "STANDARD": "Der Standard",
-    "newsmag": "all newspapers and magazines",
-    "news": "all newspapers",
-    "mag": "all magazines",
+    "newsmag": "All newspapers and magazines",
+    "news": "All newspapers",
+    "mag": "All magazines",
     "PRESSE": "Die Presse",
     "PROFIL": "Profil",
     "ParlAT": "ParlAT",
     "FALTER": "Falter",
-    "KLEINE": "Kleine Zeitung"
+    "KLEINE": "Kleine Zeitung",
+    "-":"All parliamentary records"
 }
 
 const nodesToJSON = (state, nodes) => {
