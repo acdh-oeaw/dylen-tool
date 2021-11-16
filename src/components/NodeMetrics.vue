@@ -18,6 +18,7 @@
       <b-col class='h-100'>
         <b-button-group class='float-right'>
           <b-dropdown
+            v-b-tooltip.hover title="Download CSV/JSON"
             id='dropdown-1'
             v-if='nodes && showTable'
             no-caret
