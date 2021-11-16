@@ -41,7 +41,8 @@
             variant='outline-secondary'
             data-sauto-id='table-button'
           >
-            <b-icon icon='table'></b-icon>
+            <b-icon v-if='showTable' icon='graph-up'></b-icon>
+            <b-icon v-if='!showTable' icon='table'></b-icon>
           </b-button>
         </b-button-group>
         <parallel-coordinates
