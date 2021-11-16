@@ -448,7 +448,6 @@ export default {
             ) === -1
         )
         .forEach((node) => {
-          //console.log(node);
           this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
         });
     },

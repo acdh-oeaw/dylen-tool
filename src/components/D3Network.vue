@@ -90,7 +90,7 @@ export default {
     },
     size: {
       handler() {
-        this.initNetwork();
+        this.initNetwork(true);
       },
       deep: true
     },
@@ -322,10 +322,10 @@ export default {
         )
       );
     },
-    initNetwork() {
+    initNetwork(resize) {
       this.svg = d3.select(this.$refs.svg).call(this.d3Zoom).select('g');
       this.updateSimulation();
-      this.selectAllNodes();
+      if(!resize) this.selectAllNodes();
     },
     onZoomButtonClick(zoomFactor = 1) {
       this.d3Zoom.scaleBy(
