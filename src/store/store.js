@@ -329,6 +329,15 @@ const mainModule = {
                 });
         },
         loadSourcesOfCorpus(state, payload) {
+            function compare(source1, source2) {
+                if (source1.name < source2.name) {
+                    return -1;
+                }
+                if (source1.name > source2.name) {
+                    return 1;
+                }
+                return 0;
+            }
             const sources = payload.sources.map(
                 source => {
                     return {
@@ -336,7 +345,7 @@ const mainModule = {
                         name: sourceNameMapping[source]
                     }
                 }
-            )
+            ).sort(compare)
             Vue.set(state.availableSourcesByCorpus, payload.corpus, sources);
         },
         selectInitValues(state, payload) {
