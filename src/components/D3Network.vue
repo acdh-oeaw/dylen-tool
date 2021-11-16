@@ -77,7 +77,6 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      focusedNode: [],
       transform: d3.zoomIdentity
     };
   },
@@ -102,9 +101,22 @@ export default {
         this.simulation.restart();
       },
       deep: true
+    },
+    sharedNode: {
+      handler() {
+        this.simulation.restart();
+      },
+      deep: true
     }
+
   },
   computed: {
+    sharedNode() {
+      return this.$store.getters['main/focusNode'];
+    },
+    focusedNode() {
+      return this.nodes.filter(node => this.sharedNode === node.id)
+    },
     isAllSelected: {
       get: function () {
         let selectedSize = this.netNodes.filter((node) =>
@@ -152,7 +164,7 @@ export default {
           this.mouseClick(event, this.pane + '-node-' + d.name);
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
-        .on('mouseleave', () => this.defocusNode());
+        .on('mouseleave', (event, d) => this.defocusNode(d));
 
       n.append('title').text((d) => d.name);
       n.call(
@@ -221,12 +233,12 @@ export default {
     },
     highlightedNodes() {
       let targets = this.links
-        .filter((link) => link.source === this.focusedNode)
+        .filter((link) => this.sharedNode === link.source.id)
         .map((link) => link.target);
       let sources = this.links
-        .filter((link) => link.target === this.focusedNode)
+        .filter((link) => this.sharedNode === link.target.id)
         .map((link) => link.source);
-      return [this.focusedNode].concat(targets).concat(sources);
+      return this.focusedNode.concat(targets).concat(sources);
     },
     scaleThickness() {
       return d3
@@ -243,8 +255,8 @@ export default {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
         let node = this.nodes[i];
         if (
-          event.sourceEvent.target == this.node._groups[0][i] ||
-          event.sourceEvent.target == this.label._groups[0][i]
+          event.sourceEvent.target === this.node._groups[0][i] ||
+          event.sourceEvent.target === this.label._groups[0][i]
         ) {
           node.x = this.transform.applyX(node.x);
           node.y = this.transform.applyY(node.y);
@@ -255,16 +267,20 @@ export default {
       return null;
     },
     focusNode(node) {
-      this.focusedNode = node;
+      if (this.sharedNode !== node.id) {
+        this.$store.commit('main/addFocusNode', {node:node.id})
+      }
       this.simulation.restart();
     },
-    defocusNode() {
-      this.focusedNode = null;
+    defocusNode(node) {
+      if (this.sharedNode === node.id)
+        this.$store.commit('main/removeFocusNode', {node:node.id})
       this.simulation.restart();
     },
     isFocused(node) {
+
       return (
-        node.source === this.focusedNode || node.target === this.focusedNode
+          this.sharedNode === node.source.id || this.sharedNode === node.target.id
       );
     },
     addOrRemoveSelectedNode(node) {

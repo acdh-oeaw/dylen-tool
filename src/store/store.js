@@ -179,14 +179,12 @@ const mainModule = {
     async loadTargetwordBySearchTerm(state, payload) {
       const response = await axios.post(graphqlEndpoint,
           getTargetWordByIdQuery(payload.searchTerm.id));
-      console.log(response)
       this.commit('main/changeSelectedTargetword', {pane: payload.pane, targetword: response.data.data.getTargetWordById});
       return response
     },
     async loadTargetwordById({ state }, pane) {
       const response = await axios.post(graphqlEndpoint,
           getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-      console.log(response)
       return response
     },
     async loadTimeSeriesData({ state }, pane) {
@@ -240,6 +238,7 @@ const mainModule = {
     topNav: {
       secondForm: false
     },
+    focusNode: null,
     pane1: {
       selectedCorpus: { id: '', name: '', sources: [] },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
@@ -284,6 +283,7 @@ const mainModule = {
     showInfo: true
   },
   mutations: {
+
     changeSecondFormVisibility(state, payload) {
       if (payload.pane === 'pane2') {
         state.topNav.secondForm = !state.topNav.secondForm
@@ -308,10 +308,6 @@ const mainModule = {
     },
     changeSelectedSubcorpus(state, payload) {
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
-    },
-    changeSelectedSearchTerm(state, payload) {
-      //state.availableTargetwordsByCorpusAndSource
-      console.log(state+payload)
     },
     changeSelectedTargetword(state, payload) {
       let selectedYearPayload = {
@@ -355,6 +351,7 @@ const mainModule = {
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
     },
+
     resetSelectedNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = null;
     },
@@ -373,9 +370,19 @@ const mainModule = {
     },
     resetTimeSeries(state, payload) {
       state[payload['pane']].timeSeriesData = {};
+    },
+    addFocusNode(state, payload) {
+      state.focusNode = payload.node
+    },
+    removeFocusNode(state, payload) {
+      if (state.focusNode === payload.node)
+        state.focusNode = null
     }
   },
   getters: {
+    focusNode: (state) => {
+      return state.focusNode
+    },
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
