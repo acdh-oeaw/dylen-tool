@@ -77,7 +77,6 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      focusedNode: [],
       transform: d3.zoomIdentity
     };
   },
@@ -105,6 +104,9 @@ export default {
     }
   },
   computed: {
+    focusedNode() {
+      return this.$store.getters['main/focusNode'];
+    },
     isAllSelected: {
       get: function () {
         let selectedSize = this.netNodes.filter((node) =>
@@ -152,7 +154,7 @@ export default {
           this.mouseClick(event, this.pane + '-node-' + d.name);
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
-        .on('mouseleave', () => this.defocusNode());
+        .on('mouseleave', (event, d) => this.defocusNode(d));
 
       n.append('title').text((d) => d.name);
       n.call(
@@ -221,12 +223,12 @@ export default {
     },
     highlightedNodes() {
       let targets = this.links
-        .filter((link) => link.source === this.focusedNode)
+        .filter((link) => this.focusedNode.indexOf(link.source.id) > 0)
         .map((link) => link.target);
       let sources = this.links
-        .filter((link) => link.target === this.focusedNode)
+        .filter((link) => this.focusedNode.indexOf(link.target.id) > 0)
         .map((link) => link.source);
-      return [this.focusedNode].concat(targets).concat(sources);
+      return this.focusedNode.concat(targets).concat(sources);
     },
     scaleThickness() {
       return d3
@@ -255,16 +257,21 @@ export default {
       return null;
     },
     focusNode(node) {
-      this.focusedNode = node;
+      if (this.focusedNode.indexOf(node) < 0) {
+        console.log('focusNode not')
+        this.$store.commit('main/addFocusNode', {node:node.id})
+      }
       this.simulation.restart();
     },
-    defocusNode() {
-      this.focusedNode = null;
+    defocusNode(node) {
+      if (this.focusedNode.indexOf(node) >= 0)
+        this.$store.commit('main/removeFocusNode', {node:node.id})
       this.simulation.restart();
     },
     isFocused(node) {
+      console.log('node.souce:' +  node)
       return (
-        node.source === this.focusedNode || node.target === this.focusedNode
+          this.focusedNode.indexOf(node.source.id) > 0 || this.focusedNode.indexOf(node.target.id) > 0
       );
     },
     addOrRemoveSelectedNode(node) {

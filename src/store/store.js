@@ -240,6 +240,7 @@ const mainModule = {
     topNav: {
       secondForm: false
     },
+    focusNode: [],
     pane1: {
       selectedCorpus: { id: '', name: '', sources: [] },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
@@ -284,6 +285,7 @@ const mainModule = {
     showInfo: true
   },
   mutations: {
+
     changeSecondFormVisibility(state, payload) {
       if (payload.pane === 'pane2') {
         state.topNav.secondForm = !state.topNav.secondForm
@@ -355,6 +357,7 @@ const mainModule = {
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
     },
+
     resetSelectedNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = null;
     },
@@ -373,9 +376,16 @@ const mainModule = {
     },
     resetTimeSeries(state, payload) {
       state[payload['pane']].timeSeriesData = {};
+    },
+    addFocusNode(state, payload) {
+      state.focusNode.push(payload.node);
+    },
+    removeFocusNode(state, payload) {
+      state.focusNode.splice(state.focusNode.indexOf(payload.node),1)
     }
   },
   getters: {
+    focusNode: (state) => state.focusNode,
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
