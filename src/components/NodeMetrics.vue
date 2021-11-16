@@ -41,7 +41,8 @@
             variant='outline-secondary'
             data-sauto-id='table-button'
           >
-            <b-icon icon='table'></b-icon>
+            <b-icon v-if='showTable' icon='graph-up'></b-icon>
+            <b-icon v-if='!showTable' icon='table'></b-icon>
           </b-button>
         </b-button-group>
         <parallel-coordinates
@@ -115,10 +116,10 @@ export default {
       return nodes;
     },
     csvExport() {
-      this.$store.dispatch('main/downloadMetricsAsCSV', this.nodes);
+      this.$store.dispatch('main/downloadMetricsAsCSV', {allNodes:this.allNodes, selectedNodes: this.nodes});
     },
     jsonExport() {
-      this.$store.dispatch('main/downloadMetricsAsJSON', this.nodes);
+      this.$store.dispatch('main/downloadMetricsAsJSON', {allNodes:this.allNodes, selectedNodes: this.nodes});
     }
   },
   computed: {
