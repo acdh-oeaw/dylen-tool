@@ -19,6 +19,13 @@
                     <li>Austrian Media Corpus (AMC):</li>
                   </ul>
                 </div>
+                <p>
+                  Austrian Media Corpus (AMC) consists of multiple subcorpora.<br>
+                  Some of the subcorpora are combination of different media sources, which are listed below;
+                  <ul>
+                    <li>All magazines: </li>
+                  </ul>
+                </p>
                 <p>You can read more about the project here: <a
                     href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.</p>
                 <p>You can click on the other tabs to get more information about different components of the
