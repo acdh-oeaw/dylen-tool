@@ -9,7 +9,7 @@
     <b-row class='h-10'>
       <b-col>
         <b-row align-h='center'>
-          <span><b>{{ egoNetwork.text }}</b> ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
+          <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
         </b-row>
       </b-col>
     </b-row>
@@ -214,7 +214,8 @@ export default {
           threshold: network.threshold,
           corpus: network.corpus,
           subcorpus: network.subcorpus,
-          targetWordId: network.targetWordId
+          targetWordId: network.targetWordId,
+          pos:network.pos
         };
       }
       return selectedNetwork;
