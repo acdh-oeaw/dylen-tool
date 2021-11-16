@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import {
+    timeSeriesKeyMap,
+    corpusNameMapping,
+    sourceNameMapping, relativeToMap
+} from '@/helpers/mappers';
 import props from '../properties/propertiesLoader';
 import {
     allAvailableCorporaQuery,
@@ -17,23 +22,7 @@ Vue.use(Vuex);
 
 const graphqlEndpoint = props.graphqlEndpoint;
 const logger = require('../helpers/logger');
-const corpusNameMapping = {
-    "AMC": "Austrian Media Corpus",
-    "ParlAT": "Corpus of Austrian Parliamentary Records"
-}
-const sourceNameMapping = {
-    "KURIER": "Kurier",
-    "STANDARD": "Der Standard",
-    "newsmag": "All newspapers and magazines",
-    "news": "All newspapers",
-    "mag": "All magazines",
-    "PRESSE": "Die Presse",
-    "PROFIL": "Profil",
-    "ParlAT": "ParlAT",
-    "FALTER": "Falter",
-    "KLEINE": "Kleine Zeitung",
-    "-":"All parliamentary records"
-}
+
 function compare(source1, source2) {
     if (source1.name < source2.name) {
         return -1;
@@ -221,10 +210,11 @@ const mainModule = {
             return response
         },
         async loadTimeSeriesData({state}, pane) {
+
             function zipTimeSeriesAndYears(timeSeries, years) {
                 let newTimeSeries = {};
                 Object.keys(timeSeries).forEach(key => {
-                    newTimeSeries[key] = {};
+                    newTimeSeries[timeSeriesKeyMap[key]] = {};
                     Object.keys(timeSeries[key]).forEach(metric => {
                         let initIdx = 0;
                         switch (metric) {
@@ -244,9 +234,10 @@ const mainModule = {
                                 value: val
                             }
                         })
-                        newTimeSeries[key][metric] = zippedArray;
+                        newTimeSeries[timeSeriesKeyMap[key]][relativeToMap[metric]] = zippedArray;
                     })
                 })
+                console.log(newTimeSeries)
                 return newTimeSeries;
             }
 

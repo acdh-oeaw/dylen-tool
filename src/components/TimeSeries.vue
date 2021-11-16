@@ -46,6 +46,7 @@
 
 <script>
 import LineChart from '@/components/LineChart';
+import {relativeToMap, timeSeriesKeyMap} from "@/helpers/mappers";
 
 export default {
   name: 'TimeSeries',
@@ -59,8 +60,8 @@ export default {
           w: 0
         }
       },
-      selectedMetric: 'freqDiffNorm',
-      selectedRelativeTo: 'firstYear'
+      selectedMetric: timeSeriesKeyMap['freqDiffNorm'],
+      selectedRelativeTo: relativeToMap['firstYear']
     };
   },
   created() {
