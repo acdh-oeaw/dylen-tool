@@ -34,7 +34,15 @@ const sourceNameMapping = {
     "KLEINE": "Kleine Zeitung",
     "-":"All parliamentary records"
 }
-
+function compare(source1, source2) {
+    if (source1.name < source2.name) {
+        return -1;
+    }
+    if (source1.name > source2.name) {
+        return 1;
+    }
+    return 0;
+}
 const nodesToJSON = (state, nodes) => {
     return nodes.map((node) => {
         let tableEntry = {
@@ -326,18 +334,10 @@ const mainModule = {
                         id: corpus,
                         name: corpusNameMapping[corpus]
                     }
-                });
+                }).sort(compare);
         },
         loadSourcesOfCorpus(state, payload) {
-            function compare(source1, source2) {
-                if (source1.name < source2.name) {
-                    return -1;
-                }
-                if (source1.name > source2.name) {
-                    return 1;
-                }
-                return 0;
-            }
+
             const sources = payload.sources.map(
                 source => {
                     return {
