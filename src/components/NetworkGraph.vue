@@ -19,7 +19,7 @@
           class='pl-5 year-slider-row'
           data-sauto-id='ignore'
       >
-        <div ref='sliderDiv'>
+        <div ref='sliderDiv' class='pl-2'>
           <vue-slider
               ref='slider'
               v-model='egoNetwork.year'
