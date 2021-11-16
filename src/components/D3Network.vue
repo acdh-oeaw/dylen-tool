@@ -55,8 +55,8 @@
       </defs>
       <g>
         <g class='links'></g>
-        <g class='nodes'></g>
         <g class='labels'></g>
+        <g class='nodes'></g>
       </g>
     </svg>
   </div>
@@ -73,18 +73,15 @@ export default {
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),
-      scaleFactor: 1,
-      translation: [0, 0],
       simulation: {},
       nodes: [],
       links: [],
       svg: {},
-      focusedNode: []
+      transform: d3.zoomIdentity
     };
   },
   watch: {
-    netNodes: function (_, oldNodes) {
-      this.deselectOldNodes(oldNodes);
+    netNodes: function () {
       this.updateSimulation();
     },
     netLinks: function () {
@@ -104,9 +101,22 @@ export default {
         this.simulation.restart();
       },
       deep: true
+    },
+    sharedNode: {
+      handler() {
+        this.simulation.restart();
+      },
+      deep: true
     }
+
   },
   computed: {
+    sharedNode() {
+      return this.$store.getters['main/focusNode'];
+    },
+    focusedNode() {
+      return this.nodes.filter(node => this.sharedNode === node.id)
+    },
     isAllSelected: {
       get: function () {
         let selectedSize = this.netNodes.filter((node) =>
@@ -154,10 +164,17 @@ export default {
           this.mouseClick(event, this.pane + '-node-' + d.name);
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
-        .on('mouseleave', () => this.defocusNode());
+        .on('mouseleave', (event, d) => this.defocusNode(d));
 
       n.append('title').text((d) => d.name);
-
+      n.call(
+        d3
+          .drag()
+          .subject(this.dragsubject)
+          .on('start', this.dragstarted)
+          .on('drag', this.dragged)
+          .on('end', this.dragended)
+      );
       return n;
     },
     label() {
@@ -188,6 +205,7 @@ export default {
       l.call(
         d3
           .drag()
+          .subject(this.dragsubject)
           .on('start', this.dragstarted)
           .on('drag', this.dragged)
           .on('end', this.dragended)
@@ -209,17 +227,18 @@ export default {
         )
         .attr('stroke-width', (d) => this.scaleThickness(d.similarity));
     },
+
     selectedNodes() {
       return this.$store.getters['main/selectedNodesForMetrics'];
     },
     highlightedNodes() {
       let targets = this.links
-        .filter((link) => link.source === this.focusedNode)
+        .filter((link) => this.sharedNode === link.source.id)
         .map((link) => link.target);
       let sources = this.links
-        .filter((link) => link.target === this.focusedNode)
+        .filter((link) => this.sharedNode === link.target.id)
         .map((link) => link.source);
-      return [this.focusedNode].concat(targets).concat(sources);
+      return this.focusedNode.concat(targets).concat(sources);
     },
     scaleThickness() {
       return d3
@@ -232,17 +251,36 @@ export default {
     }
   },
   methods: {
+    dragsubject(event) {
+      for (let i = this.nodes.length - 1; i >= 0; --i) {
+        let node = this.nodes[i];
+        if (
+          event.sourceEvent.target === this.node._groups[0][i] ||
+          event.sourceEvent.target === this.label._groups[0][i]
+        ) {
+          node.x = this.transform.applyX(node.x);
+          node.y = this.transform.applyY(node.y);
+
+          return node;
+        }
+      }
+      return null;
+    },
     focusNode(node) {
-      this.focusedNode = node;
+      if (this.sharedNode !== node.id) {
+        this.$store.commit('main/addFocusNode', {node:node.id})
+      }
       this.simulation.restart();
     },
-    defocusNode() {
-      this.focusedNode = null;
+    defocusNode(node) {
+      if (this.sharedNode === node.id)
+        this.$store.commit('main/removeFocusNode', {node:node.id})
       this.simulation.restart();
     },
     isFocused(node) {
+
       return (
-        node.source === this.focusedNode || node.target === this.focusedNode
+          this.sharedNode === node.source.id || this.sharedNode === node.target.id
       );
     },
     addOrRemoveSelectedNode(node) {
@@ -316,8 +354,8 @@ export default {
       const width = this.options.size.w;
       const height = this.options.size.h;
       const r = this.nodeSize / 2;
-      let scaledX = this.translation[0] + this.scaleFactor * d.x;
-      let scaledY = this.translation[1] + this.scaleFactor * d.y;
+      let scaledX = this.transform.applyX(d.x);
+      let scaledY = this.transform.applyY(d.y);
       return {
         x: this.options.boundingBox
           ? Math.max(r, Math.min(width - r, scaledX))
@@ -348,8 +386,7 @@ export default {
       if (event.sourceEvent !== null && event.sourceEvent.type === 'wheel') {
         this.scroll(event.sourceEvent, 'network-' + this.pane);
       }
-      this.scaleFactor = event.transform.k;
-      this.translation = [event.transform.x, event.transform.y];
+      this.transform = event.transform;
       this.applyScaleAndTransform();
     },
     updateSimulation() {
@@ -373,32 +410,24 @@ export default {
         )
         .force('charge', d3.forceManyBody())
         .force('center', d3.forceCenter(width / 2, height / 2));
-
       this.simulation.on('tick', () => {
         this.applyScaleAndTransform();
       });
     },
     dragstarted(event, d) {
-      let mousePos = [event.sourceEvent.offsetX, event.sourceEvent.offsetY];
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
-      d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
-      d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
-
+      d.fx = this.transform.invertX(event.x);
+      d.fy = this.transform.invertY(event.y);
       this.dragStart(event.sourceEvent);
     },
 
     dragged(event, d) {
-      let mousePos = [event.sourceEvent.offsetX, event.sourceEvent.offsetY];
-      d.fx = (mousePos[0] - this.translation[0]) / this.scaleFactor;
-      d.fy = (mousePos[1] - this.translation[1]) / this.scaleFactor;
-      this.applyScaleAndTransform();
+      d.fx = this.transform.invertX(event.x);
+      d.fy = this.transform.invertY(event.y);
     },
 
     dragended(event, d) {
       if (!event.active) this.simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-
       this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {

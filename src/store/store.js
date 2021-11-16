@@ -259,189 +259,200 @@ const mainModule = {
             }
         },
 
+  },
+  namespaced: true,
+  state: {
+    selectionColors: ['#1E88E5', '#D81B60'],
+    availableCorpora: [],
+    availableSourcesByCorpus: {},
+    availableTargetwordsByCorpusAndSource: {},
+    topNav: {
+      secondForm: false
     },
-    namespaced: true,
-    state: {
-        selectionColors: ['#1E88E5', '#D81B60'],
-        availableCorpora: [],
-        availableSourcesByCorpus: {},
-        availableTargetwordsByCorpusAndSource: {},
-        topNav: {
-            secondForm: false
-        },
-        pane1: {
-            selectedCorpus: {id: '', name: '', sources: []},
-            selectedSubcorpus: {id: '', name: '', targetWords: []},
-            selectedTargetword: {id: '', text: ''},
-            selectedYear: null,
-            selectedNetwork: null,
-            searchTerm: null,
-            autocompleteSuggestions: [],
-            timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
-        },
-        pane2: {
-            selectedCorpus: {id: '', name: '', sources: []},
-            selectedSubcorpus: {id: '', name: '', targetWords: []},
-            selectedTargetword: {id: '', text: ''},
-            selectedYear: null,
-            selectedNetwork: null,
-            searchTerm: null,
-            autocompleteSuggestions: [],
-            timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
-        },
-        nodeMetrics: {
-            selectedNodes: []
-        },
-        posColors: {
-            noun: '#aa0000',
-            verb: '#000088',
-            adjective: '#f18e04',
-            proper_noun: '#000000'
-        },
-        labelOptions: {
-            fontSize: 12,
-            bold: false,
-            background: true
-        },
-        linkOptions: {
-            opacity: 0.25
-        },
-        tableOptions: {
-            digits: 3,
-            selectedOnTop: false
-        },
-        showInfo: true
+    focusNode: null,
+    pane1: {
+      selectedCorpus: { id: '', name: '', sources: [] },
+      selectedSubcorpus: { id: '', name: '', targetWords: [] },
+      selectedTargetword: { id: '', text: '' },
+      selectedYear: null,
+      selectedNetwork: null,
+      searchTerm: null,
+      autocompleteSuggestions: [],
+      timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
     },
-    mutations: {
-        changeSecondFormVisibility(state, payload) {
-            if (payload.pane === 'pane2') {
-                state.topNav.secondForm = !state.topNav.secondForm
-            }
-        },
-        loadCorpora(state, payload) {
-            state.availableCorpora = payload.corpora.map(
-                corpus => {
-                    return {
-                        id: corpus,
-                        name: corpusNameMapping[corpus]
-                    }
-                }).sort(compare);
-        },
-        loadSourcesOfCorpus(state, payload) {
+    pane2: {
+      selectedCorpus: { id: '', name: '', sources: [] },
+      selectedSubcorpus: { id: '', name: '', targetWords: [] },
+      selectedTargetword: { id: '', text: '' },
+      selectedYear: null,
+      selectedNetwork: null,
+      searchTerm: null,
+      autocompleteSuggestions: [],
+      timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
+    },
+    nodeMetrics: {
+      selectedNodes: []
+    },
+    posColors: {
+      noun: '#aa0000',
+      verb: '#000088',
+      adjective: '#f18e04',
+      proper_noun: '#000000'
+    },
+    labelOptions: {
+      fontSize: 12,
+      bold: false,
+      background: true
+    },
+    linkOptions: {
+      opacity: 0.25
+    },
+    tableOptions: {
+      digits: 3,
+      selectedOnTop: false
+    },
+    showInfo: true
+  },
+  mutations: {
 
-            const sources = payload.sources.map(
-                source => {
-                    return {
-                        id: source,
-                        name: sourceNameMapping[source]
-                    }
+    changeSecondFormVisibility(state, payload) {
+      if (payload.pane === 'pane2') {
+        state.topNav.secondForm = !state.topNav.secondForm
+      }
+    },
+    loadCorpora(state, payload) {
+        state.availableCorpora = payload.corpora.map(
+            corpus => {
+                return {
+                    id: corpus,
+                    name: corpusNameMapping[corpus]
                 }
-            ).sort(compare)
-            Vue.set(state.availableSourcesByCorpus, payload.corpus, sources);
-        },
-        selectInitValues(state, payload) {
-            state[payload.pane].selectedCorpus = state.availableCorpora[0];
-            state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
-            state[payload.pane].searchTerm = '';
-        },
-        changeSelectedCorpus(state, payload) {
-            if (payload.corpus) {
-                state[payload.pane].selectedCorpus = payload.corpus;
-            } else {
-                state[payload.pane].selectedCorpus = state.availableCorpora[0];
-            }
-            state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
-        },
-        changeSelectedSubcorpus(state, payload) {
-            state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
-        },
-        changeSelectedTargetword(state, payload) {
-            let selectedYearPayload = {
-                pane: payload.pane,
-                reset: false
-            }
-            if (payload.targetword) {
-                state[payload.pane].selectedTargetword = payload.targetword;
-                state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
-            } else {
-                state[payload.pane].selectedTargetword = {id: '', text: ''}
-                selectedYearPayload.reset = true;
-            }
-            this.commit('main/changeSelectedYear', selectedYearPayload);
-
-        },
-        changeSearchTerm(state, payload) {
-            if (payload.searchTerm) {
-                state[payload.pane].searchTerm = payload.searchTerm;
-                this.dispatch('main/loadAutocompleteSuggestions', {pane: payload.pane});
-            } else {
-                state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
-            }
-        },
-        changeSelectedYear(state, payload) {
-            if (payload.year) {
-                state[payload.pane].selectedYear = payload.year;
-            } else if (payload.reset) {
-                state[payload.pane].selectedYear = null;
-            } else {
-                state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
-            }
-        },
-        addSelectedNodeForNodeMetrics(state, payload) {
-            state['nodeMetrics'].selectedNodes.push(payload);
-        },
-        removeSelectedNodeForNodeMetrics(state, payload) {
-            let payloadIndex = state['nodeMetrics'].selectedNodes.indexOf(payload);
-            state['nodeMetrics'].selectedNodes.splice(payloadIndex, 1);
-        },
-        addEgoNetwork(state, payload) {
-            state[payload['pane']].selectedNetwork = payload.network;
-        },
-        resetSelectedNetwork(state, payload) {
-            state[payload['pane']].selectedNetwork = null;
-        },
-        updateEgoNetwork(state, payload) {
-            state[payload.pane].selectedNetwork = payload.networkObj;
-            logger.log('Updated Ego Network for pane ' + payload.pane);
-        },
-        setAutocompleteSuggestions(state, payload) {
-            state[payload.pane].autocompleteSuggestions = payload.suggestions;
-        },
-        setShowInfo(state, payload) {
-            state.showInfo = payload.showInfo;
-        },
-        addTimeSeriesData(state, payload) {
-            state[payload['pane']].timeSeriesData = payload.data;
-        },
-        resetTimeSeries(state, payload) {
-            state[payload['pane']].timeSeriesData = {};
-        }
+            }).sort(compare);
     },
-    getters: {
-        selectionColors: (state) => state.selectionColors,
-        availableCorpora: (state) => state.availableCorpora,
-        selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
-        availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
-        selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
-        selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
-        selectedNetwork: (state) => (pane) => state[pane].selectedNetwork,
-        selectedYear: (state) => (pane) => state[pane].selectedYear,
-        searchTerm: (state) => (pane) => state[pane].searchTerm,
-        autocompleteSuggestions: (state) => (pane) => state[pane].autocompleteSuggestions,
-        getPane: (state) => (pane) => state[pane],
-        selectedNodesForMetrics: (state) => state['nodeMetrics'].selectedNodes,
-        posColors: (state) => state.posColors,
-        labelOptions: (state) => state.labelOptions,
-        linkOptions: (state) => state.linkOptions,
-        tableOptions: (state) => state.tableOptions,
-        numberOfNetworksVisualised: (state) => {
-            let count = 0;
-            if (state['pane1'].selectedNetwork) {
-                count++;
+    loadSourcesOfCorpus(state, payload) {
+        const sources = payload.sources.map(
+            source => {
+                return {
+                    id: source,
+                    name: sourceNameMapping[source]
+                }
             }
-            if (state['pane2'].selectedNetwork) {
-                count++;
-            }
+        ).sort(compare)
+        Vue.set(state.availableSourcesByCorpus, payload.corpus, sources);
+
+    },
+    selectInitValues(state, payload) {
+        state[payload.pane].selectedCorpus = state.availableCorpora[0];
+        state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
+        state[payload.pane].searchTerm = '';
+    },
+    changeSelectedCorpus(state, payload) {
+      if (payload.corpus) {
+        state[payload.pane].selectedCorpus = payload.corpus;
+      } else {
+        state[payload.pane].selectedCorpus = state.availableCorpora[0];
+      }
+      state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
+    },
+    changeSelectedSubcorpus(state, payload) {
+      state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+    },
+    changeSelectedTargetword(state, payload) {
+      let selectedYearPayload = {
+        pane: payload.pane,
+        reset: false
+      }
+      if (payload.targetword) {
+        state[payload.pane].selectedTargetword = payload.targetword;
+        state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
+      } else {
+        state[payload.pane].selectedTargetword = { id: '', text: '' }
+        selectedYearPayload.reset = true;
+      }
+      this.commit('main/changeSelectedYear', selectedYearPayload);
+    },
+    changeSearchTerm(state, payload) {
+      if (payload.searchTerm) {
+        state[payload.pane].searchTerm = payload.searchTerm;
+        this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
+      } else {
+        state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
+      }
+    },
+    changeSelectedYear(state, payload) {
+      if (payload.year) {
+        state[payload.pane].selectedYear = payload.year;
+      } else if (payload.reset) {
+        state[payload.pane].selectedYear = null;
+      } else {
+        state[payload.pane].selectedYear = state[payload.pane].selectedTargetword.networks[0];
+      }
+    },
+    addSelectedNodeForNodeMetrics(state, payload) {
+      state['nodeMetrics'].selectedNodes.push(payload);
+    },
+    removeSelectedNodeForNodeMetrics(state, payload) {
+      let payloadIndex = state['nodeMetrics'].selectedNodes.indexOf(payload);
+      state['nodeMetrics'].selectedNodes.splice(payloadIndex, 1);
+    },
+    addEgoNetwork(state, payload) {
+      state[payload['pane']].selectedNetwork = payload.network;
+    },
+    resetSelectedNetwork(state, payload) {
+      state[payload['pane']].selectedNetwork = null;
+    },
+    updateEgoNetwork(state, payload) {
+      state[payload.pane].selectedNetwork = payload.networkObj;
+      logger.log('Updated Ego Network for pane ' + payload.pane);
+    },
+    setAutocompleteSuggestions(state, payload) {
+      state[payload.pane].autocompleteSuggestions = payload.suggestions;
+    },
+    setShowInfo(state, payload) {
+      state.showInfo = payload.showInfo;
+    },
+    addTimeSeriesData(state, payload){
+      state[payload['pane']].timeSeriesData = payload.data;
+    },
+    resetTimeSeries(state, payload) {
+      state[payload['pane']].timeSeriesData = {};
+    },
+    addFocusNode(state, payload) {
+      state.focusNode = payload.node
+    },
+    removeFocusNode(state, payload) {
+      if (state.focusNode === payload.node)
+        state.focusNode = null
+    }
+  },
+  getters: {
+    focusNode: (state) => {
+      return state.focusNode
+    },
+    selectionColors: (state) => state.selectionColors,
+    availableCorpora: (state) => state.availableCorpora,
+    selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
+    availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
+    selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
+    selectedTargetword: (state) => (pane) => state[pane].selectedTargetword,
+    selectedNetwork: (state) => (pane) => state[pane].selectedNetwork,
+    selectedYear: (state) => (pane) => state[pane].selectedYear,
+    searchTerm: (state) => (pane) => state[pane].searchTerm,
+    autocompleteSuggestions: (state) => (pane) => state[pane].autocompleteSuggestions,
+    getPane: (state) => (pane) => state[pane],
+    selectedNodesForMetrics: (state) => state['nodeMetrics'].selectedNodes,
+    posColors: (state) => state.posColors,
+    labelOptions: (state) => state.labelOptions,
+    linkOptions: (state) => state.linkOptions,
+    tableOptions: (state) => state.tableOptions,
+    numberOfNetworksVisualised: (state) => {
+      let count = 0;
+      if (state['pane1'].selectedNetwork) {
+        count++;
+      }
+      if (state['pane2'].selectedNetwork) {
+        count++;
+      }
 
             return count;
         },
