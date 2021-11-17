@@ -110,7 +110,7 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              :data-sauto-id='"x-button-parallel-coordinates-" + node.name'
+              data-sauto-id="x-button-parallel-coordinates"
             >
               {{ hoverNodes.indexOf(node) >= 0 ||
             (nodeGroup.length == 1 && nonOverlappingNodesLeft.indexOf(node) >= 0) ? '❌' : '' }}
@@ -158,7 +158,7 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              :data-sauto-id='"x-button-parallel-coordinates-" + node.name'
+              data-sauto-id="x-button-parallel-coordinates"
             >
               {{ hoverNodes.indexOf(node) >= 0 ||
             (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
