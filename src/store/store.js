@@ -130,6 +130,7 @@ const mainModule = {
                 updatedNetwork.subcorpus = oldNetwork.subcorpus;
                 updatedNetwork.text = oldNetwork.text;
                 updatedNetwork.possibleYears = oldNetwork.possibleYears;
+                updatedNetwork.pos = oldNetwork.pos
                 logger.log('Ego Network %s updated successfully.', networkID);
 
                 this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
@@ -357,7 +358,7 @@ const mainModule = {
       state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
     },
     changeSelectedSubcorpus(state, payload) {
-      state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus][0];
+      state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
     },
     changeSelectedTargetword(state, payload) {
       let selectedYearPayload = {
