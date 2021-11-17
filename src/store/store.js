@@ -130,6 +130,7 @@ const mainModule = {
                 updatedNetwork.subcorpus = oldNetwork.subcorpus;
                 updatedNetwork.text = oldNetwork.text;
                 updatedNetwork.possibleYears = oldNetwork.possibleYears;
+                updatedNetwork.pos = oldNetwork.pos
                 logger.log('Ego Network %s updated successfully.', networkID);
 
                 this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
