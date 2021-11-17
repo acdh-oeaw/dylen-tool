@@ -161,7 +161,7 @@ export default {
         .attr('fill', (_, idx) => this.netNodes[idx]._color)
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
-          this.mouseClick(event, this.pane + '-node-' + d.name);
+          this.mouseClick(event, this.pane + '-node');
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
         .on('mouseleave', (event, d) => this.defocusNode(d));

@@ -127,7 +127,7 @@ export default {
         this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
       }
 
-      this.mouseClick(event, 'table-item-' + node.name);
+      this.mouseClick(event, 'table-item');
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
@@ -145,7 +145,7 @@ export default {
     },
     handleSortChanged(value) {
       const event = this.calculateSliderPosition(value.sortBy);
-      this.mouseClick(event, 'table-sort-' + value.sortBy);
+      this.mouseClick(event, 'table-sort');
     },
     calculateSliderPosition(value) {
       //im sorry for this hacky workaround but table header doesnt register clicks (when sorting)

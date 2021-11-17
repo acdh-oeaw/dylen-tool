@@ -158,7 +158,7 @@ export default {
         clientX: rect.x,
         clientY: rect.y
       };
-      this.mouseClick(event, 'selectTargetWord-option-' + this.searchTerm);
+      this.mouseClick(event, 'selectTargetWord-option');
     },
     setShowInfo() {
       this.$emit('showInfoButton', true);
