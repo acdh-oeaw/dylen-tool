@@ -316,18 +316,6 @@ export default {
         });
       }
     },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane
-          });
-      }
-    }
   },
   watch: {}
 };
