@@ -139,23 +139,6 @@ const mainModule = {
                 logger.error(error);
             }
         },
-        async loadTargetwordBySearchTerm(state, payload) {
-            let searchTermId = ''
-            if (payload.searchTerm) {
-                searchTermId = payload.searchTerm.id
-            }
-            const response = await axios.post(graphqlEndpoint,
-                getTargetWordByIdQuery(searchTermId));
-
-            console.log(response)
-
-            this.commit('main/changeSelectedTargetword', {
-                pane: payload.pane,
-                targetword: response.data.data.getTargetWordById
-            });
-
-            return response
-        },
         async loadAutocompleteSuggestions({state}, {pane}) {
             const suggestionsResponse = await axios.post(graphqlEndpoint,
                 getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
@@ -212,6 +195,23 @@ const mainModule = {
             document.body.appendChild(downloadAnchorNode); // required for firefox
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
+        },
+        async loadTargetwordBySearchTerm(state, payload) {
+            let searchTermId = ''
+            if (payload.searchTerm) {
+                searchTermId = payload.searchTerm.id
+            }
+            const response = await axios.post(graphqlEndpoint,
+                getTargetWordByIdQuery(searchTermId));
+
+            console.log(response)
+
+            this.commit('main/changeSelectedTargetword', {
+                pane: payload.pane,
+                targetword: response.data.data.getTargetWordById
+            });
+
+            return response
         },
         async loadTargetwordById({state}, pane) {
             const response = await axios.post(graphqlEndpoint,
@@ -367,6 +367,10 @@ const mainModule = {
     changeSelectedSubcorpus(state, payload) {
       console.log('changing selected subcorpus')
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
+      this.commit('main/changeSearchTerm', {
+          searchTerm: state[payload.pane].searchTerm,
+          pane: payload.pane
+      });
     },
     changeSelectedTargetword(state, payload) {
       let selectedYearPayload = {
@@ -383,6 +387,7 @@ const mainModule = {
       this.commit('main/changeSelectedYear', selectedYearPayload);
     },
     changeSearchTerm(state, payload) {
+      console.log('changing searchterm: ' + payload.searchTerm)
       if (payload.searchTerm) {
         state[payload.pane].searchTerm = payload.searchTerm;
         this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });

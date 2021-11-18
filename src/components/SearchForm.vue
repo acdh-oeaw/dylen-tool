@@ -174,7 +174,7 @@ export default {
         pane: this.queryPane
       });
       this.$store.commit('main/changeSearchTerm', {
-        targetword: null,
+        searchTerm: null,
         pane: this.queryPane
       });
       this.$store.commit('main/changeSelectedTargetword', {
