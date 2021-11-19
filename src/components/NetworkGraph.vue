@@ -91,8 +91,7 @@ export default {
         dotSize: 15
       },
       chartColors: [
-        ['#2b6ca3', '#65add2', '#b0efff'],
-        ['#a36c23', '#d59c1e', '#ffd20b']
+        '#2b6ca3', '#65add2', '#b0efff', '#a36c23', '#d59c1e', '#ffd20b'
       ],
       allNodesSelected: false
     };
@@ -192,7 +191,7 @@ export default {
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
-            _color: this.chartColors[0][node.clusterId],
+            _color: this.chartColors[node.clusterId%this.chartColors.length],
             _metrics: node.metrics,
             _pane: this.pane
           });
