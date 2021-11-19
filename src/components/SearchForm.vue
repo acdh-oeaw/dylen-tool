@@ -81,8 +81,10 @@
           </datalist>
         </b-form-group>
       </b-col>
-      <b-col xl='2'></b-col>
-      <b-col xl='4'>
+      <b-col xl='3'>
+          <div style='color:red' v-if='!hasSuggestions'>targetword not found</div>
+      </b-col>
+      <b-col xl='3'>
         <b-row align-h='end'>
           <b-col
             xl='12'
