@@ -63,7 +63,7 @@
                 </ul>
               </b-card-text>
             </b-tab>
-            <b-tab title='General Network'>
+            <b-tab v-if='false' title='General Network'>
               <b-card-text align='left'>
                 Network visualization of a selected parliament speaker or party provides information about their
                 discourse topics in a given time period.<br>
