@@ -9,31 +9,34 @@
     <b-row class='h-10'>
       <b-col>
         <b-row align-h='center'>
-          <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
+          <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos.replace("_", " ") }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
         </b-row>
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
       <!--      <b-col xl='2'></b-col>-->
       <b-col
-          class='pl-5 year-slider-row'
-          data-sauto-id='ignore'
+        class='pl-5 year-slider-row'
+        data-sauto-id='ignore'
       >
-        <div ref='sliderDiv' class='pl-2'>
+        <div
+          ref='sliderDiv'
+          class='pl-2'
+        >
           <vue-slider
-              ref='slider'
-              v-model='egoNetwork.year'
-              v-bind='sliderOptions'
-              :min='egoNetwork.possibleYears[0]'
-              :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
-              :data='egoNetwork.possibleYears'
-              :process='false'
-              :lazy='true'
-              :adsorb='true'
-              :duration='0.3'
-              v-on:change='handleChange'
-              :marks='egoNetwork.possibleYears'
-              :tooltip="'none'"
+            ref='slider'
+            v-model='egoNetwork.year'
+            v-bind='sliderOptions'
+            :min='egoNetwork.possibleYears[0]'
+            :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
+            :data='egoNetwork.possibleYears'
+            :process='false'
+            :lazy='true'
+            :adsorb='true'
+            :duration='0.3'
+            v-on:change='handleChange'
+            :marks='egoNetwork.possibleYears'
+            :tooltip="'none'"
           />
         </div>
       </b-col>
@@ -215,7 +218,7 @@ export default {
           corpus: network.corpus,
           subcorpus: network.subcorpus,
           targetWordId: network.targetWordId,
-          pos:network.pos
+          pos: network.pos
         };
       }
       return selectedNetwork;
