@@ -305,7 +305,7 @@ const mainModule = {
     },
     posColors: {
       noun: '#aa0000',
-      verb: '#000088',
+      verb: '#28BAF0',
       adjective: '#f18e04',
       proper_noun: '#000000'
     },

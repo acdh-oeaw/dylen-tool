@@ -34,23 +34,36 @@
             </b-tab>
             <b-tab title='Ego Network'>
               <img src='@/assets/ego_example.png'
-                   width='800'
+                   width='600'
                    height='auto'/>
 
               <b-card-text align='left'>
-                Network visualization of a selected target word provides information about its <b>semantic
+                <h5>General Description</h5>
+                <p>Network visualization of a selected target word provides information about its <b>semantic
                 neighborhood</b> in a given time period.<br>
                 Nodes are represented by top-50 lexemes that, according to the semantic model in use, are semantically
-                most relevant to a target word. <br>
+                  most relevant to a target word. <br></p>
                 For semantic modeling, we utilize a <b>distributional word embedding</b> model, namely a neural network
                 based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
                 The model is trained on the chosen corpus and it produces a word-vector correspondence based on
                 co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
                 determine the semantic similarity between pairs of words which is reflected in the strength of the
-                connections between respective nodes.
+                connections between respective nodes.                For semantic modeling, we utilize a <b>distributional word embedding</b> model, namely a neural network
+                based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
+                The model is trained on the chosen corpus and it produces a word-vector correspondence based on
+                co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
+                determine the semantic similarity between pairs of words which is reflected in the strength of the
+                connections between respective nodes.<br><br>
+                <h5>How to view the visualisation</h5>
+                Some of interpretation guidelines are given here.
+                <ul>
+                  <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to the targetword and the network visualisation would too unnecessarily complex</li>
+                  <li>The colors of the labels represent different Part-of-speech tags </li>
+                  <li>The colors of the nocdes represent different clusters</li>
+                </ul>
               </b-card-text>
             </b-tab>
-            <b-tab title='General Network'>
+            <b-tab v-if='false' title='General Network'>
               <b-card-text align='left'>
                 Network visualization of a selected parliament speaker or party provides information about their
                 discourse topics in a given time period.<br>
