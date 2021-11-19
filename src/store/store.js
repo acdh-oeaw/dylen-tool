@@ -139,7 +139,6 @@ const mainModule = {
                 logger.error(error);
             }
         },
-
         async loadAutocompleteSuggestions({state}, {pane}) {
             const suggestionsResponse = await axios.post(graphqlEndpoint,
                 getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
@@ -148,18 +147,22 @@ const mainModule = {
                 pane: pane
             });
         },
-        async loadAutocompleteSuggestionsForNewSubCorpus({state}, {pane}) {
-            const targetwordsResponse = await axios.post(graphqlEndpoint,
-                getAutocompleteSuggestionsQuery(state[pane].selectedCorpus, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
-            const suggestions = targetwordsResponse.data.data.getAutocompleteSuggestions;
+        async loadAutocompleteSuggestionsForNewSubCorpus({state, dispatch}, {pane}) {
+            const suggestionsResponse = await axios.post(graphqlEndpoint,
+                getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
+            const suggestions = suggestionsResponse.data.data.getAutocompleteSuggestions;
             this.commit('main/setAutocompleteSuggestions', {
                 suggestions: suggestions,
                 pane: pane
             });
+
             const currentTargetword = state[pane].selectedTargetword;
             let matchingSuggestion = suggestions.find(s => s.text === currentTargetword.text && s.pos === currentTargetword.pos);
+            let targetwordPayload = {pane:pane, searchTerm: matchingSuggestion}
+            let response = await dispatch('loadTargetwordBySearchTerm', targetwordPayload);
+
             this.commit('main/changeSelectedTargetword', {
-                targetword: matchingSuggestion,
+                targetword: response.data.data.getTargetWordById,
                 pane: pane
             });
 
@@ -194,8 +197,12 @@ const mainModule = {
             downloadAnchorNode.remove();
         },
         async loadTargetwordBySearchTerm(state, payload) {
+            let searchTermId = ''
+            if (payload.searchTerm) {
+                searchTermId = payload.searchTerm.id
+            }
             const response = await axios.post(graphqlEndpoint,
-                getTargetWordByIdQuery(payload.searchTerm.id));
+                getTargetWordByIdQuery(searchTermId));
 
             console.log(response)
 
@@ -358,7 +365,12 @@ const mainModule = {
       state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
     },
     changeSelectedSubcorpus(state, payload) {
+      console.log('changing selected subcorpus')
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
+      this.commit('main/changeSearchTerm', {
+          searchTerm: state[payload.pane].searchTerm,
+          pane: payload.pane
+      });
     },
     changeSelectedTargetword(state, payload) {
       let selectedYearPayload = {
@@ -375,6 +387,7 @@ const mainModule = {
       this.commit('main/changeSelectedYear', selectedYearPayload);
     },
     changeSearchTerm(state, payload) {
+      console.log('changing searchterm: ' + payload.searchTerm)
       if (payload.searchTerm) {
         state[payload.pane].searchTerm = payload.searchTerm;
         this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });

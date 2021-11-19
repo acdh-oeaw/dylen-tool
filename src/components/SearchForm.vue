@@ -174,7 +174,7 @@ export default {
         pane: this.queryPane
       });
       this.$store.commit('main/changeSearchTerm', {
-        targetword: null,
+        searchTerm: null,
         pane: this.queryPane
       });
       this.$store.commit('main/changeSelectedTargetword', {
@@ -316,18 +316,6 @@ export default {
         });
       }
     },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane
-          });
-      }
-    }
   },
   watch: {}
 };
