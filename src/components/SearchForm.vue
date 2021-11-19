@@ -65,7 +65,7 @@
             v-model='searchTerm'
             :data-sauto-id="'selectTargetword-'+this.pane"
             :list='`datalist-${pane}`'
-            :style="!hasSuggestions ? { 'color': 'red' } : null"
+            :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
             @change='handleSearchTermSelect'
             @keypress='this.keyPress'
             autocomplete='off'
@@ -81,8 +81,10 @@
           </datalist>
         </b-form-group>
       </b-col>
-      <b-col xl='2'></b-col>
-      <b-col xl='4'>
+      <b-col xl='3'>
+          <div style='color:lightcoral;padding-top: 0.1em;' v-if='!hasSuggestions'>targetword not found</div>
+      </b-col>
+      <b-col xl='3'>
         <b-row align-h='end'>
           <b-col
             xl='12'
