@@ -192,7 +192,7 @@ export default {
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
-            //_color: this.chartColors[0][0],
+            _color: this.chartColors[0][node.clusterId],
             _metrics: node.metrics,
             _pane: this.pane
           });

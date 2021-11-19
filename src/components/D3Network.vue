@@ -158,7 +158,7 @@ export default {
             ? 2
             : 1
         )
-        .attr('fill', 'transparent')
+        .attr('fill', (_, idx) => this.netNodes[idx]._color)
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-node-' + d.name);
@@ -431,7 +431,11 @@ export default {
       this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
     },
     getLineColor(node) {
-      return node._labelColor
+      if (node._pane === 'pane1')
+        return this.$store.getters['main/selectionColors'][0];
+      if (node._pane === 'pane2')
+        return this.$store.getters['main/selectionColors'][1];
+      return 'black';
     }
   },
   mounted() {
