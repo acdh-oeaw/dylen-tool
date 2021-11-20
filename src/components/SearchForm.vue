@@ -105,7 +105,7 @@
               class='reset-button'
               size='sm'
               variant='secondary'
-              :data-sauto-id='"resetButton-"+this.pane'
+              :data-sauto-id='"resetQueryButton-"+this.pane'
               @click='initialize'
               v-b-tooltip.hover
               title="Reset query"

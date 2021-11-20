@@ -14,16 +14,19 @@
                 <p>You can use the search panel above to display various information about target words from various
                   copora and
                   subcorpora in graph, chart and table form.</p>
-                <div>There is one corpus available
+                <div>There are two corpora available
                   <ul>
-                    <li>Austrian Media Corpus (AMC):</li>
+                    <li>Austrian Media Corpus (AMC)</li>
+                    <li>Corpus of Austrian Parliamentary Records (ParlAT)</li>
                   </ul>
                 </div>
                 <p>
                   Austrian Media Corpus (AMC) consists of multiple subcorpora.<br>
                   Some of the subcorpora are combination of different media sources, which are listed below;
                 <ul>
-                  <li>All magazines:</li>
+                  <li>All magazines</li>
+                  <li>All newspapers</li>
+                  <li>All magazines and newspapers</li>
                 </ul>
                 </p>
                 <p>You can read more about the project here: <a
@@ -255,7 +258,7 @@ export default {
   },
   methods: {
     onTabClick(event) {
-      this.mouseClick(event, "info-tab");
+      this.mouseClick(event, 'info-tab');
     }
   },
   computed: {},
