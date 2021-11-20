@@ -76,7 +76,7 @@
               v-bind:key='option.text + option.pos'
               v-bind:value='option.text'
             >
-              {{ option.text + ' (' + option.pos + ')' }}
+              {{ option.text + ' (' + option.pos.replace("_", " ") + ')' }}
             </option>
           </datalist>
         </b-form-group>
@@ -153,7 +153,10 @@ export default {
     },
     handleSearchTermSelect() {
       const target = this.findSearchTermInAvailableTargetwords();
-      this.$store.dispatch('main/loadTargetwordBySearchTerm', {pane:this.queryPane, searchTerm: target} )
+      this.$store.dispatch('main/loadTargetwordBySearchTerm', {
+        pane: this.queryPane,
+        searchTerm: target
+      });
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
       const event = {
@@ -292,7 +295,7 @@ export default {
     },
     getTargetwordById: {
       get() {
-        return this.$store.getters['main/loadTargetwordById'](this.queryPane)
+        return this.$store.getters['main/loadTargetwordById'](this.queryPane);
       }
     },
     selectedTargetword: {
