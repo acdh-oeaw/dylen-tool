@@ -99,6 +99,7 @@
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
+              data-sauto-id="parallel-coordinates-label"
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -112,7 +113,7 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              data-sauto-id="x-button-parallel-coordinates"
+              data-sauto-id="parallel-coordinates-x-button"
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -151,6 +152,7 @@
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
+              data-sauto-id="parallel-coordinates-label"
             >
               {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×'
               }}
@@ -162,7 +164,7 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              data-sauto-id="x-button-parallel-coordinates"
+              data-sauto-id="parallel-coordinates-x-button"
             >
               {{ hoverNodes.indexOf(node) >= 0 ||
             (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
@@ -197,6 +199,7 @@
             text-anchor="start"
             fill="#3161F5"
             @click="selectAllNodes('pane1')"
+            data-sauto-id='parallel-coordinates-selectAll-pane1'
           >
             <tspan>select all</tspan>
           </text>
@@ -214,6 +217,7 @@
             text-anchor="start"
             fill="#3161F5"
             @click="deselectAllNodes('pane1')"
+            data-sauto-id='parallel-coordinates-deselectAll-pane1'
           >
             <tspan>deselect all</tspan>
           </text>
@@ -235,6 +239,7 @@
             text-anchor="start"
             fill="#3161F5"
             @click="selectAllNodes('pane2')"
+            data-sauto-id='parallel-coordinates-selectAll-pane2'
           >
             <tspan>select all</tspan>
           </text>
@@ -252,6 +257,7 @@
             text-anchor="start"
             fill="#3161F5"
             @click="deselectAllNodes('pane2')"
+            data-sauto-id='parallel-coordinates-deselectAll-pane2'
           >
             <tspan>deselect all</tspan>
           </text>

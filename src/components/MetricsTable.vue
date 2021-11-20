@@ -127,7 +127,7 @@ export default {
         this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
       }
 
-      this.mouseClick(event, 'table-item');
+      this.mouseClick(event, 'table-item-checkbox');
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
