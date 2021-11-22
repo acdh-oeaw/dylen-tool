@@ -220,7 +220,7 @@ export default {
         )
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
-          this.mouseClick(event, this.pane + '-label-' + d.name);
+          this.mouseClick(event, this.pane + '-label');
         });
       l.call(
         d3
@@ -445,9 +445,9 @@ export default {
       d.fy = this.transform.invertY(event.y);
     },
 
-    dragended(event, d) {
+    dragended(event) {
       if (!event.active) this.simulation.alphaTarget(0);
-      this.dragEnd(event.sourceEvent, this.pane + '-node-' + d.name);
+      this.dragEnd(event.sourceEvent, this.pane + '-node');
     },
     getLineColor(node) {
       if (node._pane === 'pane1')
