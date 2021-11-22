@@ -17,7 +17,7 @@
               v-for='option in availableCorpora'
               v-bind:key='option.id'
               v-bind:value='option'
-              :data-sauto-id="'corpusOption-' + option"
+              data-sauto-id="corpusOption"
             >
               {{ option.name }} ({{option.id}})
             </b-form-select-option>
@@ -41,7 +41,7 @@
               v-for='option in availableSources'
               v-bind:key='option.id'
               v-bind:value='option'
-              :data-sauto-id="'subCorpusOption-' + option"
+              data-sauto-id="subCorpusOption"
             >
               {{ option.name}}
             </b-form-select-option>
@@ -105,7 +105,7 @@
               class='reset-button'
               size='sm'
               variant='secondary'
-              :data-sauto-id='"queryButton-"+this.pane'
+              :data-sauto-id='"resetButton-"+this.pane'
               @click='initialize'
               v-b-tooltip.hover
               title="Reset query"
@@ -163,7 +163,7 @@ export default {
         clientX: rect.x,
         clientY: rect.y
       };
-      this.mouseClick(event, 'selectTargetWord-option-' + this.searchTerm);
+      this.mouseClick(event, 'selectTargetWord-option');
     },
     setShowInfo() {
       this.$emit('showInfoButton', true);
