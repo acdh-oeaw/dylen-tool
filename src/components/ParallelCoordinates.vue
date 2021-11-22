@@ -154,7 +154,7 @@
               @mouseleave='(e) => onMouseLeave(e, node)'
               data-sauto-id="parallel-coordinates-label"
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '×'
+              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '*'
               }}
             </tspan>
             <tspan
