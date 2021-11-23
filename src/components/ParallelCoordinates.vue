@@ -65,7 +65,7 @@
           fill='none'
           :stroke="`${getLineColor(node)}${hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'}`"
           :stroke-width='hoverNodes.indexOf(node) >= 0 ? 4 : 1'
-          @mouseenter='(e) => onMouseEnter(e, node)'
+          @mouseenter='(e) => {onMouseEnter(e, node);mouseOver(e, "parallel-coordinates-line")}'
           @mouseleave='(e) => onMouseLeave(e, node)'
         />
       </g>
@@ -447,9 +447,12 @@ export default {
       if (sharedNode !== node.id) {
         this.$store.commit('main/addFocusNode', { node: node.id });
       }
-      if(sauto){
-        this.mouseMove(e, "parallel-coordinates-*")
+      if (sauto) {
+        this.mouseMove(e, 'parallel-coordinates-*');
       }
+    },
+    mouseOver(e, sautoId) {
+      this.mouseMove(e, sautoId);
     },
     onMouseLeave(e, node) {
       let sharedNode = this.$store.getters['main/focusNode'];

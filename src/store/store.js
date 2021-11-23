@@ -576,6 +576,7 @@ export var mixin = {
           type: 'MouseOver',
           timestamp: timestamp
         };
+        console.log(mouseOver)
         this.$store.state.lastOverElement = sautoId;
         this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
       }
