@@ -555,14 +555,19 @@ const store = new Vuex.Store({
 
 export var mixin = {
   methods: {
-    mouseMove(event) {
+    mouseMove(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+      if (event.target.nodeType === Node.TEXT_NODE) {
         return;
       }
 
       const timestamp = Date.now();
 
-      const sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
+      if (sautoId === null || sautoId === undefined) {
+        sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
+      }
 
       //send if mouseover new component
       if (sautoId !== this.$store.state.lastOverElement) {
