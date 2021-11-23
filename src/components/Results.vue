@@ -3,14 +3,14 @@
     <splitpanes
       :style="{height: maxHeight, width: '100%'}"
       :horizontal='mobile'
-      @resized='resized'
+      @resized='resized("vertical")'
       @pane-maximize='resized'
     >
       <pane
         :size="(fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 100 : (fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 0 : 50">
         <splitpanes
           horizontal
-          @resized='resized'
+          @resized='resized("left-horizontal")'
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
@@ -52,7 +52,7 @@
         v-if='showFirstGraph || showSecondGraph'>
         <splitpanes
           horizontal
-          @resized='resized'
+          @resized='resized("right-horizontal")'
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
@@ -137,10 +137,11 @@ export default {
     this.windowResizeHandler();
   },
   methods: {
-    resized() {
+    resized(paneId) {
       for (let ref in this.$refs) {
         this.$refs[ref]?.resizeHandler();
       }
+      this.resize(paneId);
     },
     windowResizeHandler() {
       if (window.innerWidth < 768) {

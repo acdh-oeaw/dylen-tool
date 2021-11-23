@@ -529,6 +529,10 @@ const sautoModule = {
     async handleKeyPress({ state }, { keyPress }) {
       state.connection.send(JSON.stringify(keyPress));
     },
+    async handleResize({ state }, { resized }) {
+      resized.type = 'Resize'
+      state.connection.send(JSON.stringify(resized));
+    },
     async handleMouseClick({ state }, { click }) {
       //send mouse click
       click.type = 'MouseClick';
@@ -576,7 +580,6 @@ export var mixin = {
           type: 'MouseOver',
           timestamp: timestamp
         };
-        console.log(mouseOver)
         this.$store.state.lastOverElement = sautoId;
         this.$store.dispatch('sauto/handleMouseOver', { mouseOver });
       }
@@ -601,6 +604,12 @@ export var mixin = {
 
       this.$store.dispatch('sauto/handleKeyPress', { keyPress });
     },
+    resize(paneId) {
+      const resized = {
+        paneId: paneId
+      };
+      this.$store.dispatch('sauto/handleResize', { resized });
+    },
     scroll(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
         return;
@@ -624,6 +633,7 @@ export var mixin = {
       if (click.id === 'ignore') {
         return;
       }
+
       click.timestamp = Date.now();
 
       this.$store.dispatch('sauto/handleMouseClick', { click });
