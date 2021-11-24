@@ -529,6 +529,10 @@ const sautoModule = {
     async handleKeyPress({ state }, { keyPress }) {
       state.connection.send(JSON.stringify(keyPress));
     },
+    async handleResize({ state }, { resized }) {
+      resized.type = 'Resize'
+      state.connection.send(JSON.stringify(resized));
+    },
     async handleMouseClick({ state }, { click }) {
       //send mouse click
       click.type = 'MouseClick';
@@ -555,14 +559,19 @@ const store = new Vuex.Store({
 
 export var mixin = {
   methods: {
-    mouseMove(event) {
+    mouseMove(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
+        return;
+      }
+      if (event.target.nodeType === Node.TEXT_NODE) {
         return;
       }
 
       const timestamp = Date.now();
 
-      const sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
+      if (sautoId === null || sautoId === undefined) {
+        sautoId = this.getNearestSautoId(event.target).getAttribute('data-sauto-id');
+      }
 
       //send if mouseover new component
       if (sautoId !== this.$store.state.lastOverElement) {
@@ -595,6 +604,12 @@ export var mixin = {
 
       this.$store.dispatch('sauto/handleKeyPress', { keyPress });
     },
+    resize(paneId) {
+      const resized = {
+        paneId: paneId
+      };
+      this.$store.dispatch('sauto/handleResize', { resized });
+    },
     scroll(event, sautoId) {
       if (this.$store.state.sauto.sauto === false) {
         return;
@@ -618,6 +633,7 @@ export var mixin = {
       if (click.id === 'ignore') {
         return;
       }
+
       click.timestamp = Date.now();
 
       this.$store.dispatch('sauto/handleMouseClick', { click });

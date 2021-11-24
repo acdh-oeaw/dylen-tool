@@ -65,7 +65,7 @@
           fill='none'
           :stroke="`${getLineColor(node)}${hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'}`"
           :stroke-width='hoverNodes.indexOf(node) >= 0 ? 4 : 1'
-          @mouseenter='(e) => onMouseEnter(e, node)'
+          @mouseenter='(e) => {onMouseEnter(e, node);mouseOver(e, "parallel-coordinates-line")}'
           @mouseleave='(e) => onMouseLeave(e, node)'
         />
       </g>
@@ -97,9 +97,9 @@
               dx='0.25em'
               dy='6'
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
-              @mouseenter='(e) => onMouseEnter(e, node)'
+              @mouseenter='(e) => onMouseEnter(e, node, !(hoverNodes.indexOf(node) >= 0 || (nodeGroup.length === 1 && nonOverlappingNodesLeft.indexOf(node) >= 0)))'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              data-sauto-id="parallel-coordinates-label"
+              data-sauto-id='parallel-coordinates-label'
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -113,7 +113,7 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              data-sauto-id="parallel-coordinates-x-button"
+              data-sauto-id='parallel-coordinates-x-button'
             >
               {{
                 hoverNodes.indexOf(node) >= 0 ||
@@ -150,11 +150,12 @@
             <tspan
               dx='0.25em'
               :stroke="hoverNodes.indexOf(node) >= 0 ? 'black' : 'none'"
-              @mouseenter='(e) => onMouseEnter(e, node)'
+              @mouseenter='(e) => onMouseEnter(e, node, !(hoverNodes.indexOf(node) >= 0 || (nodeGroup.length === 1 && nonOverlappingNodesRight.indexOf(node) >= 0)))'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              data-sauto-id="parallel-coordinates-label"
+              data-sauto-id='parallel-coordinates-label'
             >
-              {{ hoverNodes.indexOf(node) >= 0 || (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '*'
+              {{ hoverNodes.indexOf(node) >= 0 ||
+            (nodeGroup.length === 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? node.name : '*'
               }}
             </tspan>
             <tspan
@@ -164,7 +165,7 @@
               @click='deselectNode(node)'
               @mouseenter='(e) => onMouseEnter(e, node)'
               @mouseleave='(e) => onMouseLeave(e, node)'
-              data-sauto-id="parallel-coordinates-x-button"
+              data-sauto-id='parallel-coordinates-x-button'
             >
               {{ hoverNodes.indexOf(node) >= 0 ||
             (nodeGroup.length == 1 && nonOverlappingNodesRight.indexOf(node) >= 0) ? '❌' : '' }}
@@ -173,49 +174,49 @@
           </text>
         </g>
       </g>
-      <g class="targetwordLabels">
+      <g class='targetwordLabels'>
         <g v-if="targetWordLabelLeft.text != ''">
           <text
-            :y="svgPadding.top - 20"
-            :x="2"
-            text-anchor="start"
-            :fill="targetWordLabelLeft.color"
+            :y='svgPadding.top - 20'
+            :x='2'
+            text-anchor='start'
+            :fill='targetWordLabelLeft.color'
           >
-            <tspan>{{targetWordLabelLeft.text}}</tspan>
-            <tspan dx="2">({{targetWordLabelLeft.year}})</tspan>
+            <tspan>{{ targetWordLabelLeft.text }}</tspan>
+            <tspan dx='2'>({{ targetWordLabelLeft.year }})</tspan>
           </text>
           <line
-            x1="0"
-            :x2="svgPadding.left"
-            :y1="svgPadding.top"
-            :y2="svgPadding.top"
-            :stroke="targetWordLabelLeft.color"
-            stroke-width="1"
+            x1='0'
+            :x2='svgPadding.left'
+            :y1='svgPadding.top'
+            :y2='svgPadding.top'
+            :stroke='targetWordLabelLeft.color'
+            stroke-width='1'
           />
           <text
-            id="selectAll"
-            :y="svgPadding.top - 3"
-            :x="2"
-            text-anchor="start"
-            fill="#3161F5"
+            id='selectAll'
+            :y='svgPadding.top - 3'
+            :x='2'
+            text-anchor='start'
+            fill='#3161F5'
             @click="selectAllNodes('pane1')"
             data-sauto-id='parallel-coordinates-selectAll-pane1'
           >
             <tspan>select all</tspan>
           </text>
           <text
-            :y="svgPadding.top - 3"
-            :x="52"
-            text-anchor="start"
+            :y='svgPadding.top - 3'
+            :x='52'
+            text-anchor='start'
           >
-            <tspan> | </tspan>
+            <tspan> |</tspan>
           </text>
           <text
-            id="deselectAll"
-            :y="svgPadding.top - 3"
-            :x="60"
-            text-anchor="start"
-            fill="#3161F5"
+            id='deselectAll'
+            :y='svgPadding.top - 3'
+            :x='60'
+            text-anchor='start'
+            fill='#3161F5'
             @click="deselectAllNodes('pane1')"
             data-sauto-id='parallel-coordinates-deselectAll-pane1'
           >
@@ -224,50 +225,50 @@
         </g>
         <g v-if="targetWordLabelRight.text != ''">
           <text
-            :y="svgPadding.top - 20"
-            :x="chartSize[0]+svgPadding.right"
-            text-anchor="end"
-            :fill="targetWordLabelRight.color"
+            :y='svgPadding.top - 20'
+            :x='chartSize[0]+svgPadding.right'
+            text-anchor='end'
+            :fill='targetWordLabelRight.color'
           >
-            <tspan>{{targetWordLabelRight.text}}</tspan>
-            <tspan dx="2">({{targetWordLabelRight.year}})</tspan>
+            <tspan>{{ targetWordLabelRight.text }}</tspan>
+            <tspan dx='2'>({{ targetWordLabelRight.year }})</tspan>
           </text>
           <text
-            id="selectAll"
-            :y="svgPadding.top - 3"
-            :x="chartSize[0]+svgPadding.right - 120"
-            text-anchor="start"
-            fill="#3161F5"
+            id='selectAll'
+            :y='svgPadding.top - 3'
+            :x='chartSize[0]+svgPadding.right - 120'
+            text-anchor='start'
+            fill='#3161F5'
             @click="selectAllNodes('pane2')"
             data-sauto-id='parallel-coordinates-selectAll-pane2'
           >
             <tspan>select all</tspan>
           </text>
           <text
-            :y="svgPadding.top - 3"
-            :x="chartSize[0]+svgPadding.right - 67"
-            text-anchor="start"
+            :y='svgPadding.top - 3'
+            :x='chartSize[0]+svgPadding.right - 67'
+            text-anchor='start'
           >
-            <tspan> | </tspan>
+            <tspan> |</tspan>
           </text>
           <text
-            id="deselectAll"
-            :y="svgPadding.top - 3"
-            :x="chartSize[0]+svgPadding.right - 60"
-            text-anchor="start"
-            fill="#3161F5"
+            id='deselectAll'
+            :y='svgPadding.top - 3'
+            :x='chartSize[0]+svgPadding.right - 60'
+            text-anchor='start'
+            fill='#3161F5'
             @click="deselectAllNodes('pane2')"
             data-sauto-id='parallel-coordinates-deselectAll-pane2'
           >
             <tspan>deselect all</tspan>
           </text>
           <line
-            :x1="chartSize[0]"
-            :x2="chartSize[0]+svgPadding.right"
-            :y1="svgPadding.top"
-            :y2="svgPadding.top"
-            :stroke="targetWordLabelRight.color"
-            stroke-width="1"
+            :x1='chartSize[0]'
+            :x2='chartSize[0]+svgPadding.right'
+            :y1='svgPadding.top'
+            :y2='svgPadding.top'
+            :stroke='targetWordLabelRight.color'
+            stroke-width='1'
           />
         </g>
       </g>
@@ -292,8 +293,8 @@ export default {
   },
   computed: {
     hoverNodes() {
-      let sharedNode =  this.$store.getters['main/focusNode'];
-      return this.selectedNodes.filter(node => sharedNode === node.id)
+      let sharedNode = this.$store.getters['main/focusNode'];
+      return this.selectedNodes.filter(node => sharedNode === node.id);
     },
     viewBox() {
       return `0 0 ${this.options.size.w} ${this.options.size.h}`;
@@ -360,7 +361,7 @@ export default {
           let nodeVal =
             n._metrics[
               Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-            ];
+              ];
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
           nodeGroup[nodeVal].push(n);
         });
@@ -390,22 +391,22 @@ export default {
             .filter((n) => n._pane == 'pane2')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[
-                Object.values(this.scaleY).length - 1
-              ](
+              Object.values(this.scaleY).length - 1
+                ](
                 node._metrics[
                   Object.keys(this.scaleY)[
-                    Object.values(this.scaleY).length - 1
+                  Object.values(this.scaleY).length - 1
+                    ]
                   ]
-                ]
               );
               let nVal = Object.values(this.scaleY)[
-                Object.values(this.scaleY).length - 1
-              ](
+              Object.values(this.scaleY).length - 1
+                ](
                 n._metrics[
                   Object.keys(this.scaleY)[
-                    Object.values(this.scaleY).length - 1
+                  Object.values(this.scaleY).length - 1
+                    ]
                   ]
-                ]
               );
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
@@ -441,16 +442,22 @@ export default {
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
     },
-    onMouseEnter(e, node) {
-      let sharedNode = this.$store.getters['main/focusNode']
+    onMouseEnter(e, node, sauto) {
+      let sharedNode = this.$store.getters['main/focusNode'];
       if (sharedNode !== node.id) {
-        this.$store.commit('main/addFocusNode', {node:node.id})
+        this.$store.commit('main/addFocusNode', { node: node.id });
+      }
+      if (sauto) {
+        this.mouseMove(e, 'parallel-coordinates-*');
       }
     },
+    mouseOver(e, sautoId) {
+      this.mouseMove(e, sautoId);
+    },
     onMouseLeave(e, node) {
-      let sharedNode = this.$store.getters['main/focusNode']
+      let sharedNode = this.$store.getters['main/focusNode'];
       if (sharedNode === node.id)
-        this.$store.commit('main/removeFocusNode', {node:node.id})
+        this.$store.commit('main/removeFocusNode', { node: node.id });
     },
     deselectNode(node) {
       this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
@@ -514,10 +521,12 @@ export default {
   font-size: 10px;
   font-weight: bold;
 }
+
 #selectAll:hover {
   fill: red;
   cursor: pointer;
 }
+
 #deselectAll:hover {
   fill: red;
   cursor: pointer;
