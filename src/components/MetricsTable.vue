@@ -20,7 +20,7 @@
         <b-button
           variant='none'
           class='mx-auto'
-          @click=' (event) => selectionCheckboxChanged()'
+          @click=' (event) => selectionCheckboxChanged(event)'
         >
           <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
         </b-button>
@@ -127,7 +127,7 @@ export default {
         this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
       }
 
-      this.mouseClick(event, 'table-item-checkbox');
+      this.mouseClick(event, 'table-item');
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
@@ -170,10 +170,11 @@ export default {
         clientY
       };
     },
-    selectionCheckboxChanged() {
+    selectionCheckboxChanged(event) {
       console.log(this.tableData);
       if (this.isAllSelected) this.deselectAllNodes();
       else this.selectAllNodes();
+      this.mouseClick(event,"table-select-all")
     },
     selectAllNodes() {
       this.tableData
