@@ -25,5 +25,5 @@ export const sourceNameMapping = {
     "ParlAT": "ParlAT",
     "FALTER": "Falter",
     "KLEINE": "Kleine Zeitung",
-    "-":"All parliamentary records"
+    "all":"All parliamentary records"
 }
