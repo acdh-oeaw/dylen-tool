@@ -141,7 +141,9 @@ export default {
       for (let ref in this.$refs) {
         this.$refs[ref]?.resizeHandler();
       }
-      this.resize(paneId);
+      if (paneId !== null) {
+        this.resize(paneId);
+      }
     },
     windowResizeHandler() {
       if (window.innerWidth < 768) {
