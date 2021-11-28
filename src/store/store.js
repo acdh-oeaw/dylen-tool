@@ -530,8 +530,10 @@ const sautoModule = {
       state.connection.send(JSON.stringify(keyPress));
     },
     async handleResize({ state }, { resized }) {
-      resized.type = 'Resize';
-      state.connection.send(JSON.stringify(resized));
+      if (resized.paneId !== undefined) {
+        resized.type = 'Resize';
+        state.connection.send(JSON.stringify(resized));
+      }
     },
     async handleMouseClick({ state }, { click }) {
       //send mouse click
