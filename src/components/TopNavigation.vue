@@ -13,9 +13,22 @@
       <h2><b>DYLEN</b></h2>
     </b-col>
     <b-col
+      xl='2'
+      align-self='center'
+    >
+      <div>
+        <select name="TypeOfNetwork" @change="onTypeOfNetworkSelect($event)" class="form-control">
+          <option value="EgoNetwork">Ego Networks</option>
+          <option value="GeneralNetworkNetwork">General Networks (Party)</option>
+          <option value="GeneralNetworkSpeaker">General Networks (Speaker)</option>
+        </select>
+      </div>
+    </b-col>
+    <b-col
       data-sauto-id='search-form-1'
       class='pb-1'
-      xl='5'
+      xl='4'
+      v-if="typeOfNetwork == 'EgoNetwork'"
       align-self='stretch'
     >
       <b-row
@@ -41,7 +54,8 @@
     <b-col
       data-sauto-id='search-form-2'
       class='pb-1'
-      xl='5'
+      xl='4'
+      v-if="typeOfNetwork == 'EgoNetwork'"
       align-self='stretch'
     >
       <b-row
@@ -67,6 +81,132 @@
             :is-sidebar='false'
           >
           </search-form>
+        </b-col>
+      </b-row>
+    </b-col>
+    <b-col
+      data-sauto-id='search-form-general-1'
+      class='pb-1'
+      xl='4'
+      v-if="typeOfNetwork == 'GeneralNetworkNetwork'"
+      align-self='stretch'
+    >
+      <b-row
+        class='h-100'
+        align-h='center'
+        align-v='stretch'
+      >
+        <b-col>
+          <b-row>
+            <b-col>
+              <search-form-general
+                @showInfoButton='setShowInfoButton'
+                :with-labels='false'
+                :pane="'pane' + 1"
+                :is-sidebar='false'
+              >
+              </search-form-general>
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+    </b-col>
+    <b-col
+      data-sauto-id='search-form-general-2'
+      class='pb-1'
+      xl='4'
+      v-if="typeOfNetwork == 'GeneralNetworkNetwork'"
+      align-self='stretch'
+    >
+      <b-row
+        class='h-100'
+        align-v='center'
+      >
+        <b-col v-if='!showSecondForm'>
+          <b-button
+            pill
+            data-sauto-id='second-query-button-general'
+            v-if='showSecondButton'
+            size='sm'
+            variant='secondary'
+            v-on:click='queryButtonClicked(2)'
+          >
+            <b>+</b>
+          </b-button>
+        </b-col>
+        <b-col v-if='showSecondForm'>
+          <search-form-general
+            :with-labels='false'
+            :pane="'pane' + 2"
+            :is-sidebar='false'
+          >
+          </search-form-general>
+        </b-col>
+      </b-row>
+    </b-col>
+    <b-col
+      data-sauto-id='search-form-general-speaker-1'
+      class='pb-1'
+      xl='4'
+      v-if="typeOfNetwork == 'GeneralNetworkSpeaker'"
+      align-self='stretch'
+    >
+      <b-row
+        class='h-100'
+        align-v='center'
+      >
+        <b-col v-if='!showSecondForm'>
+          <b-button
+            pill
+            data-sauto-id='second-query-button-general'
+            v-if='showSecondButton'
+            size='sm'
+            variant='secondary'
+            v-on:click='queryButtonClicked(2)'
+          >
+            <b>+</b>
+          </b-button>
+        </b-col>
+        <b-col>
+          <search-form-general-speaker
+            :with-labels='false'
+            :pane="'pane' + 1"
+            :is-sidebar='false'
+          >
+          </search-form-general-speaker>
+        </b-col>
+      </b-row>
+    </b-col>
+    <b-col
+      data-sauto-id='search-form-general-speaker-2'
+      class='pb-1'
+      xl='4'
+      v-if="typeOfNetwork == 'GeneralNetworkSpeaker'"
+      align-self='stretch'
+    >
+      <b-row
+        class='h-100'
+        align-v='center'
+      >
+        <b-col v-if='!showSecondForm'>
+          <b-button
+            pill
+            data-sauto-id='second-query-button-general'
+            v-if='showSecondButton'
+            size='sm'
+            variant='secondary'
+            v-on:click='queryButtonClicked(2)'
+          >
+            <b>+</b>
+          </b-button>
+        </b-col>
+        <b-col v-if='showSecondForm'>
+          <search-form-general-speaker
+            :with-labels='false'
+            :pane="'pane' + 2"
+            :is-sidebar='false'
+          >
+          </search-form-general-speaker>
         </b-col>
       </b-row>
     </b-col>
@@ -99,18 +239,23 @@
 
 <script>
 import SearchForm from '@/components/SearchForm';
+import SearchFormGeneral from '@/components/SearchFormGeneral';
+import SearchFormGeneralSpeaker from '@/components/SearchFormGeneralSpeaker';
 
 export default {
   name: 'TopNavigation',
   components: {
-    SearchForm
+    SearchForm,
+    SearchFormGeneral,
+    SearchFormGeneralSpeaker
   },
   props: ['showInfo'],
   data() {
     return {
       firstForm: true,
       secondForm: false,
-      showInfoButton: false
+      showInfoButton: false,
+      typeOfNetwork: 'EgoNetwork'
     };
   },
   computed: {
@@ -134,6 +279,9 @@ export default {
           pane: 'pane2'
         })
       }
+    },
+    onTypeOfNetworkSelect(event) {
+      this.typeOfNetwork = event.target.value;
     },
     toggleSideBar() {
       this.$parent.$refs.sidebar.classList.toggle('collapsed');

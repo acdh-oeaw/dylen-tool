@@ -17,7 +17,7 @@ export function getNetworksByCorpusAndSource(corpus, source, page, size) {
                                 networks {
                                     year
                                 }
-                            }                  
+                            }
                         }
                     }`
   };
@@ -113,7 +113,7 @@ export function getTargetWordByIdQuery(targetwordId) {
 
 export function getAutocompleteSuggestionsQuery(corpus, source, term){
     const query = {
-      "query":`{getAutocompleteSuggestions(corpus:"${corpus}", source:"${source}", searchTerm: "${term}", page: 0, size: 10) { 
+      "query":`{getAutocompleteSuggestions(corpus:"${corpus}", source:"${source}", searchTerm: "${term}", page: 0, size: 10) {
             id
             corpus
             source
@@ -123,8 +123,31 @@ export function getAutocompleteSuggestionsQuery(corpus, source, term){
       }`
     }
     return query;
-    
+
 }
 
+export function getAvailablePartiesQuery(){
+    const query = {
+      "query":`{getAutocompleteSuggestions() {
+            id
+            corpus
+            source
+            pos
+            text
+       }
+      }`
+    }
+    return query;
 
+}
 
+export function getSpeakersForParty(party){
+    const query = {
+      "query":`{findSpeakerByParty(party: "${party}") {
+          entity_name
+        }
+      }`
+    }
+    return query;
+
+}

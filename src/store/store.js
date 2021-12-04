@@ -9,11 +9,12 @@ import {
 import props from '../properties/propertiesLoader';
 import {
     allAvailableCorporaQuery,
+    getAvailablePartiesQuery,
     getAutocompleteSuggestionsQuery,
     getNetworkQuery,
     getSourcesByCorpusQuery,
-    getTargetWordByIdQuery
-
+    getTargetWordByIdQuery,
+    getSpeakersForParty
 } from '@/queries/queries';
 import {ExportToCsv} from 'export-to-csv';
 
@@ -62,6 +63,20 @@ const mainModule = {
             this.commit('main/loadCorpora', corporaPayload);
             await dispatch('loadSources');
         },
+        async initParties({dispatch}) {
+            const response = await axios.post(graphqlEndpoint, getAvailablePartiesQuery);
+            const partyPayload = {
+                parties: response.data.data.parties
+            };
+            this.commit('main/loadParties', partyPayload);
+            await dispatch('loadSources');
+        },
+        async speakersForParty({state}, pane) {
+          const response = await axios.post(graphqlEndpoint, getSpeakersForParty(state[pane].selectedParty));
+          const speakerResponse = response.data.data.findSpeakerByParty;
+          const payload = {speakers: speakerResponse.map(row => row.entity_name).sort(), pane: pane};
+          this.commit('main/changeAvailableSpeakers', payload);
+        },
         async loadSources({state}) {
             for (const corpus of state.availableCorpora) {
                 const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus.id));
@@ -83,6 +98,28 @@ const mainModule = {
       } catch (error) {
         logger.error(error);
       }
+    },
+    async loadAvailableParties({ dispatch }) {
+      try {
+        await dispatch('initParties');
+        logger.log('Query parameters loaded successfully.');
+      } catch (error) {
+        logger.error(error);
+      }
+    },
+    async loadAvailableSpeakers({ dispatch }, party) {
+      try {
+        await dispatch('speakersForParty', party);
+        logger.log('Query parameters loaded successfully.');
+      } catch (error) {
+        logger.error(error);
+      }
+    },
+    async loadGeneralNetwork({state}, {pane: pane, slider: slidVal}) {
+      alert('PARTY: ' + state[pane].selectedParty + ' / SLIDER: ' + slidVal + '/ METRIC: ' + state[pane].selectedMetric);
+    },
+    async loadGeneralSpeakerNetwork({state}, pane) {
+      alert(state[pane].selectedParty + state[pane].selectedSpeaker);
     },
     async loadEgoNetwork({ state }, pane) {
       function assignValuesFromState(network, networkID) {
@@ -267,6 +304,7 @@ const mainModule = {
   state: {
     selectionColors: ['#1E88E5', '#D81B60'],
     availableCorpora: [],
+    availableParties: [],
     availableSourcesByCorpus: {},
     availableTargetwordsByCorpusAndSource: {},
     topNav: {
@@ -274,7 +312,11 @@ const mainModule = {
     },
     focusNode: null,
     pane1: {
+      availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
+      selectedMetric: {metric: ''},
+      selectedParty: {party: ''},
+      selectedSpeaker: {speaker: ''},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -284,7 +326,11 @@ const mainModule = {
       timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
     },
     pane2: {
+      availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
+      selectedMetric: {metric: ''},
+      selectedParty: {party: ''},
+      selectedSpeaker: {speaker: ''},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -332,6 +378,15 @@ const mainModule = {
                 }
             }).sort(compare);
     },
+    loadParties(state, payload) {
+        state.availableParties = payload.parties.map(
+            party => {
+                return {
+                    id: party,
+                    name: party
+                }
+            }).sort(compare);
+    },
     loadSourcesOfCorpus(state, payload) {
         const sources = payload.sources.map(
             source => {
@@ -356,6 +411,26 @@ const mainModule = {
         state[payload.pane].selectedCorpus = state.availableCorpora[0];
       }
       state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
+    },
+    changeSelectedParty(state, payload) {
+      if (payload.party) {
+        state[payload.pane].selectedParty = payload.party;
+      }
+    },
+    changeSelectedMetric(state, payload) {
+      if (payload.metric) {
+        state[payload.pane].selectedMetric = payload.metric;
+      }
+    },
+    changeAvailableSpeakers(state, payload) {
+      if (payload.speakers) {
+        state[payload.pane].availableSpeakers = payload.speakers;
+      }
+    },
+    changeSelectedSpeaker(state, payload) {
+      if (payload.speaker) {
+        state[payload.pane].selectedSpeaker = payload.speaker;
+      }
     },
     changeSelectedSubcorpus(state, payload) {
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
@@ -434,6 +509,11 @@ const mainModule = {
     },
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
+    availableParties: (state) => state.availableParties,
+    availableSpeakers: (state) => (pane) => state[pane].availableSpeakers,
+    selectedParty: (state) => (pane) => state[pane].selectedParty,
+    selectedMetric: (state) => (pane) => state[pane].selectedMetric,
+    selectedSpeaker: (state) => (pane) => state[pane].selectedSpeaker,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
     availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
     selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
