@@ -49,13 +49,13 @@
         <b-form-select
           size='sm'
           v-model='selectedMetric'
-          :data-sauto-id="'selectMetric-'+this.pane"
+          :data-sauto-id="'selectSpeakerMetric-'+this.pane"
         >
           <b-form-select-option
             v-for='option in availableMetrics'
             v-bind:key='option.id'
             v-bind:value='option'
-            :data-sauto-id="'metricOption-' + option"
+            :data-sauto-id="'metricSpeakerOption-' + option"
           >
             {{ option }}
           </b-form-select-option>
@@ -74,7 +74,7 @@
               size='sm'
               type='submit'
               variant='secondary'
-              :data-sauto-id='"queryButton-"+this.pane'
+              :data-sauto-id='"queryButtonSpeaker-"+this.pane'
               :disabled='!queryButtonActive'
               @click='setShowInfo'
             >
@@ -84,7 +84,7 @@
               class='reset-button'
               size='sm'
               variant='secondary'
-              :data-sauto-id='"queryButton-"+this.pane'
+              :data-sauto-id='"queryButtonSpeaker-"+this.pane'
               @click='initialize'
               v-b-tooltip.hover
               title="Reset query"
