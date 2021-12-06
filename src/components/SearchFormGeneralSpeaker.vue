@@ -46,6 +46,20 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
+        <b-form-select
+          size='sm'
+          v-model='selectedMetric'
+          :data-sauto-id="'selectMetric-'+this.pane"
+        >
+          <b-form-select-option
+            v-for='option in availableMetrics'
+            v-bind:key='option.id'
+            v-bind:value='option'
+            :data-sauto-id="'metricOption-' + option"
+          >
+            {{ option }}
+          </b-form-select-option>
+        </b-form-select>
         <b-form-input id="range-1" v-model="slider" type="range" min="0" max="1" step="0.05"></b-form-input>
         <div class="mt-2">Value: {{ slider }}</div>
       </b-col>
@@ -100,7 +114,7 @@ export default {
   data() {
     return {
       corpusEdit: false,
-      slider: 4,
+      slider: 1,
       subcorpusEdit: false,
       targetwordEdit: false,
       yearEdit: false
@@ -110,7 +124,7 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadGeneralSpeakerNetwork', this.queryPane);
+      this.$store.dispatch('main/loadGeneralSpeakerNetwork', {pane: this.queryPane, slider: this.$data.slider});
       this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
     },
     setShowInfo() {
@@ -120,6 +134,10 @@ export default {
     initialize() {
       this.$store.commit('main/changeSelectedParty', {
         party: null,
+        pane: this.queryPane
+      });
+      this.$store.commit('main/changeSelectedMetric', {
+        metric: null,
         pane: this.queryPane
       });
       this.$store.commit('main/changeAvailableSpeakers', {
@@ -174,6 +192,20 @@ export default {
         return this.$store.getters['main/availableMetrics'];
       }
     },
+    selectedMetric: {
+      get() {
+        return this.$store.getters['main/selectedMetric'](this.queryPane);
+      },
+      set(val) {
+        if (val) {
+          this.$store.commit('main/changeSelectedMetric', {
+            metric: val,
+            pane: this.queryPane
+          });
+          console.log('Set metric to: ' + val);
+        }
+      }
+    },
     selectedParty: {
       get() {
         return this.$store.getters['main/selectedParty'](this.queryPane);
@@ -187,6 +219,11 @@ export default {
           this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, val);
           console.log('Set to: ' + val);
         }
+      }
+    },
+    availableSpeakers: {
+      get() {
+        return this.$store.getters['main/availableSpeakers'](this.queryPane);
       }
     },
     selectedSpeaker: {

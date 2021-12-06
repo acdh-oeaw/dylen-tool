@@ -215,7 +215,11 @@ export default {
           corpus: network.corpus || {id: ",", name: ","},
           subcorpus: network.subcorpus  || {id: ",", name: ","},
           targetWordId: network.targetWordId,
-          pos:network.pos
+          pos:network.pos,
+          type:network.type,
+          party:network.party,
+          speaker:network.speaker,
+          filter:network.filter
         };
       }
       return selectedNetwork;

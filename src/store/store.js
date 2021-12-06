@@ -5,7 +5,8 @@ import {
     corpusNameMapping,
     sourceNameMapping,
     zipTimeSeriesAndYears,
-    partyMapping
+    partyMapping,
+    filterBasedOnSlider
 } from '@/helpers/mappers';
 import props from '../properties/propertiesLoader';
 import {
@@ -126,9 +127,10 @@ const mainModule = {
     async loadGeneralNetwork({state}, {pane: pane, slider: slidVal}) {
       function assignValuesFromState(network, networkID, slider_val, years) {
         network.id = networkID;
-        network.sliderVal = slider_val;
-        network.party = state[pane].selectedParty;
+        network.filter = {metric: state[pane].selectedMetric, value: slider_val};
+        network.party = party;
         network.possibleYears = years.map(Number).sort();
+        network.type = 'Party';
       }
 
       const year_param = "2016";
@@ -138,9 +140,8 @@ const mainModule = {
 
       try {
           const query = getGeneralNetworkQuery(party, year_param);
-          alert(query.query);
           const response = await axios.post(graphqlEndpoint, query);
-          const networkID = state[pane].selectedParty + '_' + year_param;
+          const networkID = party + '_' + year_param;
 
           const availableYearsQuery = getAvailableYearsForParty(party);
           const yearsResponse = await axios.post(graphqlEndpoint, availableYearsQuery);
@@ -149,38 +150,12 @@ const mainModule = {
           let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
 
           assignValuesFromState(network, networkID, slider_val, years);
-
-          let filteredNodes = network.nodes.filter(node => {
-            switch(metric) {
-              case "Degree Centrality":
-                return node.metrics.degree_centrality < slider_val;
-              case "Eigenvector Centrality":
-                return node.metrics.eigenvector_centrality < slider_val;
-              case "Betweenness Centrality":
-                return node.metrics.betweenness_centrality < slider_val;
-              case "Load Centrality":
-                return node.metrics.load_centrality < slider_val;
-              case "Pagerank":
-                return node.metrics.pagerank < slider_val;
-              case "Clustering Coefficient":
-                return node.metrics.clustering_coefficient < slider_val;
-              case "Harmonic Centrality":
-                return node.metrics.harmonic_centrality < slider_val;
-              default: true
-            }
-          });
-
-          console.log(filteredNodes);
-
-          network.nodes = filteredNodes;
+          filterBasedOnSlider(network, metric, slidVal);
 
           const payload = {
               pane: pane,
               network: network
           };
-
-          console.log('Network here --->');
-          console.log(network);
 
           this.commit('main/addGeneralNetwork', payload);
           logger.log('General Network loaded successfully.');
@@ -188,15 +163,18 @@ const mainModule = {
           logger.error(error);
       }
     },
-    async loadGeneralSpeakerNetwork({state}, pane) {
+    async loadGeneralSpeakerNetwork({state}, {pane: pane, slider: slidVal}) {
       function assignValuesFromState(network, networkID, possibleYears) {
         network.id = networkID;
         network.speaker = state[pane].selectedSpeaker;
-        network.party = state[pane].selectedParty.replace("Ö", "Oe");
+        network.party = partyMapping[state[pane].selectedParty];
         network.possibleYears = possibleYears;
+        network.type = 'Speaker';
+        network.filter = {metric: state[pane].selectedMetric, value: slidVal};
       }
 
       let speaker = state[pane].selectedSpeaker;
+      let metric = state[pane].selectedMetric;
 
       try {
           const query = getGeneralSpeakerNetworkQuery(speaker, "2016");
@@ -207,6 +185,7 @@ const mainModule = {
           let possibleYears = response.data.data.getGeneralSourceBySpeakerYear.networks.map(n => n.year).map(Number).sort();
 
           assignValuesFromState(network, networkID, possibleYears);
+          filterBasedOnSlider(network, metric, slidVal);
 
           const payload = {
               pane: pane,
@@ -228,6 +207,7 @@ const mainModule = {
         network.text = state[pane].selectedTargetword.text;
         network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year).sort();
         network.pos = state[pane].selectedTargetword.pos;
+        network.type = 'Ego';
       }
 
             let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
@@ -253,22 +233,86 @@ const mainModule = {
         },
         async loadUpdatedEgoNetwork(state, {network: oldNetwork, pane: pane}) {
             try {
-                const response = await axios.post(graphqlEndpoint,
-                    getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
+                let response = {};
+                let networkID = '';
+                let updatedNetwork = {};
 
-                const networkID = oldNetwork.targetWordId + oldNetwork.year;
+                switch(oldNetwork.type) {
+                  case 'Ego':
+                    response = await axios.post(graphqlEndpoint,
+                        getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
+                    networkID = oldNetwork.targetWordId + oldNetwork.year;
+                    updatedNetwork = response.data.data.getNetwork;
+
+                    updatedNetwork.subcorpus = oldNetwork.subcorpus;
+                    updatedNetwork.corpus = oldNetwork.corpus;
+                    updatedNetwork.targetWordId = oldNetwork.targetWordId;
+                    break;
+                  case 'Party':
+                    response = await axios.post(graphqlEndpoint,
+                        getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
+                    networkID = oldNetwork.party + '_' + oldNetwork.year;
+                    updatedNetwork = response.data.data.getGeneralSourceByPartyYear.networks;
+                    updatedNetwork.party = oldNetwork.party;
+                    updatedNetwork.filter = oldNetwork.filter;
+                    filterBasedOnSlider(updatedNetwork, oldNetwork.filter.metric, oldNetwork.filter.value);
+                    break;
+                  case 'Speaker':
+                    response = await axios.post(graphqlEndpoint,
+                        getGeneralSpeakerNetworkQuery(oldNetwork.speaker, oldNetwork.year));
+                    networkID = oldNetwork.speaker + '_' + oldNetwork.year;
+                    updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
+                    updatedNetwork.party = oldNetwork.party;
+                    updatedNetwork.speaker = oldNetwork.speaker;
+                    updatedNetwork.filter = oldNetwork.filter;
+                    filterBasedOnSlider(updatedNetwork, oldNetwork.filter.metric, oldNetwork.filter.value);
+                    break;
+                }
+
+                updatedNetwork.id = networkID;
+                updatedNetwork.text = oldNetwork.text;
+                updatedNetwork.possibleYears = oldNetwork.possibleYears;
+                updatedNetwork.pos = oldNetwork.pos;
+                updatedNetwork.type = oldNetwork.type;
+                updatedNetwork.year = oldNetwork.year;
+
+                logger.log('Network %s updated successfully.', networkID);
+
+                switch(oldNetwork.type) {
+                  case 'Ego':
+                    this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
+                    break;
+                  case 'Party':
+                    this.commit('main/updateGeneralNetwork', {networkObj: updatedNetwork, pane: pane});
+                    break;
+                  case 'Speaker':
+                    this.commit('main/updateGeneralSpeakerNetwork', {networkObj: updatedNetwork, pane: pane});
+                    break;
+                }
+                this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+        async loadUpdatedGeneralNetwork(state, {network: oldNetwork, pane: pane}) {
+            try {
+                const response = await axios.post(graphqlEndpoint,
+                    getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
+
+                const networkID = oldNetwork.party + oldNetwork.year;
                 let updatedNetwork = response.data.data.getNetwork;
 
                 updatedNetwork.id = networkID;
                 updatedNetwork.targetWordId = oldNetwork.targetWordId;
                 updatedNetwork.corpus = oldNetwork.corpus;
                 updatedNetwork.subcorpus = oldNetwork.subcorpus;
+                updatedNetwork.party = oldNetwork.party;
                 updatedNetwork.text = oldNetwork.text;
                 updatedNetwork.possibleYears = oldNetwork.possibleYears;
                 updatedNetwork.pos = oldNetwork.pos
-                logger.log('Ego Network %s updated successfully.', networkID);
+                logger.log('General Network %s updated successfully.', networkID);
 
-                this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
+                this.commit('main/updateGeneralNetwork', {networkObj: updatedNetwork, pane: pane});
                 this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
             } catch (error) {
                 logger.error(error);
@@ -352,7 +396,7 @@ const mainModule = {
               const response = await axios.post(graphqlEndpoint,
                   getMetadataSpeaker(state[pane].selectedSpeaker));
               let timeSeries = response.data.data.getAvailableYearsForSpeaker || {};
-              let years = response.data.data.getAvailableYearsForSpeaker.available_years;
+              let years = response.data.data.getAvailableYearsForSpeaker.available_years.sort();
 
               let data = zipTimeSeriesAndYears({
                 "frobeniusSimilarity": timeSeries.frobenius_similarity,
@@ -365,9 +409,6 @@ const mainModule = {
                   data: data
               };
 
-              console.log('Time series...');
-              console.log(data);
-
               this.commit('main/addGeneralSpeakerTimeSeriesData', payload);
               logger.log('General Network loaded successfully.');
           } catch (error) {
@@ -379,7 +420,7 @@ const mainModule = {
               const response = await axios.post(graphqlEndpoint,
                   getGeneralNetworkTimeSeries(state[pane].selectedParty.replace('Ö', 'Oe')));
               let timeSeries = response.data.data.getAvailableYearsForParty || {};
-              let years = response.data.data.getAvailableYearsForParty.available_years;
+              let years = response.data.data.getAvailableYearsForParty.available_years.sort();
 
               let data = zipTimeSeriesAndYears({
                 "frobeniusSimilarity": timeSeries.frobenius_similarity,
