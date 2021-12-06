@@ -289,7 +289,8 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {},//arbeits_ts.time_series //TODO: change when API is ready
+      errors: []
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -299,7 +300,8 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {},//random_ts.time_series //TODO: change when API is ready
+      errors: []
     },
     nodeMetrics: {
       selectedNodes: []
@@ -387,6 +389,14 @@ const mainModule = {
       }
       this.commit('main/changeSelectedYear', selectedYearPayload);
     },
+    addError(state, payload) {
+      console.log('ADDING ERROR')
+      state[payload.pane].errors.push(payload.error)
+      console.log('ADDED ERROR' + state[payload.pane].errors)
+    },
+    resetError(state, payload) {
+      state[payload.pane].errors = []
+    },
     changeSearchTerm(state, payload) {
       console.log('changing searchterm: ' + payload.searchTerm);
       if (payload.searchTerm) {
@@ -423,7 +433,16 @@ const mainModule = {
       logger.log('Updated Ego Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
+      console.log('setting autocomplete')
       state[payload.pane].autocompleteSuggestions = payload.suggestions;
+      console.log('autosuggestions: ' + state[payload.pane].autocompleteSuggestions)
+      if (state[payload.pane].autocompleteSuggestions.length === 0 && state[payload.pane].searchTerm) {
+        console.log('not found')
+        this.commit('main/addError', {
+          error: "Keyword not found",
+          pane: payload.pane
+        });
+      }
     },
     setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
