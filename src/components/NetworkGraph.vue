@@ -212,8 +212,8 @@ export default {
           year: network.year,
           possibleYears: network.possibleYears,
           threshold: network.threshold,
-          corpus: network.corpus,
-          subcorpus: network.subcorpus,
+          corpus: network.corpus || {id: ",", name: ","},
+          subcorpus: network.subcorpus  || {id: ",", name: ","},
           targetWordId: network.targetWordId,
           pos:network.pos
         };

@@ -38,8 +38,8 @@
               {{ option }}
             </b-form-select-option>
           </b-form-select>
-          <custom-slider min="10" max="50" step="2" raising v-model="slider" />
-          {{ slider }}
+          <b-form-input id="range-1" class="w-100 mb-2" v-model="slider" type="range" min="0" max="1" step="0.05"/>
+          <div class="mt-2">Value: {{ slider }}</div>
         </div>
       </b-col>
       <b-col xl='4'>
@@ -88,18 +88,13 @@
 </template>
 
 <script>
-import CustomSlider from "vue-custom-range-slider";
-
 export default {
-  components: {
-    CustomSlider
-  },
   name: 'SearchFormGeneral',
   props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,
-      slider: "12",
+      slider: 0.4,
       subcorpusEdit: false,
       targetwordEdit: false,
       yearEdit: false
@@ -110,7 +105,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadGeneralNetwork', {pane: this.queryPane, slider: this.$data.slider});
-      this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
     },
     findSearchTermInAvailableTargetwords() {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
@@ -133,6 +128,10 @@ export default {
     initialize() {
       this.$store.commit('main/changeSelectedParty', {
         party: null,
+        pane: this.queryPane
+      });
+      this.$store.commit('main/changeSelectedMetric', {
+        metric: null,
         pane: this.queryPane
       });
       this.$store.commit('main/resetSelectedNetwork', {
@@ -176,13 +175,12 @@ export default {
     },
     availableParties: {
       get() {
-        //return this.$store.getters['main/availableParties'];
-        return ['SPÖ', 'KPÖ', 'FPÖ', 'GRÜNE', 'ÖVP'];
+        return this.$store.getters['main/availableParties'];
       }
     },
     availableMetrics: {
       get() {
-        return ['Jaccard', 'Centrality', '...'];
+        return this.$store.getters['main/availableMetrics'];
       }
     },
     selectedMetric: {

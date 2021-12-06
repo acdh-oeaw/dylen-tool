@@ -220,10 +220,8 @@ export default {
         .join('line')
         .attr(
           'stroke',
-          (d) =>
-            `rgba(0, 0, 0, ${
-              this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
-            })`
+          //(d) => `rgba(0, 0, 0, ${this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity } )`
+            1
         )
         .attr('stroke-width', (d) => this.scaleThickness(d.similarity));
     },

@@ -46,6 +46,8 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
+        <b-form-input id="range-1" v-model="slider" type="range" min="0" max="1" step="0.05"></b-form-input>
+        <div class="mt-2">Value: {{ slider }}</div>
       </b-col>
       <b-col xl='4'>
         <b-row align-h='end'>
@@ -94,11 +96,11 @@
 
 <script>
 export default {
-  name: 'SearchFormGeneralSpeaker',
   props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,
+      slider: 4,
       subcorpusEdit: false,
       targetwordEdit: false,
       yearEdit: false
@@ -109,7 +111,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadGeneralSpeakerNetwork', this.queryPane);
-      this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
     },
     setShowInfo() {
       this.$emit('showInfoButton', true);
@@ -164,12 +166,12 @@ export default {
     availableParties: {
       get() {
         //return this.$store.getters['main/availableParties'];
-        return ['SPÖ', 'KPÖ', 'FPÖ', 'GRÜNE', 'ÖVP'];
+        return this.$store.getters['main/availableParties'];
       }
     },
-    availableSpeakers: {
+    availableMetrics: {
       get() {
-        return this.$store.getters['main/availableSpeakers'](this.queryPane);
+        return this.$store.getters['main/availableMetrics'];
       }
     },
     selectedParty: {

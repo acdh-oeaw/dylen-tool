@@ -66,6 +66,43 @@ export function getNetworkQuery(targetwordId, year) {
   return query;
 }
 
+export function getGeneralNetworkQuery(entity, year) {
+  const query = {
+    query: `{
+      getGeneralSourceByPartyYear(entity: "${entity}", year: "${year}") {
+        entity
+        networks {
+          year
+          nodes {
+            id
+            clusterId
+            text
+            pos
+            absolute_frequency
+            normalized_frequency
+            metrics {
+              degree_centrality
+              closeness_centrality
+              betweenness_centrality
+              eigenvector_centrality
+              pagerank
+              load_centrality
+              harmonic_centrality
+              clustering_coefficient
+            }
+          }
+          edges {
+            node1
+            node2
+            similarity
+          }
+        }
+      }
+    }`
+  };
+  return query;
+}
+
 export function getTargetWordByIdQuery(targetwordId) {
   const query = {
     query: `{
@@ -141,10 +178,115 @@ export function getAvailablePartiesQuery(){
 
 }
 
+export function getAvailableYearsForParty(party) {
+  const query = {
+    query: `{
+      getAvailableYearsForParty(party: "${party}") {
+        available_years
+      }
+    }`
+  };
+
+  return query;
+}
+
+export function getMetadataSpeaker(entityName) {
+  const query = {
+    query: `{
+      getAvailableYearsForSpeaker(entity_name: "${entityName}") {
+        available_years
+        frobenius_similarity {
+          previous_year
+          last_year
+          first_year
+        }
+        rankdcg_similarity {
+          previous_year
+          last_year
+          first_year
+        }
+        jaccard_similarity {
+          previous_year
+          last_year
+          first_year
+        }
+      }
+    }`
+  };
+
+  return query;
+}
+
+export function getGeneralNetworkTimeSeries(party) {
+  const query = {
+    query: `{
+      getAvailableYearsForParty(party: "${party}") {
+        available_years
+        frobenius_similarity {
+          previous_year
+          last_year
+          first_year
+        }
+        rankdcg_similarity {
+          previous_year
+          last_year
+          first_year
+        }
+        jaccard_similarity {
+          previous_year
+          last_year
+          first_year
+        }
+      }
+    }`
+  };
+
+  return query;
+}
+
 export function getSpeakersForParty(party){
     const query = {
       "query":`{findSpeakerByParty(party: "${party}") {
+          speakers
+        }
+      }`
+    }
+    return query;
+
+}
+
+export function getGeneralSpeakerNetworkQuery(entityName, year){
+    const query = {
+      "query":`{
+        getGeneralSourceBySpeakerYear(entity_name: "${entityName}", year: "${year}") {
+          type
           entity_name
+          networks {
+            year
+            nodes {
+              id
+              clusterId
+              text
+              pos
+              absolute_frequency
+              normalized_frequency
+              metrics {
+                closeness_centrality
+                betweenness_centrality
+                pagerank
+                eigenvector_centrality
+                load_centrality
+                harmonic_centrality
+                clustering_coefficient
+                degree_centrality
+              }
+            }
+            edges {
+              node1
+              node2
+              similarity
+            }
+          }
         }
       }`
     }
