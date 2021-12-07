@@ -8,8 +8,14 @@
   >
     <b-row class='h-10'>
       <b-col>
-        <b-row align-h='center'>
+        <b-row align-h='center' v-if="egoNetwork.type == 'Ego'">
           <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
+        </b-row>
+        <b-row align-h='center' v-if="egoNetwork.type == 'Party'">
+          <span><b>{{ egoNetwork.party }}</b></span>
+        </b-row>
+        <b-row align-h='center' v-if="egoNetwork.type == 'Speaker'">
+          <span><b>{{ egoNetwork.party }} / {{ egoNetwork.speaker }}</b></span>
         </b-row>
       </b-col>
     </b-row>
@@ -212,8 +218,8 @@ export default {
           year: network.year,
           possibleYears: network.possibleYears,
           threshold: network.threshold,
-          corpus: network.corpus || {id: ",", name: ","},
-          subcorpus: network.subcorpus  || {id: ",", name: ","},
+          corpus: network.corpus,
+          subcorpus: network.subcorpus,
           targetWordId: network.targetWordId,
           pos:network.pos,
           type:network.type,

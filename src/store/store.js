@@ -131,23 +131,24 @@ const mainModule = {
         network.party = party;
         network.possibleYears = years.map(Number).sort();
         network.type = 'Party';
+        network.year = Math.max(...years.map(Number));
       }
 
-      const year_param = "2016";
       let slider_val = slidVal;
       let party = partyMapping[state[pane].selectedParty];
       let metric = state[pane].selectedMetric;
 
       try {
-          const query = getGeneralNetworkQuery(party, year_param);
-          const response = await axios.post(graphqlEndpoint, query);
-          const networkID = party + '_' + year_param;
-
           const availableYearsQuery = getAvailableYearsForParty(party);
           const yearsResponse = await axios.post(graphqlEndpoint, availableYearsQuery);
+          let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
+          let year = Math.max(...years);
+
+          const query = getGeneralNetworkQuery(party, year);
+          const response = await axios.post(graphqlEndpoint, query);
+          const networkID = party + '_' + year;
 
           let network = response.data.data.getGeneralSourceByPartyYear.networks;
-          let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
 
           assignValuesFromState(network, networkID, slider_val, years);
           filterBasedOnSlider(network, metric, slidVal);
@@ -168,22 +169,28 @@ const mainModule = {
         network.id = networkID;
         network.speaker = state[pane].selectedSpeaker;
         network.party = partyMapping[state[pane].selectedParty];
-        network.possibleYears = possibleYears;
+        network.possibleYears = possibleYears.map(Number).sort();
         network.type = 'Speaker';
         network.filter = {metric: state[pane].selectedMetric, value: slidVal};
+        network.year = Math.max(...possibleYears.map(Number));
       }
 
       let speaker = state[pane].selectedSpeaker;
       let metric = state[pane].selectedMetric;
 
       try {
-          const query = getGeneralSpeakerNetworkQuery(speaker, "2016");
+          const yearResponse = await axios.post(graphqlEndpoint, getMetadataSpeaker(speaker));
+          let possibleYears = yearResponse.data.data.getAvailableYearsForSpeaker.available_years.sort();
+          let maxYear = Math.max(...possibleYears.map(Number));
+
+          console.log(maxYear);
+
+          const query = getGeneralSpeakerNetworkQuery(speaker);
           const response = await axios.post(graphqlEndpoint, query);
-          const networkID = speaker + '_' + "2016";
 
-          let network = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == "2016");
-          let possibleYears = response.data.data.getGeneralSourceBySpeakerYear.networks.map(n => n.year).map(Number).sort();
+          let network = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == maxYear);
 
+          const networkID = speaker + '_' + maxYear;
           assignValuesFromState(network, networkID, possibleYears);
           filterBasedOnSlider(network, metric, slidVal);
 
@@ -259,7 +266,7 @@ const mainModule = {
                     break;
                   case 'Speaker':
                     response = await axios.post(graphqlEndpoint,
-                        getGeneralSpeakerNetworkQuery(oldNetwork.speaker, oldNetwork.year));
+                        getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
                     networkID = oldNetwork.speaker + '_' + oldNetwork.year;
                     updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
                     updatedNetwork.party = oldNetwork.party;

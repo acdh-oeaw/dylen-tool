@@ -255,10 +255,10 @@ export function getSpeakersForParty(party){
 
 }
 
-export function getGeneralSpeakerNetworkQuery(entityName, year){
+export function getGeneralSpeakerNetworkQuery(entityName){
     const query = {
       "query":`{
-        getGeneralSourceBySpeakerYear(entity_name: "${entityName}", year: "${year}") {
+        getGeneralSourceBySpeakerYear(entity_name: "${entityName}") {
           type
           entity_name
           networks {
