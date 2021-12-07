@@ -12,7 +12,7 @@
       sticky-header='100%'
       small
       sort-icon-left
-      class='h-100'
+      class='h-100 sticky-table'
       data-sauto-id='table'
       @sort-changed='handleSortChanged'
     >
@@ -86,7 +86,10 @@ export default {
       let fields = [];
       for (let key in this.tableData[0]) {
         if (key != 'color' && key != 'node')
-          fields.push({ key, sortable: true });
+          fields.push({
+            key,
+            sortable: true
+          });
       }
       return fields;
     },
@@ -205,4 +208,28 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.sticky-table td {
+  background-color: white;
+}
+.sticky-table tr td:first-child,
+.sticky-table th:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.sticky-table th:first-child {
+  z-index: 4 !important;
+}
+.sticky-table tr td:nth-child(2),
+.sticky-table th:nth-child(2) {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 66px;
+  z-index: 2;
+}
+.sticky-table th:nth-child(2) {
+  z-index: 4 !important;
+}
+</style>
