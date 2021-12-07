@@ -435,7 +435,7 @@ const mainModule = {
       logger.log('Updated Ego Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
-      state[payload.pane].autocompleteSuggestions = payload.suggestions;
+      state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));
     },
     setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
