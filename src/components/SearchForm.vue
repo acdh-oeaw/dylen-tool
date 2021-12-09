@@ -65,7 +65,7 @@
             v-model='searchTerm'
             :data-sauto-id="'selectTargetword-'+this.pane"
             :list='`datalist-${pane}`'
-            :style="!errors.length>0 ? { 'color': 'lightcoral' } : null"
+            :style="errors.length>0 ? { 'color': 'lightcoral' } : null"
             @change='handleSearchTermSelect'
             @keypress='this.keyPress'
             autocomplete='off'
@@ -148,7 +148,7 @@ export default {
     checkInvalidChars(val) {
       let invalidChars = []
       for (let c of val) {
-        if (c.match("[\\s!@#\\$%\\^\\&*\\)\\(+=.,_-]")) {
+        if (c.match("[1-9;:\\s!@#\\$%\\^\\&*\\)\\(+=.,_-]")) {
           console.log('contains invalid character.')
           invalidChars.push(c)
         }
