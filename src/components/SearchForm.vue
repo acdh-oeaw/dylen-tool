@@ -156,11 +156,9 @@ export default {
       return invalidChars
     },
     validateSearchTerm(val) {
-      console.log(this.errors.length)
       this.$store.commit('main/resetError', {
         pane: this.queryPane
       });
-      console.log(this.errors.length)
       let invalidChars = this.checkInvalidChars(val)
       if(invalidChars.length > 0) {
         this.$store.commit('main/addError', {
