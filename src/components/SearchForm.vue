@@ -145,16 +145,26 @@ export default {
   },
   mounted() {},
   methods: {
+    checkInvalidChars(val) {
+      let invalidChars = []
+      for (let c of val) {
+        if (c.match("[\\s!@#\\$%\\^\\&*\\)\\(+=.,_-]")) {
+          console.log('contains invalid character.')
+          invalidChars.push(c)
+        }
+      }
+      return invalidChars
+    },
     validateSearchTerm(val) {
       console.log(this.errors.length)
       this.$store.commit('main/resetError', {
         pane: this.queryPane
       });
       console.log(this.errors.length)
-      if (val.match("[ +*/]")) {
-        console.log('contains invalid character.')
+      let invalidChars = this.checkInvalidChars(val)
+      if(invalidChars.length > 0) {
         this.$store.commit('main/addError', {
-          error: "contains invalid character.",
+          error: "contains invalid characters " + invalidChars.join(' '),
           pane: this.queryPane
         });
       } else {
