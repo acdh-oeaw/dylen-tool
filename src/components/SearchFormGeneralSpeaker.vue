@@ -60,8 +60,13 @@
             {{ option }}
           </b-form-select-option>
         </b-form-select>
-        <b-form-input id="range-1" v-model="slider" type="range" min="0" max="1" step="0.05"></b-form-input>
-        <div class="mt-2">Value: {{ slider }}</div>
+        <div class="mt-3">
+          <Slider
+          :format="sliderFormat"
+          showTooltip="drag"
+          tooltipPosition="bottom"
+          v-model="valueSlid" />
+        </div>
       </b-col>
       <b-col xl='4'>
         <b-row align-h='end'>
@@ -109,13 +114,21 @@
 </template>
 
 <script>
+import Slider from '@vueform/slider/dist/slider.vue2.js';
 export default {
   props: ['isSidebar', 'pane', 'withLabels'],
+  components: {
+      Slider,
+  },
   data() {
     return {
       corpusEdit: false,
       slider: 1,
+      sliderFormat: function (value) {
+        return `${Math.round(value)}%`
+      },
       subcorpusEdit: false,
+      valueSlid: [0, 100],
       targetwordEdit: false,
       yearEdit: false
     };
@@ -124,7 +137,11 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadGeneralSpeakerNetwork', {pane: this.queryPane, slider: this.$data.slider});
+      this.$store.dispatch('main/loadGeneralSpeakerNetwork', {
+        pane: this.queryPane,
+        sliderMin: this.$data.valueSlid[0]/100,
+        sliderMax: this.$data.valueSlid[1]/100,
+      });
       this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
     },
     setShowInfo() {
@@ -208,7 +225,9 @@ export default {
     },
     selectedParty: {
       get() {
-        return this.$store.getters['main/selectedParty'](this.queryPane);
+        const party = this.$store.getters['main/selectedParty'](this.queryPane)
+        this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, party);
+        return party;
       },
       set(val) {
         if (val) {
@@ -217,7 +236,6 @@ export default {
             pane: this.queryPane
           });
           this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, val);
-          console.log('Set to: ' + val);
         }
       }
     },
@@ -236,7 +254,6 @@ export default {
             speaker: val,
             pane: this.queryPane
           });
-          console.log('Set to: ' + val);
         }
       }
     },

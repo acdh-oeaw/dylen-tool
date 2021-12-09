@@ -155,18 +155,7 @@
         class='h-100'
         align-v='center'
       >
-        <b-col v-if='!showSecondForm'>
-          <b-button
-            pill
-            data-sauto-id='second-query-button-general'
-            v-if='showSecondButton'
-            size='sm'
-            variant='secondary'
-            v-on:click='queryButtonClicked(2)'
-          >
-            <b>+</b>
-          </b-button>
-        </b-col>
+
         <b-col>
           <search-form-general-speaker
             :with-labels='false'

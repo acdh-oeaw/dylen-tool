@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueCompositionAPI from '@vue/composition-api'
+
 import axios from 'axios';
 import {
     corpusNameMapping,
@@ -27,6 +29,7 @@ import {ExportToCsv} from 'export-to-csv';
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
+Vue.use(VueCompositionAPI);
 
 const graphqlEndpoint = props.graphqlEndpoint;
 const logger = require('../helpers/logger');
@@ -124,19 +127,17 @@ const mainModule = {
       }
     },
 
-    async loadGeneralNetwork({state}, {pane: pane, slider: slidVal}) {
-      function assignValuesFromState(network, networkID, slider_val, years) {
+    async loadGeneralNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
+      function assignValuesFromState(network, networkID, years) {
         network.id = networkID;
-        network.filter = {metric: state[pane].selectedMetric, value: slider_val};
+        network.filter = {metric: state[pane].selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
         network.party = party;
         network.possibleYears = years.map(Number).sort();
-        network.type = 'Party';
         network.year = Math.max(...years.map(Number));
+        network.type = 'Party';
       }
 
-      let slider_val = slidVal;
       let party = partyMapping[state[pane].selectedParty];
-      let metric = state[pane].selectedMetric;
 
       try {
           const availableYearsQuery = getAvailableYearsForParty(party);
@@ -150,8 +151,8 @@ const mainModule = {
 
           let network = response.data.data.getGeneralSourceByPartyYear.networks;
 
-          assignValuesFromState(network, networkID, slider_val, years);
-          filterBasedOnSlider(network, metric, slidVal);
+          assignValuesFromState(network, networkID, years);
+          filterBasedOnSlider(network);
 
           const payload = {
               pane: pane,
@@ -164,26 +165,23 @@ const mainModule = {
           logger.error(error);
       }
     },
-    async loadGeneralSpeakerNetwork({state}, {pane: pane, slider: slidVal}) {
+    async loadGeneralSpeakerNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
       function assignValuesFromState(network, networkID, possibleYears) {
         network.id = networkID;
         network.speaker = state[pane].selectedSpeaker;
         network.party = partyMapping[state[pane].selectedParty];
         network.possibleYears = possibleYears.map(Number).sort();
-        network.type = 'Speaker';
-        network.filter = {metric: state[pane].selectedMetric, value: slidVal};
+        network.filter = {metric: state[pane].selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
         network.year = Math.max(...possibleYears.map(Number));
+        network.type = 'Speaker';
       }
 
       let speaker = state[pane].selectedSpeaker;
-      let metric = state[pane].selectedMetric;
 
       try {
           const yearResponse = await axios.post(graphqlEndpoint, getMetadataSpeaker(speaker));
           let possibleYears = yearResponse.data.data.getAvailableYearsForSpeaker.available_years.sort();
           let maxYear = Math.max(...possibleYears.map(Number));
-
-          console.log(maxYear);
 
           const query = getGeneralSpeakerNetworkQuery(speaker);
           const response = await axios.post(graphqlEndpoint, query);
@@ -192,7 +190,7 @@ const mainModule = {
 
           const networkID = speaker + '_' + maxYear;
           assignValuesFromState(network, networkID, possibleYears);
-          filterBasedOnSlider(network, metric, slidVal);
+          filterBasedOnSlider(network);
 
           const payload = {
               pane: pane,
@@ -238,88 +236,75 @@ const mainModule = {
                 logger.error(error);
             }
         },
-        async loadUpdatedEgoNetwork(state, {network: oldNetwork, pane: pane}) {
-            try {
-                let response = {};
-                let networkID = '';
-                let updatedNetwork = {};
+        async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
+          try {
+            const response = await axios.post(graphqlEndpoint,
+              getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
 
-                switch(oldNetwork.type) {
-                  case 'Ego':
-                    response = await axios.post(graphqlEndpoint,
-                        getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
-                    networkID = oldNetwork.targetWordId + oldNetwork.year;
-                    updatedNetwork = response.data.data.getNetwork;
+            const networkID = oldNetwork.targetWordId + oldNetwork.year;
+            let updatedNetwork = response.data.data.getNetwork;
 
-                    updatedNetwork.subcorpus = oldNetwork.subcorpus;
-                    updatedNetwork.corpus = oldNetwork.corpus;
-                    updatedNetwork.targetWordId = oldNetwork.targetWordId;
-                    break;
-                  case 'Party':
-                    response = await axios.post(graphqlEndpoint,
-                        getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
-                    networkID = oldNetwork.party + '_' + oldNetwork.year;
-                    updatedNetwork = response.data.data.getGeneralSourceByPartyYear.networks;
-                    updatedNetwork.party = oldNetwork.party;
-                    updatedNetwork.filter = oldNetwork.filter;
-                    filterBasedOnSlider(updatedNetwork, oldNetwork.filter.metric, oldNetwork.filter.value);
-                    break;
-                  case 'Speaker':
-                    response = await axios.post(graphqlEndpoint,
-                        getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
-                    networkID = oldNetwork.speaker + '_' + oldNetwork.year;
-                    updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
-                    updatedNetwork.party = oldNetwork.party;
-                    updatedNetwork.speaker = oldNetwork.speaker;
-                    updatedNetwork.filter = oldNetwork.filter;
-                    filterBasedOnSlider(updatedNetwork, oldNetwork.filter.metric, oldNetwork.filter.value);
-                    break;
-                }
+            updatedNetwork.id = networkID;
+            updatedNetwork.targetWordId = oldNetwork.targetWordId;
+            updatedNetwork.corpus = oldNetwork.corpus;
+            updatedNetwork.subcorpus = oldNetwork.subcorpus;
+            updatedNetwork.text = oldNetwork.text;
+            updatedNetwork.possibleYears = oldNetwork.possibleYears;
+            updatedNetwork.pos = oldNetwork.pos;
+            updatedNetwork.type = oldNetwork.type;
+            logger.log('Ego Network %s updated successfully.', networkID);
 
-                updatedNetwork.id = networkID;
-                updatedNetwork.text = oldNetwork.text;
-                updatedNetwork.possibleYears = oldNetwork.possibleYears;
-                updatedNetwork.pos = oldNetwork.pos;
-                updatedNetwork.type = oldNetwork.type;
-                updatedNetwork.year = oldNetwork.year;
-
-                logger.log('Network %s updated successfully.', networkID);
-
-                switch(oldNetwork.type) {
-                  case 'Ego':
-                    this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
-                    break;
-                  case 'Party':
-                    this.commit('main/updateGeneralNetwork', {networkObj: updatedNetwork, pane: pane});
-                    break;
-                  case 'Speaker':
-                    this.commit('main/updateGeneralSpeakerNetwork', {networkObj: updatedNetwork, pane: pane});
-                    break;
-                }
-                this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
-            } catch (error) {
-                logger.error(error);
-            }
+            this.commit('main/updateEgoNetwork', { networkObj: updatedNetwork, pane: pane });
+            this.commit('main/changeSelectedYear', { pane: pane, year: updatedNetwork });
+          } catch (error) {
+            logger.error(error);
+          }
         },
         async loadUpdatedGeneralNetwork(state, {network: oldNetwork, pane: pane}) {
+          try {
+            let response = await axios.post(graphqlEndpoint,
+              getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
+            let networkID = oldNetwork.party + '_' + oldNetwork.year;
+            let updatedNetwork = response.data.data.getGeneralSourceByPartyYear.networks;
+
+            console.log(updatedNetwork);
+            updatedNetwork.party = oldNetwork.party;
+            updatedNetwork.filter = oldNetwork.filter;
+            updatedNetwork.id = networkID;
+            updatedNetwork.possibleYears = oldNetwork.possibleYears;
+            updatedNetwork.year = oldNetwork.year;
+            updatedNetwork.type = oldNetwork.type;
+            filterBasedOnSlider(updatedNetwork);
+            console.log(updatedNetwork);
+
+            logger.log('Network %s updated successfully.', networkID);
+
+            this.commit('main/updateGeneralNetwork', {networkObj: updatedNetwork, pane: pane});
+            this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
+          } catch (error) {
+            logger.error(error);
+          }
+        },
+        async loadUpdatedSpeakerNetwork(state, {network: oldNetwork, pane: pane}) {
             try {
                 const response = await axios.post(graphqlEndpoint,
-                    getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
+                  getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
 
-                const networkID = oldNetwork.party + oldNetwork.year;
-                let updatedNetwork = response.data.data.getNetwork;
+                const networkID = oldNetwork.speaker + '_' + oldNetwork.year;
+                let updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
 
-                updatedNetwork.id = networkID;
-                updatedNetwork.targetWordId = oldNetwork.targetWordId;
-                updatedNetwork.corpus = oldNetwork.corpus;
-                updatedNetwork.subcorpus = oldNetwork.subcorpus;
                 updatedNetwork.party = oldNetwork.party;
-                updatedNetwork.text = oldNetwork.text;
+                updatedNetwork.speaker = oldNetwork.speaker;
+                updatedNetwork.filter = oldNetwork.filter;
+                updatedNetwork.id = networkID;
                 updatedNetwork.possibleYears = oldNetwork.possibleYears;
-                updatedNetwork.pos = oldNetwork.pos
+                updatedNetwork.year = oldNetwork.year;
+                updatedNetwork.type = oldNetwork.type;
+                filterBasedOnSlider(updatedNetwork);
+
                 logger.log('General Network %s updated successfully.', networkID);
 
-                this.commit('main/updateGeneralNetwork', {networkObj: updatedNetwork, pane: pane});
+                this.commit('main/updateGeneralSpeakerNetwork', {networkObj: updatedNetwork, pane: pane});
                 this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
             } catch (error) {
                 logger.error(error);
@@ -528,10 +513,9 @@ const mainModule = {
     showInfo: true,
     availableMetrics: ['Degree Centrality', 'Eigenvector Centrality', 'Closeness Centrality', 'Betweenness Centrality',
       'Pagerank', 'Load Centrality', 'Harmonic Centrality', 'Clustering Coefficient'],
-    availableParties: ['SPÖ', 'KPÖ', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS', 'PILZ']
+    availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS']
   },
   mutations: {
-
     changeSecondFormVisibility(state, payload) {
       if (payload.pane === 'pane2') {
         state.topNav.secondForm = !state.topNav.secondForm

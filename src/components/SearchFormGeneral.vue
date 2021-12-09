@@ -1,7 +1,7 @@
 <template>
   <b-form @submit='onSubmit'>
     <b-row>
-      <b-col xl='8'>
+      <b-col xl='6'>
         <b-form-group
           id='select-party-group-viz'
           label='Party: '
@@ -38,8 +38,13 @@
               {{ option }}
             </b-form-select-option>
           </b-form-select>
-          <b-form-input id="range-1" class="w-100 mb-2" v-model="slider" type="range" min="0" max="1" step="0.05"/>
-          <div class="mt-2">Value: {{ slider }}</div>
+          <div class="mt-3">
+            <Slider
+            :format="sliderFormat"
+            showTooltip="drag"
+            tooltipPosition="bottom"
+            v-model="valueSlid" />
+          </div>
         </div>
       </b-col>
       <b-col xl='4'>
@@ -88,13 +93,21 @@
 </template>
 
 <script>
+import Slider from '@vueform/slider/dist/slider.vue2.js';
+
 export default {
+  components: {
+      Slider,
+  },
   name: 'SearchFormGeneral',
   props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,
-      slider: 0.4,
+      valueSlid: [0, 100],
+      sliderFormat: function (value) {
+        return `${Math.round(value)}%`
+      },
       subcorpusEdit: false,
       targetwordEdit: false,
       yearEdit: false
@@ -104,7 +117,11 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadGeneralNetwork', {pane: this.queryPane, slider: this.$data.slider});
+      this.$store.dispatch('main/loadGeneralNetwork', {
+        pane: this.queryPane,
+        sliderMin: this.$data.valueSlid[0]/100,
+        sliderMax: this.$data.valueSlid[1]/100,
+      });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
     },
     findSearchTermInAvailableTargetwords() {
@@ -229,6 +246,8 @@ export default {
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
+<style src="@vueform/slider/themes/default.css"></style>
+
 <style scoped>
 .form-group {
   margin-bottom: 0rem;
