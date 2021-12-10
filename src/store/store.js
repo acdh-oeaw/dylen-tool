@@ -4,9 +4,8 @@ import VueCompositionAPI from '@vue/composition-api'
 
 import axios from 'axios';
 import {
-    timeSeriesKeyMap,
     corpusNameMapping,
-    sourceNameMapping, relativeToMap,
+    sourceNameMapping,
     zipTimeSeriesAndYears,
     partyMapping,
     filterBasedOnSlider
