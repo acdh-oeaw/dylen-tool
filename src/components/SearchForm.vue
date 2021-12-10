@@ -82,7 +82,10 @@
         </b-form-group>
       </b-col>
       <b-col xl='3'>
-          <div style='color:lightcoral;padding-top: 0.1em;' v-if='!hasSuggestions'>targetword not found</div>
+        <div
+          style='color:lightcoral;padding-top: 0.1em;'
+          v-if='!hasSuggestions'
+        >targetword not found</div>
       </b-col>
       <b-col xl='3'>
         <b-row align-h='end'>
@@ -99,7 +102,11 @@
               :disabled='!queryButtonActive'
               @click='setShowInfo'
             >
-              Visualize
+              Visualize <b-spinner
+                label="Spinning"
+                v-if="busy"
+                small
+              ></b-spinner>
             </b-button>
             <b-button
               class='reset-button'
@@ -321,6 +328,17 @@ export default {
         });
       }
     },
+    busy: {
+      get() {
+        return this.$store.getters['main/busyState'](this.queryPane);
+      },
+      set(val) {
+        this.$store.commit('main/setBusyState', {
+          busy: val,
+          pane: this.queryPane
+        });
+      }
+    }
   },
   watch: {}
 };

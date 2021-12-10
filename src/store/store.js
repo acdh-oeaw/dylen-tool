@@ -85,7 +85,7 @@ const mainModule = {
         logger.error(error);
       }
     },
-    async loadEgoNetwork({ state }, pane) {
+    async loadEgoNetwork({ state, dispatch }, pane) {
       function assignValuesFromState(network, networkID) {
         network.id = networkID;
         network.targetWordId = state[pane].selectedTargetword.id;
@@ -95,7 +95,16 @@ const mainModule = {
         network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year).sort();
         network.pos = state[pane].selectedTargetword.pos;
       }
-
+      state[pane].busy = true;
+      if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
+        console.log(state[pane].autocompleteSuggestions)
+        let response = await dispatch("loadTargetwordBySearchTerm", {
+          pane: pane,
+          searchTerm: state[pane].autocompleteSuggestions[0]
+        });
+        state[pane].selectedTargetword = response.data.data.getTargetWordById;
+        console.log(state[pane].selectedTargetword)
+      }
       let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
       try {
@@ -113,8 +122,10 @@ const mainModule = {
 
         this.commit('main/addEgoNetwork', payload);
         logger.log('Ego Network loaded successfully.');
+        state[pane].busy = false;
       } catch (error) {
         logger.error(error);
+        state[pane].busy = false;
       }
     },
     async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
@@ -204,9 +215,6 @@ const mainModule = {
       }
       const response = await axios.post(graphqlEndpoint,
         getTargetWordByIdQuery(searchTermId));
-
-      console.log(response);
-
       this.commit('main/changeSelectedTargetword', {
         pane: payload.pane,
         targetword: response.data.data.getTargetWordById
@@ -253,6 +261,8 @@ const mainModule = {
       }
 
       try {
+        if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id))
+          state[pane].selectedTargetword = state[pane].autocompleteSuggestions[0];
         const response = await axios.post(graphqlEndpoint,
           getTargetWordByIdQuery(state[pane].selectedTargetword.id));
         let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
@@ -289,7 +299,8 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {},
+      busy: false
     },
     pane2: {
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -299,7 +310,8 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {},
+      busy: false
     },
     nodeMetrics: {
       selectedNodes: []
@@ -423,7 +435,7 @@ const mainModule = {
       logger.log('Updated Ego Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
-      state[payload.pane].autocompleteSuggestions = payload.suggestions;
+      state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));
     },
     setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
@@ -440,6 +452,9 @@ const mainModule = {
     removeFocusNode(state, payload) {
       if (state.focusNode === payload.node)
         state.focusNode = null;
+    },
+    setBusyState(state, payload){
+      state[payload.pane].busy = payload.busy;
     }
   },
   getters: {
@@ -474,7 +489,8 @@ const mainModule = {
       return count;
     },
     secondFormVisibility: (state) => state['topNav'].secondForm,
-    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData
+    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
+    busyState: state => pane => state[pane].busy
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
