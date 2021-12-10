@@ -21,6 +21,7 @@
           v-model="selectedMetric"
           :options="metricOptions"
           size="sm"
+          data-sauto-id='timeSeries-metric-option'
         >
 
         </b-select>
@@ -29,6 +30,7 @@
           v-model="selectedRelativeTo"
           :options="relativeToOptions"
           size="sm"
+          data-sauto-id='timeSeries-relative-option'
         >
 
         </b-select>
@@ -38,6 +40,7 @@
           :data="selectedTimeSeriesData"
           :colors="lineColors"
           :labels="labels"
+          data-sauto-id='timeSeries'
         ></LineChart>
       </b-col>
     </b-row>

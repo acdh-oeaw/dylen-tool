@@ -2,21 +2,23 @@
   <b-row class='h-100'>
     <splitpanes
       :style="{height: maxHeight, width: '100%'}"
-      :horizontal="mobile"
-      @resized="resized"
-      @pane-maximize="resized"
+      :horizontal='mobile'
+      @resized='resized("vertical")'
+      @pane-maximize='resized'
     >
-      <pane :size="(fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 100 : (fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 0 : 50">
+      <pane
+        :size="(fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 100 : (fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 0 : 50">
         <splitpanes
           horizontal
-          @resized="resized"
-          @pane-maximize="resized"
+          @resized='resized("left-horizontal")'
+          @pane-maximize='resized'
         >
           <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <button
-              @click="() => toggleFullscreen('networkGraph1')"
-              class="fullscreen-button"
-              variant="light"
+              @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
+              class='fullscreen-button'
+              variant='light'
+              data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
@@ -41,9 +43,10 @@
             :size="fullscreen['networkGraph2'] ? 100 : fullscreen['networkGraph1'] ? 0 : 50"
           >
             <button
-              @click="() => toggleFullscreen('networkGraph2')"
-              class="fullscreen-button"
-              variant="light"
+              @click="(event) => toggleFullscreen('networkGraph2', event,'toggleFullScreenButton-pane2')"
+              class='fullscreen-button'
+              variant='light'
+              data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
@@ -65,17 +68,20 @@
           </pane>
         </splitpanes>
       </pane>
-      <pane :size="(fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 100 : (fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 0 : 50" v-if='showFirstGraph || showSecondGraph'>
+      <pane
+        :size="(fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 100 : (fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 0 : 50"
+        v-if='showFirstGraph || showSecondGraph'>
         <splitpanes
           horizontal
-          @resized="resized"
-          @pane-maximize="resized"
+          @resized='resized("right-horizontal")'
+          @pane-maximize='resized'
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
             <button
-              @click="() => toggleFullscreen('nodeMetrics')"
-              class="fullscreen-button"
-              variant="light"
+              @click="(event) => toggleFullscreen('nodeMetrics', event,'toggleFullScreenButton-nodeMetrics')"
+              class='fullscreen-button'
+              variant='light'
+              data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['nodeMetrics'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
@@ -84,9 +90,10 @@
           </pane>
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
             <button
-              @click="() => toggleFullscreen('timeSeries')"
-              class="fullscreen-button"
-              variant="light"
+              @click="(event) => toggleFullscreen('timeSeries', event,'toggleFullScreenButton-timeSeries')"
+              class='fullscreen-button'
+              variant='light'
+              data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['timeSeries'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
@@ -138,13 +145,13 @@ export default {
   },
   computed: {
     networkCount() {
-      return this.$store.getters['main/numberOfNetworksVisualised']
+      return this.$store.getters['main/numberOfNetworksVisualised'];
     },
     showFirstGraph() {
-      return this.$store.getters['main/selectedNetwork']('pane1') !== null
+      return this.$store.getters['main/selectedNetwork']('pane1') !== null;
     },
     showSecondGraph() {
-      return this.$store.getters['main/selectedNetwork']('pane2') !== null
+      return this.$store.getters['main/selectedNetwork']('pane2') !== null;
     },
     type() {
       const network = this.$store.getters['main/selectedNetwork']('pane1');
@@ -163,9 +170,12 @@ export default {
     this.windowResizeHandler();
   },
   methods: {
-    resized() {
+    resized(paneId) {
       for (let ref in this.$refs) {
         this.$refs[ref]?.resizeHandler();
+      }
+      if (paneId !== null) {
+        this.resize(paneId);
       }
     },
     windowResizeHandler() {
@@ -177,11 +187,14 @@ export default {
         this.maxHeight = '100%';
       }
     },
-    toggleFullscreen(idx) {
+    toggleFullscreen(idx, event, sautoId) {
       let current = this.fullscreen[idx];
       for (let idx in this.fullscreen) this.fullscreen[idx] = 0;
       this.fullscreen[idx] = 1 - current;
       window.setTimeout(() => this.$refs[idx]?.resizeHandler(), 150);
+
+      //sauto
+      this.mouseClick(event, sautoId);
     }
   }
 };
@@ -192,6 +205,7 @@ export default {
   background-color: #ccc;
   position: relative;
 }
+
 .splitpanes__splitter:before {
   content: '';
   position: absolute;
@@ -202,26 +216,31 @@ export default {
   opacity: 0;
   z-index: 1;
 }
+
 .splitpanes--vertical > .splitpanes__splitter:before {
   left: -20px;
   right: -20px;
   height: 100%;
 }
+
 .splitpanes--horizontal > .splitpanes__splitter:before {
   top: -20px;
   bottom: -20px;
   width: 100%;
 }
+
 .splitpanes--horizontal > .splitpanes__splitter {
   width: 100%;
   margin: auto;
 }
+
 /* .splitpanes--vertical > .splitpanes__splitter {
   top: 1%;
 } */
 .splitpanes__pane {
   position: relative;
 }
+
 .fullscreen-button {
   position: absolute;
   z-index: 2;

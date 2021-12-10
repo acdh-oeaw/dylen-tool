@@ -8,30 +8,35 @@
   >
     <b-row class='h-10'>
       <b-col>
-        <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
+        <b-row align-h='center'>
+          <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos.replace("_", " ") }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
+        </b-row>
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
       <!--      <b-col xl='2'></b-col>-->
       <b-col
-          class='pl-5 year-slider-row'
-          data-sauto-id='ignore'
+        class='pl-5 year-slider-row'
+        data-sauto-id='ignore'
       >
-        <div ref='sliderDiv' class='pl-2'>
+        <div
+          ref='sliderDiv'
+          class='pl-2'
+        >
           <vue-slider
-              ref='slider'
-              v-model='egoNetwork.year'
-              v-bind='sliderOptions'
-              :min='egoNetwork.possibleYears[0]'
-              :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
-              :data='egoNetwork.possibleYears'
-              :process='false'
-              :lazy='true'
-              :adsorb='true'
-              :duration='0.3'
-              v-on:change='handleChange'
-              :marks='egoNetwork.possibleYears'
-              :tooltip="'none'"
+            ref='slider'
+            v-model='egoNetwork.year'
+            v-bind='sliderOptions'
+            :min='egoNetwork.possibleYears[0]'
+            :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
+            :data='egoNetwork.possibleYears'
+            :process='false'
+            :lazy='true'
+            :adsorb='true'
+            :duration='0.3'
+            v-on:change='handleChange'
+            :marks='egoNetwork.possibleYears'
+            :tooltip="'none'"
           />
         </div>
       </b-col>
@@ -89,8 +94,7 @@ export default {
         dotSize: 15
       },
       chartColors: [
-        ['#2b6ca3', '#65add2', '#b0efff'],
-        ['#a36c23', '#d59c1e', '#ffd20b']
+        '#2b6ca3', '#65add2', '#b0efff', '#a36c23', '#d59c1e', '#ffd20b'
       ],
       allNodesSelected: false
     };
@@ -118,7 +122,7 @@ export default {
     handleChange(value) {
       this.updateNetwork(this.egoNetwork);
       const position = this.calculateSliderPosition(value);
-      this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);
+      this.mouseClick(position, 'year-slider-' + this.pane);
     },
     calculateSliderPosition(value) {
       //im sorry for this hacky workaround but vue slider doesnt register clicks on labels
@@ -190,7 +194,7 @@ export default {
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
-            _color: this.chartColors[0][node.clusterId],
+            _color: this.chartColors[node.clusterId%this.chartColors.length],
             _metrics: node.metrics,
             _pane: this.pane
           });
@@ -213,7 +217,7 @@ export default {
           corpus: network.corpus,
           subcorpus: network.subcorpus,
           targetWordId: network.targetWordId,
-          pos:network.pos
+          pos: network.pos
         };
       }
       return selectedNetwork;

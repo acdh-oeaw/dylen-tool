@@ -4,7 +4,7 @@
       <b-row class='justify-content-center' aligh-h='center'>
         <b-card align='center' no-body>
           <b-tabs content-class='mt-3' card>
-            <b-tab title='General Information' active>
+            <b-tab title='General Information' active @click='onTabClick' data-sauto-id='info-tab-content'>
               <b-card-text align='left'>
                 <p>
                   DYLEN is a research project which aims to gain insights to the dynamics of the Austrian German lexicon
@@ -14,43 +14,62 @@
                 <p>You can use the search panel above to display various information about target words from various
                   copora and
                   subcorpora in graph, chart and table form.</p>
-                <div>There is one corpus available
+                <div>There are two corpora available
                   <ul>
-                    <li>Austrian Media Corpus (AMC):</li>
+                    <li>Austrian Media Corpus (AMC)</li>
+                    <li>Corpus of Austrian Parliamentary Records (ParlAT)</li>
                   </ul>
                 </div>
                 <p>
                   Austrian Media Corpus (AMC) consists of multiple subcorpora.<br>
                   Some of the subcorpora are combination of different media sources, which are listed below;
-                  <ul>
-                    <li>All magazines: </li>
-                  </ul>
+                <ul>
+                  <li>All magazines</li>
+                  <li>All newspapers</li>
+                  <li>All magazines and newspapers</li>
+                </ul>
                 </p>
                 <p>You can read more about the project here: <a
-                    href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.</p>
+                  href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.</p>
                 <p>You can click on the other tabs to get more information about different components of the
                   application</p>
               </b-card-text>
             </b-tab>
-            <b-tab title='Ego Network'>
+            <b-tab title='Ego Network' @click='onTabClick' data-sauto-id='info-tab-content'>
               <img src='@/assets/ego_example.png'
-                   width='800'
-                   height='auto'/>
+                   width='600'
+                   height='auto' />
 
               <b-card-text align='left'>
-                Network visualization of a selected target word provides information about its <b>semantic
-                neighborhood</b> in a given time period.<br>
-                Nodes are represented by top-50 lexemes that, according to the semantic model in use, are semantically
-                most relevant to a target word. <br>
+                <h5>General Description</h5>
+                <p>Network visualization of a selected target word provides information about its <b>semantic
+                  neighborhood</b> in a given time period.<br>
+                  Nodes are represented by top-50 lexemes that, according to the semantic model in use, are semantically
+                  most relevant to a target word. <br></p>
                 For semantic modeling, we utilize a <b>distributional word embedding</b> model, namely a neural network
                 based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
                 The model is trained on the chosen corpus and it produces a word-vector correspondence based on
                 co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
                 determine the semantic similarity between pairs of words which is reflected in the strength of the
-                connections between respective nodes.
+                connections between respective nodes. For semantic modeling, we utilize a <b>distributional word
+                embedding</b> model, namely a neural network
+                based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
+                The model is trained on the chosen corpus and it produces a word-vector correspondence based on
+                co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
+                determine the semantic similarity between pairs of words which is reflected in the strength of the
+                connections between respective nodes.<br><br>
+                <h5>How to view the visualisation</h5>
+                Some of interpretation guidelines are given here.
+                <ul>
+                  <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
+                    the targetword and the network visualisation would too unnecessarily complex
+                  </li>
+                  <li>The colors of the labels represent different Part-of-speech tags</li>
+                  <li>The colors of the nocdes represent different clusters</li>
+                </ul>
               </b-card-text>
             </b-tab>
-            <b-tab title='General Network'>
+            <b-tab v-if='false' title='General Network' @click='onTabClick' data-sauto-id='info-tab-content'>
               <b-card-text align='left'>
                 Network visualization of a selected parliament speaker or party provides information about their
                 discourse topics in a given time period.<br>
@@ -65,10 +84,10 @@
                 similarity between pairs of words.
               </b-card-text>
             </b-tab>
-            <b-tab title='Network Metrics'>
+            <b-tab title='Network Metrics' @click='onTabClick' data-sauto-id='info-tab-content'>
               <img src='@/assets/parallel_coordinates.png'
                    width='800'
-                   height='auto'/>
+                   height='auto' />
               <b-card-text align='left'>
                 Each of the ego networks can be described by different network metrics. <br>
                 <a href='https://en.wikipedia.org/wiki/Parallel_coordinates' target='_blank'>Parallel coordinates</a> is
@@ -81,65 +100,73 @@
                 <ul>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.degree_centrality.html#networkx.algorithms.centrality.degree_centrality'
-                         target='_blank'>degree centrality</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.degree_centrality.html#networkx.algorithms.centrality.degree_centrality'
+                        target='_blank'>degree centrality</a>
                     </b> - is the total number of edges linked to a node.
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html#networkx.algorithms.centrality.betweenness_centrality'
-                         target='_blank'>betweenness centrality</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html#networkx.algorithms.centrality.betweenness_centrality'
+                        target='_blank'>betweenness centrality</a>
                     </b> - is the number of the shortest paths that pass
                     through the node; it represents the degree to which nodes stand between each other.
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.load_centrality.html#networkx.algorithms.centrality.load_centrality'
-                         target='_blank'>load centrality</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.load_centrality.html#networkx.algorithms.centrality.load_centrality'
+                        target='_blank'>load centrality</a>
                     </b> - is a betweenness-like centrality measure that
                     differs in its definition (uses hypothetical flow process).
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.closeness_centrality.html#networkx.algorithms.centrality.closeness_centrality'
-                         target='_blank'>closeness centrality</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.closeness_centrality.html#networkx.algorithms.centrality.closeness_centrality'
+                        target='_blank'>closeness centrality</a>
                     </b> - indicates how close a node is to all other
                     nodes in the network; nodes with a high closeness score have the shortest distances to all other
                     nodes, i.e. is the most central.
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.harmonic_centrality.html#networkx.algorithms.centrality.harmonic_centrality'
-                         target='_blank'>harmonic centrality</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.harmonic_centrality.html#networkx.algorithms.centrality.harmonic_centrality'
+                        target='_blank'>harmonic centrality</a>
                     </b> - is a variant of closeness centrality; higher
                     values indicate higher centrality.
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality'
-                         target='_blank'>eigenvector centrality</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality'
+                        target='_blank'>eigenvector centrality</a>
                     </b> - the idea behind this measure is that a
                     high eigenvector centrality means that a node is connected to many nodes who themselves have high
                     scores.
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_analysis.pagerank_alg.pagerank.html#networkx.algorithms.link_analysis.pagerank_alg.pagerank'
-                         target='_blank'>pagerank</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_analysis.pagerank_alg.pagerank.html#networkx.algorithms.link_analysis.pagerank_alg.pagerank'
+                        target='_blank'>pagerank</a>
                     </b> - is a variant of eigenvector centrality; the underlying
                     assumption is that a node is only as important as the nodes that link to it.
                   </li>
                   <li>
                     <b>
-                      <a href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html#networkx.algorithms.cluster.clustering'
-                         target='_blank'>clustering coefficient</a>
+                      <a
+                        href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html#networkx.algorithms.cluster.clustering'
+                        target='_blank'>clustering coefficient</a>
                     </b> - is a measure of the degree to which nodes
                     in a graph tend to cluster together.
                   </li>
                 </ul>
               </b-card-text>
             </b-tab>
-            <b-tab title='Time Series Analysis'>
+            <b-tab title='Time Series Analysis' @click='onTabClick' data-sauto-id='info-tab-content'>
               <b-card-text align='left'>
                 <p><b>Time series analysis</b> allows us to track the change over time. <br>
                   Each graph indicates the diachronic development of a given target word according to the frequency
@@ -200,7 +227,8 @@
                     range.
                   </li>
                   <li>
-                    <b>Network embeddings similarity:</b> this measure requires incremental training of node embedding models
+                    <b>Network embeddings similarity:</b> this measure requires incremental training of node embedding
+                    models
                     of networks of subsequent years. Node embeddings are obtained by the node2vec algorithm described in
                     [2]. The score between two years is computed by averaging node embeddings to represent a network and
                     taking cosine similarity between obtained network vectors. The score ranges from 0 to 1.
@@ -209,7 +237,7 @@
               </b-card-text>
               <img src='@/assets/timeseries.png'
                    width='800'
-                   height='auto'/>
+                   height='auto' />
             </b-tab>
           </b-tabs>
         </b-card>
@@ -228,7 +256,11 @@ export default {
   },
   mounted() {
   },
-  methods: {},
+  methods: {
+    onTabClick(event) {
+      this.mouseClick(event, 'info-tab');
+    }
+  },
   computed: {},
   watch: {}
 };

@@ -12,7 +12,7 @@
       sticky-header='100%'
       small
       sort-icon-left
-      class='h-100'
+      class='h-100 sticky-table'
       data-sauto-id='table'
       @sort-changed='handleSortChanged'
     >
@@ -20,7 +20,7 @@
         <b-button
           variant='none'
           class='mx-auto'
-          @click=' (event) => selectionCheckboxChanged()'
+          @click=' (event) => selectionCheckboxChanged(event)'
         >
           <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
         </b-button>
@@ -91,7 +91,10 @@ export default {
       let fields = [];
       for (let key in this.tableData[0]) {
         if (key != 'color' && key != 'node')
-          fields.push({ key, sortable: true });
+          fields.push({
+            key,
+            sortable: true
+          });
       }
       return fields;
     },
@@ -132,7 +135,7 @@ export default {
         this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
       }
 
-      this.mouseClick(event, 'table-item-' + node.name);
+      this.mouseClick(event, 'table-item');
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
@@ -150,7 +153,7 @@ export default {
     },
     handleSortChanged(value) {
       const event = this.calculateSliderPosition(value.sortBy);
-      this.mouseClick(event, 'table-sort-' + value.sortBy);
+      this.mouseClick(event, 'table-sort');
     },
     calculateSliderPosition(value) {
       //im sorry for this hacky workaround but table header doesnt register clicks (when sorting)
@@ -175,10 +178,11 @@ export default {
         clientY
       };
     },
-    selectionCheckboxChanged() {
+    selectionCheckboxChanged(event) {
       console.log(this.tableData);
       if (this.isAllSelected) this.deselectAllNodes();
       else this.selectAllNodes();
+      this.mouseClick(event,"table-select-all")
     },
     selectAllNodes() {
       this.tableData
@@ -210,4 +214,28 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.sticky-table td {
+  background-color: white;
+}
+.sticky-table tr td:first-child,
+.sticky-table th:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.sticky-table th:first-child {
+  z-index: 4 !important;
+}
+.sticky-table tr td:nth-child(2),
+.sticky-table th:nth-child(2) {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 66px;
+  z-index: 2;
+}
+.sticky-table th:nth-child(2) {
+  z-index: 4 !important;
+}
+</style>

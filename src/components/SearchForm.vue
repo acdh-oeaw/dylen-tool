@@ -17,7 +17,7 @@
               v-for='option in availableCorpora'
               v-bind:key='option.id'
               v-bind:value='option'
-              :data-sauto-id="'corpusOption-' + option"
+              data-sauto-id="corpusOption"
             >
               {{ option.name }} ({{option.id}})
             </b-form-select-option>
@@ -41,7 +41,7 @@
               v-for='option in availableSources'
               v-bind:key='option.id'
               v-bind:value='option'
-              :data-sauto-id="'subCorpusOption-' + option"
+              data-sauto-id="subCorpusOption"
             >
               {{ option.name}}
             </b-form-select-option>
@@ -65,7 +65,7 @@
             v-model='searchTerm'
             :data-sauto-id="'selectTargetword-'+this.pane"
             :list='`datalist-${pane}`'
-            :style="!hasSuggestions ? { 'color': 'red' } : null"
+            :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
             @change='handleSearchTermSelect'
             @keypress='this.keyPress'
             autocomplete='off'
@@ -76,13 +76,15 @@
               v-bind:key='option.text + option.pos'
               v-bind:value='option.text'
             >
-              {{ option.text + ' (' + option.pos + ')' }}
+              {{ option.text + ' (' + option.pos.replace("_", " ") + ')' }}
             </option>
           </datalist>
         </b-form-group>
       </b-col>
-      <b-col xl='2'></b-col>
-      <b-col xl='4'>
+      <b-col xl='3'>
+          <div style='color:lightcoral;padding-top: 0.1em;' v-if='!hasSuggestions'>targetword not found</div>
+      </b-col>
+      <b-col xl='3'>
         <b-row align-h='end'>
           <b-col
             xl='12'
@@ -103,7 +105,7 @@
               class='reset-button'
               size='sm'
               variant='secondary'
-              :data-sauto-id='"queryButton-"+this.pane'
+              :data-sauto-id='"resetQueryButton-"+this.pane'
               @click='initialize'
               v-b-tooltip.hover
               title="Reset query"
@@ -151,14 +153,17 @@ export default {
     },
     handleSearchTermSelect() {
       const target = this.findSearchTermInAvailableTargetwords();
-      this.$store.dispatch('main/loadTargetwordBySearchTerm', {pane:this.queryPane, searchTerm: target} )
+      this.$store.dispatch('main/loadTargetwordBySearchTerm', {
+        pane: this.queryPane,
+        searchTerm: target
+      });
 
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
       const event = {
         clientX: rect.x,
         clientY: rect.y
       };
-      this.mouseClick(event, 'selectTargetWord-option-' + this.searchTerm);
+      this.mouseClick(event, 'selectTargetWord-option');
     },
     setShowInfo() {
       this.$emit('showInfoButton', true);
@@ -174,7 +179,7 @@ export default {
         pane: this.queryPane
       });
       this.$store.commit('main/changeSearchTerm', {
-        targetword: null,
+        searchTerm: null,
         pane: this.queryPane
       });
       this.$store.commit('main/changeSelectedTargetword', {
@@ -290,7 +295,7 @@ export default {
     },
     getTargetwordById: {
       get() {
-        return this.$store.getters['main/loadTargetwordById'](this.queryPane)
+        return this.$store.getters['main/loadTargetwordById'](this.queryPane);
       }
     },
     selectedTargetword: {
@@ -316,18 +321,6 @@ export default {
         });
       }
     },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane
-          });
-      }
-    }
   },
   watch: {}
 };

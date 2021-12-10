@@ -39,7 +39,7 @@ export const sourceNameMapping = {
     "ParlAT": "ParlAT",
     "FALTER": "Falter",
     "KLEINE": "Kleine Zeitung",
-    "-":"All parliamentary records"
+    "all":"All parliamentary records"
 }
 
 export function filterBasedOnSlider(network) {
@@ -133,11 +133,11 @@ export function zipTimeSeriesAndYears(timeSeries, years) {
                 return {
                     year: years[idx + initIdx],
                     value: val
-                }
-            })
+                };
+            });
             newTimeSeries[timeSeriesKeyMap[key]][relativeToMap[metric]] = zippedArray;
-        })
-    })
+        });
+    });
     console.log(newTimeSeries)
     return newTimeSeries;
 }

@@ -48,6 +48,7 @@
       @mouseover="mouseover"
       @mousemove="mousemove"
       @mouseout="mouseout"
+      data-sauto-id='timeSeries-line'
     >
     </rect>
     <g
