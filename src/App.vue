@@ -28,10 +28,14 @@
         <b-row
           xl='12'
           class='h-100'
+
         >
+          <b-col xl='2' style='border-right: solid; border-color: mediumturquoise'>
+            <query-bar></query-bar>
+          </b-col>
           <b-col
             class='h-100'
-            xl='12'
+            xl='10'
           >
             <div
               class='h-100'
@@ -183,10 +187,12 @@ import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
 import TopNavigation from '@/components/TopNavigation';
 import Info from '@/components/Info';
+import QueryBar from "@/components/QueryBar";
 
 export default {
   name: 'App',
   components: {
+    QueryBar,
     TopNavigation,
     Results,
     Modal,
