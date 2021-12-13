@@ -148,7 +148,7 @@ export default {
     checkInvalidChars(val) {
       let invalidChars = []
       for (let c of val) {
-        if (c.match("[1-9;:\\s!@#\\$%\\^\\&*\\)\\(+=.,_-]")) {
+        if (c.match(/[1-9;:\s!@#$%^&*)(+=.,'"_]/)) {
           console.log('contains invalid character.')
           invalidChars.push(c)
         }
@@ -162,7 +162,7 @@ export default {
       let invalidChars = this.checkInvalidChars(val)
       if(invalidChars.length > 0) {
         this.$store.commit('main/addError', {
-          error: "contains invalid characters " + invalidChars.join(' '),
+          error: "contains invalid character(s): '" + invalidChars.join(' ') + "'",
           pane: this.queryPane
         });
       } else {
