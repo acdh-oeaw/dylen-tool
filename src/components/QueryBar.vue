@@ -41,15 +41,16 @@
               class='h-100'
               align-v='center'
           >
-            <b-col>
+            <b-col v-if='!showSecondForm'>
               <b-button
                   pill
                   data-sauto-id='second-query-button'
                   size='sm'
                   variant='secondary'
+                  v-if='showSecondButton'
                   v-on:click='queryButtonClicked(2)'
               >
-                <b>+</b>
+                <b>New Query</b>
               </b-button>
             </b-col>
             <b-col v-if='showSecondForm'>
@@ -88,10 +89,8 @@ export default {
   computed: {
     showSecondButton() {
       let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
-      if (numberOfVisualisedNetworks > 0) {
-        return true;
-      }
-      return false;
+      return numberOfVisualisedNetworks > 0;
+
     },
     showSecondForm() {
       return this.$store.getters['main/secondFormVisibility']

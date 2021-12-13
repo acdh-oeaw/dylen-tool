@@ -21,6 +21,15 @@
             <h4><b>DYLEN</b></h4>
           </b-row>
         </b-col>
+        <b-col xl='10'>
+          <div>
+            <select name="TypeOfNetwork" @change="onTypeOfNetworkSelect($event)" class="form-control">
+              <option value="EgoNetwork">Ego Networks</option>
+              <option value="GeneralNetworkNetwork">General Networks (Party)</option>
+              <option value="GeneralNetworkSpeaker">General Networks (Speaker)</option>
+            </select>
+          </div>
+        </b-col>
         <b-col
             xl='1'
             align-self='center'
@@ -46,40 +55,7 @@
           </b-row>
         </b-col>
       </b-row>
-      <b-row xl='12'>
-        <b-col
-            data-sauto-id='search-form-2'
-            class='pb-1'
-            xl='5'
-            v-if="typeOfNetwork == 'EgoNetwork'"
-            align-self='stretch'
-        >
-          <b-row
-              class='h-100'
-              align-v='center'
-          >
-            <b-col v-if='!showSecondForm'>
-              <b-button
-                  pill
-                  data-sauto-id='second-query-button'
-                  v-if='showSecondButton'
-                  size='sm'
-                  variant='secondary'
-                  v-on:click='queryButtonClicked(2)'
-              >
-                <b>+</b>
-              </b-button>
-            </b-col>
-            <b-col v-if='showSecondForm'>
-              <search-form
-                  :with-labels='false'
-                  :pane="'pane' + 2"
-                  :is-sidebar='false'
-              >
-              </search-form>
-            </b-col>
-          </b-row>
-        </b-col>
+      <b-row xl='12' v-if='false'>
         <b-col
             data-sauto-id='search-form-general-1'
             class='pb-1'
@@ -203,14 +179,12 @@
 </template>
 
 <script>
-import SearchForm from '@/components/SearchForm';
 import SearchFormGeneral from '@/components/SearchFormGeneral';
 import SearchFormGeneralSpeaker from '@/components/SearchFormGeneralSpeaker';
 
 export default {
   name: 'TopNavigation',
   components: {
-    SearchForm,
     SearchFormGeneral,
     SearchFormGeneralSpeaker
   },
@@ -265,11 +239,6 @@ export default {
 <style>
 .top-nav {
   border-bottom: solid thick;
-  border-bottom-color: grey;
-}
-.search-form {
-  height: 100%;
-  border-bottom: solid thick;
-  border-bottom-color: grey;
+  border-bottom-color: cadetblue;
 }
 </style>

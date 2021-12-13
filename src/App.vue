@@ -30,7 +30,7 @@
           class='h-100'
 
         >
-          <b-col xl='2' style='border-right: solid; border-color: mediumturquoise'>
+          <b-col xl='2' style='border-right: solid; border-color: cadetblue'>
             <query-bar></query-bar>
           </b-col>
           <b-col
