@@ -32,6 +32,7 @@ Vue.use(Vuex);
 Vue.use(VueCompositionAPI);
 
 const graphqlEndpoint = props.graphqlEndpoint;
+console.log(graphqlEndpoint)
 const logger = require('../helpers/logger');
 
 function compare(source1, source2) {
