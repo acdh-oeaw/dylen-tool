@@ -67,13 +67,25 @@
       @sort-changed='handleSortChanged'
     >
       <template #head(selected)="">
-        <b-button
-          variant='none'
-          class='mx-auto'
-          @click=' (event) => selectionCheckboxChanged(event)'
-        >
-          <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
-        </b-button>
+        <div style='width:3em'>
+          <b-button
+              style='padding:0'
+              variant='none'
+              @click=' (event) => selectionCheckboxChanged(event)'
+          >
+            <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
+          </b-button>
+          <b-button
+              style='padding:0'
+              variant='none'
+              @click='(event) => selectionCheckboxFilterClicked(event)'
+          >
+            <b-icon v-if='filterOn.indexOf("selected") < 0' :icon="'filter-circle'"></b-icon>
+            <b-icon v-if='filterOn.indexOf("selected") >= 0' :icon="'filter-circle-fill'"></b-icon>
+
+          </b-button>
+        </div>
+
       </template>
       <template #cell(selected)='row'>
         <div data-sauto-id='ignore'>
@@ -233,6 +245,17 @@ export default {
       else this.selectAllNodes();
       this.mouseClick(event,"table-select-all")
     },
+    selectionCheckboxFilterClicked(event) {
+      console.log(event)
+      let i = this.filterOn.indexOf("selected")
+      if(i < 0 ) {
+        this.filterOn.push("selected")
+        this.filter = "true"
+      } else {
+        this.filterOn.splice(i, 1)
+        this.filter = "false"
+      }
+    } ,
     selectAllNodes() {
       this.tableData
         .filter(
