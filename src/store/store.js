@@ -342,14 +342,8 @@ const mainModule = {
   },
   mutations: {
     changeActiveSettings(state, payload) {
-      let component = (state.settings.component === payload.component && !payload.active)? null: payload.component
-      if (!state.settings.component || !component) {
-        if(payload.active !== undefined) {
-          state.settings.active = payload.active
-        } else {
-          state.settings.active = !state.settings.active
-        }
-      }
+      let component = (state.settings.component === payload.component)? 'closed': payload.component
+      state.settings.active = component !== 'closed'
       state.settings.component = component
     },
     changeSecondFormVisibility(state, payload) {
