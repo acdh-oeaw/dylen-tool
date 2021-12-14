@@ -446,7 +446,7 @@ const mainModule = {
     },
     setAutocompleteSuggestions(state, payload) {
       console.log('setting autocomplete')
-      state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));;
+      state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));
       console.log('autosuggestions: ' + state[payload.pane].autocompleteSuggestions)
       if (state[payload.pane].autocompleteSuggestions.length === 0 && state[payload.pane].searchTerm) {
         console.log('not found')
