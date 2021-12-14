@@ -14,15 +14,10 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
-            <b-button
-                size='sm'
-                data-sauto-id='settings-button'
-                class='settings-button'
-                variant="light"
-                @click='toggleSideBar("egoNetwork")'
-            >
-              <b-icon icon='gear' font-scale="1"></b-icon>
-            </b-button>
+            <setting
+                position='result'
+                setting-component='egoNetwork'
+            ></setting>
             <button
                 @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
                 class='fullscreen-button'
@@ -66,15 +61,10 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
-            <b-button
-                size='sm'
-                data-sauto-id='settings-button'
-                class='settings-button'
-                variant="light"
-                @click='toggleSideBar("nodeMetrics")'
-            >
-              <b-icon icon='gear' font-scale="1"></b-icon>
-            </b-button>
+            <setting
+                position='result'
+                setting-component='nodeMetrics'
+            ></setting>
             <button
               @click="(event) => toggleFullscreen('nodeMetrics', event,'toggleFullScreenButton-nodeMetrics')"
               class='fullscreen-button'
@@ -114,11 +104,13 @@ import NodeMetrics from '@/components/NodeMetrics';
 import TimeSeries from '@/components/TimeSeries';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
+import Setting from "@/components/Setting";
 
 export default {
   name: 'Results',
   props: ['pane'],
   components: {
+    Setting,
     NodeMetrics,
     NetworkGraph,
     TimeSeries,
@@ -228,15 +220,6 @@ export default {
 } */
 .splitpanes__pane {
   position: relative;
-}
-
-.settings-button {
-  margin-right: 1.5em;
-  margin-bottom: 0.5em;
-  padding: 1em;
-  z-index: 2;
-  position: absolute;
-  right: 0;
 }
 
 .fullscreen-button {
