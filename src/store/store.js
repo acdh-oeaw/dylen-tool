@@ -342,10 +342,18 @@ const mainModule = {
   },
   mutations: {
     changeActiveSettings(state, payload) {
-      if (payload) {
-        state.settings.component = payload.component
+      console.log('current setting: ' + state.settings.component)
+      console.log('new setting: ' + payload.component)
+      let component = (state.settings.component === payload.component && !payload.active)? null: payload.component
+      console.log('to change: '+ component)
+      if (!state.settings.component || !component) {
+        if(payload.active !== undefined) {
+          state.settings.active = payload.active
+        } else {
+          state.settings.active = !state.settings.active
+        }
       }
-      state.settings.active = !state.settings.active
+      state.settings.component = component
     },
     changeSecondFormVisibility(state, payload) {
       if (payload.pane === 'pane2') {
@@ -486,6 +494,7 @@ const mainModule = {
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
     tableOptions: (state) => state.tableOptions,
+    settingsActive: (state) => state.settings.active,
     activeSettings: (state) => state.settings.component,
     numberOfNetworksVisualised: (state) => {
       let count = 0;

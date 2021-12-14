@@ -154,6 +154,7 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
+      this.$store.commit('main/changeActiveSettings', {active:true, component: 'egoNetwork'})
     },
     findSearchTermInAvailableTargetwords() {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);

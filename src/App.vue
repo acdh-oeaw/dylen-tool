@@ -249,21 +249,27 @@ export default {
       get() {
         return this.$store.getters['main/activeSettings'];
       }
+    },
+    settingsActive: {
+      get() {
+         return this.$store.getters['main/settingsActive'];
+      }
     }
   },
   methods: {
     toggleSideBar(component) {
-      let currentSetting = this.$store.getters['main/activeSettings'];
-      component = currentSetting === component? null: component
-      if (!currentSetting || !component) {
-        this.$refs.sidebar.classList.toggle('collapsed');
-        this.$refs.main.classList.toggle('full');
-      }
       this.$store.commit('main/changeActiveSettings', {component: component})
     },
     screenResizeHandler() {
       const size = this.$refs.app.getBoundingClientRect();
       this.$store.dispatch('sauto/setBoundingClientRect', { size });
+    }
+  },
+  watch: {
+    settingsActive: function(newVal, oldVal) {
+      console.log('settings changed: ' + newVal + oldVal)
+      this.$refs.sidebar.classList.toggle('collapsed');
+      this.$refs.main.classList.toggle('full');
     }
   }
 };
