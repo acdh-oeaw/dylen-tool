@@ -88,7 +88,7 @@
         <b-button
           data-sauto-id='settings-button'
           class='mr-2'
-          @click='toggleSideBar'
+          @click='toggleSideBar("all")'
         >
           <b-icon icon='gear'></b-icon>
         </b-button>
@@ -135,9 +135,14 @@ export default {
         })
       }
     },
-    toggleSideBar() {
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
+    toggleSideBar(component) {
+      let currentSetting = this.$store.getters['main/activeSettings'];
+      component = currentSetting === component? null: component
+      if (!currentSetting || !component) {
+        this.$parent.$refs.sidebar.classList.toggle('collapsed');
+        this.$parent.$refs.main.classList.toggle('full');
+      }
+      this.$store.commit('main/changeActiveSettings', {component: component})
     },
     updateShowInfo() {
       this.$store.commit('main/setShowInfo', { showInfo: !this.$store.state.main.showInfo });

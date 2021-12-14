@@ -17,19 +17,21 @@
             <b-button
                 size='sm'
                 data-sauto-id='settings-button'
-                class='mr-4 settings-button'
+                class='settings-button'
+                variant="light"
                 @click='toggleSideBar("egoNetwork")'
             >
-              <b-icon icon='gear' font-scale="0.7"></b-icon>
+              <b-icon icon='gear' font-scale="1"></b-icon>
             </b-button>
             <button
-              @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
-              class='fullscreen-button'
-              variant='light'
-              data-sauto-id='ignore'
+                @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
+                class='fullscreen-button'
+                variant='light'
+                data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
+
             <NetworkGraph
               v-if='showFirstGraph'
               ref='networkGraph1'
@@ -64,6 +66,15 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
+            <b-button
+                size='sm'
+                data-sauto-id='settings-button'
+                class='settings-button'
+                variant="light"
+                @click='toggleSideBar("nodeMetrics")'
+            >
+              <b-icon icon='gear' font-scale="1"></b-icon>
+            </b-button>
             <button
               @click="(event) => toggleFullscreen('nodeMetrics', event,'toggleFullScreenButton-nodeMetrics')"
               class='fullscreen-button'
@@ -146,9 +157,13 @@ export default {
   },
   methods: {
     toggleSideBar(component) {
-      this.$store.commit('main/changeActiveSettings', {activeSettings: component})
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
+      let currentSetting = this.$store.getters['main/activeSettings'];
+      component = currentSetting === component? null: component
+      if (!currentSetting || !component) {
+        this.$parent.$refs.sidebar.classList.toggle('collapsed');
+        this.$parent.$refs.main.classList.toggle('full');
+      }
+      this.$store.commit('main/changeActiveSettings', {component: component})
     },
     resized(paneId) {
       for (let ref in this.$refs) {
@@ -222,9 +237,12 @@ export default {
 }
 
 .settings-button {
+  margin-right: 1.5em;
+  margin-bottom: 0.5em;
+  padding: 1em;
+  z-index: 2;
   position: absolute;
   right: 0;
-  border: #d3d9df;
 }
 
 .fullscreen-button {

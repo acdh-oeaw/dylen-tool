@@ -67,14 +67,15 @@
           class='close'
           aria-label='Close'
           variant='light'
-          @click='toggleSideBar'
+          @click='toggleSideBar(activeSettings)'
           data-sauto-id='sidebar-close-button'
         >
           <span aria-hidden='true'>×</span>
         </b-button>
-        <b-row v-if='activeSettings === "egoNetwork"'>
+        <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
           <b-col>
-            <h4 class='mt-3'>Part-of-speech colors</h4>
+            <h4><u>Ego Network options</u></h4>
+            <h5 class='mt-3'>Part-of-speech colors</h5>
             <b-row
                 v-for='key in Object.keys(posColors)'
                 :key='key'
@@ -94,23 +95,24 @@
             </b-row>
           </b-col>
         </b-row>
-        <b-row v-if='activeSettings === "egoNetwork"'>
+        <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
           <b-col>
-            <h4 class='mt-3'>Node label options</h4>
-            <b-row>
-              <b-col>Font size</b-col>
+            <h5 class='mt-3'>Node label options</h5>
+            <b-row class='pt-3'>
+              <b-col xl='5' class='text-right'>Font size </b-col>
               <b-col>
                 <b-form-input
                     data-sauto-id='font-option'
                     type='number'
                     v-model='labelOptions.fontSize'
                     :number='true'
+                    size='sm'
                 >
                 </b-form-input>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col>Bold</b-col>
+            <b-row class='pt-3'>
+              <b-col xl='5' class='text-right'>Bold</b-col>
               <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
               <b-col
                   data-sauto-id='ignore'
@@ -121,8 +123,8 @@
                 ></b-form-checkbox>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col>White label background</b-col>
+            <b-row class='pt-3'>
+              <b-col xl='5' class='text-right'>White label background</b-col>
               <b-col
                   data-sauto-id='ignore'
               >
@@ -134,11 +136,11 @@
             </b-row>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
           <b-col>
-            <h4 class='mt-3'>Link options</h4>
-            <b-row>
-              <b-col>Opacity: {{ linkOptions.opacity }}</b-col>
+            <h5 class='mt-3'>Link options</h5>
+            <b-row class='pt-3'>
+              <b-col xl='6' class='text-right'>Opacity: {{ linkOptions.opacity }}</b-col>
               <b-col>
                 <b-form-input
                     data-sauto-id='opacity-slider-option'
@@ -154,11 +156,11 @@
             </b-row>
           </b-col>
         </b-row>
-        <b-row v-if='activeSettings === "table"'>
+        <b-row v-if='activeSettings === "nodeMetrics" || activeSettings === "all"'>
           <b-col>
-            <h4 class='mt-3'>Table options</h4>
-            <b-row>
-              <b-col>
+            <h4 class='mt-3'><u>Table options</u></h4>
+            <b-row class='pt-3'>
+              <b-col xl='7' class='text-right'>
                 Number of digits to display:
                 {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
               </b-col>
@@ -175,8 +177,8 @@
                 </b-form-input>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col>Show selected words on top</b-col>
+            <b-row class='pt-3'>
+              <b-col xl='7' class='text-right'>Show selected words on top</b-col>
               <b-col
                   data-sauto-id='ignore'
               >
@@ -250,10 +252,14 @@ export default {
     }
   },
   methods: {
-    toggleSideBar() {
-      this.$store.commit('main/changeActiveSettings')
-      this.$refs.sidebar.classList.toggle('collapsed');
-      this.$refs.main.classList.toggle('full');
+    toggleSideBar(component) {
+      let currentSetting = this.$store.getters['main/activeSettings'];
+      component = currentSetting === component? null: component
+      if (!currentSetting || !component) {
+        this.$refs.sidebar.classList.toggle('collapsed');
+        this.$refs.main.classList.toggle('full');
+      }
+      this.$store.commit('main/changeActiveSettings', {component: component})
     },
     screenResizeHandler() {
       const size = this.$refs.app.getBoundingClientRect();

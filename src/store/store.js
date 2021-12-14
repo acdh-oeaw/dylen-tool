@@ -342,8 +342,8 @@ const mainModule = {
   },
   mutations: {
     changeActiveSettings(state, payload) {
-      if (payload && payload.activeSettings) {
-        state.settings.component = payload.activeSettings
+      if (payload) {
+        state.settings.component = payload.component
       }
       state.settings.active = !state.settings.active
     },
