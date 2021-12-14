@@ -342,10 +342,7 @@ const mainModule = {
   },
   mutations: {
     changeActiveSettings(state, payload) {
-      console.log('current setting: ' + state.settings.component)
-      console.log('new setting: ' + payload.component)
       let component = (state.settings.component === payload.component && !payload.active)? null: payload.component
-      console.log('to change: '+ component)
       if (!state.settings.component || !component) {
         if(payload.active !== undefined) {
           state.settings.active = payload.active
