@@ -3,13 +3,63 @@
     ref='table'
     style="height: 85%;"
   >
+    <b-row>
+      <b-col lg="6" class="my-1">
+        <b-form-group
+            label="Filter"
+            label-for="filter-input"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            class="mb-0"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+                id="filter-input"
+                v-model="filter"
+                type="search"
+                placeholder="Type to Search"
+            ></b-form-input>
+
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col>
+        <b-form-group
+            v-model="sortDirection"
+            label="Filter On"
+            description="Leave all unchecked to filter on all data"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            class="mb-0"
+            v-slot="{ ariaDescribedby }"
+        >
+          <b-form-checkbox-group
+              v-model="filterOn"
+              :aria-describedby="ariaDescribedby"
+              class="mt-1"
+          >
+            <b-form-checkbox value="selected">selected</b-form-checkbox>
+            <b-form-checkbox value="word">word</b-form-checkbox>
+            <b-form-checkbox value="network">network</b-form-checkbox>
+          </b-form-checkbox-group>
+        </b-form-group>
+      </b-col>
+    </b-row>
     <b-table
       :items='tableData'
       :fields='fields'
       :responsive='true'
       :sort-by="'word'"
       :sort-compare='sortCompare'
+      :filter="filter"
+      :filter-included-fields="filterOn"
       sticky-header='100%'
+      head-variant='light'
       small
       sort-icon-left
       class='h-100 sticky-table'
@@ -50,7 +100,11 @@ export default {
   name: 'MetricsTable',
   props: ['selectedNodes', 'allNodes', 'options'],
   data() {
-    return {};
+    return {
+      filter: null,
+      filterOn: [],
+      sortDirection: 'asc',
+    };
   },
   computed: {
     tableOptions() {
