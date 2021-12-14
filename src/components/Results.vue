@@ -14,6 +14,14 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+            <b-button
+                size='sm'
+                data-sauto-id='settings-button'
+                class='mr-4 settings-button'
+                @click='toggleSideBar("egoNetwork")'
+            >
+              <b-icon icon='gear' font-scale="0.7"></b-icon>
+            </b-button>
             <button
               @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
               class='fullscreen-button'
@@ -137,6 +145,11 @@ export default {
     this.windowResizeHandler();
   },
   methods: {
+    toggleSideBar(component) {
+      this.$store.commit('main/changeActiveSettings', {activeSettings: component})
+      this.$parent.$refs.sidebar.classList.toggle('collapsed');
+      this.$parent.$refs.main.classList.toggle('full');
+    },
     resized(paneId) {
       for (let ref in this.$refs) {
         this.$refs[ref]?.resizeHandler();
@@ -206,6 +219,12 @@ export default {
 } */
 .splitpanes__pane {
   position: relative;
+}
+
+.settings-button {
+  position: absolute;
+  right: 0;
+  border: #d3d9df;
 }
 
 .fullscreen-button {

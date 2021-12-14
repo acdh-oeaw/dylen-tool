@@ -283,6 +283,10 @@ const mainModule = {
   },
   namespaced: true,
   state: {
+    settings: {
+      active: false,
+      component: null
+    },
     selectionColors: ['#1E88E5', '#D81B60'],
     availableCorpora: [],
     availableSourcesByCorpus: {},
@@ -337,7 +341,12 @@ const mainModule = {
     showInfo: true
   },
   mutations: {
-
+    changeActiveSettings(state, payload) {
+      if (payload && payload.activeSettings) {
+        state.settings.component = payload.activeSettings
+      }
+      state.settings.active = !state.settings.active
+    },
     changeSecondFormVisibility(state, payload) {
       if (payload.pane === 'pane2') {
         state.topNav.secondForm = !state.topNav.secondForm;
@@ -477,6 +486,7 @@ const mainModule = {
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
     tableOptions: (state) => state.tableOptions,
+    activeSettings: (state) => state.settings.component,
     numberOfNetworksVisualised: (state) => {
       let count = 0;
       if (state['pane1'].selectedNetwork) {

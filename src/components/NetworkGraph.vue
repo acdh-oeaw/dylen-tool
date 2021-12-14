@@ -14,7 +14,6 @@
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
-      <!--      <b-col xl='2'></b-col>-->
       <b-col
         class='pl-5 year-slider-row'
         data-sauto-id='ignore'
