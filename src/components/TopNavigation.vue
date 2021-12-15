@@ -221,6 +221,9 @@ export default {
     },
     onTypeOfNetworkSelect(event) {
       this.typeOfNetwork = event.target.value;
+      this.$store.commit('main/changeTopNavType', {
+        networkType: event.target.value
+      });
     },
     toggleSideBar() {
       this.$parent.$refs.sidebar.classList.toggle('collapsed');

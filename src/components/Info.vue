@@ -65,7 +65,7 @@
                     the targetword and the network visualisation would too unnecessarily complex
                   </li>
                   <li>The colors of the labels represent different Part-of-speech tags</li>
-                  <li>The colors of the nocdes represent different clusters</li>
+                  <li>The colors of the nodes represent different clusters</li>
                 </ul>
               </b-card-text>
             </b-tab>

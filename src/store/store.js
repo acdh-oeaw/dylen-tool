@@ -205,7 +205,7 @@ const mainModule = {
           logger.error(error);
       }
     },
-    async loadEgoNetwork({ state }, pane) {
+    async loadEgoNetwork({ state, dispatch }, pane) {
       function assignValuesFromState(network, networkID) {
         network.id = networkID;
         network.targetWordId = state[pane].selectedTargetword.id;
@@ -216,7 +216,16 @@ const mainModule = {
         network.pos = state[pane].selectedTargetword.pos;
         network.type = 'Ego';
       }
-
+      state[pane].busy = true;
+      if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
+        console.log(state[pane].autocompleteSuggestions)
+        let response = await dispatch("loadTargetwordBySearchTerm", {
+          pane: pane,
+          searchTerm: state[pane].autocompleteSuggestions[0]
+        });
+        state[pane].selectedTargetword = response.data.data.getTargetWordById;
+        console.log(state[pane].selectedTargetword)
+      }
       let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
       try {
@@ -234,8 +243,10 @@ const mainModule = {
 
         this.commit('main/addEgoNetwork', payload);
         logger.log('Ego Network loaded successfully.');
+        state[pane].busy = false;
       } catch (error) {
         logger.error(error);
+        state[pane].busy = false;
       }
     },
     async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
@@ -269,7 +280,6 @@ const mainModule = {
             let networkID = oldNetwork.party + '_' + oldNetwork.year;
             let updatedNetwork = response.data.data.getGeneralSourceByPartyYear.networks;
 
-            console.log(updatedNetwork);
             updatedNetwork.party = oldNetwork.party;
             updatedNetwork.filter = oldNetwork.filter;
             updatedNetwork.id = networkID;
@@ -277,7 +287,6 @@ const mainModule = {
             updatedNetwork.year = oldNetwork.year;
             updatedNetwork.type = oldNetwork.type;
             filterBasedOnSlider(updatedNetwork);
-            console.log(updatedNetwork);
 
             logger.log('Network %s updated successfully.', networkID);
 
@@ -377,9 +386,6 @@ const mainModule = {
       }
       const response = await axios.post(graphqlEndpoint,
         getTargetWordByIdQuery(searchTermId));
-
-      console.log(response);
-
       this.commit('main/changeSelectedTargetword', {
         pane: payload.pane,
         targetword: response.data.data.getTargetWordById
@@ -441,17 +447,19 @@ const mainModule = {
               logger.error(error);
           }
         },
-        async loadTimeSeriesData({state}, pane) {
-            try {
-                const response = await axios.post(graphqlEndpoint,
-                    getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-                let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
-                let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
-                let data = zipTimeSeriesAndYears(timeSeries, years);
-                const payload = {
-                    pane: pane,
-                    data: data
-                };
+        async loadTimeSeriesData({ state }, pane) {
+          try {
+            if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id))
+              state[pane].selectedTargetword = state[pane].autocompleteSuggestions[0];
+            const response = await axios.post(graphqlEndpoint,
+              getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+            let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
+            let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
+            let data = zipTimeSeriesAndYears(timeSeries, years);
+            const payload = {
+              pane: pane,
+              data: data
+            };
 
         this.commit('main/addTimeSeriesData', payload);
         logger.log('Ego Network loaded successfully.');
@@ -468,6 +476,7 @@ const mainModule = {
     availableSourcesByCorpus: {},
     availableTargetwordsByCorpusAndSource: {},
     topNav: {
+      networkType: null,
       secondForm: false
     },
     focusNode: null,
@@ -483,7 +492,9 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: {}//arbeits_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {},
+      busy: false,
+      errors: []
     },
     pane2: {
       availableSpeakers: [],
@@ -497,7 +508,9 @@ const mainModule = {
       selectedNetwork: null,
       searchTerm: null,
       autocompleteSuggestions: [],
-      timeSeriesData: {}//random_ts.time_series //TODO: change when API is ready
+      timeSeriesData: {},
+      busy: false,
+      errors: []
     },
     nodeMetrics: {
       selectedNodes: []
@@ -530,6 +543,9 @@ const mainModule = {
       if (payload.pane === 'pane2') {
         state.topNav.secondForm = !state.topNav.secondForm;
       }
+    },
+    changeTopNavType(state, payload) {
+      state.topNav.networkType = payload['networkType'];
     },
     loadCorpora(state, payload) {
       state.availableCorpora = payload.corpora.map(
@@ -608,6 +624,14 @@ const mainModule = {
       }
       this.commit('main/changeSelectedYear', selectedYearPayload);
     },
+    addError(state, payload) {
+      console.log('ADDING ERROR')
+      state[payload.pane].errors.push(payload.error)
+      console.log('ADDED ERROR' + state[payload.pane].errors)
+    },
+    resetError(state, payload) {
+      state[payload.pane].errors = []
+    },
     changeSearchTerm(state, payload) {
       console.log('changing searchterm: ' + payload.searchTerm);
       if (payload.searchTerm) {
@@ -664,7 +688,16 @@ const mainModule = {
       logger.log('Updated General Speaker Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
-      state[payload.pane].autocompleteSuggestions = payload.suggestions;
+      console.log('setting autocomplete')
+      state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));
+      console.log('autosuggestions: ' + state[payload.pane].autocompleteSuggestions)
+      if (state[payload.pane].autocompleteSuggestions.length === 0 && state[payload.pane].searchTerm) {
+        console.log('not found')
+        this.commit('main/addError', {
+          error: "Keyword not found",
+          pane: payload.pane
+        });
+      }
     },
     setShowInfo(state, payload) {
       state.showInfo = payload.showInfo;
@@ -687,6 +720,9 @@ const mainModule = {
     removeFocusNode(state, payload) {
       if (state.focusNode === payload.node)
         state.focusNode = null;
+    },
+    setBusyState(state, payload){
+      state[payload.pane].busy = payload.busy;
     }
   },
   getters: {
@@ -712,6 +748,7 @@ const mainModule = {
     posColors: (state) => state.posColors,
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
+    topNav: (state) => state.topNav,
     availableParties: (state) => state.availableParties,
     availableMetrics: (state) => state.availableMetrics,
     tableOptions: (state) => state.tableOptions,
@@ -727,7 +764,8 @@ const mainModule = {
       return count;
     },
     secondFormVisibility: (state) => state['topNav'].secondForm,
-    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData
+    timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
+    busyState: state => pane => state[pane].busy
   },
   setPosColor({ state }, posTag, colorCode) {
     state.posColors[posTag] = colorCode;
