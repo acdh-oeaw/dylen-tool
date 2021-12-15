@@ -4,29 +4,6 @@
     style="height: 85%;"
   >
     <b-row>
-<!--      <b-col lg="6" class="my-1">
-        <b-form-group
-            label="Filter"
-            label-for="filter-input"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            class="mb-0"
-        >
-          <b-input-group size="sm">
-            <b-form-input
-                id="filter-input"
-                v-model="filter"
-                type="search"
-                placeholder="Type to Search"
-            ></b-form-input>
-
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
-      </b-col>-->
       <b-col>
         <b-form-group
             v-model="sortDirection"
@@ -80,7 +57,7 @@
           <b-button
               style='padding:0'
               variant='none'
-              @click='(event) => selectionCheckboxFilterClicked(event)'
+              @click='filterClicked("selected","filterSelected")'
           >
             <b-icon v-if='filterOn.indexOf("selected") < 0' :icon="'filter-circle'"></b-icon>
             <b-icon v-if='filterOn.indexOf("selected") >= 0' :icon="'filter-circle-fill'"></b-icon>
@@ -89,15 +66,36 @@
       </template>
       <template #head(word)="">
         <div style='width:7em'>
-          <span>Word</span>
+          <span>Word </span>
           <b-button
+              id='word-filter-input'
               style='padding:0'
               variant='none'
-              @click='(event) => wordFilterClicked(event)'
+              v-b-popover.click="'Popover content'"
+              @click='filterClicked("word", "filterWord")'
           >
             <b-icon v-if='filterOn.indexOf("word") < 0' :icon="'filter-circle'"></b-icon>
             <b-icon v-if='filterOn.indexOf("word") >= 0' :icon="'filter-circle-fill'"></b-icon>
           </b-button>
+          <b-popover target='word-filter-input' title="Word filter" triggers="click">
+            <b-form-group
+                label="Filter"
+                label-for="filter-input"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-size="sm"
+                class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-input
+                    id="filter-input"
+                    v-model="filterWord"
+                    type="search"
+                    placeholder="Type to Search"
+                ></b-form-input>
+              </b-input-group>
+            </b-form-group>
+          </b-popover>
         </div>
       </template>
       <template #cell(selected)='row'>
@@ -275,7 +273,7 @@ export default {
         this.filterSelected = true
       } else {
         this.filterOn.splice(i, 1)
-        this.filter = null
+        this.filterSelected = null
       }
     } ,
     customFilter(row, filter) {
@@ -284,20 +282,20 @@ export default {
       console.log('filter filter: ' +  filter)
 
       const selectedCheck = filter[0] !== null? row.selected === filter[0]: null
-      //const wordCheck = filter[1] !== null? row.word === filter[1]: null
+      const wordCheck = filter[1] !== null? row.word.startsWith(filter[1]): null
       //const networkCheck = filter[2] !== null? row.network === filter[2]: null
 
-      return selectedCheck
+      return (selectedCheck || selectedCheck === null) && (wordCheck || wordCheck === null)
     },
-    wordFilterClicked(event) {
-      console.log(event)
-      let i = this.filterOn.indexOf("word")
+    filterClicked(column, filterName) {
+      let i = this.filterOn.indexOf(column)
       if(i < 0 ) {
-        this.filterOn.push("word")
-        this.filter = "true"
+        this.filterOn.push(column)
+        if(column === 'selected')
+          this.filterSelected = true
       } else {
         this.filterOn.splice(i, 1)
-        this.filter = null
+        this[filterName] = null
       }
     },
     selectAllNodes() {
