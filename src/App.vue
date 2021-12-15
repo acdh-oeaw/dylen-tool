@@ -36,12 +36,11 @@
             <div
               class='h-100'
               data-sauto-id='results'
-              v-if='!this.$store.state.main.showInfo'
             >
               <Results />
             </div>
             <div
-              class='h-100'
+              class='h-100 w-100 infoContainer'
               data-sauto-id='info'
               v-if='this.$store.state.main.showInfo'
             >
@@ -319,6 +318,15 @@ body {
 
 .main.full {
   margin-right: 0;
+}
+
+.infoContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  z-index: 10;
+  overflow-x: hidden;
 }
 
 @media screen and (max-width: 576px) {

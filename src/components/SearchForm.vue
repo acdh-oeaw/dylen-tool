@@ -65,7 +65,7 @@
             v-model='searchTerm'
             :data-sauto-id="'selectTargetword-'+this.pane"
             :list='`datalist-${pane}`'
-            :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
+            :style="errors.length>0 ? { 'color': 'lightcoral' } : null"
             @change='handleSearchTermSelect'
             @keypress='this.keyPress'
             autocomplete='off'
@@ -82,10 +82,12 @@
         </b-form-group>
       </b-col>
       <b-col xl='3'>
-        <div
-          style='color:lightcoral;padding-top: 0.1em;'
-          v-if='!hasSuggestions'
-        >targetword not found</div>
+          <div
+            style='color:lightcoral;
+            padding-top: 0.1em;'
+            v-for="error in errors" :key="error">
+            {{error}}
+          </div>
       </b-col>
       <b-col xl='3'>
         <b-row align-h='end'>
@@ -150,6 +152,35 @@ export default {
   },
   mounted() {},
   methods: {
+    checkInvalidChars(val) {
+      let invalidChars = []
+      for (let c of val) {
+        if (c.match(/[1-9;:\s!@#$%^&*)(+=.,'"_]/)) {
+          console.log('contains invalid character.')
+          invalidChars.push(c)
+        }
+      }
+      return invalidChars
+    },
+    validateSearchTerm(val) {
+      this.$store.commit('main/resetError', {
+        pane: this.queryPane
+      });
+      let invalidChars = this.checkInvalidChars(val)
+      if(invalidChars.length > 0) {
+        this.$store.commit('main/addError', {
+          error: "contains invalid character(s): '" + invalidChars.join(' ') + "'",
+          pane: this.queryPane
+        });
+      } else {
+        if(this.errors.length === 0) {
+          this.$store.commit('main/changeSearchTerm', {
+            searchTerm: val,
+            pane: this.queryPane
+          });
+        }
+      }
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
@@ -211,18 +242,16 @@ export default {
     }
   },
   computed: {
+    errors() {
+      console.log('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors)
+      return this.$store.getters['main/getPane']('pane1').errors;
+    },
     queryButtonActive() {
       if (
         !this.searchTerm ||
         this.searchTerm.length === 0 ||
         !this.findSearchTermInAvailableTargetwords()
       ) {
-        return false;
-      }
-      return true;
-    },
-    hasSuggestions() {
-      if (this.availableTargetwords.length === 0 && this.searchTerm) {
         return false;
       }
       return true;
@@ -326,10 +355,8 @@ export default {
         return this.$store.getters['main/searchTerm'](this.queryPane);
       },
       set(val) {
-        this.$store.commit('main/changeSearchTerm', {
-          searchTerm: val,
-          pane: this.queryPane
-        });
+        this.validateSearchTerm(val)
+
       }
     },
     busy: {
@@ -344,7 +371,9 @@ export default {
       }
     }
   },
-  watch: {}
+  watch: {
+  }
+
 };
 </script>
 
