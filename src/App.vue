@@ -36,12 +36,11 @@
             <div
               class='h-100'
               data-sauto-id='results'
-              v-if='!this.$store.state.main.showInfo'
             >
               <Results />
             </div>
             <div
-              class='h-100'
+              class='h-100 w-100 infoContainer'
               data-sauto-id='info'
               v-if='this.$store.state.main.showInfo'
             >
@@ -106,9 +105,7 @@
         <b-row>
           <b-col>Bold</b-col>
           <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
-          <b-col
-            data-sauto-id='ignore'
-          >
+          <b-col data-sauto-id='ignore'>
             <b-form-checkbox
               data-sauto-id='bold-checkbox-option'
               v-model='labelOptions.bold'
@@ -117,9 +114,7 @@
         </b-row>
         <b-row>
           <b-col>White label background</b-col>
-          <b-col
-            data-sauto-id='ignore'
-          >
+          <b-col data-sauto-id='ignore'>
             <b-form-checkbox
               data-sauto-id='white-label-checkbox-option'
               v-model='labelOptions.background'
@@ -163,9 +158,7 @@
         </b-row>
         <b-row>
           <b-col>Show selected words on top</b-col>
-          <b-col
-            data-sauto-id='ignore'
-          >
+          <b-col data-sauto-id='ignore'>
             <b-check
               data-sauto-id='selected-words-top-checkbox-option'
               v-model='tableOptions.selectedOnTop'
@@ -284,6 +277,15 @@ body {
 
 .main.full {
   margin-right: 0;
+}
+
+.infoContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  z-index: 10;
+  overflow-x: hidden;
 }
 
 @media screen and (max-width: 576px) {
