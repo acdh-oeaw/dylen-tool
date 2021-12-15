@@ -4,7 +4,7 @@
     style="height: 85%;"
   >
     <b-row>
-      <b-col lg="6" class="my-1">
+<!--      <b-col lg="6" class="my-1">
         <b-form-group
             label="Filter"
             label-for="filter-input"
@@ -26,7 +26,7 @@
             </b-input-group-append>
           </b-input-group>
         </b-form-group>
-      </b-col>
+      </b-col>-->
       <b-col>
         <b-form-group
             v-model="sortDirection"
@@ -57,10 +57,12 @@
       :sort-by="'word'"
       :sort-compare='sortCompare'
       :filter="filter"
+      :filter-function='customFilter'
       :filter-included-fields="filterOn"
       sticky-header='100%'
       head-variant='light'
       small
+      hover
       sort-icon-left
       class='h-100 sticky-table'
       data-sauto-id='table'
@@ -82,10 +84,21 @@
           >
             <b-icon v-if='filterOn.indexOf("selected") < 0' :icon="'filter-circle'"></b-icon>
             <b-icon v-if='filterOn.indexOf("selected") >= 0' :icon="'filter-circle-fill'"></b-icon>
-
           </b-button>
         </div>
-
+      </template>
+      <template #head(word)="">
+        <div style='width:7em'>
+          <span>Word</span>
+          <b-button
+              style='padding:0'
+              variant='none'
+              @click='(event) => wordFilterClicked(event)'
+          >
+            <b-icon v-if='filterOn.indexOf("word") < 0' :icon="'filter-circle'"></b-icon>
+            <b-icon v-if='filterOn.indexOf("word") >= 0' :icon="'filter-circle-fill'"></b-icon>
+          </b-button>
+        </div>
       </template>
       <template #cell(selected)='row'>
         <div data-sauto-id='ignore'>
@@ -113,12 +126,21 @@ export default {
   props: ['selectedNodes', 'allNodes', 'options'],
   data() {
     return {
-      filter: null,
+      filterSelected: null,
+      filterWord: null,
+      filterNetwork: null,
       filterOn: [],
       sortDirection: 'asc',
     };
   },
   computed: {
+    filter: function() {
+      if (this.filterSelected === null && this.filterWord ===  null && this.filterNetwork === null){
+        return null;
+      }
+
+      return [this.filterSelected , this.filterWord, this.filterNetwork];
+    },
     tableOptions() {
       return this.$store.getters['main/tableOptions'];
     },
@@ -151,7 +173,7 @@ export default {
       if (this.tableData.length <= 0) return [];
       let fields = [];
       for (let key in this.tableData[0]) {
-        if (key != 'color' && key != 'node')
+        if (key !== 'color' && key !== 'node')
           fields.push({
             key,
             sortable: true
@@ -250,12 +272,34 @@ export default {
       let i = this.filterOn.indexOf("selected")
       if(i < 0 ) {
         this.filterOn.push("selected")
+        this.filterSelected = true
+      } else {
+        this.filterOn.splice(i, 1)
+        this.filter = null
+      }
+    } ,
+    customFilter(row, filter) {
+      console.log('filtering on: ' + this.filterOn)
+      console.log('filter row: ' + JSON.stringify(row))
+      console.log('filter filter: ' +  filter)
+
+      const selectedCheck = filter[0] !== null? row.selected === filter[0]: null
+      //const wordCheck = filter[1] !== null? row.word === filter[1]: null
+      //const networkCheck = filter[2] !== null? row.network === filter[2]: null
+
+      return selectedCheck
+    },
+    wordFilterClicked(event) {
+      console.log(event)
+      let i = this.filterOn.indexOf("word")
+      if(i < 0 ) {
+        this.filterOn.push("word")
         this.filter = "true"
       } else {
         this.filterOn.splice(i, 1)
-        this.filter = "false"
+        this.filter = null
       }
-    } ,
+    },
     selectAllNodes() {
       this.tableData
         .filter(
