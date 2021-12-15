@@ -33,7 +33,10 @@
           <b-button
               style='padding:0'
               variant='none'
-              @click='filterClicked("selected","filterSelected")'
+              @click='(event) => {
+                filterClicked("selected","filterSelected")
+                event.stopPropagation()
+              }'
           >
             <b-icon v-if='filterOn.indexOf("selected") < 0' :icon="'filter-circle'"></b-icon>
             <b-icon v-if='filterOn.indexOf("selected") >= 0' :icon="'filter-circle-fill'"></b-icon>
@@ -43,34 +46,41 @@
       <template #head(word)="">
         <div style='width:7em'>
           <span>Word </span>
-          <b-button
-              id='word-filter-input'
-              style='padding:0'
-              variant='none'
-              @click='filterClicked("word", "filterWord")'
-          >
-            <b-icon v-if='filterOn.indexOf("word") < 0' :icon="'filter-circle'"></b-icon>
-            <b-icon v-if='filterOn.indexOf("word") >= 0' :icon="'filter-circle-fill'"></b-icon>
-          </b-button>
-          <b-popover target='word-filter-input' title="Word filter" triggers="click blur">
-            <b-form-group
-                label="Filter"
-                label-for="filter-input"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-size="sm"
-                class="mb-0"
-            >
-              <b-input-group size="sm">
-                <b-form-input
-                    id="filter-input"
-                    v-model="filterWord"
-                    type="search"
-                    placeholder="Type to Filter"
-                ></b-form-input>
-              </b-input-group>
-            </b-form-group>
-          </b-popover>
+          <span>
+            <b-button
+                            id='word-filter-input'
+                            style='padding:0'
+                            variant='none'
+                            @click='(event) => {
+                filterClicked("word","filterWord")
+                event.stopPropagation()
+
+              }'
+                        >
+              <b-icon v-if='filterOn.indexOf("word") < 0' :icon="'filter-circle'"></b-icon>
+              <b-icon v-if='filterOn.indexOf("word") >= 0' :icon="'filter-circle-fill'"></b-icon>
+            </b-button>
+            <b-popover target='word-filter-input' title="Word filter" triggers="click blur">
+              <b-form-group
+                  label="Filter"
+                  label-for="filter-input"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  class="mb-0"
+              >
+                <b-input-group size="sm">
+                  <b-form-input
+                      id="filter-input"
+                      v-model="filterWord"
+                      type="search"
+                      placeholder="Type to Filter"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-popover>
+          </span>
+
         </div>
       </template>
       <template #head(network)="">
@@ -80,7 +90,11 @@
               id='network-filter-input'
               style='padding:0'
               variant='none'
-              @click='filterClicked("network", "filterNetwork")'
+              @click='(event) => {
+                filterClicked("network","filterNetwork")
+                event.stopPropagation()
+
+              }'
           >
             <b-icon v-if='filterOn.indexOf("network") < 0' :icon="'filter-circle'"></b-icon>
             <b-icon v-if='filterOn.indexOf("network") >= 0' :icon="'filter-circle-fill'"></b-icon>
