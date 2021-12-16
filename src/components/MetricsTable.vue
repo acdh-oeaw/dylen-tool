@@ -9,21 +9,116 @@
       :responsive='true'
       :sort-by="'word'"
       :sort-compare='sortCompare'
+      :filter="filter"
+      :filter-function='customFilter'
+      :filter-included-fields="filterOn"
       sticky-header='100%'
+      head-variant='light'
       small
+      hover
       sort-icon-left
       class='h-100 sticky-table'
       data-sauto-id='table'
       @sort-changed='handleSortChanged'
     >
       <template #head(selected)="">
-        <b-button
-          variant='none'
-          class='mx-auto'
-          @click=' (event) => selectionCheckboxChanged(event)'
-        >
-          <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
-        </b-button>
+        <div style='width:3em'>
+          <b-button
+              style='padding:0'
+              variant='none'
+              @click=' (event) => selectionCheckboxChanged(event)'
+          >
+            <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
+          </b-button>
+          <b-button
+              style='padding:0'
+              variant='none'
+              @click='(event) => {
+                filterClicked("selected","filterSelected")
+                event.stopPropagation()
+              }'
+          >
+            <b-icon v-if='filterOn.indexOf("selected") < 0' :icon="'filter-circle'"></b-icon>
+            <b-icon v-if='filterOn.indexOf("selected") >= 0' :icon="'filter-circle-fill'"></b-icon>
+          </b-button>
+        </div>
+      </template>
+      <template #head(word)="">
+        <div style='width:7em'>
+          <span>Word </span>
+          <span>
+            <b-button
+                            id='word-filter-input'
+                            style='padding:0'
+                            variant='none'
+                            @click='(event) => {
+                filterClicked("word","filterWord")
+                event.stopPropagation()
+
+              }'
+                        >
+              <b-icon v-if='filterOn.indexOf("word") < 0' :icon="'filter-circle'"></b-icon>
+              <b-icon v-if='filterOn.indexOf("word") >= 0' :icon="'filter-circle-fill'"></b-icon>
+            </b-button>
+            <b-popover target='word-filter-input' title="Word filter" triggers="click blur">
+              <b-form-group
+                  label="Filter"
+                  label-for="filter-input"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  class="mb-0"
+              >
+                <b-input-group size="sm">
+                  <b-form-input
+                      id="filter-input"
+                      v-model="filterWord"
+                      type="search"
+                      placeholder="Type to Filter"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-popover>
+          </span>
+
+        </div>
+      </template>
+      <template #head(network)="">
+        <div style='width:7em'>
+          <span>Network  </span>
+          <b-button
+              id='network-filter-input'
+              style='padding:0'
+              variant='none'
+              @click='(event) => {
+                filterClicked("network","filterNetwork")
+                event.stopPropagation()
+
+              }'
+          >
+            <b-icon v-if='filterOn.indexOf("network") < 0' :icon="'filter-circle'"></b-icon>
+            <b-icon v-if='filterOn.indexOf("network") >= 0' :icon="'filter-circle-fill'"></b-icon>
+          </b-button>
+          <b-popover target='network-filter-input' title='Network filter' triggers='click blur'>
+            <b-form-group
+                label="Filter"
+                label-for="filter-input"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-size="sm"
+                class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-input
+                    id="filter-input"
+                    v-model="filterNetwork"
+                    type="search"
+                    placeholder="Type to Filter"
+                ></b-form-input>
+              </b-input-group>
+            </b-form-group>
+          </b-popover>
+        </div>
       </template>
       <template #cell(selected)='row'>
         <div data-sauto-id='ignore'>
@@ -50,9 +145,22 @@ export default {
   name: 'MetricsTable',
   props: ['selectedNodes', 'allNodes', 'options'],
   data() {
-    return {};
+    return {
+      filterSelected: null,
+      filterWord: null,
+      filterNetwork: null,
+      filterOn: [],
+      sortDirection: 'asc',
+    };
   },
   computed: {
+    filter: function() {
+      if (this.filterSelected === null && this.filterWord ===  null && this.filterNetwork === null){
+        return null;
+      }
+
+      return [this.filterSelected , this.filterWord, this.filterNetwork];
+    },
     tableOptions() {
       return this.$store.getters['main/tableOptions'];
     },
@@ -85,7 +193,7 @@ export default {
       if (this.tableData.length <= 0) return [];
       let fields = [];
       for (let key in this.tableData[0]) {
-        if (key != 'color' && key != 'node')
+        if (key !== 'color' && key !== 'node')
           fields.push({
             key,
             sortable: true
@@ -178,6 +286,28 @@ export default {
       if (this.isAllSelected) this.deselectAllNodes();
       else this.selectAllNodes();
       this.mouseClick(event,"table-select-all")
+    },
+    customFilter(row, filter) {
+      console.log('filtering on: ' + this.filterOn)
+      console.log('filter row: ' + JSON.stringify(row))
+      console.log('filter filter: ' +  filter)
+
+      const selectedCheck = filter[0] !== null? row.selected === filter[0]: null
+      const wordCheck = filter[1] !== null? row.word.toLowerCase().startsWith(filter[1].toLowerCase()): null
+      const networkCheck = filter[2] !== null? row.network.toLowerCase().startsWith(filter[2].toLowerCase()): null
+
+      return (selectedCheck || selectedCheck === null) && (wordCheck || wordCheck === null) && (networkCheck || networkCheck === null)
+    },
+    filterClicked(column, filterName) {
+      let i = this.filterOn.indexOf(column)
+      if(i < 0 ) {
+        this.filterOn.push(column)
+        if(column === 'selected')
+          this.filterSelected = true
+      } else {
+        this.filterOn.splice(i, 1)
+        this[filterName] = null
+      }
     },
     selectAllNodes() {
       this.tableData
