@@ -36,7 +36,7 @@
             >Export JSON</b-dropdown-item-button>
           </b-dropdown>
           <b-button
-              class='mr-3'
+              class='mr-5'
               size='sm'
               :pressed.sync='showTable'
               variant='outline-secondary'
