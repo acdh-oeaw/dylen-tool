@@ -85,13 +85,10 @@
         >
           <b-icon icon='info'></b-icon>
         </b-button>
-        <b-button
-          data-sauto-id='settings-button'
-          class='mr-2'
-          @click='toggleSideBar'
-        >
-          <b-icon icon='gear'></b-icon>
-        </b-button>
+        <setting
+            setting-component='all'
+            position='nav'>
+        </setting>
       </b-row>
     </b-col>
   </b-row>
@@ -99,11 +96,12 @@
 
 <script>
 import SearchForm from '@/components/SearchForm';
-
+import Setting from '@/components/Setting'
 export default {
   name: 'TopNavigation',
   components: {
-    SearchForm
+    SearchForm,
+    Setting
   },
   props: ['showInfo'],
   data() {
@@ -134,10 +132,6 @@ export default {
           pane: 'pane2'
         })
       }
-    },
-    toggleSideBar() {
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
     },
     updateShowInfo() {
       this.$store.commit('main/setShowInfo', { showInfo: !this.$store.state.main.showInfo });
