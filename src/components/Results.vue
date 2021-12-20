@@ -28,17 +28,17 @@
             </button>
 
             <NetworkGraph
-              v-if="showFirstGraph && type == 'Ego'"
+              v-if="showFirstGraph && type === 'Ego'"
               ref='networkGraph1'
               pane='pane1'
             />
             <NetworkGraphGeneral
-              v-if="showFirstGraph && type == 'Party'"
+              v-if="showFirstGraph && type === 'Party'"
               ref='networkGraph1'
               pane='pane1'
             />
             <NetworkGraphSpeaker
-              v-if="showFirstGraph && type == 'Speaker'"
+              v-if="showFirstGraph && type === 'Speaker'"
               ref='networkGraph1'
               pane='pane1'
             />
@@ -56,17 +56,17 @@
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
-              v-if="showFirstGraph && type == 'Ego'"
+              v-if="showFirstGraph && type === 'Ego'"
               ref='networkGraph2'
               pane='pane2'
             />
             <NetworkGraphGeneral
-              v-if="showFirstGraph && type == 'Party'"
+              v-if="showFirstGraph && type === 'Party'"
               ref='networkGraph2'
               pane='pane2'
             />
             <NetworkGraphSpeaker
-              v-if="showFirstGraph && type == 'Speaker'"
+              v-if="showFirstGraph && type === 'Speaker'"
               ref='networkGraph2'
               pane='pane2'
             />

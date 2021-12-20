@@ -33,7 +33,7 @@
             :lazy='true'
             :adsorb='true'
             :duration='0.3'
-            v-on:change='handleChange'
+            v-on:change='handleYearChange'
             :marks='egoNetwork.possibleYears'
             :tooltip="'none'"
           />
@@ -118,7 +118,7 @@ export default {
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
     },
-    handleChange(value) {
+    handleYearChange(value) {
       this.updateNetwork(this.egoNetwork);
       const position = this.calculateSliderPosition(value);
       this.mouseClick(position, 'year-slider-' + this.pane);
@@ -216,7 +216,8 @@ export default {
           corpus: network.corpus,
           subcorpus: network.subcorpus,
           targetWordId: network.targetWordId,
-          pos: network.pos
+          pos: network.pos,
+          type: network.type
         };
       }
       return selectedNetwork;

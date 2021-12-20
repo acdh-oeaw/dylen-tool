@@ -214,6 +214,7 @@ const mainModule = {
         network.text = state[pane].selectedTargetword.text;
         network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year).sort();
         network.pos = state[pane].selectedTargetword.pos;
+        //TODO: use constant.. hardcoding types as string is very errorprone
         network.type = 'Ego';
       }
       state[pane].busy = true;

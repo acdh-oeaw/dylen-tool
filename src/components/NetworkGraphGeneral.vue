@@ -29,7 +29,7 @@
               :lazy='true'
               :adsorb='true'
               :duration='0.3'
-              v-on:change='handleChange'
+              v-on:change='handleYearChange'
               :marks='generalNetwork.possibleYears'
               :tooltip="'none'"
           />
@@ -115,7 +115,7 @@ export default {
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
     },
-    handleChange(value) {
+    handleYearChange(value) {
       this.updateNetwork(this.generalNetwork);
       const position = this.calculateSliderPosition(value);
       this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);

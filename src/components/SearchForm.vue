@@ -373,10 +373,8 @@ export default {
   },
   computed: {
     hasSuggestions() {
-      if (this.availableTargetwords.length === 0 && this.searchTerm) {
-        return false;
-      }
-      return true;
+      return !(this.availableTargetwords.length === 0 && this.searchTerm);
+
     },
     errors() {
       console.log('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors)
@@ -512,26 +510,7 @@ export default {
 
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-.form-group {
-  margin-bottom: 0rem;
-}
-.custom-select-sm {
-  height: calc(1.5em + 0.5rem + 2px);
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.5rem;
-  font-size: 0.7rem;
-}
-.form-control-sm {
-  height: calc(1.5em + 0.5rem + 2px);
-  padding: 0.25rem 0.5rem;
-  font-size: 0.7rem;
-  line-height: 1.5;
-  border-radius: 0.2rem;
-}
 .visualize-button {
   margin-right: 0.5em;
 }
