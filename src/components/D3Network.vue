@@ -44,29 +44,27 @@
     </div>
 
     <div class="checkbox-container checkbox-width">
-      <div
-        data-sauto-id='ignore'
-      >
+      <div data-sauto-id='ignore'>
         <b-form-group
-            class='ego-network-formgroup mt-1 pl-2'
-            id="ego-network-options"
-            label='visualization option'
-            label-size='sm'
-            label-align='center'
+          class='ego-network-formgroup mt-1 pl-2'
+          id="ego-network-options"
+          label='visualization option'
+          label-size='sm'
+          label-align='center'
         >
           <b-form-checkbox
-              class='b-0 pl-4'
-              v-model='isAllSelected'
-              @change='selectionCheckboxChanged'
-              :data-sauto-id="'select-all-checkbox-'+this.pane"
+            class='b-0 pl-4'
+            v-model='isAllSelected'
+            @change='selectionCheckboxChanged'
+            :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
             select all
           </b-form-checkbox>
           <b-form-checkbox
-              class='b-0'
-              v-model='options.showClusters'
-              @chante='clickOnShowClusters'
-              :data-sauto-id="'select-all-checkbox-'+this.pane"
+            class='b-0'
+            v-model='options.showClusters'
+            @chante='clickOnShowClusters'
+            :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
             show clusters
           </b-form-checkbox>
@@ -115,12 +113,26 @@ export default {
       links: [],
       svg: {},
       transform: d3.zoomIdentity,
+      menuItems: [
+        {
+          title: '',
+          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
+        },
+        {
+          title: 'Absolute frequency: ',
+          value: (d) => d._absoluteFrequency
+        },
+        {
+          title: 'Normalized frequency: ',
+          value: (d) => d._normalisedFrequency.toExponential(2)
+        }
+      ]
     };
   },
   watch: {
-    showClusters: function() {
-      console.log('watch showclusters: ' + this.options.showClusters)
-      this.updateSimulation()
+    showClusters: function () {
+      console.log('watch showclusters: ' + this.options.showClusters);
+      this.updateSimulation();
     },
     netNodes: function () {
       this.updateSimulation();
@@ -199,18 +211,20 @@ export default {
             : 1
         )
         .attr('fill', (_, idx) => {
-          if(!this.options.showClusters) {
-            return 'white'
+          if (!this.options.showClusters) {
+            return 'white';
           }
-          return this.netNodes[idx]._color
-
+          return this.netNodes[idx]._color;
         })
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-node');
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
-        .on('mouseleave', (event, d) => this.defocusNode(d));
+        .on('mouseleave', (event, d) => this.defocusNode(d))
+        .on('contextmenu', (event, d) => {
+          this.createContextMenu(event, d);
+        });
 
       n.append('title').text((d) => d.name);
       n.call(
@@ -266,7 +280,10 @@ export default {
         .join('line')
         .attr(
           'stroke',
-          (d) => `rgba(0, 0, 0, ${this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity } )`  
+          (d) =>
+            `rgba(0, 0, 0, ${
+              this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
+            } )`
         )
         .attr('stroke-width', (d) => this.scaleThickness(d.similarity));
     },
@@ -306,6 +323,35 @@ export default {
     clickOnShowClusters() {
       this.options.showClusters = true;
       //this.simulation.restart();
+    },
+    createContextMenu(event, d) {
+      const x = event.pageX,
+        y = event.pageY;
+
+      console.log(event);
+
+      d3.selectAll(`.contextMenu`).remove();
+
+      d3.select('body')
+        .append('div')
+        .attr('class', 'contextMenu')
+        .style('top', `${y}px`)
+        .style('left', `${x}px`)
+        .style('position', 'fixed')
+        .selectAll('tmp')
+        .data(this.menuItems)
+        .enter()
+        .append('div')
+        .attr('class', 'menuEntry');
+
+      d3.selectAll(`.menuEntry`)
+        .append('span')
+        .text((entry) => {
+          return `${entry.title}${entry.value(d)}`;
+        })
+        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'));
+
+      event.preventDefault();
     },
     dragsubject(event) {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
@@ -450,7 +496,7 @@ export default {
       this.applyScaleAndTransform();
     },
     updateSimulation() {
-      console.log('updating sim: ' + this.options.showClusters)
+      console.log('updating sim: ' + this.options.showClusters);
       const options = this.options;
       const width = options.size.w;
       const height = options.size.h;
@@ -507,6 +553,9 @@ export default {
   },
   mounted() {
     this.initNetwork();
+    d3.select('body').on('click', () => {
+      d3.selectAll(`.contextMenu`).remove();
+    });
   },
   beforeDestroy() {
     this.deselectAllNodes();
@@ -535,5 +584,16 @@ svg .labels text {
 }
 .controls-container {
   bottom: 0.2em;
+}
+.contextMenu {
+  background-color: white;
+  border-radius: 5px;
+  padding: 2px 0;
+}
+
+.menuEntry {
+  stroke: transparent;
+  margin: 0 5px;
+  font-size: 12px;
 }
 </style>
