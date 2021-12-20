@@ -42,19 +42,35 @@
       </div>
 
     </div>
-    <div class="checkbox-container">
+
+    <div class="checkbox-container checkbox-width">
       <div
-        class='ego-checkbox'
         data-sauto-id='ignore'
       >
-        <b-form-checkbox
-          class='b-0'
-          v-model='isAllSelected'
-          @change='selectionCheckboxChanged'
-          :data-sauto-id="'select-all-checkbox-'+this.pane"
+        <b-form-group
+            class='ego-network-formgroup mt-1 pl-2'
+            id="ego-network-options"
+            label='visualization option'
+            label-size='sm'
+            label-align='center'
         >
-          select all
-        </b-form-checkbox>
+          <b-form-checkbox
+              class='b-0 pl-4'
+              v-model='isAllSelected'
+              @change='selectionCheckboxChanged'
+              :data-sauto-id="'select-all-checkbox-'+this.pane"
+          >
+            select all
+          </b-form-checkbox>
+          <b-form-checkbox
+              class='b-0'
+              v-model='options.showClusters'
+              @chante='clickOnShowClusters'
+              :data-sauto-id="'select-all-checkbox-'+this.pane"
+          >
+            show clusters
+          </b-form-checkbox>
+        </b-form-group>
       </div>
     </div>
     <svg
@@ -98,10 +114,14 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      transform: d3.zoomIdentity
+      transform: d3.zoomIdentity,
     };
   },
   watch: {
+    showClusters: function() {
+      console.log('watch showclusters: ' + this.options.showClusters)
+      this.updateSimulation()
+    },
     netNodes: function () {
       this.updateSimulation();
     },
@@ -178,7 +198,13 @@ export default {
             ? 2
             : 1
         )
-        .attr('fill', (_, idx) => this.netNodes[idx]._color)
+        .attr('fill', (_, idx) => {
+          if(!this.options.showClusters) {
+            return 'white'
+          }
+          return this.netNodes[idx]._color
+
+        })
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-node');
@@ -268,6 +294,10 @@ export default {
     }
   },
   methods: {
+    clickOnShowClusters() {
+      this.options.showClusters = true;
+      //this.simulation.restart();
+    },
     dragsubject(event) {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
         let node = this.nodes[i];
@@ -406,6 +436,7 @@ export default {
       this.applyScaleAndTransform();
     },
     updateSimulation() {
+      console.log('updating sim: ' + this.options.showClusters)
       const options = this.options;
       const width = options.size.w;
       const height = options.size.h;
@@ -478,11 +509,15 @@ svg .labels text {
   position: absolute;
   background: rgba(255, 255, 255, 1);
   right: 0;
-  margin-right: 1.2em;
-}
-.checkbox-container {
+  margin-right: 1em;
   padding-top: 0.5em;
   padding-right: 0.5em;
+}
+.checkbox-width {
+  width: 10em;
+}
+.ego-network-formgroup {
+  border: solid lightgrey;
 }
 .controls-container {
   bottom: 0.2em;

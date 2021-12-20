@@ -5,6 +5,7 @@
           v-if='position === "nav"'
           data-sauto-id='settings-button'
           class='mr-2'
+          variant='info'
           @click='toggleSideBar(settingComponent)'
       >
         <b-icon icon='gear'></b-icon>
@@ -38,12 +39,4 @@ export default {
 </script>
 
 <style scoped>
-
-.settings-button {
-  margin-right: 2.5em;
-  margin-bottom: 0.5em;
-  z-index: 2;
-  position: absolute;
-  right: 0;
-}
 </style>

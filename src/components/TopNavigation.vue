@@ -32,13 +32,10 @@
                 >
                   <b-icon icon='info'></b-icon>
                 </b-button>
-                <b-button
-                    data-sauto-id='settings-button'
-                    class='mr-2'
-                    @click='toggleSideBar'
-                >
-                  <b-icon icon='gear'></b-icon>
-                </b-button>
+                <setting
+                    setting-component='all'
+                    position='nav'>
+                </setting>
               </b-row>
           </b-navbar>
 
@@ -170,12 +167,14 @@
 <script>
 import SearchFormGeneral from '@/components/SearchFormGeneral';
 import SearchFormGeneralSpeaker from '@/components/SearchFormGeneralSpeaker';
+import Setting from '@/components/Setting'
 
 export default {
   name: 'TopNavigation',
   components: {
     SearchFormGeneral,
-    SearchFormGeneralSpeaker
+    SearchFormGeneralSpeaker,
+    Setting
   },
   props: ['showInfo'],
   data() {

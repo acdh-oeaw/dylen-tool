@@ -87,7 +87,8 @@ export default {
         size: {
           h: 0,
           w: 0
-        }
+        },
+        showClusters: false
       },
       sliderOptions: {
         dotSize: 15
