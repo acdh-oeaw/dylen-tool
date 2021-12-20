@@ -238,6 +238,9 @@ export default {
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-label');
+        })
+        .on('contextmenu', (event, d) => {
+          this.createContextMenu(event, d);
         });
       l.call(
         d3
@@ -298,10 +301,15 @@ export default {
   },
   methods: {
     createContextMenu(event, d) {
-      const x = event.pageX,
-        y = event.pageY;
+      const x = event.clientX,
+        y = event.clientY;
 
-      console.log(event);
+      let metricEntries = Object.keys(d._metrics).map((key) => {
+        return {
+          title: `${this.camelCaseToSpaces(key)}: `,
+          value: (d) => d._metrics[key].toFixed(3)
+        };
+      });
 
       d3.selectAll(`.contextMenu`).remove();
 
@@ -312,7 +320,7 @@ export default {
         .style('left', `${x}px`)
         .style('position', 'fixed')
         .selectAll('tmp')
-        .data(this.menuItems)
+        .data(this.menuItems.concat(metricEntries))
         .enter()
         .append('div')
         .attr('class', 'menuEntry');
@@ -521,6 +529,10 @@ export default {
       this.transform.y = 0;
       this.transform.k = 1;
       this.applyScaleAndTransform();
+    },
+    camelCaseToSpaces(text) {
+      let result = text.replace(/([A-Z])/g, ' $1');
+      return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     }
   },
   mounted() {
