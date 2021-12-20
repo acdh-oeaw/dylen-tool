@@ -70,9 +70,7 @@ export default {
           node: node
         };
         let maxDigits = this.tableOptions.digits;
-        tableEntry['normalizedFrequency'] =
-          node._normalisedFrequency.toExponential(2);
-        for (let key in node._metrics)
+        for (let key in node._metrics) {
           tableEntry[key] =
             maxDigits > 10
               ? node._metrics[key]
@@ -80,6 +78,10 @@ export default {
                   (node._metrics[key] + Number.EPSILON) *
                     Math.pow(10, maxDigits)
                 ) / Math.pow(10, maxDigits);
+          if (tableEntry[key] == 0 && node._metrics[key] != 0)
+            tableEntry[key] = node._metrics[key].toExponential(2);
+        }
+
         return tableEntry;
       });
     },
