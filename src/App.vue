@@ -330,6 +330,13 @@ body {
   z-index: 10;
   overflow-x: hidden;
 }
+.settings-button {
+  margin-right: 2.5em;
+  margin-bottom: 0.5em;
+  z-index: 2;
+  position: absolute;
+  right: 0;
+}
 
 @media screen and (max-width: 576px) {
   .main {
