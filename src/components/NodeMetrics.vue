@@ -13,37 +13,47 @@
       <b-col xl='2'></b-col>
       <b-col class="h-8"><b>Node Metrics Comparison</b></b-col>
       <b-col xl='2'>
-        <b-button-group size='sm' class='float-right'>
+        <b-button-group
+          size='sm'
+          class='float-right'
+        >
           <b-dropdown
-              size='sm'
-              v-b-tooltip.hover title="Download CSV/JSON"
-              id='dropdown-1'
-              v-if='nodes && showTable'
-              no-caret
-              right
+            size='sm'
+            v-b-tooltip.hover
+            title="Download CSV/JSON"
+            id='dropdown-1'
+            v-if='nodes && showTable'
+            no-caret
+            right
           >
             <template #button-content>
               <b-icon icon='download'></b-icon>
               <span class='sr-only'>Download</span>
             </template>
             <b-dropdown-item-button
-                data-sauto-id="export-csv-button"
-                @click='csvExport'
+              data-sauto-id="export-csv-button"
+              @click='csvExport'
             >Export CSV</b-dropdown-item-button>
             <b-dropdown-item-button
-                data-sauto-id="export-json-button"
-                @click='jsonExport'
+              data-sauto-id="export-json-button"
+              @click='jsonExport'
             >Export JSON</b-dropdown-item-button>
           </b-dropdown>
           <b-button
-              class='mr-5'
-              size='sm'
-              :pressed.sync='showTable'
-              variant='outline-secondary'
-              data-sauto-id='table-button'
+            class='mr-5'
+            size='sm'
+            :pressed.sync='showTable'
+            variant='outline-secondary'
+            data-sauto-id='table-button'
           >
-            <b-icon v-if='showTable' icon='graph-up'></b-icon>
-            <b-icon v-if='!showTable' icon='table'></b-icon>
+            <b-icon
+              v-if='showTable'
+              icon='graph-up'
+            ></b-icon>
+            <b-icon
+              v-if='!showTable'
+              icon='table'
+            ></b-icon>
           </b-button>
         </b-button-group>
       </b-col>
@@ -124,10 +134,16 @@ export default {
       return nodes;
     },
     csvExport() {
-      this.$store.dispatch('main/downloadMetricsAsCSV', {allNodes:this.allNodes, selectedNodes: this.nodes});
+      this.$store.dispatch('main/downloadMetricsAsCSV', {
+        allNodes: this.allNodes,
+        selectedNodes: this.nodes
+      });
     },
     jsonExport() {
-      this.$store.dispatch('main/downloadMetricsAsJSON', {allNodes:this.allNodes, selectedNodes: this.nodes});
+      this.$store.dispatch('main/downloadMetricsAsJSON', {
+        allNodes: this.allNodes,
+        selectedNodes: this.nodes
+      });
     }
   },
   computed: {
@@ -146,6 +162,7 @@ export default {
             nodes.push({
               id: network.id + '_' + node.id,
               name: node.text,
+              _normalisedFrequency: node.normalisedFrequency,
               _metrics: node.metrics,
               _pane: `pane${idx + 1}`
             });

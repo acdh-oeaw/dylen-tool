@@ -185,6 +185,8 @@ export default {
           node: node
         };
         let maxDigits = this.tableOptions.digits;
+        tableEntry['normalizedFrequency'] =
+          node._normalisedFrequency.toExponential(2);
         for (let key in node._metrics)
           tableEntry[key] = roundToMaxDigit(node._metrics[key], maxDigits)
         return tableEntry;
@@ -286,7 +288,7 @@ export default {
       console.log(this.tableData);
       if (this.isAllSelected) this.deselectAllNodes();
       else this.selectAllNodes();
-      this.mouseClick(event,"table-select-all")
+      this.mouseClick(event, 'table-select-all');
     },
     customFilter(row, filter) {
       console.log('filtering on: ' + this.filterOn)
