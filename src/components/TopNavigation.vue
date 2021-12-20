@@ -197,13 +197,16 @@ export default {
       typeOfNetwork: 'EgoNetwork'
     };
   },
+  created() {
+    this.$store.commit('main/changeTopNavType', {
+      networkType: this.typeOfNetwork
+    });
+  },
   computed: {
     showSecondButton() {
       let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
-      if (numberOfVisualisedNetworks > 0) {
-        return true;
-      }
-      return false;
+      return numberOfVisualisedNetworks > 0;
+
     },
     showSecondForm() {
       return this.$store.getters['main/secondFormVisibility']

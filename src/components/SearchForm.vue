@@ -415,8 +415,7 @@ export default {
     },
     selectedCorpus: {
       get() {
-        return 'ParlAT';
-        //return this.$store.getters['main/selectedCorpus'](this.queryPane);
+        return this.$store.getters['main/selectedCorpus'](this.queryPane);
       },
       set(val) {
         if (val)

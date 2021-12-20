@@ -15,7 +15,7 @@
           >
             <b-col>
               <b-row>
-                <b-col v-if="type=='EgoNetwork'">
+                <b-col v-if="type==='EgoNetwork'">
                   <search-form
                       @showInfoButton='setShowInfoButton'
                       :is-vertical='true'
@@ -25,7 +25,7 @@
                   >
                   </search-form>
                 </b-col>
-                <b-col v-if="type=='GeneralNetworkNetwork'">
+                <b-col v-if="type==='GeneralNetworkNetwork'">
                   <search-form-general
                       @showInfoButton='setShowInfoButton'
                       :is-vertical='true'
@@ -35,7 +35,7 @@
                   >
                   </search-form-general>
                 </b-col>
-                <b-col v-if="type=='GeneralNetworkSpeaker'">
+                <b-col v-if="type==='GeneralNetworkSpeaker'">
                   <search-form-general-speaker
                       @showInfoButton='setShowInfoButton'
                       :is-vertical='true'
