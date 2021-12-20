@@ -10,49 +10,38 @@
       <b-row
           xl='12'
           class='top-nav'>
-        <b-col
-            xl='1'
-            align-self='center'
-        >
-          <b-row
-              class='h-100'
-              align-h='center'
-              align-v='stretch'>
-            <h4><b>DYLEN</b></h4>
-          </b-row>
-        </b-col>
-        <b-col xl='10'>
-          <div>
-            <select name="TypeOfNetwork" @change="onTypeOfNetworkSelect($event)" class="form-control">
-              <option value="EgoNetwork">Ego Networks</option>
-              <option value="GeneralNetworkNetwork">General Networks (Party)</option>
-              <option value="GeneralNetworkSpeaker">General Networks (Speaker)</option>
-            </select>
-          </div>
-        </b-col>
-        <b-col
-            xl='1'
-            align-self='center'
-        >
-          <b-row align-h='end'>
-            <b-button
-                v-if='showInfoButton'
-                ref='showInfoButton'
-                data-sauto-id='show-info-button'
-                variant='secondary'
-                @click='updateShowInfo'
-                class='mr-1'
-            >
-              <b-icon icon='info'></b-icon>
-            </b-button>
-            <b-button
-                data-sauto-id='settings-button'
-                class='mr-2'
-                @click='toggleSideBar'
-            >
-              <b-icon icon='gear'></b-icon>
-            </b-button>
-          </b-row>
+        <b-col xl='12'>
+          <b-navbar toggleable="sm" type="dark" variant="info">
+            <b-navbar-brand href="#">DYLEN</b-navbar-brand>
+            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+              <b-collapse id="nav-collapse" is-nav>
+                <b-navbar-nav>
+                  <b-nav-item href="#" @click='onTypeOfNetworkSelect("EgoNetwork")'>Ego Network</b-nav-item>
+                  <b-nav-item href="#" @click='onTypeOfNetworkSelect("GeneralNetworkNetwork")'>General Network</b-nav-item>
+                  <b-nav-item href="#" @click='onTypeOfNetworkSelect("GeneralNetworkSpeaker")'>General Network Speaker</b-nav-item>
+                </b-navbar-nav>
+              </b-collapse>
+              <b-row align-h='end'>
+                <b-button
+                    v-if='showInfoButton'
+                    ref='showInfoButton'
+                    data-sauto-id='show-info-button'
+                    variant='secondary'
+                    @click='updateShowInfo'
+                    class='mr-1'
+                >
+                  <b-icon icon='info'></b-icon>
+                </b-button>
+                <b-button
+                    data-sauto-id='settings-button'
+                    class='mr-2'
+                    @click='toggleSideBar'
+                >
+                  <b-icon icon='gear'></b-icon>
+                </b-button>
+              </b-row>
+          </b-navbar>
+
         </b-col>
       </b-row>
       <b-row xl='12' v-if='false'>
@@ -60,7 +49,7 @@
             data-sauto-id='search-form-general-1'
             class='pb-1'
             xl='4'
-            v-if="typeOfNetwork == 'GeneralNetworkNetwork'"
+            v-if="typeOfNetwork === 'GeneralNetworkNetwork'"
             align-self='stretch'
         >
           <b-row
@@ -87,7 +76,7 @@
             data-sauto-id='search-form-general-2'
             class='pb-1'
             xl='4'
-            v-if="typeOfNetwork == 'GeneralNetworkNetwork'"
+            v-if="typeOfNetwork === 'GeneralNetworkNetwork'"
             align-self='stretch'
         >
           <b-row
@@ -120,7 +109,7 @@
             data-sauto-id='search-form-general-speaker-1'
             class='pb-1'
             xl='4'
-            v-if="typeOfNetwork == 'GeneralNetworkSpeaker'"
+            v-if="typeOfNetwork === 'GeneralNetworkSpeaker'"
             align-self='stretch'
         >
           <b-row
@@ -142,7 +131,7 @@
             data-sauto-id='search-form-general-speaker-2'
             class='pb-1'
             xl='4'
-            v-if="typeOfNetwork == 'GeneralNetworkSpeaker'"
+            v-if="typeOfNetwork === 'GeneralNetworkSpeaker'"
             align-self='stretch'
         >
           <b-row
@@ -223,9 +212,10 @@ export default {
       }
     },
     onTypeOfNetworkSelect(event) {
-      this.typeOfNetwork = event.target.value;
+      //TODO: use getter from store
+      this.typeOfNetwork = event;
       this.$store.commit('main/changeTopNavType', {
-        networkType: event.target.value
+        networkType: event
       });
     },
     toggleSideBar() {
