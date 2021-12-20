@@ -42,19 +42,40 @@
       </div>
 
     </div>
+    <b-row xl='12'>
+      <b-col xl='8'></b-col>
+      <b-col xl='4' >
+        <b-form-group
+            class='ego-network-formgroup mr-2 mt-1 pl-2'
+            id="ego-network-options"
+            label='visualization option'
+            label-size='sm'
+            label-align='center'
+        >
+          <b-form-checkbox
+              class='b-0 pl-4'
+              v-model='isAllSelected'
+              @change='selectionCheckboxChanged'
+              :data-sauto-id="'select-all-checkbox-'+this.pane"
+          >
+            select all
+          </b-form-checkbox>
+          <b-form-checkbox
+              class='b-0'
+              v-model='showClusters'
+              @chante='clickOnShowClusters'
+              :data-sauto-id="'select-all-checkbox-'+this.pane"
+          >
+            show clusters
+          </b-form-checkbox>
+        </b-form-group>
+      </b-col>
+    </b-row>
     <div class="checkbox-container">
       <div
-        class='ego-checkbox'
         data-sauto-id='ignore'
       >
-        <b-form-checkbox
-          class='b-0'
-          v-model='isAllSelected'
-          @change='selectionCheckboxChanged'
-          :data-sauto-id="'select-all-checkbox-'+this.pane"
-        >
-          select all
-        </b-form-checkbox>
+
       </div>
     </div>
     <svg
@@ -98,10 +119,14 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      transform: d3.zoomIdentity
+      transform: d3.zoomIdentity,
+      showClusters: false
     };
   },
   watch: {
+    showClusters: function() {
+      this.updateSimulation()
+    },
     netNodes: function () {
       this.updateSimulation();
     },
@@ -178,7 +203,16 @@ export default {
             ? 2
             : 1
         )
-        .attr('fill', (_, idx) => this.netNodes[idx]._color)
+        .attr('fill', (_, idx) => {
+          console.log(this.showClusters)
+          console.log(this.netNodes[idx])
+
+          if(!this.showClusters) {
+            return 'white'
+          }
+          return this.netNodes[idx]._color
+
+        })
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-node');
@@ -268,6 +302,10 @@ export default {
     }
   },
   methods: {
+    clickOnShowClusters() {
+      this.showClusters = true;
+      this.simulation.restart();
+    },
     dragsubject(event) {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
         let node = this.nodes[i];
@@ -479,10 +517,11 @@ svg .labels text {
   background: rgba(255, 255, 255, 1);
   right: 0;
   margin-right: 1.2em;
-}
-.checkbox-container {
   padding-top: 0.5em;
   padding-right: 0.5em;
+}
+.ego-network-formgroup {
+  border: solid lightgrey;
 }
 .controls-container {
   bottom: 0.2em;
