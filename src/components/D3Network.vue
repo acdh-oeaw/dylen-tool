@@ -294,7 +294,7 @@ export default {
     },
     scaleNodeSize() {
       return d3
-        .scaleLinear()
+        .scaleSqrt()
         .domain([
           d3.min(this.netNodes, (d) => d._absoluteFrequency),
           d3.max(this.netNodes, (d) => d._absoluteFrequency)
