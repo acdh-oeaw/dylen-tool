@@ -467,11 +467,6 @@ export default {
         );
       }
     },
-    getTargetwordById: {
-      get() {
-        return this.$store.getters['main/loadTargetwordById'](this.queryPane);
-      }
-    },
     selectedTargetword: {
       get() {
         return this.$store.getters['main/selectedTargetword'](this.queryPane);

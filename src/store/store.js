@@ -246,6 +246,7 @@ const mainModule = {
         logger.log('Ego Network loaded successfully.');
         state[pane].busy = false;
       } catch (error) {
+          //TODO use alert
         logger.error(error);
         state[pane].busy = false;
       }
@@ -392,12 +393,6 @@ const mainModule = {
         targetword: response.data.data.getTargetWordById
       });
 
-            return response
-        },
-        async loadTargetwordById({state}, pane) {
-            const response = await axios.post(graphqlEndpoint,
-                getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-            console.log(response)
             return response
         },
         async loadGeneralSpeakerTimeSeriesData({state}, pane) {
@@ -778,9 +773,6 @@ const mainModule = {
     secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy
-  },
-  setPosColor({ state }, posTag, colorCode) {
-    state.posColors[posTag] = colorCode;
   }
 };
 
