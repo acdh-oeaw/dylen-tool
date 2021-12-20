@@ -98,7 +98,21 @@ export default {
       nodes: [],
       links: [],
       svg: {},
-      transform: d3.zoomIdentity
+      transform: d3.zoomIdentity,
+      menuItems: [
+        {
+          title: '',
+          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
+        },
+        {
+          title: 'Absolute frequency: ',
+          value: (d) => d._absoluteFrequency
+        },
+        {
+          title: 'Normalized frequency: ',
+          value: (d) => d._normalisedFrequency.toExponential(2)
+        }
+      ]
     };
   },
   watch: {
@@ -184,7 +198,10 @@ export default {
           this.mouseClick(event, this.pane + '-node');
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
-        .on('mouseleave', (event, d) => this.defocusNode(d));
+        .on('mouseleave', (event, d) => this.defocusNode(d))
+        .on('contextmenu', (event, d) => {
+          this.createContextMenu(event, d);
+        });
 
       n.append('title').text((d) => d.name);
       n.call(
@@ -280,6 +297,35 @@ export default {
     }
   },
   methods: {
+    createContextMenu(event, d) {
+      const x = event.pageX,
+        y = event.pageY;
+
+      console.log(event);
+
+      d3.selectAll(`.contextMenu`).remove();
+
+      d3.select('body')
+        .append('div')
+        .attr('class', 'contextMenu')
+        .style('top', `${y}px`)
+        .style('left', `${x}px`)
+        .style('position', 'fixed')
+        .selectAll('tmp')
+        .data(this.menuItems)
+        .enter()
+        .append('div')
+        .attr('class', 'menuEntry');
+
+      d3.selectAll(`.menuEntry`)
+        .append('span')
+        .text((entry) => {
+          return `${entry.title}${entry.value(d)}`;
+        })
+        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'));
+
+      event.preventDefault();
+    },
     dragsubject(event) {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
         let node = this.nodes[i];
@@ -479,6 +525,9 @@ export default {
   },
   mounted() {
     this.initNetwork();
+    d3.select('body').on('click', () => {
+      d3.selectAll(`.contextMenu`).remove();
+    });
   },
   beforeDestroy() {
     this.deselectAllNodes();
@@ -503,5 +552,16 @@ svg .labels text {
 }
 .controls-container {
   bottom: 0.2em;
+}
+.contextMenu {
+  background-color: white;
+  border-radius: 5px;
+  padding: 2px 0;
+}
+
+.menuEntry {
+  stroke: transparent;
+  margin: 0 5px;
+  font-size: 12px;
 }
 </style>
