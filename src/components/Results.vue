@@ -14,14 +14,19 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+            <setting
+                position='result'
+                setting-component='egoNetwork'
+            ></setting>
             <button
-              @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
-              class='fullscreen-button'
-              variant='light'
-              data-sauto-id='ignore'
+                @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
+                class='fullscreen-button'
+                variant='light'
+                data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
+
             <NetworkGraph
               v-if="showFirstGraph && type == 'Ego'"
               ref='networkGraph1'
@@ -77,6 +82,10 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
+            <setting
+                position='result'
+                setting-component='nodeMetrics'
+            ></setting>
             <button
               @click="(event) => toggleFullscreen('nodeMetrics', event,'toggleFullScreenButton-nodeMetrics')"
               class='fullscreen-button'
@@ -118,11 +127,13 @@ import NodeMetrics from '@/components/NodeMetrics';
 import TimeSeries from '@/components/TimeSeries';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
+import Setting from "@/components/Setting";
 
 export default {
   name: 'Results',
   props: ['pane'],
   components: {
+    Setting,
     NodeMetrics,
     NetworkGraph,
     NetworkGraphGeneral,
@@ -170,6 +181,9 @@ export default {
     this.windowResizeHandler();
   },
   methods: {
+    toggleSideBar(component) {
+      this.$store.commit('main/changeActiveSettings', {component: component})
+    },
     resized(paneId) {
       for (let ref in this.$refs) {
         this.$refs[ref]?.resizeHandler();

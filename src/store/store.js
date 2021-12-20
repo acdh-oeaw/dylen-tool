@@ -471,6 +471,10 @@ const mainModule = {
   },
   namespaced: true,
   state: {
+    settings: {
+      active: false,
+      component: null
+    },
     selectionColors: ['#1E88E5', '#D81B60'],
     availableCorpora: [],
     availableSourcesByCorpus: {},
@@ -539,6 +543,11 @@ const mainModule = {
     availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS']
   },
   mutations: {
+    changeActiveSettings(state, payload) {
+      let component = (state.settings.component === payload.component)? 'closed': payload.component
+      state.settings.active = component !== 'closed'
+      state.settings.component = component
+    },
     changeSecondFormVisibility(state, payload) {
       if (payload.pane === 'pane2') {
         state.topNav.secondForm = !state.topNav.secondForm;
@@ -752,6 +761,8 @@ const mainModule = {
     availableParties: (state) => state.availableParties,
     availableMetrics: (state) => state.availableMetrics,
     tableOptions: (state) => state.tableOptions,
+    settingsActive: (state) => state.settings.active,
+    activeSettings: (state) => state.settings.component,
     numberOfNetworksVisualised: (state) => {
       let count = 0;
       if (state['pane1'].selectedNetwork) {
