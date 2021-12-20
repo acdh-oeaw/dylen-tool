@@ -42,11 +42,13 @@
       </div>
 
     </div>
-    <b-row xl='12'>
-      <b-col xl='8'></b-col>
-      <b-col xl='4' >
+
+    <div class="checkbox-container checkbox-width">
+      <div
+        data-sauto-id='ignore'
+      >
         <b-form-group
-            class='ego-network-formgroup mr-2 mt-1 pl-2'
+            class='ego-network-formgroup mt-1 pl-2'
             id="ego-network-options"
             label='visualization option'
             label-size='sm'
@@ -69,13 +71,6 @@
             show clusters
           </b-form-checkbox>
         </b-form-group>
-      </b-col>
-    </b-row>
-    <div class="checkbox-container">
-      <div
-        data-sauto-id='ignore'
-      >
-
       </div>
     </div>
     <svg
@@ -514,9 +509,12 @@ svg .labels text {
   position: absolute;
   background: rgba(255, 255, 255, 1);
   right: 0;
-  margin-right: 1.2em;
+  margin-right: 1em;
   padding-top: 0.5em;
   padding-right: 0.5em;
+}
+.checkbox-width {
+  width: 10em;
 }
 .ego-network-formgroup {
   border: solid lightgrey;
