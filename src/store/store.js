@@ -237,7 +237,8 @@ const mainModule = {
               getNetworkQuery(state[pane].selectedTargetword.id, year_param));
             const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
             let network = response.data.data.getNetwork;
-
+            network.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
+            network.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
             assignValuesFromState(network, networkID);
 
             const payload = {
