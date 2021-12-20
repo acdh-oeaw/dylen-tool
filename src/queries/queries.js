@@ -54,6 +54,8 @@ export function getNetworkQuery(targetwordId, year) {
                       harmonicCentrality
                       clusteringCoefficient
                     }
+                    absoluteFrequency
+                    normalisedFrequency
                 }
                 edges {
                     node1

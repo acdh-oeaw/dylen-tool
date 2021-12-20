@@ -169,7 +169,7 @@ export default {
         .selectAll('circle')
         .data(this.nodes)
         .join('circle')
-        .attr('r', this.nodeSize / 2)
+        .attr('r', (d) => this.scaleNodeSize(d._absoluteFrequency))
         .attr('stroke', (d) =>
           this.isSelected(d.index) ? this.getLineColor(d) : '#000'
         )
@@ -268,6 +268,15 @@ export default {
           d3.max(this.netLinks, (d) => d.similarity)
         ])
         .range([0.3, 3]);
+    },
+    scaleNodeSize() {
+      return d3
+        .scaleLinear()
+        .domain([
+          d3.min(this.netNodes, (d) => d._absoluteFrequency),
+          d3.max(this.netNodes, (d) => d._absoluteFrequency)
+        ])
+        .range([this.nodeSize / 2, this.nodeSize * 1.5]);
     }
   },
   methods: {
@@ -395,10 +404,15 @@ export default {
       this.node
         .attr('cx', (d) => this.getNodeCoords(d).x)
         .attr('cy', (d) => this.getNodeCoords(d).y);
-
       if (this.options.nodeLabels)
         this.label
-          .attr('x', (d) => this.getNodeCoords(d).x + r + 2)
+          .attr(
+            'x',
+            (d) =>
+              this.getNodeCoords(d).x +
+              this.scaleNodeSize(d._absoluteFrequency) +
+              2
+          )
           .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {
