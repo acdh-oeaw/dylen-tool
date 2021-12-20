@@ -13,28 +13,28 @@
       class='main full'
     >
       <b-container
-        class='pt-1 pb-5 h-100'
+        class='pb-5 h-100 pr-0 pl-0'
         fluid
       >
         <b-row>
           <b-col>
-            <top-navigation
-              class='mb-20'
-              style='min-height: 72px'
-            >
+            <top-navigation>
             </top-navigation>
           </b-col>
         </b-row>
         <b-row
           xl='12'
-          class='h-100'
+          class='pl-3 pt-0 h-100'
         >
+          <b-col xl='2' class='pt-0 mt-0' style='border-right: solid; border-color: cadetblue'>
+            <query-bar></query-bar>
+          </b-col>
           <b-col
             class='h-100'
-            xl='12'
+            xl='10'
           >
             <div
-              class='h-100'
+              class='h-100 pr-4'
               data-sauto-id='results'
             >
               <Results />
@@ -201,10 +201,12 @@ import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
 import TopNavigation from '@/components/TopNavigation';
 import Info from '@/components/Info';
+import QueryBar from "@/components/QueryBar";
 
 export default {
   name: 'App',
   components: {
+    QueryBar,
     TopNavigation,
     Results,
     Modal,

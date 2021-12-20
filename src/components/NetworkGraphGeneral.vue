@@ -4,38 +4,34 @@
     fluid
     class='mt-2'
     style='background-color: white'
-    v-if='egoNetwork'
+    v-if='generalNetwork'
   >
     <b-row class='h-10'>
       <b-col>
-        <b-row align-h='center'>
-          <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos.replace("_", " ") }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
-        </b-row>
+        <span><b>{{ generalNetwork.party }}</b></span>
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
+      <!--      <b-col xl='2'></b-col>-->
       <b-col
-        class='pl-5 year-slider-row'
-        data-sauto-id='ignore'
+          class='pl-5 year-slider-row'
+          data-sauto-id='ignore'
       >
-        <div
-          ref='sliderDiv'
-          class='pl-2'
-        >
+        <div ref='sliderDiv' class='pl-2'>
           <vue-slider
-            ref='slider'
-            v-model='egoNetwork.year'
-            v-bind='sliderOptions'
-            :min='egoNetwork.possibleYears[0]'
-            :max='egoNetwork.possibleYears[egoNetwork.possibleYears.length - 1]'
-            :data='egoNetwork.possibleYears'
-            :process='false'
-            :lazy='true'
-            :adsorb='true'
-            :duration='0.3'
-            v-on:change='handleYearChange'
-            :marks='egoNetwork.possibleYears'
-            :tooltip="'none'"
+              ref='slider'
+              v-model='generalNetwork.year'
+              v-bind='sliderOptions'
+              :min='generalNetwork.possibleYears[0]'
+              :max='generalNetwork.possibleYears[generalNetwork.possibleYears.length - 1]'
+              :data='generalNetwork.possibleYears'
+              :process='false'
+              :lazy='true'
+              :adsorb='true'
+              :duration='0.3'
+              v-on:change='handleYearChange'
+              :marks='generalNetwork.possibleYears'
+              :tooltip="'none'"
           />
         </div>
       </b-col>
@@ -43,16 +39,16 @@
     <b-row
       lg='12'
       class='pt-2 h-70'
-      v-bind='egoNetwork'
-      :key='egoNetwork.id'
+      v-bind='generalNetwork'
+      :key='generalNetwork.id'
       data-sauto-id='ignore'
     >
       <b-col>
         <d3-network
           ref='egoChart'
           class='network-wrapper'
-          :net-nodes='egoNetwork.nodes'
-          :net-links='egoNetwork.links'
+          :net-nodes='generalNetwork.nodes'
+          :net-links='generalNetwork.links'
           :options='options'
           :pane='this.pane'
         />
@@ -60,14 +56,14 @@
     </b-row>
   </b-container>
 </template>
-<!--v-on:change='updateNetwork(egoNetwork)'-->
+<!--v-on:change='updateNetwork(generalNetwork)'-->
 <script>
 import D3Network from './D3Network';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
 
 export default {
-  name: 'NetworkGraph',
+  name: 'NetworkGraphGeneral',
   components: {
     D3Network,
     VueSlider
@@ -93,7 +89,8 @@ export default {
         dotSize: 15
       },
       chartColors: [
-        '#2b6ca3', '#65add2', '#b0efff', '#a36c23', '#d59c1e', '#ffd20b'
+        ['#2b6ca3', '#65add2', '#b0efff'],
+        ['#a36c23', '#d59c1e', '#ffd20b']
       ],
       allNodesSelected: false
     };
@@ -119,9 +116,9 @@ export default {
       if (chartWidth) this.options.size.w = chartWidth;
     },
     handleYearChange(value) {
-      this.updateNetwork(this.egoNetwork);
+      this.updateNetwork(this.generalNetwork);
       const position = this.calculateSliderPosition(value);
-      this.mouseClick(position, 'year-slider-' + this.pane);
+      this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);
     },
     calculateSliderPosition(value) {
       //im sorry for this hacky workaround but vue slider doesnt register clicks on labels
@@ -131,8 +128,8 @@ export default {
       //indexes:   1 ---i-- array.length , where i is index of value
       //positions: 0 ---p-- width        , where p is position of i
       //and the rest is basic proportion calculation
-      const arrayLength = this.egoNetwork.possibleYears.length;
-      const index = this.egoNetwork.possibleYears.indexOf(value);
+      const arrayLength = this.generalNetwork.possibleYears.length;
+      const index = this.generalNetwork.possibleYears.indexOf(value);
       const clientX = ((index + 1) * sizes.width) / arrayLength + sizes.x;
       //this calculation works with an error margin of couple of pixels
       //to be honest im disgusted and proud of this method
@@ -143,7 +140,7 @@ export default {
     },
     updateNetwork(network) {
       //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-      this.$store.dispatch('main/loadUpdatedEgoNetwork', {
+      this.$store.dispatch('main/loadUpdatedGeneralNetwork', {
         network: network,
         pane: this.pane
       });
@@ -155,7 +152,7 @@ export default {
       else this.deselectAllNodes();
     },
     selectAllNodes() {
-      this.egoNetwork.nodes
+      this.generalNetwork.nodes
         .filter(
           (node) =>
             this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
@@ -166,7 +163,7 @@ export default {
         });
     },
     deselectAllNodes() {
-      this.egoNetwork.nodes
+      this.generalNetwork.nodes
         .filter(
           (node) =>
             this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) >
@@ -178,7 +175,7 @@ export default {
     }
   },
   computed: {
-    egoNetwork() {
+    generalNetwork() {
       const network = this.$store.getters['main/getPane'](
         this.pane
       ).selectedNetwork;
@@ -193,7 +190,7 @@ export default {
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
-            _color: this.chartColors[node.clusterId%this.chartColors.length],
+            _color: this.chartColors[0][node.clusterId],
             _metrics: node.metrics,
             _pane: this.pane
           });
@@ -209,15 +206,12 @@ export default {
           id: network.id,
           nodes: nodes,
           links: links,
-          text: network.text,
           year: network.year,
           possibleYears: network.possibleYears,
-          threshold: network.threshold,
-          corpus: network.corpus,
-          subcorpus: network.subcorpus,
-          targetWordId: network.targetWordId,
-          pos: network.pos,
-          type: network.type
+          party:network.party,
+          speaker:network.speaker,
+          filter:network.filter,
+          type:network.type
         };
       }
       return selectedNetwork;

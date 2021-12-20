@@ -28,7 +28,17 @@
             </button>
 
             <NetworkGraph
-              v-if='showFirstGraph'
+              v-if="showFirstGraph && type === 'Ego'"
+              ref='networkGraph1'
+              pane='pane1'
+            />
+            <NetworkGraphGeneral
+              v-if="showFirstGraph && type === 'Party'"
+              ref='networkGraph1'
+              pane='pane1'
+            />
+            <NetworkGraphSpeaker
+              v-if="showFirstGraph && type === 'Speaker'"
               ref='networkGraph1'
               pane='pane1'
             />
@@ -46,6 +56,17 @@
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
+              v-if="showFirstGraph && type === 'Ego'"
+              ref='networkGraph2'
+              pane='pane2'
+            />
+            <NetworkGraphGeneral
+              v-if="showFirstGraph && type === 'Party'"
+              ref='networkGraph2'
+              pane='pane2'
+            />
+            <NetworkGraphSpeaker
+              v-if="showFirstGraph && type === 'Speaker'"
               ref='networkGraph2'
               pane='pane2'
             />
@@ -100,6 +121,8 @@
 
 <script>
 import NetworkGraph from '@/components/NetworkGraph';
+import NetworkGraphSpeaker from '@/components/NetworkGraphSpeaker';
+import NetworkGraphGeneral from '@/components/NetworkGraphGeneral';
 import NodeMetrics from '@/components/NodeMetrics';
 import TimeSeries from '@/components/TimeSeries';
 import { Splitpanes, Pane } from 'splitpanes';
@@ -113,6 +136,8 @@ export default {
     Setting,
     NodeMetrics,
     NetworkGraph,
+    NetworkGraphGeneral,
+    NetworkGraphSpeaker,
     TimeSeries,
     Splitpanes,
     Pane
@@ -138,6 +163,14 @@ export default {
     },
     showSecondGraph() {
       return this.$store.getters['main/selectedNetwork']('pane2') !== null;
+    },
+    type() {
+      const network = this.$store.getters['main/selectedNetwork']('pane1');
+
+      if (network !== null) {
+        return network.type;
+      }
+      return null;
     }
   },
   mounted() {

@@ -1,26 +1,38 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VueCompositionAPI from '@vue/composition-api'
+
 import axios from 'axios';
 import {
-  timeSeriesKeyMap,
-  corpusNameMapping,
-  sourceNameMapping, relativeToMap
+    corpusNameMapping,
+    sourceNameMapping,
+    zipTimeSeriesAndYears,
+    partyMapping,
+    filterBasedOnSlider
 } from '@/helpers/mappers';
 import props from '../properties/propertiesLoader';
 import {
-  allAvailableCorporaQuery,
-  getAutocompleteSuggestionsQuery,
-  getNetworkQuery,
-  getSourcesByCorpusQuery,
-  getTargetWordByIdQuery
-
+    allAvailableCorporaQuery,
+    getAvailablePartiesQuery,
+    getAutocompleteSuggestionsQuery,
+    getNetworkQuery,
+    getSourcesByCorpusQuery,
+    getTargetWordByIdQuery,
+    getGeneralNetworkQuery,
+    getSpeakersForParty,
+    getAvailableYearsForParty,
+    getGeneralNetworkTimeSeries,
+    getGeneralSpeakerNetworkQuery,
+    getMetadataSpeaker
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
+Vue.use(VueCompositionAPI);
 
 const graphqlEndpoint = props.graphqlEndpoint;
+console.log(graphqlEndpoint)
 const logger = require('../helpers/logger');
 
 function compare(source1, source2) {
@@ -54,231 +66,403 @@ const nodesToJSON = (state, allNodes, selectedNodes) => {
 
 
 const mainModule = {
-  actions: {
-    async initCorpora({ dispatch }) {
-      const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
-      const corporaPayload = {
-        corpora: response.data.data.allAvailableCorpora
-      };
-      this.commit('main/loadCorpora', corporaPayload);
-      await dispatch('loadSources');
-    },
-    async loadSources({ state }) {
-      for (const corpus of state.availableCorpora) {
-        const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus.id));
-        const sourcesPayload = {
-          corpus: corpus.id,
-          sources: sourceResponse.data.data.getSourcesByCorpus
-        };
-        this.commit('main/loadSourcesOfCorpus', sourcesPayload);
-      }
-      this.commit('main/selectInitValues', { pane: 'pane1' });
-      this.commit('main/selectInitValues', { pane: 'pane2' });
-
-    },
-
-    async loadAvailableCorpora({ dispatch }) {
-      try {
-        await dispatch('initCorpora');
-        logger.log('Query parameters loaded successfully.');
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-    async loadEgoNetwork({ state, dispatch }, pane) {
-      function assignValuesFromState(network, networkID) {
-        network.id = networkID;
-        network.targetWordId = state[pane].selectedTargetword.id;
-        network.corpus = state[pane].selectedCorpus;
-        network.subcorpus = state[pane].selectedSubcorpus;
-        network.text = state[pane].selectedTargetword.text;
-        network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year).sort();
-        network.pos = state[pane].selectedTargetword.pos;
-      }
-      state[pane].busy = true;
-      if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
-        console.log(state[pane].autocompleteSuggestions)
-        let response = await dispatch("loadTargetwordBySearchTerm", {
-          pane: pane,
-          searchTerm: state[pane].autocompleteSuggestions[0]
-        });
-        state[pane].selectedTargetword = response.data.data.getTargetWordById;
-        console.log(state[pane].selectedTargetword)
-      }
-      let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
-
-      try {
-        const response = await axios.post(graphqlEndpoint,
-          getNetworkQuery(state[pane].selectedTargetword.id, year_param));
-        const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
-        let network = response.data.data.getNetwork;
-
-        assignValuesFromState(network, networkID);
-
-        const payload = {
-          pane: pane,
-          network: network
-        };
-
-        this.commit('main/addEgoNetwork', payload);
-        logger.log('Ego Network loaded successfully.');
-        state[pane].busy = false;
-      } catch (error) {
-        logger.error(error);
-        state[pane].busy = false;
-      }
-    },
-    async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
-      try {
-        const response = await axios.post(graphqlEndpoint,
-          getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
-
-        const networkID = oldNetwork.targetWordId + oldNetwork.year;
-        let updatedNetwork = response.data.data.getNetwork;
-
-        updatedNetwork.id = networkID;
-        updatedNetwork.targetWordId = oldNetwork.targetWordId;
-        updatedNetwork.corpus = oldNetwork.corpus;
-        updatedNetwork.subcorpus = oldNetwork.subcorpus;
-        updatedNetwork.text = oldNetwork.text;
-        updatedNetwork.possibleYears = oldNetwork.possibleYears;
-        updatedNetwork.pos = oldNetwork.pos;
-        logger.log('Ego Network %s updated successfully.', networkID);
-
-        this.commit('main/updateEgoNetwork', { networkObj: updatedNetwork, pane: pane });
-        this.commit('main/changeSelectedYear', { pane: pane, year: updatedNetwork });
-      } catch (error) {
-        logger.error(error);
-      }
-    },
-    async loadAutocompleteSuggestions({ state }, { pane }) {
-      const suggestionsResponse = await axios.post(graphqlEndpoint,
-        getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
-      this.commit('main/setAutocompleteSuggestions', {
-        suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
-        pane: pane
-      });
-    },
-    async loadAutocompleteSuggestionsForNewSubCorpus({ state, dispatch }, { pane }) {
-      const suggestionsResponse = await axios.post(graphqlEndpoint,
-        getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
-      const suggestions = suggestionsResponse.data.data.getAutocompleteSuggestions;
-      this.commit('main/setAutocompleteSuggestions', {
-        suggestions: suggestions,
-        pane: pane
-      });
-
-      const currentTargetword = state[pane].selectedTargetword;
-      let matchingSuggestion = suggestions.find(s => s.text === currentTargetword.text && s.pos === currentTargetword.pos);
-      let targetwordPayload = { pane: pane, searchTerm: matchingSuggestion };
-      let response = await dispatch('loadTargetwordBySearchTerm', targetwordPayload);
-
-      this.commit('main/changeSelectedTargetword', {
-        targetword: response.data.data.getTargetWordById,
-        pane: pane
-      });
-
-
-    },
-    async downloadMetricsAsCSV({ state }, payload) {
-      let data = nodesToJSON(state, payload.allNodes, payload.selectedNodes);
-      const options = {
-        filename: 'DYLEN_Export',
-        fieldSeparator: ',',
-        quoteStrings: '"',
-        decimalSeparator: '.',
-        showLabels: true,
-        showTitle: false,
-        useTextFile: false,
-        useBom: true,
-        useKeysAsHeaders: true
-      };
-
-      const csvExporter = new ExportToCsv(options);
-      csvExporter.generateCsv(data);
-    },
-    async downloadMetricsAsJSON({ state }, payload) {
-      let exportName = 'DYLEN_Export';
-      let data = nodesToJSON(state, payload.allNodes, payload.selectedNodes);
-      var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
-      var downloadAnchorNode = document.createElement('a');
-      downloadAnchorNode.setAttribute('href', dataStr);
-      downloadAnchorNode.setAttribute('download', exportName + '.json');
-      document.body.appendChild(downloadAnchorNode); // required for firefox
-      downloadAnchorNode.click();
-      downloadAnchorNode.remove();
-    },
-    async loadTargetwordBySearchTerm(state, payload) {
-      let searchTermId = '';
-      if (payload.searchTerm) {
-        searchTermId = payload.searchTerm.id;
-      }
-      const response = await axios.post(graphqlEndpoint,
-        getTargetWordByIdQuery(searchTermId));
-      this.commit('main/changeSelectedTargetword', {
-        pane: payload.pane,
-        targetword: response.data.data.getTargetWordById
-      });
-
-      return response;
-    },
-    async loadTargetwordById({ state }, pane) {
-      const response = await axios.post(graphqlEndpoint,
-        getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-      console.log(response);
-      return response;
-    },
-    async loadTimeSeriesData({ state }, pane) {
-
-      function zipTimeSeriesAndYears(timeSeries, years) {
-        let newTimeSeries = {};
-        Object.keys(timeSeries).forEach(key => {
-          newTimeSeries[timeSeriesKeyMap[key]] = {};
-          Object.keys(timeSeries[key]).forEach(metric => {
-            let initIdx = 0;
-            switch (metric) {
-              case 'firstYear':
-                initIdx = 1;
-                break;
-              case 'lastYear':
-                initIdx = 0;
-                break;
-              case 'previousYear':
-                initIdx = 1;
-                break;
+    actions: {
+        async initCorpora({ dispatch }) {
+            const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
+            const corporaPayload = {
+                corpora: response.data.data.allAvailableCorpora
+            };
+            this.commit('main/loadCorpora', corporaPayload);
+            await dispatch('loadSources');
+        },
+        async initParties({dispatch}) {
+            const response = await axios.post(graphqlEndpoint, getAvailablePartiesQuery);
+            const partyPayload = {
+                parties: response.data.data.parties
+            };
+            this.commit('main/loadParties', partyPayload);
+            await dispatch('loadSources');
+        },
+        async speakersForParty({state}, pane) {
+          let party = partyMapping[state[pane].selectedParty];
+          const response = await axios.post(graphqlEndpoint, getSpeakersForParty(party));
+          const speakerResponse = response.data.data.findSpeakerByParty;
+          const payload = {speakers: speakerResponse.speakers.sort(), pane: pane};
+          this.commit('main/changeAvailableSpeakers', payload);
+        },
+        async loadSources({ state }) {
+            for (const corpus of state.availableCorpora) {
+                const sourceResponse = await axios.post(graphqlEndpoint, getSourcesByCorpusQuery(corpus.id));
+                const sourcesPayload = {
+                    corpus: corpus.id,
+                    sources: sourceResponse.data.data.getSourcesByCorpus
+                };
+                this.commit('main/loadSourcesOfCorpus', sourcesPayload);
             }
-            let zippedArray = timeSeries[key][metric].map((val, idx) => {
-              return {
-                year: years[idx + initIdx],
-                value: val
-              };
-            });
-            newTimeSeries[timeSeriesKeyMap[key]][relativeToMap[metric]] = zippedArray;
-          });
-        });
-        console.log(newTimeSeries);
-        return newTimeSeries;
-      }
+            this.commit('main/selectInitValues', {pane: 'pane1'});
+            this.commit('main/selectInitValues', {pane: 'pane2'});
 
-      try {
-        if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id))
-          state[pane].selectedTargetword = state[pane].autocompleteSuggestions[0];
-        const response = await axios.post(graphqlEndpoint,
-          getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-        let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
-        let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
-        let data = zipTimeSeriesAndYears(timeSeries, years);
-        const payload = {
-          pane: pane,
-          data: data
-        };
+        },
+
+        async loadAvailableCorpora({ dispatch }) {
+          try {
+            await dispatch('initCorpora');
+            logger.log('Query parameters loaded successfully.');
+          } catch (error) {
+            logger.error(error);
+          }
+        },
+        async loadAvailableParties({ dispatch }) {
+          try {
+            await dispatch('initParties');
+            logger.log('Query parameters loaded successfully.');
+          } catch (error) {
+            logger.error(error);
+          }
+        },
+        async loadAvailableSpeakers({ dispatch }, party) {
+          try {
+            await dispatch('speakersForParty', party);
+            logger.log('Query parameters loaded successfully.');
+          } catch (error) {
+            logger.error(error);
+          }
+        },
+        async loadGeneralNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
+          function assignValuesFromState(network, networkID, years) {
+            network.id = networkID;
+            network.filter = {metric: state[pane].selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
+            network.party = party;
+            network.possibleYears = years.map(Number).sort();
+            network.year = Math.max(...years.map(Number));
+            network.type = 'Party';
+          }
+
+          let party = partyMapping[state[pane].selectedParty];
+
+          try {
+              const availableYearsQuery = getAvailableYearsForParty(party);
+              const yearsResponse = await axios.post(graphqlEndpoint, availableYearsQuery);
+              let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
+              let year = Math.max(...years);
+
+              const query = getGeneralNetworkQuery(party, year);
+              const response = await axios.post(graphqlEndpoint, query);
+              const networkID = party + '_' + year;
+
+              let network = response.data.data.getGeneralSourceByPartyYear.networks;
+
+              assignValuesFromState(network, networkID, years);
+              filterBasedOnSlider(network);
+
+              const payload = {
+                  pane: pane,
+                  network: network
+              };
+
+              this.commit('main/addGeneralNetwork', payload);
+              logger.log('General Network loaded successfully.');
+          } catch (error) {
+              logger.error(error);
+          }
+        },
+        async loadGeneralSpeakerNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
+          function assignValuesFromState(network, networkID, possibleYears) {
+            network.id = networkID;
+            network.speaker = state[pane].selectedSpeaker;
+            network.party = partyMapping[state[pane].selectedParty];
+            network.possibleYears = possibleYears.map(Number).sort();
+            network.filter = {metric: state[pane].selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
+            network.year = Math.max(...possibleYears.map(Number));
+            network.type = 'Speaker';
+          }
+
+          let speaker = state[pane].selectedSpeaker;
+
+          try {
+              const yearResponse = await axios.post(graphqlEndpoint, getMetadataSpeaker(speaker));
+              let possibleYears = yearResponse.data.data.getAvailableYearsForSpeaker.available_years.sort();
+              let maxYear = Math.max(...possibleYears.map(Number));
+
+              const query = getGeneralSpeakerNetworkQuery(speaker);
+              const response = await axios.post(graphqlEndpoint, query);
+
+              let network = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == maxYear);
+
+              const networkID = speaker + '_' + maxYear;
+              assignValuesFromState(network, networkID, possibleYears);
+              filterBasedOnSlider(network);
+
+              const payload = {
+                  pane: pane,
+                  network: network
+              };
+
+              this.commit('main/addGeneralSpeakerNetwork', payload);
+              logger.log('General Speaker Network loaded successfully.');
+          } catch (error) {
+              logger.error(error);
+          }
+        },
+        async loadEgoNetwork({ state, dispatch }, pane) {
+          function assignValuesFromState(network, networkID) {
+            network.id = networkID;
+            network.targetWordId = state[pane].selectedTargetword.id;
+            network.corpus = state[pane].selectedCorpus;
+            network.subcorpus = state[pane].selectedSubcorpus;
+            network.text = state[pane].selectedTargetword.text;
+            network.possibleYears = state[pane].selectedTargetword.networks.map(n => n.year).sort();
+            network.pos = state[pane].selectedTargetword.pos;
+            //TODO: use constant.. hardcoding types as string is very errorprone
+            network.type = 'Ego';
+          }
+          state[pane].busy = true;
+          if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
+            console.log(state[pane].autocompleteSuggestions)
+            let response = await dispatch("loadTargetwordBySearchTerm", {
+              pane: pane,
+              searchTerm: state[pane].autocompleteSuggestions[0]
+            });
+            state[pane].selectedTargetword = response.data.data.getTargetWordById;
+            console.log(state[pane].selectedTargetword)
+          }
+          let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
+
+          try {
+            const response = await axios.post(graphqlEndpoint,
+              getNetworkQuery(state[pane].selectedTargetword.id, year_param));
+            const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
+            let network = response.data.data.getNetwork;
+
+            assignValuesFromState(network, networkID);
+
+            const payload = {
+              pane: pane,
+              network: network
+            };
+
+            this.commit('main/addEgoNetwork', payload);
+            logger.log('Ego Network loaded successfully.');
+            state[pane].busy = false;
+          } catch (error) {
+              //TODO use alert
+            logger.error(error);
+            state[pane].busy = false;
+          }
+        },
+        async loadUpdatedEgoNetwork(state, { network: oldNetwork, pane: pane }) {
+          try {
+            const response = await axios.post(graphqlEndpoint,
+              getNetworkQuery(oldNetwork.targetWordId, oldNetwork.year));
+
+            const networkID = oldNetwork.targetWordId + oldNetwork.year;
+            let updatedNetwork = response.data.data.getNetwork;
+
+            updatedNetwork.id = networkID;
+            updatedNetwork.targetWordId = oldNetwork.targetWordId;
+            updatedNetwork.corpus = oldNetwork.corpus;
+            updatedNetwork.subcorpus = oldNetwork.subcorpus;
+            updatedNetwork.text = oldNetwork.text;
+            updatedNetwork.possibleYears = oldNetwork.possibleYears;
+            updatedNetwork.pos = oldNetwork.pos;
+            updatedNetwork.type = oldNetwork.type;
+            logger.log('Ego Network %s updated successfully.', networkID);
+
+            this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
+            this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
+          } catch (error) {
+            logger.error(error);
+          }
+        },
+        async loadUpdatedGeneralNetwork(state, {network: oldNetwork, pane: pane}) {
+            try {
+                let response = await axios.post(graphqlEndpoint,
+                  getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
+                let networkID = oldNetwork.party + '_' + oldNetwork.year;
+                let updatedNetwork = response.data.data.getGeneralSourceByPartyYear.networks;
+
+                updatedNetwork.party = oldNetwork.party;
+                updatedNetwork.filter = oldNetwork.filter;
+                updatedNetwork.id = networkID;
+                updatedNetwork.possibleYears = oldNetwork.possibleYears;
+                updatedNetwork.year = oldNetwork.year;
+                updatedNetwork.type = oldNetwork.type;
+                filterBasedOnSlider(updatedNetwork);
+
+                logger.log('Network %s updated successfully.', networkID);
+
+                this.commit('main/updateGeneralNetwork', {networkObj: updatedNetwork, pane: pane});
+                this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
+              } catch (error) {
+                logger.error(error);
+              }
+            },
+        async loadUpdatedSpeakerNetwork(state, {network: oldNetwork, pane: pane}) {
+            try {
+                const response = await axios.post(graphqlEndpoint,
+                  getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
+
+                const networkID = oldNetwork.speaker + '_' + oldNetwork.year;
+                let updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
+
+                updatedNetwork.party = oldNetwork.party;
+                updatedNetwork.speaker = oldNetwork.speaker;
+                updatedNetwork.filter = oldNetwork.filter;
+                updatedNetwork.id = networkID;
+                updatedNetwork.possibleYears = oldNetwork.possibleYears;
+                updatedNetwork.year = oldNetwork.year;
+                updatedNetwork.type = oldNetwork.type;
+                filterBasedOnSlider(updatedNetwork);
+
+                logger.log('General Network %s updated successfully.', networkID);
+
+                this.commit('main/updateGeneralSpeakerNetwork', {networkObj: updatedNetwork, pane: pane});
+                this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
+            } catch (error) {
+                logger.error(error);
+            }
+        },
+
+        async loadAutocompleteSuggestions({ state }, { pane }) {
+            console.log('loading autocomplete suggestions...')
+          const suggestionsResponse = await axios.post(graphqlEndpoint,
+            getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
+          this.commit('main/setAutocompleteSuggestions', {
+            suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
+            pane: pane
+          });
+        },
+        async loadAutocompleteSuggestionsForNewSubCorpus({ state, dispatch }, { pane }) {
+          const suggestionsResponse = await axios.post(graphqlEndpoint,
+            getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
+          const suggestions = suggestionsResponse.data.data.getAutocompleteSuggestions;
+          this.commit('main/setAutocompleteSuggestions', {
+            suggestions: suggestions,
+            pane: pane
+          });
+
+          const currentTargetword = state[pane].selectedTargetword;
+          let matchingSuggestion = suggestions.find(s => s.text === currentTargetword.text && s.pos === currentTargetword.pos);
+          let targetwordPayload = { pane: pane, searchTerm: matchingSuggestion };
+          let response = await dispatch('loadTargetwordBySearchTerm', targetwordPayload);
+
+          this.commit('main/changeSelectedTargetword', {
+            targetword: response.data.data.getTargetWordById,
+            pane: pane
+          });
+
+
+        },
+        async downloadMetricsAsCSV({ state }, payload) {
+          let data = nodesToJSON(state, payload.allNodes, payload.selectedNodes);
+          const options = {
+            filename: 'DYLEN_Export',
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalSeparator: '.',
+            showLabels: true,
+            showTitle: false,
+            useTextFile: false,
+            useBom: true,
+            useKeysAsHeaders: true
+          };
+
+          const csvExporter = new ExportToCsv(options);
+          csvExporter.generateCsv(data);
+        },
+        async downloadMetricsAsJSON({ state }, payload) {
+          let exportName = 'DYLEN_Export';
+          let data = nodesToJSON(state, payload.allNodes, payload.selectedNodes);
+          var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+          var downloadAnchorNode = document.createElement('a');
+          downloadAnchorNode.setAttribute('href', dataStr);
+          downloadAnchorNode.setAttribute('download', exportName + '.json');
+          document.body.appendChild(downloadAnchorNode); // required for firefox
+          downloadAnchorNode.click();
+          downloadAnchorNode.remove();
+        },
+        async loadTargetwordBySearchTerm(state, payload) {
+          let searchTermId = '';
+          if (payload.searchTerm) {
+            searchTermId = payload.searchTerm.id;
+          }
+          const response = await axios.post(graphqlEndpoint,
+            getTargetWordByIdQuery(searchTermId));
+          this.commit('main/changeSelectedTargetword', {
+            pane: payload.pane,
+            targetword: response.data.data.getTargetWordById
+          });
+
+          return response
+        },
+        async loadGeneralSpeakerTimeSeriesData({state}, pane) {
+          try {
+              const response = await axios.post(graphqlEndpoint,
+                  getMetadataSpeaker(state[pane].selectedSpeaker));
+              let timeSeries = response.data.data.getAvailableYearsForSpeaker || {};
+              let years = response.data.data.getAvailableYearsForSpeaker.available_years.sort();
+
+              let data = zipTimeSeriesAndYears({
+                "frobeniusSimilarity": timeSeries.frobenius_similarity,
+                "rankdcgSimilarity": timeSeries.rankdcg_similarity,
+                "jaccardSimilarity": timeSeries.jaccard_similarity
+              }, years);
+
+              const payload = {
+                  pane: pane,
+                  data: data
+              };
+
+              this.commit('main/addGeneralSpeakerTimeSeriesData', payload);
+              logger.log('General Network loaded successfully.');
+          } catch (error) {
+              logger.error(error);
+          }
+        },
+        async loadGeneralTimeSeriesData({state}, pane) {
+          try {
+              const response = await axios.post(graphqlEndpoint,
+                  getGeneralNetworkTimeSeries(state[pane].selectedParty.replace('Ö', 'Oe')));
+              let timeSeries = response.data.data.getAvailableYearsForParty || {};
+              let years = response.data.data.getAvailableYearsForParty.available_years.sort();
+
+              let data = zipTimeSeriesAndYears({
+                "frobeniusSimilarity": timeSeries.frobenius_similarity,
+                "rankdcgSimilarity": timeSeries.rankdcg_similarity,
+                "jaccardSimilarity": timeSeries.jaccard_similarity
+              }, years);
+
+              const payload = {
+                  pane: pane,
+                  data: data
+              };
+
+              this.commit('main/addGeneralTimeSeriesData', payload);
+              logger.log('General Network loaded successfully.');
+          } catch (error) {
+              logger.error(error);
+          }
+        },
+        async loadTimeSeriesData({ state }, pane) {
+          try {
+            if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id))
+              state[pane].selectedTargetword = state[pane].autocompleteSuggestions[0];
+            const response = await axios.post(graphqlEndpoint,
+              getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+            let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
+            let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
+            let data = zipTimeSeriesAndYears(timeSeries, years);
+            const payload = {
+              pane: pane,
+              data: data
+            };
 
         this.commit('main/addTimeSeriesData', payload);
         logger.log('Ego Network loaded successfully.');
       } catch (error) {
         logger.error(error);
       }
-    }
+        }
 
   },
   namespaced: true,
@@ -292,11 +476,16 @@ const mainModule = {
     availableSourcesByCorpus: {},
     availableTargetwordsByCorpusAndSource: {},
     topNav: {
+      networkType: null,
       secondForm: false
     },
     focusNode: null,
     pane1: {
+      availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
+      selectedMetric: {metric: ''},
+      selectedParty: {party: ''},
+      selectedSpeaker: {speaker: ''},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -308,7 +497,11 @@ const mainModule = {
       errors: []
     },
     pane2: {
+      availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
+      selectedMetric: {metric: ''},
+      selectedParty: {party: ''},
+      selectedSpeaker: {speaker: ''},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -340,7 +533,10 @@ const mainModule = {
       digits: 3,
       selectedOnTop: false
     },
-    showInfo: true
+    showInfo: true,
+    availableMetrics: ['Degree Centrality', 'Eigenvector Centrality', 'Closeness Centrality', 'Betweenness Centrality',
+      'Pagerank', 'Load Centrality', 'Harmonic Centrality', 'Clustering Coefficient'],
+    availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS']
   },
   mutations: {
     changeActiveSettings(state, payload) {
@@ -353,6 +549,9 @@ const mainModule = {
         state.topNav.secondForm = !state.topNav.secondForm;
       }
     },
+    changeTopNavType(state, payload) {
+      state.topNav.networkType = payload['networkType'];
+    },
     loadCorpora(state, payload) {
       state.availableCorpora = payload.corpora.map(
         corpus => {
@@ -361,6 +560,15 @@ const mainModule = {
             name: corpusNameMapping[corpus]
           };
         }).sort(compare);
+    },
+    loadParties(state, payload) {
+        state.availableParties = payload.parties.map(
+            party => {
+                return {
+                    id: party,
+                    name: party
+                }
+            }).sort(compare);
     },
     loadSourcesOfCorpus(state, payload) {
       const sources = payload.sources.map(
@@ -387,6 +595,18 @@ const mainModule = {
       }
       state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
     },
+    changeSelectedParty(state, payload) {
+      state[payload.pane].selectedParty = payload.party;
+    },
+    changeSelectedMetric(state, payload) {
+      state[payload.pane].selectedMetric = payload.metric;
+    },
+    changeAvailableSpeakers(state, payload) {
+      state[payload.pane].availableSpeakers = payload.speakers;
+    },
+    changeSelectedSpeaker(state, payload) {
+      state[payload.pane].selectedSpeaker = payload.speaker;
+    },
     changeSelectedSubcorpus(state, payload) {
       console.log('changing selected subcorpus');
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
@@ -410,9 +630,7 @@ const mainModule = {
       this.commit('main/changeSelectedYear', selectedYearPayload);
     },
     addError(state, payload) {
-      console.log('ADDING ERROR')
       state[payload.pane].errors.push(payload.error)
-      console.log('ADDED ERROR' + state[payload.pane].errors)
     },
     resetError(state, payload) {
       state[payload.pane].errors = []
@@ -421,7 +639,9 @@ const mainModule = {
       console.log('changing searchterm: ' + payload.searchTerm);
       if (payload.searchTerm) {
         state[payload.pane].searchTerm = payload.searchTerm;
-        this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
+        if(state[payload.pane].searchTerm.toLowerCase() !== state[payload.pane].selectedTargetword.text.toLowerCase()) {
+            this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
+        }
       } else {
         state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
       }
@@ -445,12 +665,32 @@ const mainModule = {
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
     },
+    addGeneralNetwork(state, payload) {
+      state[payload['pane']].selectedNetwork = payload.network;
+    },
+    addGeneralSpeakerNetwork(state, payload) {
+      state[payload['pane']].selectedNetwork = payload.network;
+    },
     resetSelectedNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = null;
+    },
+    resetSelectedGeneralNetwork(state, payload) {
+      state[payload['pane']].selectedGeneralNetwork = null;
+    },
+    resetSelectedGeneralSpeakerNetwork(state, payload) {
+      state[payload['pane']].selectedGeneralNetwork = null;
     },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
+    },
+    updateGeneralNetwork(state, payload) {
+      state[payload.pane].selectedNetwork = payload.networkObj;
+      logger.log('Updated General Network for pane ' + payload.pane);
+    },
+    updateGeneralSpeakerNetwork(state, payload) {
+      state[payload.pane].selectedNetwork = payload.networkObj;
+      logger.log('Updated General Speaker Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
       console.log('setting autocomplete')
@@ -468,6 +708,12 @@ const mainModule = {
       state.showInfo = payload.showInfo;
     },
     addTimeSeriesData(state, payload) {
+      state[payload['pane']].timeSeriesData = payload.data;
+    },
+    addGeneralTimeSeriesData(state, payload) {
+      state[payload['pane']].timeSeriesData = payload.data;
+    },
+    addGeneralSpeakerTimeSeriesData(state, payload) {
       state[payload['pane']].timeSeriesData = payload.data;
     },
     resetTimeSeries(state, payload) {
@@ -490,6 +736,10 @@ const mainModule = {
     },
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
+    availableSpeakers: (state) => (pane) => state[pane].availableSpeakers,
+    selectedParty: (state) => (pane) => state[pane].selectedParty,
+    selectedMetric: (state) => (pane) => state[pane].selectedMetric,
+    selectedSpeaker: (state) => (pane) => state[pane].selectedSpeaker,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
     availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
     selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
@@ -503,6 +753,9 @@ const mainModule = {
     posColors: (state) => state.posColors,
     labelOptions: (state) => state.labelOptions,
     linkOptions: (state) => state.linkOptions,
+    topNav: (state) => state.topNav,
+    availableParties: (state) => state.availableParties,
+    availableMetrics: (state) => state.availableMetrics,
     tableOptions: (state) => state.tableOptions,
     settingsActive: (state) => state.settings.active,
     activeSettings: (state) => state.settings.component,
@@ -520,9 +773,6 @@ const mainModule = {
     secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy
-  },
-  setPosColor({ state }, posTag, colorCode) {
-    state.posColors[posTag] = colorCode;
   }
 };
 

@@ -166,12 +166,17 @@ export default {
     },
     tableData() {
       return this.allNodes.map((node) => {
+        let networkEntry = this.$store.getters['main/getPane'](node._pane).selectedNetwork.type == 'Ego' ?
+          this.$store.getters['main/selectedTargetword'](node._pane).text :
+        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type == 'Party' ?
+          this.$store.getters['main/getPane'](node._pane).selectedNetwork.party :
+        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type == 'Speaker' ?
+          this.$store.getters['main/getPane'](node._pane).selectedNetwork.speaker : null;
+
         let tableEntry = {
           selected: Boolean(this.checkSelected(node)),
           word: node.name,
-          network: `${
-            this.$store.getters['main/selectedTargetword'](node._pane).text
-          }, ${
+          network: `${networkEntry}, ${
             this.$store.getters['main/getPane'](node._pane).selectedNetwork.year
           }`,
           color: this.getLineColor(node),
