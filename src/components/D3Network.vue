@@ -62,7 +62,7 @@
           </b-form-checkbox>
           <b-form-checkbox
               class='b-0'
-              v-model='showClusters'
+              v-model='options.showClusters'
               @chante='clickOnShowClusters'
               :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
@@ -120,11 +120,11 @@ export default {
       links: [],
       svg: {},
       transform: d3.zoomIdentity,
-      showClusters: false
     };
   },
   watch: {
     showClusters: function() {
+      console.log('watch showclusters: ' + this.options.showClusters)
       this.updateSimulation()
     },
     netNodes: function () {
@@ -204,10 +204,7 @@ export default {
             : 1
         )
         .attr('fill', (_, idx) => {
-          console.log(this.showClusters)
-          console.log(this.netNodes[idx])
-
-          if(!this.showClusters) {
+          if(!this.options.showClusters) {
             return 'white'
           }
           return this.netNodes[idx]._color
@@ -303,8 +300,8 @@ export default {
   },
   methods: {
     clickOnShowClusters() {
-      this.showClusters = true;
-      this.simulation.restart();
+      this.options.showClusters = true;
+      //this.simulation.restart();
     },
     dragsubject(event) {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
@@ -444,6 +441,7 @@ export default {
       this.applyScaleAndTransform();
     },
     updateSimulation() {
+      console.log('updating sim: ' + this.options.showClusters)
       const options = this.options;
       const width = options.size.w;
       const height = options.size.h;
