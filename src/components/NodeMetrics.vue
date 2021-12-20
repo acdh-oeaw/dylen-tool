@@ -18,7 +18,8 @@
       <b-col class='h-100'>
         <b-button-group class='float-right'>
           <b-dropdown
-            v-b-tooltip.hover title="Download CSV/JSON"
+            v-b-tooltip.hover
+            title="Download CSV/JSON"
             id='dropdown-1'
             v-if='nodes && showTable'
             no-caret
@@ -42,8 +43,14 @@
             variant='outline-secondary'
             data-sauto-id='table-button'
           >
-            <b-icon v-if='showTable' icon='graph-up'></b-icon>
-            <b-icon v-if='!showTable' icon='table'></b-icon>
+            <b-icon
+              v-if='showTable'
+              icon='graph-up'
+            ></b-icon>
+            <b-icon
+              v-if='!showTable'
+              icon='table'
+            ></b-icon>
           </b-button>
         </b-button-group>
         <parallel-coordinates
@@ -117,10 +124,16 @@ export default {
       return nodes;
     },
     csvExport() {
-      this.$store.dispatch('main/downloadMetricsAsCSV', {allNodes:this.allNodes, selectedNodes: this.nodes});
+      this.$store.dispatch('main/downloadMetricsAsCSV', {
+        allNodes: this.allNodes,
+        selectedNodes: this.nodes
+      });
     },
     jsonExport() {
-      this.$store.dispatch('main/downloadMetricsAsJSON', {allNodes:this.allNodes, selectedNodes: this.nodes});
+      this.$store.dispatch('main/downloadMetricsAsJSON', {
+        allNodes: this.allNodes,
+        selectedNodes: this.nodes
+      });
     }
   },
   computed: {
@@ -139,6 +152,7 @@ export default {
             nodes.push({
               id: network.id + '_' + node.id,
               name: node.text,
+              _normalisedFrequency: node.normalisedFrequency,
               _metrics: node.metrics,
               _pane: `pane${idx + 1}`
             });
