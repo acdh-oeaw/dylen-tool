@@ -212,7 +212,7 @@
                   @keypress='this.keyPress'
                   autocomplete='off'
               ></b-form-input>
-              <datalist :id='`datalist-${pane}`'>
+              <datalist v-if='showSuggestions' :id='`datalist-${pane}`'>
                 <option
                     v-for='option in availableTargetwords'
                     v-bind:key='option.text + option.pos'
@@ -277,7 +277,8 @@ export default {
       corpusEdit: false,
       subcorpusEdit: false,
       targetwordEdit: false,
-      yearEdit: false
+      yearEdit: false,
+      searchTermSelected: false
     };
   },
   mounted() {},
@@ -324,6 +325,7 @@ export default {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
     },
     handleSearchTermSelect() {
+      console.log('handle searchterm select: ' + target)
       const target = this.findSearchTermInAvailableTargetwords();
       this.$store.dispatch('main/loadTargetwordBySearchTerm', {
         pane: this.queryPane,
@@ -372,6 +374,12 @@ export default {
     }
   },
   computed: {
+    showSuggestions() {
+      if (this.searchTerm && this.selectedTargetword.text && (this.searchTerm.toLowerCase() === this.selectedTargetword.text.toLowerCase())) {
+        return false
+      }
+      return true
+    },
     hasSuggestions() {
       return !(this.availableTargetwords.length === 0 && this.searchTerm);
 
