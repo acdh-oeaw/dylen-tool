@@ -103,14 +103,6 @@ export default {
         {
           title: '',
           value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
-        },
-        {
-          title: 'Absolute frequency: ',
-          value: (d) => d._absoluteFrequency
-        },
-        {
-          title: 'Normalized frequency: ',
-          value: (d) => d._normalisedFrequency.toExponential(2)
         }
       ]
     };
@@ -305,9 +297,12 @@ export default {
         y = event.clientY;
 
       let metricEntries = Object.keys(d._metrics).map((key) => {
+        let val = (d) => d._metrics[key].toFixed(3);
+        if (val(d) == 0 && d._metrics[key] != 0)
+          val = (d) => d._metrics[key].toExponential(2);
         return {
           title: `${this.camelCaseToSpaces(key)}: `,
-          value: (d) => d._metrics[key].toFixed(3)
+          value: val
         };
       });
 
