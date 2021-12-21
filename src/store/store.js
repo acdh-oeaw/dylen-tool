@@ -216,6 +216,7 @@ const mainModule = {
             //TODO: use constant.. hardcoding types as string is very errorprone
             network.type = 'Ego';
           }
+          console.log('change busy state to true')
           state[pane].busy = true;
           if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
             console.log(state[pane].autocompleteSuggestions)
