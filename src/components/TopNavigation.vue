@@ -26,11 +26,12 @@
                     v-if='showInfoButton'
                     ref='showInfoButton'
                     data-sauto-id='show-info-button'
-                    variant='secondary'
+                    variant='info'
                     @click='updateShowInfo'
-                    class='mr-1'
+                    class='px-1 mx-1'
+                    style='z-index: 1'
                 >
-                  <b-icon icon='info'></b-icon>
+                  <b-icon icon='info' class='pr-0 mr-0'></b-icon>
                 </b-button>
                 <setting
                     setting-component='all'
