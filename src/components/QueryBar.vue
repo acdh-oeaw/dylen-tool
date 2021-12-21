@@ -17,7 +17,6 @@
               <b-row>
                 <b-col v-if="type==='EgoNetwork'">
                   <search-form
-                      @showInfoButton='setShowInfoButton'
                       :is-vertical='true'
                       :with-labels='false'
                       :pane="'pane' + 1"
@@ -27,7 +26,6 @@
                 </b-col>
                 <b-col v-if="type==='GeneralNetworkNetwork'">
                   <search-form-general
-                      @showInfoButton='setShowInfoButton'
                       :is-vertical='true'
                       :with-labels='false'
                       :pane="'pane' + 1"
@@ -37,7 +35,6 @@
                 </b-col>
                 <b-col v-if="type==='GeneralNetworkSpeaker'">
                   <search-form-general-speaker
-                      @showInfoButton='setShowInfoButton'
                       :is-vertical='true'
                       :with-labels='false'
                       :pane="'pane' + 1"
@@ -73,7 +70,7 @@
                 <b>New Query</b>
               </b-button>
             </b-col>
-            <b-col v-if="showSecondForm && type=='EgoNetwork'">
+            <b-col v-if="showSecondForm && type==='EgoNetwork'">
               <search-form
                   :is-vertical='true'
                   :with-labels='false'
@@ -82,7 +79,7 @@
               >
               </search-form>
             </b-col>
-            <b-col v-if="showSecondForm && type=='GeneralNetworkNetwork'">
+            <b-col v-if="showSecondForm && type==='GeneralNetworkNetwork'">
               <search-form-general
                   :is-vertical='true'
                   :with-labels='false'
@@ -91,7 +88,7 @@
               >
               </search-form-general>
             </b-col>
-            <b-col v-if="showSecondForm && type=='GeneralNetworkSpeaker'">
+            <b-col v-if="showSecondForm && type==='GeneralNetworkSpeaker'">
               <search-form-general-speaker
                   :is-vertical='true'
                   :with-labels='false'
@@ -115,7 +112,7 @@ import SearchFormGeneralSpeaker from '@/components/SearchFormGeneralSpeaker';
 
 export default {
   name: "QueryBar",
-  props: ['showInfo'],
+  props: [],
   components: {
     SearchForm,
     SearchFormGeneral,
@@ -138,8 +135,7 @@ export default {
       return this.$store.getters['main/secondFormVisibility']
     },
     type() {
-      const networkType = this.$store.getters['main/topNav'].networkType;
-      return networkType;
+      return this.$store.getters['main/topNav'].networkType;
     }
   },
   methods: {
@@ -158,9 +154,6 @@ export default {
     },
     updateShowInfo() {
       this.$store.commit('main/setShowInfo', {showInfo: !this.$store.state.main.showInfo});
-    },
-    setShowInfoButton(showInfoButton) {
-      this.showInfoButton = showInfoButton;
     }
   }
 }

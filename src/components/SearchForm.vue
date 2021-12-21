@@ -340,7 +340,7 @@ export default {
       this.mouseClick(event, 'selectTargetWord-option');
     },
     setShowInfo() {
-      this.$emit('showInfoButton', true);
+      this.$store.commit('main/setShowInfoButton', { showInfoButton: true });
       this.$store.commit('main/setShowInfo', { showInfo: false });
     },
     initialize() {
