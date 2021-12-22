@@ -216,6 +216,7 @@ const mainModule = {
             //TODO: use constant.. hardcoding types as string is very errorprone
             network.type = 'Ego';
           }
+          console.log('change busy state to true')
           state[pane].busy = true;
           if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
             console.log(state[pane].autocompleteSuggestions)
@@ -534,6 +535,7 @@ const mainModule = {
       selectedOnTop: false
     },
     showInfo: true,
+    showInfoButton: false,
     availableMetrics: ['Degree Centrality', 'Eigenvector Centrality', 'Closeness Centrality', 'Betweenness Centrality',
       'Pagerank', 'Load Centrality', 'Harmonic Centrality', 'Clustering Coefficient'],
     availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS']
@@ -705,7 +707,11 @@ const mainModule = {
       }
     },
     setShowInfo(state, payload) {
+      console.log('setting showinfo button: ' +  payload.showInfo)
       state.showInfo = payload.showInfo;
+    },
+    setShowInfoButton(state, payload) {
+      state.showInfoButton = payload.showInfoButton
     },
     addTimeSeriesData(state, payload) {
       state[payload['pane']].timeSeriesData = payload.data;
@@ -770,6 +776,7 @@ const mainModule = {
 
       return count;
     },
+    showInfoButton: (state) => state.showInfoButton,
     secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy

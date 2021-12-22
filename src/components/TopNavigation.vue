@@ -26,11 +26,12 @@
                     v-if='showInfoButton'
                     ref='showInfoButton'
                     data-sauto-id='show-info-button'
-                    variant='secondary'
+                    variant='info'
                     @click='updateShowInfo'
-                    class='mr-1'
+                    class='px-1 mx-1'
+                    style='z-index: 1'
                 >
-                  <b-icon icon='info'></b-icon>
+                  <b-icon icon='info' class='pr-0 mr-0'></b-icon>
                 </b-button>
                 <setting
                     setting-component='all'
@@ -41,139 +42,17 @@
 
         </b-col>
       </b-row>
-      <b-row xl='12' v-if='false'>
-        <b-col
-            data-sauto-id='search-form-general-1'
-            class='pb-1'
-            xl='4'
-            v-if="typeOfNetwork === 'GeneralNetworkNetwork'"
-            align-self='stretch'
-        >
-          <b-row
-              class='h-100'
-              align-h='center'
-              align-v='stretch'
-          >
-            <b-col>
-              <b-row>
-                <b-col>
-                  <search-form-general
-                      @showInfoButton='setShowInfoButton'
-                      :with-labels='false'
-                      :pane="'pane' + 1"
-                      :is-sidebar='false'
-                  >
-                  </search-form-general>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col
-            data-sauto-id='search-form-general-2'
-            class='pb-1'
-            xl='4'
-            v-if="typeOfNetwork === 'GeneralNetworkNetwork'"
-            align-self='stretch'
-        >
-          <b-row
-              class='h-100'
-              align-v='center'
-          >
-            <b-col v-if='!showSecondForm'>
-              <b-button
-                  pill
-                  data-sauto-id='second-query-button-general'
-                  v-if='showSecondButton'
-                  size='sm'
-                  variant='secondary'
-                  v-on:click='queryButtonClicked(2)'
-              >
-                <b>+</b>
-              </b-button>
-            </b-col>
-            <b-col v-if='showSecondForm'>
-              <search-form-general
-                  :with-labels='false'
-                  :pane="'pane' + 2"
-                  :is-sidebar='false'
-              >
-              </search-form-general>
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col
-            data-sauto-id='search-form-general-speaker-1'
-            class='pb-1'
-            xl='4'
-            v-if="typeOfNetwork === 'GeneralNetworkSpeaker'"
-            align-self='stretch'
-        >
-          <b-row
-              class='h-100'
-              align-v='center'
-          >
-
-            <b-col>
-              <search-form-general-speaker
-                  :with-labels='false'
-                  :pane="'pane' + 1"
-                  :is-sidebar='false'
-              >
-              </search-form-general-speaker>
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col
-            data-sauto-id='search-form-general-speaker-2'
-            class='pb-1'
-            xl='4'
-            v-if="typeOfNetwork === 'GeneralNetworkSpeaker'"
-            align-self='stretch'
-        >
-          <b-row
-              class='h-100'
-              align-v='center'
-          >
-            <b-col v-if='!showSecondForm'>
-              <b-button
-                  pill
-                  data-sauto-id='second-query-button-general'
-                  v-if='showSecondButton'
-                  size='sm'
-                  variant='secondary'
-                  v-on:click='queryButtonClicked(2)'
-              >
-                <b>+</b>
-              </b-button>
-            </b-col>
-            <b-col v-if='showSecondForm'>
-              <search-form-general-speaker
-                  :with-labels='false'
-                  :pane="'pane' + 2"
-                  :is-sidebar='false'
-              >
-              </search-form-general-speaker>
-            </b-col>
-          </b-row>
-        </b-col>
-
-      </b-row>
     </b-col>
 
   </b-row>
 </template>
 
 <script>
-import SearchFormGeneral from '@/components/SearchFormGeneral';
-import SearchFormGeneralSpeaker from '@/components/SearchFormGeneralSpeaker';
 import Setting from '@/components/Setting'
 
 export default {
   name: 'TopNavigation',
   components: {
-    SearchFormGeneral,
-    SearchFormGeneralSpeaker,
     Setting
   },
   props: ['showInfo'],
@@ -181,7 +60,6 @@ export default {
     return {
       firstForm: true,
       secondForm: false,
-      showInfoButton: false,
       typeOfNetwork: 'EgoNetwork'
     };
   },
@@ -191,6 +69,9 @@ export default {
     });
   },
   computed: {
+    showInfoButton() {
+      return this.$store.getters['main/showInfoButton']
+    },
     showSecondButton() {
       let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
       return numberOfVisualisedNetworks > 0;
@@ -223,9 +104,6 @@ export default {
     },
     updateShowInfo() {
       this.$store.commit('main/setShowInfo', { showInfo: !this.$store.state.main.showInfo });
-    },
-    setShowInfoButton(showInfoButton) {
-      this.showInfoButton=showInfoButton;
     }
   }
 };
