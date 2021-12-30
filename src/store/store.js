@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueCompositionAPI from '@vue/composition-api'
 
+import { BSpinner } from 'bootstrap-vue';
+Vue.component('b-spinner', BSpinner);
+
 import axios from 'axios';
 import {
     corpusNameMapping,

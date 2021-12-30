@@ -162,6 +162,9 @@
                   :disabled='!queryButtonActive'
                   @click='setShowInfo'
                 >
+                  <div v-if="isNetworkLoading">
+                    <b-spinner small type="grow"></b-spinner>
+                  </div>
                   Visualize
                 </b-button>
                 <b-button
@@ -206,6 +209,7 @@ export default {
   data() {
     return {
       corpusEdit: false,
+      isNetworkLoading: false,
       valueSlid: [0, 100],
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
@@ -219,10 +223,15 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
+      this.isNetworkLoading = true;
       this.$store.dispatch('main/loadGeneralNetwork', {
         pane: this.queryPane,
         sliderMin: this.$data.valueSlid[0]/100,
         sliderMax: this.$data.valueSlid[1]/100,
+      }).then(() => {
+        this.isNetworkLoading = false;
+      }).finally(() => {
+        this.isNetworkLoading = false;
       });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
     },

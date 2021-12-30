@@ -44,14 +44,19 @@
       data-sauto-id='ignore'
     >
       <b-col>
-        <d3-network
-          ref='egoChart'
-          class='network-wrapper'
-          :net-nodes='generalNetwork.nodes'
-          :net-links='generalNetwork.links'
-          :options='options'
-          :pane='this.pane'
-        />
+        <div v-if="isNetworkLoading">
+          <b-spinner small type="grow"></b-spinner>
+        </div>
+        <div v-if="!isNetworkLoading">
+          <d3-network
+            ref='egoChart'
+            class='network-wrapper'
+            :net-nodes='generalNetwork.nodes'
+            :net-links='generalNetwork.links'
+            :options='options'
+            :pane='this.pane'
+          />
+        </div>
       </b-col>
     </b-row>
   </b-container>
@@ -85,6 +90,7 @@ export default {
           w: 0
         }
       },
+      isNetworkLoading: false,
       sliderOptions: {
         dotSize: 15
       },
@@ -116,6 +122,7 @@ export default {
       if (chartWidth) this.options.size.w = chartWidth;
     },
     handleYearChange(value) {
+      this.isNetworkLoading = true;
       this.updateNetwork(this.generalNetwork);
       const position = this.calculateSliderPosition(value);
       this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);
@@ -143,6 +150,10 @@ export default {
       this.$store.dispatch('main/loadUpdatedGeneralNetwork', {
         network: network,
         pane: this.pane
+      }).then(() => {
+        this.isNetworkLoading = false;
+      }).catch(() => {
+        this.isNetworkLoading = false;
       });
       this.allNodesSelected = false;
       this.deselectAllNodes();
