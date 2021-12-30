@@ -423,7 +423,7 @@ const mainModule = {
         async loadGeneralTimeSeriesData({state}, pane) {
           try {
               const response = await axios.post(graphqlEndpoint,
-                  getGeneralNetworkTimeSeries(state[pane].selectedParty.replace('Ö', 'Oe')));
+                  getGeneralNetworkTimeSeries(partyMapping[state[pane].selectedParty]));
               let timeSeries = response.data.data.getAvailableYearsForParty || {};
               let years = response.data.data.getAvailableYearsForParty.available_years.sort();
 

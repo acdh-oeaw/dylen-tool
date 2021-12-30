@@ -206,7 +206,7 @@ export default {
   data() {
     return {
       corpusEdit: false,
-      valueSlid: [0, 100],
+      valueSlid: [0, 20],
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
       },
@@ -215,7 +215,25 @@ export default {
       yearEdit: false
     };
   },
-  mounted() {},
+  mounted() {
+    let defaultParty = "ÖVP";
+    let defaultMetric = "Pagerank";
+
+    let selectedParty = this.$store.getters['main/selectedParty']('pane1');
+    let selectedMetric = this.$store.getters['main/selectedMetric']('pane1');
+
+    if (selectedParty === "") {
+      this.selectedParty = defaultParty;
+    } else {
+      this.selectedParty = selectedParty;
+    }
+
+    if (selectedMetric === "") {
+      this.selectedMetric = defaultMetric;
+    } else {
+      this.selectedMetric = selectedMetric;
+    }
+  },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();

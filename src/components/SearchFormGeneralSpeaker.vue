@@ -123,6 +123,7 @@
               <b-form-select
                 size='sm'
                 v-model='selectedParty'
+                @change='changeSelectedPartyEvent'
                 :data-sauto-id="'selectParty-'+this.pane"
               >
                 <b-form-select-option
@@ -244,13 +245,40 @@ export default {
         return `${Math.round(value)}%`
       },
       subcorpusEdit: false,
-      valueSlid: [0, 100],
+      valueSlid: [0, 20],
       targetwordEdit: false,
       yearEdit: false
     };
   },
-  mounted() {},
+  mounted() {
+    let defaultParty = "ÖVP";
+    let defaultMetric = "Pagerank";
+
+    let selectedParty = this.$store.getters['main/selectedParty']('pane1');
+    let selectedMetric = this.$store.getters['main/selectedMetric']('pane1');
+
+    if (selectedParty === "") {
+      this.selectedParty = defaultParty;
+    } else {
+      this.selectedParty = selectedParty;
+    }
+
+    if (selectedMetric === "") {
+      this.selectedMetric = defaultMetric;
+    } else {
+      this.selectedMetric = selectedMetric;
+    }
+
+    this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, this.selectedParty).then(() => {
+      this.selectedSpeaker = this.availableSpeakers[0];
+    });
+  },
   methods: {
+    changeSelectedPartyEvent(evt) {
+      this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, evt).then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
+      });
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadGeneralSpeakerNetwork', {
