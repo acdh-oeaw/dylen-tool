@@ -63,7 +63,7 @@ export default {
           w: 0
         }
       },
-      selectedMetric: timeSeriesKeyMap['freqDiffNorm'],
+      selectedMetric: timeSeriesKeyMap[this.firstMetric()],
       selectedRelativeTo: relativeToMap['firstYear']
     };
   },
@@ -76,6 +76,15 @@ export default {
   methods: {
     resizeHandler() {
       this.defineChartSize();
+    },
+    firstMetric() {
+      const networkType = this.$store.getters['main/selectedNetwork']('pane1').type;
+
+      if (networkType === 'Ego') {
+        return 'freqDiffNorm';
+      } else {
+        return 'jaccardSimilarity';
+      }
     },
     defineChartSize() {
       const heightRefElem = this.$refs.con?.parentElement;
