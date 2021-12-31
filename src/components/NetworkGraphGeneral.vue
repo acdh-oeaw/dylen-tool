@@ -44,8 +44,8 @@
       data-sauto-id='ignore'
     >
       <b-col>
-        <div v-if="isNetworkLoading">
-          <b-spinner small type="grow"></b-spinner>
+        <div v-if="isNetworkLoading" class="text-center">
+          <b-spinner/>
         </div>
         <div v-if="!isNetworkLoading">
           <d3-network

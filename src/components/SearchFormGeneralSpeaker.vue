@@ -78,15 +78,18 @@
               class='visualize-button'
               size='sm'
               type='submit'
+              block
               variant='secondary'
               :data-sauto-id='"queryButtonSpeaker-"+this.pane'
               :disabled='!queryButtonActive'
               @click='setShowInfo'
             >
               <div v-if="isNetworkLoading">
-                <b-spinner small type="grow"></b-spinner>
+                <b-spinner small></b-spinner>
               </div>
-              Visualize
+              <div v-if="!isNetworkLoading">
+                Visualize
+              </div>
             </b-button>
             <b-button
               class='reset-button'
@@ -195,6 +198,7 @@
               <b-button
                 class='visualize-button'
                 size='sm'
+                block
                 type='submit'
                 variant='secondary'
                 :data-sauto-id='"queryButtonSpeaker-"+this.pane'
@@ -202,9 +206,11 @@
                 @click='setShowInfo'
               >
                 <div v-if="isNetworkLoading">
-                  <b-spinner small type="grow"></b-spinner>
+                  <b-spinner small></b-spinner>
                 </div>
-                Visualize
+                <div v-if="!isNetworkLoading">
+                  Visualize
+                </div>
               </b-button>
               <b-button
                 class='reset-button'

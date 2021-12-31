@@ -157,15 +157,18 @@
                   class='visualize-button'
                   size='sm'
                   type='submit'
+                  block=true
                   variant='secondary'
                   :data-sauto-id='"queryButtonGeneral-"+this.pane'
                   :disabled='!queryButtonActive'
                   @click='setShowInfo'
                 >
                   <div v-if="isNetworkLoading">
-                    <b-spinner small type="grow"></b-spinner>
+                    <b-spinner small></b-spinner>
                   </div>
-                  Visualize
+                  <div v-if="!isNetworkLoading">
+                    Visualize
+                  </div>
                 </b-button>
                 <b-button
                   class='reset-button'
