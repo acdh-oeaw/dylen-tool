@@ -294,7 +294,7 @@ export default {
   computed: {
     hoverNodes() {
       let sharedNode = this.$store.getters['main/focusNode'];
-      return this.selectedNodes.filter(node => sharedNode === node.id);
+      return this.selectedNodes.filter((node) => sharedNode === node.id);
     },
     viewBox() {
       return `0 0 ${this.options.size.w} ${this.options.size.h}`;
@@ -307,7 +307,9 @@ export default {
     },
     metrics() {
       return [
-        ...new Set(this.allNodes.map((n) => Object.keys(n._metrics)).flat())
+        ...new Set(
+          this.allNodes.map((n) => Object.keys(n._metrics).slice(0, -1)).flat()
+        )
       ];
     },
     scaleY() {
@@ -361,7 +363,7 @@ export default {
           let nodeVal =
             n._metrics[
               Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-              ];
+            ];
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
           nodeGroup[nodeVal].push(n);
         });
@@ -391,22 +393,22 @@ export default {
             .filter((n) => n._pane == 'pane2')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 node._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               let nVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 n._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
@@ -429,7 +431,7 @@ export default {
   },
   methods: {
     generateLine(node) {
-      return this.lineGenerator(Object.entries(node._metrics));
+      return this.lineGenerator(Object.entries(node._metrics).slice(0, -1));
     },
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');

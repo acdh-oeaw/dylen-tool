@@ -283,16 +283,16 @@ export default {
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
-        if (a.selected === b.selected)
-          return a[key].localeCompare
+        if (a.selected == b.selected)
+          return a[key].localeCompare && +a != a
             ? a[key].localeCompare(b[key])
-            : a[key] - b[key];
+            : +a[key] - +b[key];
         if (a.selected) return sortDesc ? 1 : -1;
         if (b.selected) return sortDesc ? -1 : 1;
       } else {
-        return a[key].localeCompare
+        return a[key].localeCompare && +a != a
           ? a[key].localeCompare(b[key])
-          : a[key] - b[key];
+          : +a[key] - +b[key];
       }
     },
     handleSortChanged(value) {

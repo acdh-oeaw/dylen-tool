@@ -162,7 +162,6 @@ export default {
             nodes.push({
               id: network.id + '_' + node.id,
               name: node.text,
-              _normalisedFrequency: node.normalisedFrequency,
               _metrics: node.metrics,
               _pane: `pane${idx + 1}`
             });
