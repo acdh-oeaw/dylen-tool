@@ -141,6 +141,8 @@
   </div>
 </template>
 <script>
+import {roundToMaxDigit} from "@/helpers/utils";
+
 export default {
   name: 'MetricsTable',
   props: ['selectedNodes', 'allNodes', 'options'],
@@ -184,13 +186,7 @@ export default {
         };
         let maxDigits = this.tableOptions.digits;
         for (let key in node._metrics)
-          tableEntry[key] =
-            maxDigits > 10
-              ? node._metrics[key]
-              : Math.round(
-                  (node._metrics[key] + Number.EPSILON) *
-                    Math.pow(10, maxDigits)
-                ) / Math.pow(10, maxDigits);
+          tableEntry[key] = roundToMaxDigit(node._metrics[key], maxDigits)
         return tableEntry;
       });
     },
