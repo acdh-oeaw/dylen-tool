@@ -22,24 +22,22 @@ export default {
   props: ['options'],
   computed: {
     timeSeriesData() {
-      let timeSeries =  ['pane1', 'pane2']
+      return ['pane1', 'pane2']
           .map((p) => {
             let ts = this.$store.getters['main/timeSeriesData'](p)
             let label = this.$store.getters['main/selectedTargetword'](p)?.text
             let rows = []
-            for (const [key, value] of Object.entries(ts)) {
-              console.log(`${key}: ${value}`);
+
+            for (const key of Object.keys(ts)) {
               for (const [relationToKey, relationToValue] of Object.entries(ts[key])) {
-                console.log(`${relationToKey}: ${relationToValue}`);
                 let rowList = relationToValue.map(v => {
-                  let row = {
+                  return {
                     'Word': label,
                     'Metric': key,
                     'Relative to': relationToKey,
                     'Year': v['year'],
                     'Value': v['value']
                   }
-                  return row
                 })
                 rows = rows.concat(rowList)
               }
@@ -47,8 +45,6 @@ export default {
             return rows
           })
           .flat()
-
-      return timeSeries
     },
   }
 }
