@@ -222,16 +222,16 @@ export default {
     let selectedParty = this.$store.getters['main/selectedParty']('pane1');
     let selectedMetric = this.$store.getters['main/selectedMetric']('pane1');
 
-    if (selectedParty === "") {
+    if (selectedParty.party === "") {
       this.selectedParty = defaultParty;
     } else {
-      this.selectedParty = selectedParty;
+      this.selectedParty = selectedParty.party;
     }
 
-    if (selectedMetric === "") {
+    if (selectedMetric.metric === "") {
       this.selectedMetric = defaultMetric;
     } else {
-      this.selectedMetric = selectedMetric;
+      this.selectedMetric = selectedMetric.metric;
     }
   },
   methods: {
