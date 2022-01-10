@@ -141,6 +141,8 @@
   </div>
 </template>
 <script>
+import {roundToMaxDigit} from "@/helpers/utils";
+
 export default {
   name: 'MetricsTable',
   props: ['selectedNodes', 'allNodes', 'options'],
@@ -166,11 +168,11 @@ export default {
     },
     tableData() {
       return this.allNodes.map((node) => {
-        let networkEntry = this.$store.getters['main/getPane'](node._pane).selectedNetwork.type == 'Ego' ?
+        let networkEntry = this.$store.getters['main/getPane'](node._pane).selectedNetwork.type === 'Ego' ?
           this.$store.getters['main/selectedTargetword'](node._pane).text :
-        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type == 'Party' ?
+        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type === 'Party' ?
           this.$store.getters['main/getPane'](node._pane).selectedNetwork.party :
-        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type == 'Speaker' ?
+        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type === 'Speaker' ?
           this.$store.getters['main/getPane'](node._pane).selectedNetwork.speaker : null;
 
         let tableEntry = {
@@ -184,13 +186,7 @@ export default {
         };
         let maxDigits = this.tableOptions.digits;
         for (let key in node._metrics)
-          tableEntry[key] =
-            maxDigits > 10
-              ? node._metrics[key]
-              : Math.round(
-                  (node._metrics[key] + Number.EPSILON) *
-                    Math.pow(10, maxDigits)
-                ) / Math.pow(10, maxDigits);
+          tableEntry[key] = roundToMaxDigit(node._metrics[key], maxDigits)
         return tableEntry;
       });
     },
@@ -221,15 +217,15 @@ export default {
   },
   methods: {
     getLineColor(node) {
-      if (node._pane == 'pane1')
+      if (node._pane === 'pane1')
         return this.$store.getters['main/selectionColors'][0];
-      if (node._pane == 'pane2')
+      if (node._pane === 'pane2')
         return this.$store.getters['main/selectionColors'][1];
       return 'black';
     },
     checkSelected(node) {
       return this.selectedNodes.find(
-        (n) => n.id == node.id && n._pane == node._pane
+        (n) => n.id === node.id && n._pane === node._pane
       );
     },
     addOrRemoveSelectedNodeAndHandleClick(event, node) {
@@ -247,7 +243,7 @@ export default {
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
-        if (a.selected == b.selected)
+        if (a.selected === b.selected)
           return a[key].localeCompare
             ? a[key].localeCompare(b[key])
             : a[key] - b[key];
