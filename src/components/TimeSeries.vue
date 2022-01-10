@@ -10,6 +10,16 @@
       align-h='center'
     >
       <b-col class="h-10"><b>Time series Analysis</b></b-col>
+      <b-button
+          class='mr-5'
+          size='sm'
+          :pressed.sync='showTable'
+          variant='outline-secondary'
+          data-sauto-id='table-button'
+      >
+        <b-icon v-if='showTable' icon='graph-up'></b-icon>
+        <b-icon v-if='!showTable' icon='table'></b-icon>
+      </b-button>
     </b-row>
     <b-row
       lg='12'
@@ -17,6 +27,7 @@
     >
       <b-col class='h-100'>
         <b-select
+          v-if='!showTable'
           class="w-50"
           v-model="selectedMetric"
           :options="metricOptions"
@@ -26,15 +37,16 @@
 
         </b-select>
         <b-select
+          v-if='!showTable'
           class="w-50"
           v-model="selectedRelativeTo"
           :options="relativeToOptions"
           size="sm"
           data-sauto-id='timeSeries-relative-option'
         >
-
         </b-select>
         <LineChart
+          v-if='!showTable'
           ref="lineChart"
           :options='options'
           :data="selectedTimeSeriesData"
@@ -42,6 +54,10 @@
           :labels="labels"
           data-sauto-id='timeSeries'
         ></LineChart>
+        <time-series-table
+            v-if='showTable'
+            :options='options'>
+        </time-series-table>
       </b-col>
     </b-row>
   </b-container>
@@ -50,10 +66,11 @@
 <script>
 import LineChart from '@/components/LineChart';
 import {relativeToMap, timeSeriesKeyMap} from "@/helpers/mappers";
+import TimeSeriesTable from "@/components/TimeSeriesTable";
 
 export default {
   name: 'TimeSeries',
-  components: { LineChart },
+  components: {TimeSeriesTable, LineChart },
   props: ['panes'],
   data() {
     return {
@@ -63,7 +80,8 @@ export default {
           w: 0
         }
       },
-      selectedMetric: timeSeriesKeyMap['freqDiffNorm'],
+      showTable: false,
+      selectedMetric: timeSeriesKeyMap[this.firstMetric()],
       selectedRelativeTo: relativeToMap['firstYear']
     };
   },
@@ -76,6 +94,15 @@ export default {
   methods: {
     resizeHandler() {
       this.defineChartSize();
+    },
+    firstMetric() {
+      const networkType = this.$store.getters['main/selectedNetwork']('pane1').type;
+
+      if (networkType === 'Ego') {
+        return 'freqDiffNorm';
+      } else {
+        return 'jaccardSimilarity';
+      }
     },
     defineChartSize() {
       const heightRefElem = this.$refs.con?.parentElement;

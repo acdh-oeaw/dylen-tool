@@ -217,10 +217,11 @@ export default {
       const axis = binding.arg;
       const axisMethod = { x: 'axisBottom', y: 'axisLeft' }[axis];
       const tickFormat = { x: (d) => d, y: (d) => d }[axis];
+      const filterFunc = { x: (d) => Number.isInteger(d), y: () => true}[axis];
       const methodArg = binding.value;
       d3.select(el).call(
         d3[axisMethod](methodArg)
-          .tickValues(methodArg.ticks())
+          .tickValues(methodArg.ticks().filter(filterFunc))
           .tickFormat(tickFormat)
       );
     }
