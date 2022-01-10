@@ -308,12 +308,18 @@ export default {
     metrics() {
       return [
         ...new Set(
-          this.allNodes.map((n) => Object.keys(n._metrics).slice(0, -1)).flat()
+          [
+            this.allNodes
+              .map((n) => Object.keys(n._metrics).slice(0, -1))
+              .flat()
+          ].flat()
         )
       ];
     },
     scaleY() {
       let scale = {};
+      console.log(this.selectedNodes.map((n) => n.name));
+
       this.metrics.forEach((metric) => {
         scale[metric] = d3
           .scaleLinear()
@@ -328,6 +334,11 @@ export default {
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
       });
+      /* scale['word'] = d3
+        .scalePoint()
+        .domain(this.selectedNodes.map((n) => n.name).sort())
+        .range([this.chartSize[1], this.svgPadding.top]); */
+      console.log(scale);
       return scale;
     },
     scaleX() {
@@ -431,7 +442,8 @@ export default {
   },
   methods: {
     generateLine(node) {
-      return this.lineGenerator(Object.entries(node._metrics).slice(0, -1));
+      let data = Object.entries(node._metrics).slice(0, -1);
+      return this.lineGenerator(data);
     },
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');
