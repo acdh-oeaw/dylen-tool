@@ -264,22 +264,22 @@ export default {
     };
   },
   mounted() {
-    let defaultParty = "ÖVP";
+    let defaultParty = "SPOe";
     let defaultMetric = "Pagerank";
 
-    let selectedParty = this.$store.getters['main/selectedParty']('pane1');
-    let selectedMetric = this.$store.getters['main/selectedMetric']('pane1');
+    let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty']('pane1');
+    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkSpeakerMetric']('pane1');
 
-    if (selectedParty === "") {
+    if (selectedParty.party === "") {
       this.selectedParty = defaultParty;
     } else {
-      this.selectedParty = selectedParty;
+      this.selectedParty = selectedParty.party;
     }
 
-    if (selectedMetric === "") {
+    if (selectedMetric.metric === "") {
       this.selectedMetric = defaultMetric;
     } else {
-      this.selectedMetric = selectedMetric;
+      this.selectedMetric = selectedMetric.metric;
     }
 
     this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, this.selectedParty).then(() => {

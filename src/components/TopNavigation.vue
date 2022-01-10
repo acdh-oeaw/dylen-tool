@@ -92,7 +92,6 @@ export default {
       }
     },
     onTypeOfNetworkSelect(event) {
-      //TODO: use getter from store
       this.typeOfNetwork = event;
       this.$store.commit('main/changeTopNavType', {
         networkType: event
