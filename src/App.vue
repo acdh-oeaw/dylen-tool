@@ -26,7 +26,11 @@
           xl='12'
           class='pl-3 pt-0 h-100'
         >
-          <b-col xl='2' class='pt-0 mt-0' style='border-right: solid; border-color: cadetblue'>
+          <b-col
+            xl='2'
+            class='pt-0 mt-0'
+            style='border-right: solid; border-color: cadetblue'
+          >
             <query-bar></query-bar>
           </b-col>
           <b-col
@@ -76,9 +80,9 @@
             <h4><u>Ego Network options</u></h4>
             <h5 class='mt-3'>Part-of-speech colors</h5>
             <b-row
-                v-for='key in Object.keys(posColors)'
-                :key='key'
-                class='my-3'
+              v-for='key in Object.keys(posColors)'
+              :key='key'
+              class='my-3'
             >
               <b-col>{{
                   key[0].toUpperCase() + key.slice(1).replace('_', ' ')
@@ -86,9 +90,9 @@
               </b-col>
               <b-col>
                 <b-form-input
-                    :data-sauto-id="'color-option-' + key"
-                    type='color'
-                    v-model='posColors[key]'
+                  :data-sauto-id="'color-option-' + key"
+                  type='color'
+                  v-model='posColors[key]'
                 ></b-form-input>
               </b-col>
             </b-row>
@@ -98,38 +102,43 @@
           <b-col>
             <h5 class='mt-3'>Node label options</h5>
             <b-row class='pt-3'>
-              <b-col xl='5' class='text-right'>Font size </b-col>
+              <b-col
+                xl='5'
+                class='text-right'
+              >Font size </b-col>
               <b-col>
                 <b-form-input
-                    data-sauto-id='font-option'
-                    type='number'
-                    v-model='labelOptions.fontSize'
-                    :number='true'
-                    size='sm'
+                  data-sauto-id='font-option'
+                  type='number'
+                  v-model='labelOptions.fontSize'
+                  :number='true'
+                  size='sm'
                 >
                 </b-form-input>
               </b-col>
             </b-row>
             <b-row class='pt-3'>
-              <b-col xl='5' class='text-right'>Bold</b-col>
-              <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
               <b-col
-                  data-sauto-id='ignore'
-              >
+                xl='5'
+                class='text-right'
+              >Bold</b-col>
+              <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
+              <b-col data-sauto-id='ignore'>
                 <b-form-checkbox
-                    data-sauto-id='bold-checkbox-option'
-                    v-model='labelOptions.bold'
+                  data-sauto-id='bold-checkbox-option'
+                  v-model='labelOptions.bold'
                 ></b-form-checkbox>
               </b-col>
             </b-row>
             <b-row class='pt-3'>
-              <b-col xl='5' class='text-right'>White label background</b-col>
               <b-col
-                  data-sauto-id='ignore'
-              >
+                xl='5'
+                class='text-right'
+              >White label background</b-col>
+              <b-col data-sauto-id='ignore'>
                 <b-form-checkbox
-                    data-sauto-id='white-label-checkbox-option'
-                    v-model='labelOptions.background'
+                  data-sauto-id='white-label-checkbox-option'
+                  v-model='labelOptions.background'
                 ></b-form-checkbox>
               </b-col>
             </b-row>
@@ -139,16 +148,19 @@
           <b-col>
             <h5 class='mt-3'>Link options</h5>
             <b-row class='pt-3'>
-              <b-col xl='6' class='text-right'>Opacity: {{ linkOptions.opacity }}</b-col>
+              <b-col
+                xl='6'
+                class='text-right'
+              >Opacity: {{ linkOptions.opacity }}</b-col>
               <b-col>
                 <b-form-input
-                    data-sauto-id='opacity-slider-option'
-                    type='range'
-                    v-model='linkOptions.opacity'
-                    :number='true'
-                    :min='0'
-                    :max='1'
-                    :step='0.1'
+                  data-sauto-id='opacity-slider-option'
+                  type='range'
+                  v-model='linkOptions.opacity'
+                  :number='true'
+                  :min='0'
+                  :max='1'
+                  :step='0.1'
                 >
                 </b-form-input>
               </b-col>
@@ -159,34 +171,62 @@
           <b-col>
             <h4 class='mt-3'><u>Table options</u></h4>
             <b-row class='pt-3'>
-              <b-col xl='7' class='text-right'>
+              <b-col
+                xl='7'
+                class='text-right'
+              >
                 Number of digits to display:
                 {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
               </b-col>
               <b-col>
                 <b-form-input
-                    data-sauto-id='digits-slider-option'
-                    type='range'
-                    v-model='tableOptions.digits'
-                    :number='true'
-                    :min='0'
-                    :max='11'
-                    :step='1'
+                  data-sauto-id='digits-slider-option'
+                  type='range'
+                  v-model='tableOptions.digits'
+                  :number='true'
+                  :min='0'
+                  :max='11'
+                  :step='1'
                 >
                 </b-form-input>
               </b-col>
             </b-row>
             <b-row class='pt-3'>
-              <b-col xl='7' class='text-right'>Show selected words on top</b-col>
               <b-col
-                  data-sauto-id='ignore'
-              >
+                xl='7'
+                class='text-right'
+              >Show selected words on top</b-col>
+              <b-col data-sauto-id='ignore'>
                 <b-check
-                    data-sauto-id='selected-words-top-checkbox-option'
-                    v-model='tableOptions.selectedOnTop'
+                  data-sauto-id='selected-words-top-checkbox-option'
+                  v-model='tableOptions.selectedOnTop'
                 >
                 </b-check>
               </b-col>
+            </b-row>
+            <h4 class="mt-3"><u>Parallel coordinates options</u></h4>
+            <b-row class='pt-3'>
+              <b>Axes to display (drag to reorder): </b>
+              <draggable
+                :list="selectedMetrics"
+                @start="drag=true"
+                @end="drag=false"
+                class="list-group w-100"
+                :disabled="false"
+              >
+                <div
+                  class="list-group-item w-100"
+                  v-for="element in selectedMetrics"
+                  :key="element.name"
+                >{{camelCaseToSpaces(element.name)}}
+                  <b-form-checkbox
+                    v-model="element.enabled"
+                    switch
+                  >
+                    {{element.enabled ? "Enabled" : "Disabled"}}
+                  </b-form-checkbox>
+                </div>
+              </draggable>
             </b-row>
           </b-col>
         </b-row>
@@ -197,11 +237,13 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
 import TopNavigation from '@/components/TopNavigation';
 import Info from '@/components/Info';
-import QueryBar from "@/components/QueryBar";
+import QueryBar from '@/components/QueryBar';
+import { camelCaseToSpaces } from '@/helpers/utils';
 
 export default {
   name: 'App',
@@ -210,10 +252,14 @@ export default {
     TopNavigation,
     Results,
     Modal,
-    Info
+    Info,
+    draggable
   },
   data() {
-    return {};
+    return {
+      drag: false,
+      camelCaseToSpaces: camelCaseToSpaces
+    };
   },
   created() {
     this.$store.dispatch('main/loadAvailableCorpora');
@@ -253,13 +299,22 @@ export default {
     },
     settingsActive: {
       get() {
-         return this.$store.getters['main/settingsActive'];
+        return this.$store.getters['main/settingsActive'];
+      }
+    },
+    selectedMetrics: {
+      get() {
+        return this.$store.getters['main/parallelCoordinateMetrics'];
+      },
+      set(value) {
+        console.log(value);
+        this.$store.commit('main/setParallelCoordinateMetrics', value);
       }
     }
   },
   methods: {
     toggleSideBar(component) {
-      this.$store.commit('main/changeActiveSettings', {component: component})
+      this.$store.commit('main/changeActiveSettings', { component: component });
     },
     screenResizeHandler() {
       const size = this.$refs.app.getBoundingClientRect();
@@ -267,8 +322,8 @@ export default {
     }
   },
   watch: {
-    settingsActive: function(newVal, oldVal) {
-      console.log('settings changed: ' + newVal + oldVal)
+    settingsActive: function (newVal, oldVal) {
+      console.log('settings changed: ' + newVal + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
     }
