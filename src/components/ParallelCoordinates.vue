@@ -294,7 +294,7 @@ export default {
   computed: {
     hoverNodes() {
       let sharedNode = this.$store.getters['main/focusNode'];
-      return this.selectedNodes.filter(node => sharedNode === node.id);
+      return this.selectedNodes.filter((node) => sharedNode === node.id);
     },
     viewBox() {
       return `0 0 ${this.options.size.w} ${this.options.size.h}`;
@@ -307,11 +307,19 @@ export default {
     },
     metrics() {
       return [
-        ...new Set(this.allNodes.map((n) => Object.keys(n._metrics)).flat())
+        ...new Set(
+          [
+            this.allNodes
+              .map((n) => Object.keys(n._metrics).slice(0, -1))
+              .flat()
+          ].flat()
+        )
       ];
     },
     scaleY() {
       let scale = {};
+      console.log(this.selectedNodes.map((n) => n.name));
+
       this.metrics.forEach((metric) => {
         scale[metric] = d3
           .scaleLinear()
@@ -326,6 +334,11 @@ export default {
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
       });
+      /* scale['word'] = d3
+        .scalePoint()
+        .domain(this.selectedNodes.map((n) => n.name).sort())
+        .range([this.chartSize[1], this.svgPadding.top]); */
+      console.log(scale);
       return scale;
     },
     scaleX() {
@@ -361,7 +374,7 @@ export default {
           let nodeVal =
             n._metrics[
               Object.keys(this.scaleY)[Object.values(this.scaleY).length - 1]
-              ];
+            ];
           if (!(nodeVal in nodeGroup)) nodeGroup[nodeVal] = [];
           nodeGroup[nodeVal].push(n);
         });
@@ -391,22 +404,22 @@ export default {
             .filter((n) => n._pane == 'pane2')
             .filter((n) => {
               let nodeVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 node._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               let nVal = Object.values(this.scaleY)[
-              Object.values(this.scaleY).length - 1
-                ](
+                Object.values(this.scaleY).length - 1
+              ](
                 n._metrics[
                   Object.keys(this.scaleY)[
-                  Object.values(this.scaleY).length - 1
-                    ]
+                    Object.values(this.scaleY).length - 1
                   ]
+                ]
               );
               return nodeVal + 7 >= nVal && nodeVal - 7 <= nVal;
             }).length == 1
@@ -429,7 +442,8 @@ export default {
   },
   methods: {
     generateLine(node) {
-      return this.lineGenerator(Object.entries(node._metrics));
+      let data = Object.entries(node._metrics).slice(0, -1);
+      return this.lineGenerator(data);
     },
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');

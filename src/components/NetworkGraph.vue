@@ -94,7 +94,12 @@ export default {
         dotSize: 15
       },
       chartColors: [
-        '#2b6ca3', '#65add2', '#b0efff', '#a36c23', '#d59c1e', '#ffd20b'
+        '#2b6ca3',
+        '#65add2',
+        '#b0efff',
+        '#a36c23',
+        '#d59c1e',
+        '#ffd20b'
       ],
       allNodesSelected: false
     };
@@ -183,6 +188,7 @@ export default {
       const network = this.$store.getters['main/getPane'](
         this.pane
       ).selectedNetwork;
+      console.log(network);
       const nodes = [];
       const links = [];
       let selectedNetwork;
@@ -194,9 +200,12 @@ export default {
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
-            _color: this.chartColors[node.clusterId%this.chartColors.length],
+            _color: this.chartColors[node.clusterId % this.chartColors.length],
             _metrics: node.metrics,
-            _pane: this.pane
+            _pane: this.pane,
+            _absoluteFrequency: node.absoluteFrequency,
+            _normalisedFrequency: node.normalisedFrequency,
+            _pos: node.pos
           });
         }
         for (const link of network.edges) {

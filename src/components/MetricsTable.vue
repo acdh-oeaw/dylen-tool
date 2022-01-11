@@ -24,22 +24,28 @@
       <template #head(selected)="">
         <div style='width:3em'>
           <b-button
-              style='padding:0'
-              variant='none'
-              @click=' (event) => selectionCheckboxChanged(event)'
+            style='padding:0'
+            variant='none'
+            @click=' (event) => selectionCheckboxChanged(event)'
           >
             <b-icon :icon="isAllSelected ? 'check-square' : 'square'"></b-icon>
           </b-button>
           <b-button
-              style='padding:0'
-              variant='none'
-              @click='(event) => {
+            style='padding:0'
+            variant='none'
+            @click='(event) => {
                 filterClicked("selected","filterSelected")
                 event.stopPropagation()
               }'
           >
-            <b-icon v-if='filterOn.indexOf("selected") < 0' :icon="'filter-circle'"></b-icon>
-            <b-icon v-if='filterOn.indexOf("selected") >= 0' :icon="'filter-circle-fill'"></b-icon>
+            <b-icon
+              v-if='filterOn.indexOf("selected") < 0'
+              :icon="'filter-circle'"
+            ></b-icon>
+            <b-icon
+              v-if='filterOn.indexOf("selected") >= 0'
+              :icon="'filter-circle-fill'"
+            ></b-icon>
           </b-button>
         </div>
       </template>
@@ -48,33 +54,43 @@
           <span>Word </span>
           <span>
             <b-button
-                            id='word-filter-input'
-                            style='padding:0'
-                            variant='none'
-                            @click='(event) => {
+              id='word-filter-input'
+              style='padding:0'
+              variant='none'
+              @click='(event) => {
                 filterClicked("word","filterWord")
                 event.stopPropagation()
 
               }'
-                        >
-              <b-icon v-if='filterOn.indexOf("word") < 0' :icon="'filter-circle'"></b-icon>
-              <b-icon v-if='filterOn.indexOf("word") >= 0' :icon="'filter-circle-fill'"></b-icon>
+            >
+              <b-icon
+                v-if='filterOn.indexOf("word") < 0'
+                :icon="'filter-circle'"
+              ></b-icon>
+              <b-icon
+                v-if='filterOn.indexOf("word") >= 0'
+                :icon="'filter-circle-fill'"
+              ></b-icon>
             </b-button>
-            <b-popover target='word-filter-input' title="Word filter" triggers="click blur">
+            <b-popover
+              target='word-filter-input'
+              title="Word filter"
+              triggers="click blur"
+            >
               <b-form-group
-                  label="Filter"
-                  label-for="filter-input"
-                  label-cols-sm="3"
-                  label-align-sm="right"
-                  label-size="sm"
-                  class="mb-0"
+                label="Filter"
+                label-for="filter-input"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-size="sm"
+                class="mb-0"
               >
                 <b-input-group size="sm">
                   <b-form-input
-                      id="filter-input"
-                      v-model="filterWord"
-                      type="search"
-                      placeholder="Type to Filter"
+                    id="filter-input"
+                    v-model="filterWord"
+                    type="search"
+                    placeholder="Type to Filter"
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
@@ -85,35 +101,45 @@
       </template>
       <template #head(network)="">
         <div style='width:7em'>
-          <span>Network  </span>
+          <span>Network </span>
           <b-button
-              id='network-filter-input'
-              style='padding:0'
-              variant='none'
-              @click='(event) => {
+            id='network-filter-input'
+            style='padding:0'
+            variant='none'
+            @click='(event) => {
                 filterClicked("network","filterNetwork")
                 event.stopPropagation()
 
               }'
           >
-            <b-icon v-if='filterOn.indexOf("network") < 0' :icon="'filter-circle'"></b-icon>
-            <b-icon v-if='filterOn.indexOf("network") >= 0' :icon="'filter-circle-fill'"></b-icon>
+            <b-icon
+              v-if='filterOn.indexOf("network") < 0'
+              :icon="'filter-circle'"
+            ></b-icon>
+            <b-icon
+              v-if='filterOn.indexOf("network") >= 0'
+              :icon="'filter-circle-fill'"
+            ></b-icon>
           </b-button>
-          <b-popover target='network-filter-input' title='Network filter' triggers='click blur'>
+          <b-popover
+            target='network-filter-input'
+            title='Network filter'
+            triggers='click blur'
+          >
             <b-form-group
-                label="Filter"
-                label-for="filter-input"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-size="sm"
-                class="mb-0"
+              label="Filter"
+              label-for="filter-input"
+              label-cols-sm="3"
+              label-align-sm="right"
+              label-size="sm"
+              class="mb-0"
             >
               <b-input-group size="sm">
                 <b-form-input
-                    id="filter-input"
-                    v-model="filterNetwork"
-                    type="search"
-                    placeholder="Type to Filter"
+                  id="filter-input"
+                  v-model="filterNetwork"
+                  type="search"
+                  placeholder="Type to Filter"
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
@@ -141,7 +167,7 @@
   </div>
 </template>
 <script>
-import {roundToMaxDigit} from "@/helpers/utils";
+import { roundToMaxDigit } from '@/helpers/utils';
 
 export default {
   name: 'MetricsTable',
@@ -152,28 +178,39 @@ export default {
       filterWord: null,
       filterNetwork: null,
       filterOn: [],
-      sortDirection: 'asc',
+      sortDirection: 'asc'
     };
   },
   computed: {
-    filter: function() {
-      if (this.filterSelected === null && this.filterWord ===  null && this.filterNetwork === null){
+    filter: function () {
+      if (
+        this.filterSelected === null &&
+        this.filterWord === null &&
+        this.filterNetwork === null
+      ) {
         return null;
       }
 
-      return [this.filterSelected , this.filterWord, this.filterNetwork];
+      return [this.filterSelected, this.filterWord, this.filterNetwork];
     },
     tableOptions() {
       return this.$store.getters['main/tableOptions'];
     },
     tableData() {
       return this.allNodes.map((node) => {
-        let networkEntry = this.$store.getters['main/getPane'](node._pane).selectedNetwork.type === 'Ego' ?
-          this.$store.getters['main/selectedTargetword'](node._pane).text :
-        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type === 'Party' ?
-          this.$store.getters['main/getPane'](node._pane).selectedNetwork.party :
-        this.$store.getters['main/getPane'](node._pane).selectedNetwork.type === 'Speaker' ?
-          this.$store.getters['main/getPane'](node._pane).selectedNetwork.speaker : null;
+        let networkEntry =
+          this.$store.getters['main/getPane'](node._pane).selectedNetwork
+            .type === 'Ego'
+            ? this.$store.getters['main/selectedTargetword'](node._pane).text
+            : this.$store.getters['main/getPane'](node._pane).selectedNetwork
+                .type === 'Party'
+            ? this.$store.getters['main/getPane'](node._pane).selectedNetwork
+                .party
+            : this.$store.getters['main/getPane'](node._pane).selectedNetwork
+                .type === 'Speaker'
+            ? this.$store.getters['main/getPane'](node._pane).selectedNetwork
+                .speaker
+            : null;
 
         let tableEntry = {
           selected: Boolean(this.checkSelected(node)),
@@ -185,8 +222,12 @@ export default {
           node: node
         };
         let maxDigits = this.tableOptions.digits;
+        /* console.log(node);
+        tableEntry['normalizedFrequency'] =
+          node._normalisedFrequency?.toExponential(2); */
         for (let key in node._metrics)
-          tableEntry[key] = roundToMaxDigit(node._metrics[key], maxDigits)
+          tableEntry[key] = roundToMaxDigit(node._metrics[key], maxDigits);
+
         return tableEntry;
       });
     },
@@ -243,16 +284,16 @@ export default {
     },
     sortCompare(a, b, key, sortDesc) {
       if (this.tableOptions.selectedOnTop) {
-        if (a.selected === b.selected)
-          return a[key].localeCompare
+        if (a.selected == b.selected)
+          return a[key].localeCompare && +a != a
             ? a[key].localeCompare(b[key])
-            : a[key] - b[key];
+            : +a[key] - +b[key];
         if (a.selected) return sortDesc ? 1 : -1;
         if (b.selected) return sortDesc ? -1 : 1;
       } else {
-        return a[key].localeCompare
+        return a[key].localeCompare && +a != a
           ? a[key].localeCompare(b[key])
-          : a[key] - b[key];
+          : +a[key] - +b[key];
       }
     },
     handleSortChanged(value) {
@@ -286,28 +327,38 @@ export default {
       console.log(this.tableData);
       if (this.isAllSelected) this.deselectAllNodes();
       else this.selectAllNodes();
-      this.mouseClick(event,"table-select-all")
+      this.mouseClick(event, 'table-select-all');
     },
     customFilter(row, filter) {
-      console.log('filtering on: ' + this.filterOn)
-      console.log('filter row: ' + JSON.stringify(row))
-      console.log('filter filter: ' +  filter)
+      console.log('filtering on: ' + this.filterOn);
+      console.log('filter row: ' + JSON.stringify(row));
+      console.log('filter filter: ' + filter);
 
-      const selectedCheck = filter[0] !== null? row.selected === filter[0]: null
-      const wordCheck = filter[1] !== null? row.word.toLowerCase().startsWith(filter[1].toLowerCase()): null
-      const networkCheck = filter[2] !== null? row.network.toLowerCase().startsWith(filter[2].toLowerCase()): null
+      const selectedCheck =
+        filter[0] !== null ? row.selected === filter[0] : null;
+      const wordCheck =
+        filter[1] !== null
+          ? row.word.toLowerCase().startsWith(filter[1].toLowerCase())
+          : null;
+      const networkCheck =
+        filter[2] !== null
+          ? row.network.toLowerCase().startsWith(filter[2].toLowerCase())
+          : null;
 
-      return (selectedCheck || selectedCheck === null) && (wordCheck || wordCheck === null) && (networkCheck || networkCheck === null)
+      return (
+        (selectedCheck || selectedCheck === null) &&
+        (wordCheck || wordCheck === null) &&
+        (networkCheck || networkCheck === null)
+      );
     },
     filterClicked(column, filterName) {
-      let i = this.filterOn.indexOf(column)
-      if(i < 0 ) {
-        this.filterOn.push(column)
-        if(column === 'selected')
-          this.filterSelected = true
+      let i = this.filterOn.indexOf(column);
+      if (i < 0) {
+        this.filterOn.push(column);
+        if (column === 'selected') this.filterSelected = true;
       } else {
-        this.filterOn.splice(i, 1)
-        this[filterName] = null
+        this.filterOn.splice(i, 1);
+        this[filterName] = null;
       }
     },
     selectAllNodes() {

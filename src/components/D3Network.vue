@@ -44,29 +44,27 @@
     </div>
 
     <div class="checkbox-container checkbox-width">
-      <div
-        data-sauto-id='ignore'
-      >
+      <div data-sauto-id='ignore'>
         <b-form-group
-            class='ego-network-formgroup mt-1 pl-2'
-            id="ego-network-options"
-            label='visualization option'
-            label-size='sm'
-            label-align='center'
+          class='ego-network-formgroup mt-1 pl-2'
+          id="ego-network-options"
+          label='visualization option'
+          label-size='sm'
+          label-align='center'
         >
           <b-form-checkbox
-              class='b-0 pl-4'
-              v-model='isAllSelected'
-              @change='selectionCheckboxChanged'
-              :data-sauto-id="'select-all-checkbox-'+this.pane"
+            class='b-0 pl-4'
+            v-model='isAllSelected'
+            @change='selectionCheckboxChanged'
+            :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
             select all
           </b-form-checkbox>
           <b-form-checkbox
-              class='b-0'
-              v-model='options.showClusters'
-              @chante='clickOnShowClusters'
-              :data-sauto-id="'select-all-checkbox-'+this.pane"
+            class='b-0'
+            v-model='options.showClusters'
+            @chante='clickOnShowClusters'
+            :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
             show clusters
           </b-form-checkbox>
@@ -115,12 +113,18 @@ export default {
       links: [],
       svg: {},
       transform: d3.zoomIdentity,
+      menuItems: [
+        {
+          title: '',
+          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
+        }
+      ]
     };
   },
   watch: {
-    showClusters: function() {
-      console.log('watch showclusters: ' + this.options.showClusters)
-      this.updateSimulation()
+    showClusters: function () {
+      console.log('watch showclusters: ' + this.options.showClusters);
+      this.updateSimulation();
     },
     netNodes: function () {
       this.updateSimulation();
@@ -189,7 +193,11 @@ export default {
         .selectAll('circle')
         .data(this.nodes)
         .join('circle')
-        .attr('r', this.nodeSize / 2)
+        .attr('r', (d) =>
+          d._absoluteFrequency
+            ? this.scaleNodeSize(d._absoluteFrequency)
+            : this.nodeSize
+        )
         .attr('stroke', (d) =>
           this.isSelected(d.index) ? this.getLineColor(d) : '#000'
         )
@@ -199,18 +207,20 @@ export default {
             : 1
         )
         .attr('fill', (_, idx) => {
-          if(!this.options.showClusters) {
-            return 'white'
+          if (!this.options.showClusters) {
+            return 'white';
           }
-          return this.netNodes[idx]._color
-
+          return this.netNodes[idx]._color;
         })
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-node');
         })
         .on('mouseenter', (event, d) => this.focusNode(d))
-        .on('mouseleave', (event, d) => this.defocusNode(d));
+        .on('mouseleave', (event, d) => this.defocusNode(d))
+        .on('contextmenu', (event, d) => {
+          this.createContextMenu(event, d);
+        });
 
       n.append('title').text((d) => d.name);
       n.call(
@@ -247,6 +257,9 @@ export default {
         .on('click', (event, d) => {
           this.addOrRemoveSelectedNode(d.index);
           this.mouseClick(event, this.pane + '-label');
+        })
+        .on('contextmenu', (event, d) => {
+          this.createContextMenu(event, d);
         });
       l.call(
         d3
@@ -266,7 +279,10 @@ export default {
         .join('line')
         .attr(
           'stroke',
-          (d) => `rgba(0, 0, 0, ${this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity } )`  
+          (d) =>
+            `rgba(0, 0, 0, ${
+              this.isFocused(d) ? 1 : this.options?.linkOptions?.opacity
+            } )`
         )
         .attr('stroke-width', (d) => this.scaleThickness(d.similarity));
     },
@@ -291,12 +307,58 @@ export default {
           d3.max(this.netLinks, (d) => d.similarity)
         ])
         .range([0.3, 3]);
+    },
+    scaleNodeSize() {
+      return d3
+        .scaleSqrt()
+        .domain([
+          d3.min(this.netNodes, (d) => d._absoluteFrequency),
+          d3.max(this.netNodes, (d) => d._absoluteFrequency)
+        ])
+        .range([this.nodeSize / 2, this.nodeSize * 1.5]);
     }
   },
   methods: {
     clickOnShowClusters() {
       this.options.showClusters = true;
       //this.simulation.restart();
+    },
+    createContextMenu(event, d) {
+      const x = event.clientX,
+        y = event.clientY;
+
+      let metricEntries = Object.keys(d._metrics).map((key) => {
+        let val = (d) => d._metrics[key].toFixed(3);
+        if (val(d) == 0 && d._metrics[key] != 0)
+          val = (d) => d._metrics[key].toExponential(2);
+        return {
+          title: `${this.camelCaseToSpaces(key)}: `,
+          value: val
+        };
+      });
+
+      d3.selectAll(`.contextMenu`).remove();
+
+      d3.select('body')
+        .append('div')
+        .attr('class', 'contextMenu')
+        .style('top', `${y}px`)
+        .style('left', `${x}px`)
+        .style('position', 'fixed')
+        .selectAll('tmp')
+        .data(this.menuItems.concat(metricEntries))
+        .enter()
+        .append('div')
+        .attr('class', 'menuEntry');
+
+      d3.selectAll(`.menuEntry`)
+        .append('span')
+        .text((entry) => {
+          return `${entry.title}${entry.value(d)}`;
+        })
+        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'));
+
+      event.preventDefault();
     },
     dragsubject(event) {
       for (let i = this.nodes.length - 1; i >= 0; --i) {
@@ -422,10 +484,15 @@ export default {
       this.node
         .attr('cx', (d) => this.getNodeCoords(d).x)
         .attr('cy', (d) => this.getNodeCoords(d).y);
-
       if (this.options.nodeLabels)
         this.label
-          .attr('x', (d) => this.getNodeCoords(d).x + r + 2)
+          .attr(
+            'x',
+            (d) =>
+              this.getNodeCoords(d).x +
+              (this.scaleNodeSize(d._absoluteFrequency) || this.nodeSize) +
+              2
+          )
           .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
     },
     zoom(event) {
@@ -436,7 +503,7 @@ export default {
       this.applyScaleAndTransform();
     },
     updateSimulation() {
-      console.log('updating sim: ' + this.options.showClusters)
+      console.log('updating sim: ' + this.options.showClusters);
       const options = this.options;
       const width = options.size.w;
       const height = options.size.h;
@@ -489,10 +556,17 @@ export default {
       this.transform.y = 0;
       this.transform.k = 1;
       this.applyScaleAndTransform();
+    },
+    camelCaseToSpaces(text) {
+      let result = text.replace(/([A-Z])/g, ' $1');
+      return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     }
   },
   mounted() {
     this.initNetwork();
+    d3.select('body').on('click', () => {
+      d3.selectAll(`.contextMenu`).remove();
+    });
   },
   beforeDestroy() {
     this.deselectAllNodes();
@@ -521,5 +595,16 @@ svg .labels text {
 }
 .controls-container {
   bottom: 0.2em;
+}
+.contextMenu {
+  background-color: white;
+  border-radius: 5px;
+  padding: 2px 0;
+}
+
+.menuEntry {
+  stroke: transparent;
+  margin: 0 5px;
+  font-size: 12px;
 }
 </style>
