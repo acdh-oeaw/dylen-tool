@@ -14,24 +14,27 @@
     <b-row class='h-20 pb-2'>
       <!--      <b-col xl='2'></b-col>-->
       <b-col
-          class='pl-5 year-slider-row'
-          data-sauto-id='ignore'
+        class='pl-5 year-slider-row'
+        data-sauto-id='ignore'
       >
-        <div ref='sliderDiv' class='pl-2'>
+        <div
+          ref='sliderDiv'
+          class='pl-2'
+        >
           <vue-slider
-              ref='slider'
-              v-model='speakerNetwork.year'
-              v-bind='sliderOptions'
-              :min='speakerNetwork.possibleYears[0]'
-              :max='speakerNetwork.possibleYears[speakerNetwork.possibleYears.length - 1]'
-              :data='speakerNetwork.possibleYears'
-              :process='false'
-              :lazy='true'
-              :adsorb='true'
-              :duration='0.3'
-              v-on:change='handleChange'
-              :marks='speakerNetwork.possibleYears'
-              :tooltip="'none'"
+            ref='slider'
+            v-model='speakerNetwork.year'
+            v-bind='sliderOptions'
+            :min='speakerNetwork.possibleYears[0]'
+            :max='speakerNetwork.possibleYears[speakerNetwork.possibleYears.length - 1]'
+            :data='speakerNetwork.possibleYears'
+            :process='false'
+            :lazy='true'
+            :adsorb='true'
+            :duration='0.3'
+            v-on:change='handleChange'
+            :marks='speakerNetwork.possibleYears'
+            :tooltip="'none'"
           />
         </div>
       </b-col>
@@ -45,7 +48,10 @@
     >
       <b-col>
         <div v-if="isNetworkLoading">
-          <b-spinner small type="grow"></b-spinner>
+          <b-spinner
+            small
+            type="grow"
+          ></b-spinner>
         </div>
         <div v-if="!isNetworkLoading">
           <d3-network
@@ -78,7 +84,7 @@ export default {
     return {
       options: {
         /* force: 100, */
-        nodeSize: 15,
+        nodeSize: 10,
         nodeDistance: 75,
         nodeLabels: true,
         boundingBox: false, //Indicates whether nodes are forces to be placed withing the surrounding container
@@ -147,14 +153,17 @@ export default {
     },
     updateNetwork(network) {
       //important: the year is already updated in the sent network obj, because v-model is a two way binding on the vue-range-slider
-      this.$store.dispatch('main/loadUpdatedSpeakerNetwork', {
-        network: network,
-        pane: this.pane
-      }).then(() => {
-        this.isNetworkLoading = false;
-      }).finally(() => {
-        this.isNetworkLoading = false;
-      });
+      this.$store
+        .dispatch('main/loadUpdatedSpeakerNetwork', {
+          network: network,
+          pane: this.pane
+        })
+        .then(() => {
+          this.isNetworkLoading = false;
+        })
+        .finally(() => {
+          this.isNetworkLoading = false;
+        });
       this.allNodesSelected = false;
       this.deselectAllNodes();
     },
@@ -220,10 +229,10 @@ export default {
           year: network.year,
           possibleYears: network.possibleYears,
           threshold: network.threshold,
-          party:network.party,
-          speaker:network.speaker,
-          filter:network.filter,
-          type:network.type
+          party: network.party,
+          speaker: network.speaker,
+          filter: network.filter,
+          type: network.type
         };
       }
       return selectedNetwork;

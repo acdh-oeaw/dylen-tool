@@ -193,7 +193,11 @@ export default {
         .selectAll('circle')
         .data(this.nodes)
         .join('circle')
-        .attr('r', (d) => this.scaleNodeSize(d._absoluteFrequency))
+        .attr('r', (d) =>
+          d._absoluteFrequency
+            ? this.scaleNodeSize(d._absoluteFrequency)
+            : this.nodeSize
+        )
         .attr('stroke', (d) =>
           this.isSelected(d.index) ? this.getLineColor(d) : '#000'
         )
@@ -486,7 +490,7 @@ export default {
             'x',
             (d) =>
               this.getNodeCoords(d).x +
-              this.scaleNodeSize(d._absoluteFrequency) +
+              (this.scaleNodeSize(d._absoluteFrequency) || this.nodeSize) +
               2
           )
           .attr('y', (d) => this.getNodeCoords(d).y + r / 2);
