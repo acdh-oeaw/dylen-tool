@@ -222,8 +222,9 @@ export default {
           node: node
         };
         let maxDigits = this.tableOptions.digits;
+        /* console.log(node);
         tableEntry['normalizedFrequency'] =
-          node._normalisedFrequency.toExponential(2);
+          node._normalisedFrequency?.toExponential(2); */
         for (let key in node._metrics)
           tableEntry[key] = roundToMaxDigit(node._metrics[key], maxDigits);
 
