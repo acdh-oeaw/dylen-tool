@@ -86,14 +86,13 @@ const mainModule = {
             this.commit('main/loadParties', partyPayload);
             await dispatch('loadSources');
         },
-        async speakersForParty({state}, pane) {
-          let party = partyMapping[state[pane].generalNetworkSpeaker.selectedParty];
+        async speakersForParty({state}, payload) {
+          let party = partyMapping[state[payload.pane].generalNetworkSpeaker.selectedParty];
 
           const response = await axios.post(graphqlEndpoint, getSpeakersForParty(party));
           const speakerResponse = response.data.data.findSpeakerByParty;
-          const payload = {speakers: speakerResponse.speakers.sort(), pane: pane};
 
-          this.commit('main/changeAvailableSpeakers', payload);
+          this.commit('main/changeAvailableSpeakers', {speakers: speakerResponse.speakers.sort(), pane: payload.pane});
         },
         async loadSources({ state }) {
             for (const corpus of state.availableCorpora) {
@@ -125,9 +124,9 @@ const mainModule = {
             logger.error(error);
           }
         },
-        async loadAvailableSpeakers({ dispatch }, party) {
+        async loadAvailableSpeakers({ dispatch }, payload) {
           try {
-            await dispatch('speakersForParty', party);
+            await dispatch('speakersForParty', payload);
             logger.log('Query parameters loaded successfully.');
           } catch (error) {
             logger.error(error);
@@ -490,7 +489,7 @@ const mainModule = {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
       generalNetwork: { selectedParty: {party: ''}, selectedMetric: {metric: ''}},
-      generalNetworkSpeaker: { selectedParty: {party: ''}, selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}},
+      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -614,7 +613,7 @@ const mainModule = {
       state[payload.pane].generalNetworkSpeaker.selectedParty = payload.party;
     },
     changeSelectedSpeakerMetric(state, payload) {
-      state[payload.pane].generalNetgeneralNetworkSpeakerwork.selectedMetric = payload.metric;
+      state[payload.pane].generalNetworkSpeaker.selectedMetric = payload.metric;
     },
     changeSelectedSpeaker(state, payload) {
       state[payload.pane].generalNetworkSpeaker.selectedSpeaker = payload.speaker;
