@@ -21,6 +21,7 @@
                       :with-labels='false'
                       :pane="'pane' + 1"
                       :is-sidebar='false'
+                      @visualizeClicked='validateFormVisibility'
                   >
                   </search-form>
                 </b-col>
@@ -58,19 +59,19 @@
               class='h-100'
               align-v='center'
           >
-            <b-col v-if='!showSecondForm'>
+            <b-col v-if='!secondForm'>
               <b-button
                   pill
                   data-sauto-id='second-query-button'
                   size='sm'
                   variant='secondary'
-                  v-if='showSecondButton'
+                  v-if='secondForm'
                   v-on:click='queryButtonClicked(2)'
               >
                 <b>New Query</b>
               </b-button>
             </b-col>
-            <b-col v-if="showSecondForm && type==='EgoNetwork'">
+            <b-col v-if="secondForm && type==='EgoNetwork'">
               <search-form
                   :with-labels='false'
                   :pane="'pane' + 2"
@@ -119,8 +120,17 @@ export default {
     return {
       firstForm: true,
       secondForm: false,
+      showSecondQueryButton: false,
       showInfoButton: false,
     };
+  },
+  mounted() {
+    this.$root.$on('visualizeClicked', () => {
+      let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
+      if(numberOfVisualisedNetworks > 0) {
+        this.secondForm = true
+      }
+    })
   },
   computed: {
     showSecondButton() {
@@ -136,6 +146,12 @@ export default {
     }
   },
   methods: {
+    validateFormVisibility() {
+      let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
+      if(numberOfVisualisedNetworks > 0) {
+        this.secondForm = true
+      }
+    },
     queryButtonClicked(button) {
       if (button === 1) {
         this.firstForm = true;
@@ -144,13 +160,6 @@ export default {
           pane: 'pane2'
         })
       }
-    },
-    toggleSideBar() {
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
-    },
-    updateShowInfo() {
-      this.$store.commit('main/setShowInfo', {showInfo: !this.$store.state.main.showInfo});
     }
   }
 }

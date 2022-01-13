@@ -162,7 +162,9 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
+      this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
+        this.$emit('visualizeClicked')
+      });
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
       let settingsComponent = this.$store.getters['main/activeSettings']
       if (!settingsComponent) {
