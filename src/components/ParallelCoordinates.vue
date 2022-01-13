@@ -308,6 +308,7 @@ export default {
       ];
     },
     metrics() {
+      console.log(this.selectedNodes);
       return this.$store.getters['main/parallelCoordinateMetrics']
         .filter((m) => m.enabled)
         .map((m) => m.name);
@@ -332,7 +333,7 @@ export default {
               this.selectedNodes.length > 0
                 ? this.selectedNodes
                 : this.allNodes,
-              (entry) => entry._metrics[metric]
+              (entry) => entry._metrics[metric] || 0
             ) * 1.1
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
@@ -440,7 +441,8 @@ export default {
   },
   methods: {
     generateLine(node) {
-      let data = this.metrics.map((m) => [m, node._metrics[m]]);
+      let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
+      console.log(node, data);
       return this.lineGenerator(data);
     },
 

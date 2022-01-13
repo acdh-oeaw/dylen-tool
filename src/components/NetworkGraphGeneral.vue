@@ -72,6 +72,7 @@
 import D3Network from './D3Network';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
+import { snakeToCamel } from '@/helpers/utils';
 
 export default {
   name: 'NetworkGraphGeneral',
@@ -205,13 +206,16 @@ export default {
 
       if (network) {
         for (const node of network.nodes) {
+          let camelMetrics = {};
+          for (let key in node.metrics)
+            camelMetrics[snakeToCamel(key)] = node.metrics[key];
           nodes.push({
             id: network.id + '_' + node.id,
             name: node.text,
             _labelColor: this.$store.getters['main/posColors'][node.pos],
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
-            _metrics: node.metrics,
+            _metrics: camelMetrics,
             _pane: this.pane
           });
         }
