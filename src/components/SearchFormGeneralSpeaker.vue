@@ -129,6 +129,7 @@
               <b-form-select
                 size='sm'
                 v-model='selectedParty'
+                @change='changeSelectedPartyEvent'
                 :data-sauto-id="'selectParty-'+this.pane"
               >
                 <b-form-select-option
@@ -257,13 +258,40 @@ export default {
         return `${Math.round(value)}%`
       },
       subcorpusEdit: false,
-      valueSlid: [0, 100],
+      valueSlid: [0, 20],
       targetwordEdit: false,
       yearEdit: false
     };
   },
-  mounted() {},
+  mounted() {
+    let defaultParty = "SPÖ";
+    let defaultMetric = "Pagerank";
+
+    let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty']('pane1');
+    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkSpeakerMetric']('pane1');
+
+    if (!selectedParty) {
+      this.selectedParty = defaultParty
+    } else {
+      this.selectedParty = selectedParty;
+    }
+
+    if (!selectedMetric.metric) {
+      this.selectedMetric = defaultMetric;
+    } else {
+      this.selectedMetric = selectedMetric.metric;
+    }
+
+    this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
+      this.selectedSpeaker = this.availableSpeakers[0];
+    });
+  },
   methods: {
+    changeSelectedPartyEvent(evt) {
+      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, event:evt}).then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
+      });
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.isNetworkLoading = true;
@@ -283,11 +311,11 @@ export default {
       this.$store.commit('main/setShowInfo', { showInfo: false });
     },
     initialize() {
-      this.$store.commit('main/changeSelectedParty', {
+      this.$store.commit('main/changeSelectedSpeakerParty', {
         party: null,
         pane: this.queryPane
       });
-      this.$store.commit('main/changeSelectedMetric', {
+      this.$store.commit('main/changeSelectedSpeakerMetric', {
         metric: null,
         pane: this.queryPane
       });
@@ -345,11 +373,11 @@ export default {
     },
     selectedMetric: {
       get() {
-        return this.$store.getters['main/selectedMetric'](this.queryPane);
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.queryPane);
       },
       set(val) {
         if (val) {
-          this.$store.commit('main/changeSelectedMetric', {
+          this.$store.commit('main/changeSelectedSpeakerMetric', {
             metric: val,
             pane: this.queryPane
           });
@@ -359,17 +387,17 @@ export default {
     },
     selectedParty: {
       get() {
-        const party = this.$store.getters['main/selectedParty'](this.queryPane)
-        this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, party);
+        const party = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane)
+        this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:party});
         return party;
       },
       set(val) {
         if (val) {
-          this.$store.commit('main/changeSelectedParty', {
+          this.$store.commit('main/changeSelectedSpeakerParty', {
             party: val,
             pane: this.queryPane
           });
-          this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, val);
+          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val});
         }
       }
     },
@@ -380,7 +408,7 @@ export default {
     },
     selectedSpeaker: {
       get() {
-        return this.$store.getters['main/selectedSpeaker'](this.queryPane);
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](this.queryPane);
       },
       set(val) {
         if (val) {

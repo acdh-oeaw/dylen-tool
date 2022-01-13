@@ -86,12 +86,13 @@ const mainModule = {
             this.commit('main/loadParties', partyPayload);
             await dispatch('loadSources');
         },
-        async speakersForParty({state}, pane) {
-          let party = partyMapping[state[pane].selectedParty];
+        async speakersForParty({state}, payload) {
+          let party = partyMapping[state[payload.pane].generalNetworkSpeaker.selectedParty];
+
           const response = await axios.post(graphqlEndpoint, getSpeakersForParty(party));
           const speakerResponse = response.data.data.findSpeakerByParty;
-          const payload = {speakers: speakerResponse.speakers.sort(), pane: pane};
-          this.commit('main/changeAvailableSpeakers', payload);
+
+          this.commit('main/changeAvailableSpeakers', {speakers: speakerResponse.speakers.sort(), pane: payload.pane});
         },
         async loadSources({ state }) {
             for (const corpus of state.availableCorpora) {
@@ -123,9 +124,9 @@ const mainModule = {
             logger.error(error);
           }
         },
-        async loadAvailableSpeakers({ dispatch }, party) {
+        async loadAvailableSpeakers({ dispatch }, payload) {
           try {
-            await dispatch('speakersForParty', party);
+            await dispatch('speakersForParty', payload);
             logger.log('Query parameters loaded successfully.');
           } catch (error) {
             logger.error(error);
@@ -134,14 +135,14 @@ const mainModule = {
         async loadGeneralNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, years) {
             network.id = networkID;
-            network.filter = {metric: state[pane].selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
+            network.filter = {metric: state[pane].generalNetwork.selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
             network.party = party;
             network.possibleYears = years.map(Number).sort();
             network.year = Math.max(...years.map(Number));
             network.type = 'Party';
           }
 
-          let party = partyMapping[state[pane].selectedParty];
+          let party = partyMapping[state[pane].generalNetwork.selectedParty];
 
           try {
               const availableYearsQuery = getAvailableYearsForParty(party);
@@ -172,15 +173,15 @@ const mainModule = {
         async loadGeneralSpeakerNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, possibleYears) {
             network.id = networkID;
-            network.speaker = state[pane].selectedSpeaker;
-            network.party = partyMapping[state[pane].selectedParty];
+            network.speaker = state[pane].generalNetworkSpeaker.selectedSpeaker;
+            network.party = partyMapping[state[pane].generalNetworkSpeaker.selectedParty];
             network.possibleYears = possibleYears.map(Number).sort();
-            network.filter = {metric: state[pane].selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
+            network.filter = {metric: state[pane].generalNetworkSpeaker.selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
             network.year = Math.max(...possibleYears.map(Number));
             network.type = 'Speaker';
           }
 
-          let speaker = state[pane].selectedSpeaker;
+          let speaker = state[pane].generalNetworkSpeaker.selectedSpeaker;
 
           try {
               const yearResponse = await axios.post(graphqlEndpoint, getMetadataSpeaker(speaker));
@@ -403,7 +404,7 @@ const mainModule = {
         async loadGeneralSpeakerTimeSeriesData({state}, pane) {
           try {
               const response = await axios.post(graphqlEndpoint,
-                  getMetadataSpeaker(state[pane].selectedSpeaker));
+                  getMetadataSpeaker(state[pane].generalNetworkSpeaker.selectedSpeaker));
               let timeSeries = response.data.data.getAvailableYearsForSpeaker || {};
               let years = response.data.data.getAvailableYearsForSpeaker.available_years.sort();
 
@@ -427,7 +428,7 @@ const mainModule = {
         async loadGeneralTimeSeriesData({state}, pane) {
           try {
               const response = await axios.post(graphqlEndpoint,
-                  getGeneralNetworkTimeSeries(state[pane].selectedParty.replace('Ö', 'Oe')));
+                  getGeneralNetworkTimeSeries(partyMapping[state[pane].generalNetwork.selectedParty]));
               let timeSeries = response.data.data.getAvailableYearsForParty || {};
               let years = response.data.data.getAvailableYearsForParty.available_years.sort();
 
@@ -488,9 +489,8 @@ const mainModule = {
     pane1: {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
-      selectedMetric: {metric: ''},
-      selectedParty: {party: ''},
-      selectedSpeaker: {speaker: ''},
+      generalNetwork: { selectedParty: {party: ''}, selectedMetric: {metric: ''}},
+      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -602,16 +602,22 @@ const mainModule = {
       state[payload.pane].selectedSubcorpus = state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
     },
     changeSelectedParty(state, payload) {
-      state[payload.pane].selectedParty = payload.party;
+      state[payload.pane].generalNetwork.selectedParty = payload.party;
     },
     changeSelectedMetric(state, payload) {
-      state[payload.pane].selectedMetric = payload.metric;
+      state[payload.pane].generalNetwork.selectedMetric = payload.metric;
     },
     changeAvailableSpeakers(state, payload) {
       state[payload.pane].availableSpeakers = payload.speakers;
     },
+    changeSelectedSpeakerParty(state, payload) {
+      state[payload.pane].generalNetworkSpeaker.selectedParty = payload.party;
+    },
+    changeSelectedSpeakerMetric(state, payload) {
+      state[payload.pane].generalNetworkSpeaker.selectedMetric = payload.metric;
+    },
     changeSelectedSpeaker(state, payload) {
-      state[payload.pane].selectedSpeaker = payload.speaker;
+      state[payload.pane].generalNetworkSpeaker.selectedSpeaker = payload.speaker;
     },
     changeSelectedSubcorpus(state, payload) {
       console.log('changing selected subcorpus');
@@ -680,12 +686,6 @@ const mainModule = {
     resetSelectedNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = null;
     },
-    resetSelectedGeneralNetwork(state, payload) {
-      state[payload['pane']].selectedGeneralNetwork = null;
-    },
-    resetSelectedGeneralSpeakerNetwork(state, payload) {
-      state[payload['pane']].selectedGeneralNetwork = null;
-    },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
@@ -747,9 +747,11 @@ const mainModule = {
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
     availableSpeakers: (state) => (pane) => state[pane].availableSpeakers,
-    selectedParty: (state) => (pane) => state[pane].selectedParty,
-    selectedMetric: (state) => (pane) => state[pane].selectedMetric,
-    selectedSpeaker: (state) => (pane) => state[pane].selectedSpeaker,
+    selectedGeneralNetworkParty: (state) => (pane) => state[pane].generalNetwork.selectedParty,
+    selectedGeneralNetworkMetric: (state) => (pane) => state[pane].generalNetwork.selectedMetric,
+    selectedGeneralNetworkSpeakerParty: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedParty,
+    selectedGeneralNetworkSpeakerMetric: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedMetric,
+    selectedGeneralNetworkSpeakerSpeaker: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedSpeaker,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
     availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
     selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,
