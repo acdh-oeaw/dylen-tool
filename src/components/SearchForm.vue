@@ -2,7 +2,6 @@
   <b-form @submit='onSubmit'>
     <b-row
         text-center
-        v-if='isVertical'
         xl='12'>
       <b-col xl='12'>
         <b-row xl='12'>
@@ -120,7 +119,7 @@ import VisualizeButton from "@/components/VisualizeButton";
 export default {
   name: 'SearchForm',
   components: {VisualizeButton},
-  props: ['isVertical', 'isSidebar', 'pane', 'withLabels'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,

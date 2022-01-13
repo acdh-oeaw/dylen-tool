@@ -72,7 +72,6 @@
             </b-col>
             <b-col v-if="showSecondForm && type==='EgoNetwork'">
               <search-form
-                  :is-vertical='true'
                   :with-labels='false'
                   :pane="'pane' + 2"
                   :is-sidebar='false'
@@ -81,7 +80,6 @@
             </b-col>
             <b-col v-if="showSecondForm && type==='GeneralNetworkNetwork'">
               <search-form-general
-                  :is-vertical='true'
                   :with-labels='false'
                   :pane="'pane' + 2"
                   :is-sidebar='false'
@@ -90,7 +88,6 @@
             </b-col>
             <b-col v-if="showSecondForm && type==='GeneralNetworkSpeaker'">
               <search-form-general-speaker
-                  :is-vertical='true'
                   :with-labels='false'
                   :pane="'pane' + 2"
                   :is-sidebar='false'

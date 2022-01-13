@@ -2,7 +2,6 @@
   <b-form @submit='onSubmit'>
     <b-row
       text-center
-      v-if='isVertical'
       xl='12'>
       <b-col xl='12'>
         <b-col xl='12'>
@@ -119,7 +118,7 @@ export default {
       Slider,
   },
   name: 'SearchFormGeneral',
-  props: ['isSidebar', 'isVertical', 'pane', 'withLabels'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,

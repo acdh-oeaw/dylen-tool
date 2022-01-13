@@ -1,6 +1,6 @@
 <template>
   <b-form @submit='onSubmit'>
-    <b-row v-if=!isVertical>
+    <b-row>
       <b-col xl='8'>
         <b-form-group
           id='select-party-group-viz'
@@ -116,7 +116,7 @@
         </b-row>
       </b-col>
     </b-row>
-    <b-row v-if='isVertical'>
+    <b-row>
       <b-col xl='12'>
         <b-row xl='12'>
           <b-col xl='12'>
@@ -245,7 +245,7 @@
 <script>
 import Slider from '@vueform/slider/dist/slider.vue2.js';
 export default {
-  props: ['isSidebar', 'isVertical', 'pane', 'withLabels'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   components: {
       Slider,
   },
