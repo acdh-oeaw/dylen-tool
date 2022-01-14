@@ -544,15 +544,15 @@ const mainModule = {
       'Pagerank', 'Load Centrality', 'Harmonic Centrality', 'Clustering Coefficient'],
     availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS'],
     parallelCoordinateMetrics: [
-      {name: "degreeCentrality", enabled: true},
       {name: "normalizedFrequency", enabled: true},
-      {name: "closenessCentrality", enabled: true},
+      {name: "degreeCentrality", enabled: true},
+      {name: "betweennessCentrality", enabled: true},
       {name: "pagerank", enabled: true},
+      {name: "clusteringCoefficient", enabled: true},
+      {name: "closenessCentrality", enabled: false},
       {name: "eigenvectorCentrality", enabled: false},
-      {name: "betweennessCentrality", enabled: false},
       {name: "loadCentrality", enabled: false},
       {name: "harmonicCentrality", enabled: false},
-      {name: "clusteringCoefficient", enabled: false},
       {name: "absoluteFrequency", enabled: false},
   
   ]
