@@ -62,7 +62,7 @@ import Slider from '@vueform/slider/dist/slider.vue2.js';
 export default {
   components: {InfoIcon, AlertTriangleIcon, Slider},
   name: "NodeFilter",
-  props: ['availableMetrics', 'pane'],
+  props: ['availableMetrics', 'pane', 'generalType'],
   data() {
     return {
       valueSlid: [0,20],
@@ -74,7 +74,8 @@ export default {
   mounted() {
     let defaultMetric = "Pagerank";
 
-    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkMetric']('pane1');
+
+    let selectedMetric = this.getMetricByType(this.generalType);
 
     this.selectedMetric = selectedMetric.metric === ""? defaultMetric : selectedMetric.metric
 
@@ -82,19 +83,34 @@ export default {
   methods: {
     valueChanged() {
       this.$emit('sliderValueChanged', this.$data.valueSlid);
+    },
+    getMetricByType(entityType) {
+      if (entityType === "speaker") {
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.pane)
+      } else {
+        return this.$store.getters['main/selectedGeneralNetworkMetric'](this.pane);
+      }
     }
   },
   computed: {
     selectedMetric: {
       get() {
-        return this.$store.getters['main/selectedGeneralNetworkMetric'](this.pane);
+        return this.getMetricByType(this.generalType)
       },
       set(val) {
         if (val) {
-          this.$store.commit('main/changeSelectedMetric', {
-            metric: val,
-            pane: this.pane
-          });
+          if (this.generalType === "speaker") {
+            this.$store.commit('main/changeSelectedSpeakerMetric', {
+              metric: val,
+              pane: this.pane
+            });
+          } else {
+            this.$store.commit('main/changeSelectedMetric', {
+              metric: val,
+              pane: this.pane
+            });
+          }
+
           console.log('Set metric to: ' + val);
         }
       }

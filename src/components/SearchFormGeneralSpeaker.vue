@@ -30,60 +30,36 @@
         </b-row>
         <b-row xl='12'>
           <b-col xl='12'>
-            <b-card>
-              <b-row xl='12'>
-                <b-col xl=12 class='mt-0 text-center' style='font-size:0.9em'>
-                  <h7>
-                    <info-icon size="1.2x" class="custom-class" style='color:red' v-b-modal.threshold></info-icon>
-                    <b> Node filter</b>
-                  </h7>
-                </b-col>
-              </b-row>
-              <b-row xl='12'>
-                <b-form-group
-                    id='select-speaker-group-viz'
-                    label='Speaker: '
-                    label-size='sm'
-                    label-cols-xl='4'
+            <b-form-group
+                id='select-speaker-group-viz'
+                label='Speaker: '
+                label-size='sm'
+                label-cols-xl='4'
+            >
+              <b-form-select
+                  size='sm'
+                  v-model='selectedSpeaker'
+                  :data-sauto-id="'selectSpeaker-'+this.pane"
+              >
+                <b-form-select-option
+                    v-for='optionSpeaker in availableSpeakers'
+                    v-bind:key='optionSpeaker.id'
+                    v-bind:value='optionSpeaker'
+                    :data-sauto-id="'speakerOption-' + optionSpeaker"
                 >
-                  <b-form-select
-                      size='sm'
-                      v-model='selectedSpeaker'
-                      :data-sauto-id="'selectSpeaker-'+this.pane"
-                  >
-                    <b-form-select-option
-                        v-for='optionSpeaker in availableSpeakers'
-                        v-bind:key='optionSpeaker.id'
-                        v-bind:value='optionSpeaker'
-                        :data-sauto-id="'speakerOption-' + optionSpeaker"
-                    >
-                      {{ optionSpeaker }}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-form-group>
-                <b-form-select
-                    size='sm'
-                    v-model='selectedMetric'
-                    :data-sauto-id="'selectSpeakerMetric-'+this.pane"
-                >
-                  <b-form-select-option
-                      v-for='option in availableMetrics'
-                      v-bind:key='option.id'
-                      v-bind:value='option'
-                      :data-sauto-id="'metricSpeakerOption-' + option"
-                  >
-                    {{ option }}
-                  </b-form-select-option>
-                </b-form-select>
-                <div class="mt-3">
-                  <Slider
-                      :format="sliderFormat"
-                      showTooltip="drag"
-                      tooltipPosition="bottom"
-                      v-model="valueSlid" />
-                </div>
-              </b-row>
-            </b-card>
+                  {{ optionSpeaker }}
+                </b-form-select-option>
+              </b-form-select>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row xl='12'>
+          <b-col xl='12'>
+            <node-filter
+                @sliderValueChanged='handleSliderValue'
+                :available-metrics='availableMetrics'
+                :general-type='"speaker"'
+                :pane='queryPane'></node-filter>
           </b-col>
         </b-row>
         <b-row align-h='end' xl='12'>
@@ -139,11 +115,12 @@
 </template>
 
 <script>
-import Slider from '@vueform/slider/dist/slider.vue2.js';
+import NodeFilter from "@/components/NodeFilter";
+
 export default {
   props: ['isSidebar', 'pane', 'withLabels'],
   components: {
-      Slider,
+    NodeFilter
   },
   data() {
     return {
@@ -161,10 +138,8 @@ export default {
   },
   mounted() {
     let defaultParty = "SPÖ";
-    let defaultMetric = "Pagerank";
 
     let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty']('pane1');
-    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkSpeakerMetric']('pane1');
 
     if (!selectedParty) {
       this.selectedParty = defaultParty
@@ -172,17 +147,14 @@ export default {
       this.selectedParty = selectedParty;
     }
 
-    if (!selectedMetric.metric) {
-      this.selectedMetric = defaultMetric;
-    } else {
-      this.selectedMetric = selectedMetric.metric;
-    }
-
     this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
       this.selectedSpeaker = this.availableSpeakers[0];
     });
   },
   methods: {
+    handleSliderValue(values) {
+      this.$data.valueSlid=values
+    },
     changeSelectedPartyEvent(evt) {
       this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, event:evt}).then(() => {
         this.selectedSpeaker = this.availableSpeakers[0];
@@ -265,20 +237,6 @@ export default {
     availableMetrics: {
       get() {
         return this.$store.getters['main/availableMetrics'];
-      }
-    },
-    selectedMetric: {
-      get() {
-        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.queryPane);
-      },
-      set(val) {
-        if (val) {
-          this.$store.commit('main/changeSelectedSpeakerMetric', {
-            metric: val,
-            pane: this.queryPane
-          });
-          console.log('Set metric to: ' + val);
-        }
       }
     },
     selectedParty: {
