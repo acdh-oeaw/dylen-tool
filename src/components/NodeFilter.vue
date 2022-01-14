@@ -27,7 +27,7 @@
     </b-row>
     <b-row xl='12' class='mt-2'>
       <b-col xl=12 class='mtb-2' style='font-size:0.9em'>
-        % of nodes to display:
+        % of nodes to display: <b-badge variant="warning" style='font-size: 0.7em'>Use with caution</b-badge>
         <b-modal id='threshold' title='Node filter with threshold slider'>
           <alert-triangle-icon size="1.2x" class="custom-class" style='color:red'></alert-triangle-icon>
           General Network graphs consist of large number of nodes and edges. <br>
