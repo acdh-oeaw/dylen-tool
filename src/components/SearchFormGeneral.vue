@@ -36,61 +36,10 @@
       </b-row>
       <b-row xl='12'>
         <b-col xl='12'>
-          <b-card class='mt-0'>
-              <b-row xl='12'>
-                <b-col xl=12 class='mt-0 text-center' style='font-size:0.9em'>
-                  <h7>
-                    <info-icon size="1.2x" class="custom-class" style='color:red' v-b-modal.threshold></info-icon>
-                    <b> Node filter</b>
-                  </h7>
-                </b-col>
-              </b-row>
-              <b-row xl='12'>
-                <b-col xl=12 class='pt-2' style='font-size:0.9em'>
-                  Metric:
-                  <b-form-select
-                      size='sm'
-                      v-model='selectedMetric'
-                      :data-sauto-id="'selectGeneralMetric-'+this.pane"
-                  >
-                    <b-form-select-option
-                        v-for='option in availableMetrics'
-                        v-bind:key='option.id'
-                        v-bind:value='option'
-                        :data-sauto-id="'metricGeneralOption-' + option"
-                    >
-                      {{ option }}
-                    </b-form-select-option>
-                  </b-form-select>
-                </b-col>
-              </b-row>
-              <b-row xl='12' class='mt-2'>
-                <b-col xl=12 class='mtb-2' style='font-size:0.9em'>
-                  Threshold:
-                  <b-modal id='threshold' title='Node filter with threshold slider'>
-                    <alert-triangle-icon size="1.2x" class="custom-class" style='color:red'></alert-triangle-icon>
-                    General Network graphs consist of large number of nodes and edges. <br>
-                    Visualizing such large graphs can be computation intensive and depending on the computational resources,
-                    the visualization might take longer time or might freeze the browser. <br>
-                    <hr>
-                    The threshold slider lets you select which nodes you want to visualize. <br>
-                    For example, if you want to view top 10% nodes with the highest degress centrality,
-                    you should select 'degrees centrality' from the drop down selector and move the slider and select
-                    90 - 100%
-                  </b-modal>
-                </b-col>
-              </b-row>
-              <b-row xl='12'>
-                <b-col xl='12' class='mt-2 pb-4'>
-                  <Slider
-                      :format="sliderFormat"
-                      showTooltip="always"
-                      tooltipPosition="bottom"
-                      v-model="valueSlid"/>
-                </b-col>
-
-              </b-row>
-          </b-card>
+          <node-filter
+              @sliderValueChanged='handleSliderValue'
+              :available-metrics='availableMetrics'
+              :pane='queryPane'></node-filter>
         </b-col>
       </b-row>
       <b-row xl='12' class='mt-2'>
@@ -107,25 +56,22 @@
 </template>
 
 <script>
-import Slider from '@vueform/slider/dist/slider.vue2.js';
-import {InfoIcon, AlertTriangleIcon} from 'vue-feather-icons'
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
+import NodeFilter from "@/components/NodeFilter";
 
 export default {
   components: {
-    Slider, InfoIcon, AlertTriangleIcon, VisualizeButton, ResetButton
+    NodeFilter,
+    VisualizeButton, ResetButton
   },
   name: 'SearchFormGeneral',
   props: ['isSidebar', 'isVertical', 'pane', 'withLabels'],
   data() {
     return {
-      corpusEdit: false,
       valueSlid: [0, 20],
+      corpusEdit: false,
       isNetworkLoading: false,
-      sliderFormat: function (value) {
-        return `${Math.round(value)}%`
-      },
       subcorpusEdit: false,
       targetwordEdit: false,
       yearEdit: false
@@ -133,24 +79,19 @@ export default {
   },
   mounted() {
     let defaultParty = "ÖVP";
-    let defaultMetric = "Pagerank";
 
     let selectedParty = this.$store.getters['main/selectedGeneralNetworkParty']('pane1');
-    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkMetric']('pane1');
 
     if (selectedParty.party === "") {
       this.selectedParty = defaultParty;
     } else {
       this.selectedParty = selectedParty.party;
     }
-
-    if (selectedMetric.metric === "") {
-      this.selectedMetric = defaultMetric;
-    } else {
-      this.selectedMetric = selectedMetric.metric;
-    }
   },
   methods: {
+    handleSliderValue(values) {
+      this.$data.valueSlid=values
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadGeneralNetwork', {
@@ -217,20 +158,6 @@ export default {
     availableMetrics: {
       get() {
         return this.$store.getters['main/availableMetrics'];
-      }
-    },
-    selectedMetric: {
-      get() {
-        return this.$store.getters['main/selectedGeneralNetworkMetric'](this.queryPane);
-      },
-      set(val) {
-        if (val) {
-          this.$store.commit('main/changeSelectedMetric', {
-            metric: val,
-            pane: this.queryPane
-          });
-          console.log('Set metric to: ' + val);
-        }
       }
     },
     selectedParty: {
