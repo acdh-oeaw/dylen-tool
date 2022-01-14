@@ -16,34 +16,42 @@
             <b-col>
               <b-row>
                 <b-col v-if="type==='EgoNetwork'">
-                  <search-form
-                      :is-vertical='true'
-                      :with-labels='false'
-                      :pane="'pane' + 1"
-                      :is-sidebar='false'
-                      @visualizeClicked='validateFormVisibility'
-                  >
-                  </search-form>
+                  <b-card>
+                    <search-form
+                        :is-vertical='true'
+                        :with-labels='false'
+                        :pane="'pane' + 1"
+                        :is-sidebar='false'
+                        @visualizeClicked='validateFormVisibility'
+                    >
+                    </search-form>
+                  </b-card>
                 </b-col>
                 <b-col v-if="type==='GeneralNetworkNetwork'">
-                  <search-form-general
-                      :is-vertical='true'
-                      :with-labels='false'
-                      :pane="'pane' + 1"
-                      :is-sidebar='false'
-                      @visualizeClicked='validateFormVisibility'
-                  >
-                  </search-form-general>
+                  <b-card>
+                    <search-form-general
+                        :is-vertical='true'
+                        :with-labels='false'
+                        :pane="'pane' + 1"
+                        :is-sidebar='false'
+                        @visualizeClicked='validateFormVisibility'
+                    >
+                    </search-form-general>
+                  </b-card>
+
                 </b-col>
                 <b-col v-if="type==='GeneralNetworkSpeaker'">
-                  <search-form-general-speaker
-                      :is-vertical='true'
-                      :with-labels='false'
-                      :pane="'pane' + 1"
-                      :is-sidebar='false'
-                      @visualizeClicked='validateFormVisibility'
-                  >
-                  </search-form-general-speaker>
+                  <b-card>
+                    <search-form-general-speaker
+                        :is-vertical='true'
+                        :with-labels='false'
+                        :pane="'pane' + 1"
+                        :is-sidebar='false'
+                        @visualizeClicked='validateFormVisibility'
+                    >
+                    </search-form-general-speaker>
+                  </b-card>
+
                 </b-col>
               </b-row>
             </b-col>
@@ -79,30 +87,39 @@
             <b-col
                 xl='12'
                 v-if="secondFormVisibility && type==='EgoNetwork'">
-              <search-form
-                  :with-labels='false'
-                  :pane="'pane' + 2"
-                  :is-sidebar='false'
-              >
-              </search-form>
+              <b-card>
+                <search-form
+                    :with-labels='false'
+                    :pane="'pane' + 2"
+                    :is-sidebar='false'
+                >
+                </search-form>
+              </b-card>
+
             </b-col>
             <b-col
                 xl='12'
                 v-if="secondFormVisibility && type==='GeneralNetworkNetwork'">
-              <search-form-general
-                  :with-labels='false'
-                  :pane="'pane' + 2"
-                  :is-sidebar='false'
-              >
-              </search-form-general>
+              <b-card>
+                <search-form-general
+                    :with-labels='false'
+                    :pane="'pane' + 2"
+                    :is-sidebar='false'
+                >
+                </search-form-general>
+              </b-card>
+
             </b-col>
             <b-col v-if="secondFormVisibility && type==='GeneralNetworkSpeaker'">
-              <search-form-general-speaker
-                  :with-labels='false'
-                  :pane="'pane' + 2"
-                  :is-sidebar='false'
-              >
-              </search-form-general-speaker>
+              <b-card>
+                <search-form-general-speaker
+                    :with-labels='false'
+                    :pane="'pane' + 2"
+                    :is-sidebar='false'
+                >
+                </search-form-general-speaker>
+              </b-card>
+
             </b-col>
           </b-row>
         </b-col>
