@@ -145,6 +145,7 @@ const mainModule = {
           let party = partyMapping[state[pane].generalNetwork.selectedParty];
 
           try {
+              state[pane].busy = true;
               const availableYearsQuery = getAvailableYearsForParty(party);
               const yearsResponse = await axios.post(graphqlEndpoint, availableYearsQuery);
               let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
@@ -165,9 +166,11 @@ const mainModule = {
               };
 
               this.commit('main/addGeneralNetwork', payload);
+              state[pane].busy = false;
               logger.log('General Network loaded successfully.');
           } catch (error) {
               logger.error(error);
+              state[pane].busy = false;
           }
         },
         async loadGeneralSpeakerNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
