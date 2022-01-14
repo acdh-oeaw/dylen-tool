@@ -15,7 +15,7 @@
                 id='select-party-group-viz'
                 label='Party: '
                 label-size='sm'
-                label-cols-xl='2'
+                label-cols-xl='3'
             >
               <b-form-select
                   size='sm'
@@ -46,7 +46,7 @@
                 </b-col>
               </b-row>
               <b-row xl='12'>
-                <b-col xl=12 class='mb-2' style='font-size:0.9em'>
+                <b-col xl=12 class='pt-2' style='font-size:0.9em'>
                   Metric:
                   <b-form-select
                       size='sm'
@@ -81,7 +81,7 @@
                 </b-col>
               </b-row>
               <b-row xl='12'>
-                <b-col xl='12' class='mt-2'>
+                <b-col xl='12' class='mt-2 pb-4'>
                   <Slider
                       :format="sliderFormat"
                       showTooltip="always"
