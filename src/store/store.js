@@ -187,6 +187,8 @@ const mainModule = {
           let speaker = state[pane].generalNetworkSpeaker.selectedSpeaker;
 
           try {
+              state[pane].busy = true;
+
               const yearResponse = await axios.post(graphqlEndpoint, getMetadataSpeaker(speaker));
               let possibleYears = yearResponse.data.data.getAvailableYearsForSpeaker.available_years.sort();
               let maxYear = Math.max(...possibleYears.map(Number));
@@ -206,8 +208,12 @@ const mainModule = {
               };
 
               this.commit('main/addGeneralSpeakerNetwork', payload);
+              state[pane].busy = false;
+
               logger.log('General Speaker Network loaded successfully.');
           } catch (error) {
+              state[pane].busy = false;
+
               logger.error(error);
           }
         },
