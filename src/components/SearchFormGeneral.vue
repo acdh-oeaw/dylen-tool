@@ -1,17 +1,17 @@
 <template>
   <b-form @submit='onSubmit'>
     <b-row
-        text-center
-        v-if='isVertical'
-        xl='12'
-    >
-      <b-col xl='12' class='mlr-0'>
-        <b-row
-            class='mt-2 mlr-0 plr-0'
-            xl='12'
-        >
-          <b-col>
-            <b-form-group
+      text-center
+      xl='12'>
+      <b-col
+          xl='12'
+          class='mlr-0'>
+          <b-row
+              xl='12'
+              class='mt-2 mlr-0 plr-0'
+          >
+            <b-col>
+              <b-form-group
                 id='select-party-group-viz'
                 label='Party: '
                 label-size='sm'
@@ -66,7 +66,7 @@ export default {
     VisualizeButton, ResetButton
   },
   name: 'SearchFormGeneral',
-  props: ['isSidebar', 'isVertical', 'pane', 'withLabels'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       valueSlid: [0, 20],
@@ -80,7 +80,7 @@ export default {
   mounted() {
     let defaultParty = "ÖVP";
 
-    let selectedParty = this.$store.getters['main/selectedGeneralNetworkParty']('pane1');
+    let selectedParty = this.$store.getters['main/selectedGeneralNetworkParty'](this.pane);
 
     if (selectedParty.party === "") {
       this.selectedParty = defaultParty;
@@ -96,9 +96,14 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('main/loadGeneralNetwork', {
         pane: this.queryPane,
-        sliderMin: this.$data.valueSlid[0] / 100,
-        sliderMax: this.$data.valueSlid[1] / 100,
-      })
+        sliderMin: this.$data.valueSlid[0]/100,
+        sliderMax: this.$data.valueSlid[1]/100,
+      }).then(() => {
+        this.isNetworkLoading = false;
+        this.$emit('visualizeClicked')
+      }).finally(() => {
+        this.isNetworkLoading = false;
+      });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
     },
     findSearchTermInAvailableTargetwords() {

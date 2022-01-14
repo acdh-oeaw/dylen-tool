@@ -132,6 +132,7 @@ export default {
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
         this.isNetworkLoading = false;
+        this.$emit('visualizeClicked')
       }).finally(() => {
         this.isNetworkLoading = false;
       });

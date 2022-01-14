@@ -29,6 +29,7 @@ import {
     getMetadataSpeaker
 } from '@/queries/queries';
 import { ExportToCsv } from 'export-to-csv';
+import {speakers_not_fount} from "@/helpers/speakers_not_found";
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
@@ -91,8 +92,10 @@ const mainModule = {
 
           const response = await axios.post(graphqlEndpoint, getSpeakersForParty(party));
           const speakerResponse = response.data.data.findSpeakerByParty;
+          let not_found = speakers_not_fount[party]
 
-          this.commit('main/changeAvailableSpeakers', {speakers: speakerResponse.speakers.sort(), pane: payload.pane});
+          let speakers = speakerResponse.speakers.filter(s => !not_found.includes(s))
+          this.commit('main/changeAvailableSpeakers', {speakers: speakers.sort(), pane: payload.pane});
         },
         async loadSources({ state }) {
             for (const corpus of state.availableCorpora) {
