@@ -16,7 +16,7 @@
             <b-col>
               <b-row>
                 <b-col v-if="type==='EgoNetwork'">
-                  <b-card>
+                  <b-card class='mt-2'>
                     <search-form
                         :is-vertical='true'
                         :with-labels='false'
@@ -28,7 +28,7 @@
                   </b-card>
                 </b-col>
                 <b-col v-if="type==='GeneralNetworkNetwork'">
-                  <b-card>
+                  <b-card class='mt-2'>
                     <search-form-general
                         :is-vertical='true'
                         :with-labels='false'
@@ -40,7 +40,7 @@
                   </b-card>
 
                 </b-col>
-                <b-col v-if="type==='GeneralNetworkSpeaker'">
+                <b-col v-if="type==='GeneralNetworkSpeaker'" class='mt-2'>
                   <b-card>
                     <search-form-general-speaker
                         :is-vertical='true'
