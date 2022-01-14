@@ -21,6 +21,7 @@
                       :with-labels='false'
                       :pane="'pane' + 1"
                       :is-sidebar='false'
+                      @visualizeClicked='validateFormVisibility'
                   >
                   </search-form>
                 </b-col>
@@ -30,6 +31,7 @@
                       :with-labels='false'
                       :pane="'pane' + 1"
                       :is-sidebar='false'
+                      @visualizeClicked='validateFormVisibility'
                   >
                   </search-form-general>
                 </b-col>
@@ -39,6 +41,7 @@
                       :with-labels='false'
                       :pane="'pane' + 1"
                       :is-sidebar='false'
+                      @visualizeClicked='validateFormVisibility'
                   >
                   </search-form-general-speaker>
                 </b-col>
@@ -55,47 +58,51 @@
             align-self='stretch'
         >
           <b-row
+              xl='12'
               class='h-100'
               align-v='center'
           >
-            <b-col v-if='!showSecondForm'>
+            <b-col
+                xl='12'
+                v-if='!secondFormVisibility'>
               <b-button
                   pill
                   data-sauto-id='second-query-button'
                   size='sm'
                   variant='secondary'
-                  v-if='showSecondButton'
+                  v-if='secondFormVisibility'
                   v-on:click='queryButtonClicked(2)'
               >
                 <b>New Query</b>
               </b-button>
             </b-col>
-            <b-col v-if="showSecondForm && type==='EgoNetwork'">
+            <b-col
+                xl='12'
+                v-if="secondFormVisibility && type==='EgoNetwork'">
               <search-form
-                  :is-vertical='true'
                   :with-labels='false'
                   :pane="'pane' + 2"
                   :is-sidebar='false'
               >
               </search-form>
             </b-col>
-            <b-col v-if="showSecondForm && type==='GeneralNetworkNetwork'">
+            <b-col
+                xl='12'
+                v-if="secondFormVisibility && type==='GeneralNetworkNetwork'">
               <search-form-general
-                  :is-vertical='true'
                   :with-labels='false'
                   :pane="'pane' + 2"
                   :is-sidebar='false'
               >
               </search-form-general>
             </b-col>
-            <b-col v-if="showSecondForm && type==='GeneralNetworkSpeaker'">
+            <b-col v-if="secondFormVisibility && type==='GeneralNetworkSpeaker'">
               <search-form-general-speaker
-                  :is-vertical='true'
                   :with-labels='false'
                   :pane="'pane' + 2"
                   :is-sidebar='false'
               >
-            </search-form-general-speaker>
+              </search-form-general-speaker>
             </b-col>
           </b-row>
         </b-col>
@@ -122,38 +129,38 @@ export default {
     return {
       firstForm: true,
       secondForm: false,
-      showInfoButton: false,
     };
   },
-  computed: {
-    showSecondButton() {
+  mounted() {
+    this.$root.$on('visualizeClicked', () => {
       let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
-      return numberOfVisualisedNetworks > 0;
-
-    },
-    showSecondForm() {
-      return this.$store.getters['main/secondFormVisibility']
-    },
+      if(numberOfVisualisedNetworks > 0) {
+        this.secondForm = true
+      }
+    })
+  },
+  computed: {
     type() {
       return this.$store.getters['main/topNav'].networkType;
+    },
+    secondFormVisibility() {
+      return this.secondForm
     }
+
   },
   methods: {
+    validateFormVisibility() {
+      let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
+      if(numberOfVisualisedNetworks > 0) {
+        this.secondForm = true
+      }
+    },
     queryButtonClicked(button) {
       if (button === 1) {
         this.firstForm = true;
       } else if (button === 2) {
-        this.$store.commit('main/changeSecondFormVisibility', {
-          pane: 'pane2'
-        })
+        this.secondForm = true;
       }
-    },
-    toggleSideBar() {
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
-    },
-    updateShowInfo() {
-      this.$store.commit('main/setShowInfo', {showInfo: !this.$store.state.main.showInfo});
     }
   }
 }

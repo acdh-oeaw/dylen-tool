@@ -2,7 +2,6 @@
   <b-form @submit='onSubmit'>
     <b-row
       text-center
-      v-if='isVertical'
       xl='12'>
       <b-col xl='12'>
         <b-col xl='12'>
@@ -119,7 +118,7 @@ export default {
       Slider,
   },
   name: 'SearchFormGeneral',
-  props: ['isSidebar', 'isVertical', 'pane', 'withLabels'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,
@@ -137,8 +136,8 @@ export default {
     let defaultParty = "ÖVP";
     let defaultMetric = "Pagerank";
 
-    let selectedParty = this.$store.getters['main/selectedGeneralNetworkParty']('pane1');
-    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkMetric']('pane1');
+    let selectedParty = this.$store.getters['main/selectedGeneralNetworkParty'](this.pane);
+    let selectedMetric = this.$store.getters['main/selectedGeneralNetworkMetric'](this.pane);
 
     if (selectedParty.party === "") {
       this.selectedParty = defaultParty;
@@ -162,6 +161,7 @@ export default {
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
         this.isNetworkLoading = false;
+        this.$emit('visualizeClicked')
       }).finally(() => {
         this.isNetworkLoading = false;
       });

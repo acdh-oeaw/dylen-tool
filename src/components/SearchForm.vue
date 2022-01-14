@@ -2,7 +2,6 @@
   <b-form @submit='onSubmit'>
     <b-row
         text-center
-        v-if='isVertical'
         xl='12'>
       <b-col xl='12'>
         <b-row xl='12'>
@@ -120,7 +119,7 @@ import VisualizeButton from "@/components/VisualizeButton";
 export default {
   name: 'SearchForm',
   components: {VisualizeButton},
-  props: ['isVertical', 'isSidebar', 'pane', 'withLabels'],
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,
@@ -163,7 +162,9 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
+      this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
+        this.$emit('visualizeClicked')
+      });
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
       let settingsComponent = this.$store.getters['main/activeSettings']
       if (!settingsComponent) {
@@ -207,9 +208,6 @@ export default {
       });
       this.$store.commit('main/resetSelectedNetwork', {
         network: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSecondFormVisibility', {
         pane: this.queryPane
       });
       this.$store.commit('main/resetTimeSeries', {

@@ -504,6 +504,8 @@ const mainModule = {
     pane2: {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
+      generalNetwork: { selectedParty: {party: ''}, selectedMetric: {metric: ''}},
+      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}},
       selectedMetric: {metric: ''},
       selectedParty: {party: ''},
       selectedSpeaker: {speaker: ''},
