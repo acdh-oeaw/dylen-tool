@@ -104,6 +104,9 @@ export default {
     this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
       this.selectedSpeaker = this.availableSpeakers[0];
     });
+    this.$root.$on('networkTypeChanged', () => {
+      this.initialize()
+    })
   },
   methods: {
     checkSelectedParty(party) {

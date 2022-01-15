@@ -78,6 +78,9 @@ export default {
     };
   },
   mounted() {
+    this.$root.$on('networkTypeChanged', () => {
+      this.initialize()
+    })
   },
   methods: {
     handleSliderValue(values) {

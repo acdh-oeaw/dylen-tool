@@ -119,7 +119,11 @@ export default {
       searchTermSelected: false
     };
   },
-  mounted() {},
+  mounted() {
+    this.$root.$on('networkTypeChanged', () => {
+      this.initialize()
+    })
+  },
   methods: {
     checkInvalidChars(val) {
       let invalidChars = []

@@ -77,6 +77,7 @@ export default {
       this.$store.commit('main/changeTopNavType', {
         networkType: event
       });
+      this.$root.$emit('networkTypeChanged', event)
     },
     toggleSideBar() {
       this.$parent.$refs.sidebar.classList.toggle('collapsed');
