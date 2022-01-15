@@ -83,7 +83,11 @@
           <b-col xl='12'>
               <b-row xl='12' v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
                 <b-col xl='12'>
-                  <b-card header='Ego network options'>
+                  <b-card
+                      header='Ego network options'
+                      header-bg-variant='info'
+                      header-text-variant='white'
+                  >
                     <h6 class='mt-3'>Part-of-speech colors</h6>
                     <b-row
                         v-for='key in Object.keys(posColors)'
@@ -107,7 +111,11 @@
               </b-row>
               <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
                 <b-col>
-                  <b-card  header='Node label options'>
+                  <b-card
+                      header='Node label options'
+                      header-bg-variant='info'
+                      header-text-variant='white'
+                  >
                     <b-row class='pt-3'>
                       <b-col xl='6' class='text-right'>Font size </b-col>
                       <b-col>
@@ -148,7 +156,11 @@
               </b-row>
               <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
                 <b-col>
-                  <b-card header='Link options'>
+                  <b-card
+                      header='Link options'
+                      header-bg-variant='info'
+                      header-text-variant='white'
+                  >
                     <b-row class='pt-3'>
                       <b-col xl='6' class='text-right'>Opacity: {{ linkOptions.opacity }}</b-col>
                       <b-col>
@@ -169,8 +181,11 @@
               </b-row>
               <b-row v-if='activeSettings === "nodeMetrics" || activeSettings === "all"'>
                 <b-col>
-                  <b-card>
-                    <h4 class='mt-3'><u>Table options</u></h4>
+                  <b-card
+                      header='Table options'
+                      header-bg-variant='info'
+                      header-text-variant='white'
+                  >
                     <b-row class='pt-3'>
                       <b-col xl='7' class='text-right'>
                         Number of digits to display:
@@ -204,30 +219,37 @@
                   </b-card>
                 </b-col>
               </b-row>
-            <h4 class="mt-3"><u>Parallel coordinates options</u></h4>
-            <b-row class='pt-3'>
-              <b>Axes to display (drag to reorder): </b>
-              <draggable
-                  :list="selectedMetrics"
-                  @start="drag=true"
-                  @end="drag=false"
-                  class="list-group w-100"
-                  :disabled="false"
-              >
-                <div
-                    class="list-group-item w-100"
-                    v-for="element in selectedMetrics"
-                    :key="element.name"
-                >{{camelCaseToSpaces(element.name)}}
-                  <b-form-checkbox
-                      v-model="element.enabled"
-                      switch
+              <b-row>
+                <b-col>
+                  <b-card
+                      header='Parallel coordinates options'
+                      header-bg-variant='info'
+                      header-text-variant='white'
                   >
-                    {{element.enabled ? "Enabled" : "Disabled"}}
-                  </b-form-checkbox>
-                </div>
-              </draggable>
-            </b-row>
+                    <b-row>Axes to display (drag to reorder):</b-row>
+                    <draggable
+                        :list="selectedMetrics"
+                        @start="drag=true"
+                        @end="drag=false"
+                        class="list-group w-100"
+                        :disabled="false"
+                    >
+                      <div
+                          class="list-group-item w-100"
+                          v-for="element in selectedMetrics"
+                          :key="element.name"
+                      >{{camelCaseToSpaces(element.name)}}
+                        <b-form-checkbox
+                            v-model="element.enabled"
+                            switch
+                        >
+                          {{element.enabled ? "Enabled" : "Disabled"}}
+                        </b-form-checkbox>
+                      </div>
+                    </draggable>
+                  </b-card>
+                </b-col>
+              </b-row>
           </b-col>
         </b-row>
 
