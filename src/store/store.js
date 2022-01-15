@@ -160,6 +160,11 @@ const mainModule = {
 
               let network = response.data.data.getGeneralSourceByPartyYear.networks;
 
+              network.nodes.forEach(node => node["normalisedFrequency"] = node.normalised_frequency);
+              network.nodes.forEach(node => node["absoluteFrequency"] = node.absolute_frequency);
+              network.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
+              network.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
+
               assignValuesFromState(network, networkID, years);
               filterBasedOnSlider(network);
 

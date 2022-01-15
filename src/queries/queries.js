@@ -81,7 +81,7 @@ export function getGeneralNetworkQuery(entity, year) {
             text
             pos
             absolute_frequency
-            normalized_frequency
+            normalised_frequency
             metrics {
               degree_centrality
               closeness_centrality
