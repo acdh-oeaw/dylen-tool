@@ -20,7 +20,7 @@ export function camelToSnake (str){
   );
 }
 export function snakeToCamel (str){
-  return str.toLowerCase().replace(/([-_][a-z])/g, group =>
+  return str.replace(/([-_][a-z])/g, group =>
   group
     .toUpperCase()
     .replace('-', '')

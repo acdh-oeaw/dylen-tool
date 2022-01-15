@@ -312,15 +312,6 @@ export default {
       return this.$store.getters['main/parallelCoordinateMetrics']
         .filter((m) => m.enabled)
         .map((m) => m.name);
-      /* return [
-        ...new Set(
-          [
-            this.allNodes
-              .map((n) => Object.keys(n._metrics).slice(0, -1))
-              .flat()
-          ].flat()
-        )
-      ]; */
     },
     scaleY() {
       let scale = {};
@@ -442,7 +433,7 @@ export default {
   methods: {
     generateLine(node) {
       let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
-      //console.log(node, data);
+      console.log(node, data);
       return this.lineGenerator(data);
     },
 

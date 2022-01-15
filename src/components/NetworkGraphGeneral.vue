@@ -208,6 +208,7 @@ export default {
         for (const node of network.nodes) {
           let camelMetrics = {};
           for (let key in node.metrics)
+            //TODO: Not the right place to change this.. change it when it gets loaded from the backend
             camelMetrics[snakeToCamel(key)] = node.metrics[key];
           nodes.push({
             id: network.id + '_' + node.id,

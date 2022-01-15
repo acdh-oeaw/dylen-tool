@@ -259,7 +259,7 @@ const mainModule = {
               getNetworkQuery(state[pane].selectedTargetword.id, year_param));
             const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
             let network = response.data.data.getNetwork;
-            network.nodes.forEach(node => node.metrics["normalizedFrequency"] = node.normalisedFrequency);
+            network.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
             network.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
             assignValuesFromState(network, networkID);
 
@@ -293,7 +293,7 @@ const mainModule = {
             updatedNetwork.possibleYears = oldNetwork.possibleYears;
             updatedNetwork.pos = oldNetwork.pos;
             updatedNetwork.type = oldNetwork.type;
-            updatedNetwork.nodes.forEach(node => node.metrics["normalizedFrequency"] = node.normalisedFrequency);
+            updatedNetwork.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
             updatedNetwork.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
             logger.log('Ego Network %s updated successfully.', networkID);
 
@@ -578,7 +578,7 @@ const mainModule = {
       'Pagerank', 'Load Centrality', 'Harmonic Centrality', 'Clustering Coefficient'],
     availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS'],
     parallelCoordinateMetrics: [
-      {name: "normalizedFrequency", enabled: true},
+      {name: "normalisedFrequency", enabled: true},
       {name: "degreeCentrality", enabled: true},
       {name: "betweennessCentrality", enabled: true},
       {name: "pagerank", enabled: true},
