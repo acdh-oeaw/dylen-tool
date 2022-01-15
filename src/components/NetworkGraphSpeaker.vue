@@ -6,65 +6,62 @@
     style='background-color: white'
     v-if='speakerNetwork'
   >
-    <b-row class='h-10'>
-      <b-col>
-        <span><b>{{ speakerNetwork.party }} / {{ speakerNetwork.speaker }}</b></span>
-      </b-col>
-    </b-row>
-    <b-row class='h-20 pb-2'>
-      <!--      <b-col xl='2'></b-col>-->
-      <b-col
-        class='pl-5 year-slider-row'
-        data-sauto-id='ignore'
-      >
-        <div
-          ref='sliderDiv'
-          class='pl-2'
+    <b-overlay :show='isNetworkLoading' rounded='lg'>
+      <b-row class='h-10'>
+        <b-col>
+          <span><b>{{ speakerNetwork.party }} / {{ speakerNetwork.speaker }}</b></span>
+        </b-col>
+      </b-row>
+      <b-row class='h-20 pb-2'>
+        <!--      <b-col xl='2'></b-col>-->
+        <b-col
+            class='pl-5 year-slider-row'
+            data-sauto-id='ignore'
         >
-          <vue-slider
-            ref='slider'
-            v-model='speakerNetwork.year'
-            v-bind='sliderOptions'
-            :min='speakerNetwork.possibleYears[0]'
-            :max='speakerNetwork.possibleYears[speakerNetwork.possibleYears.length - 1]'
-            :data='speakerNetwork.possibleYears'
-            :process='false'
-            :lazy='true'
-            :adsorb='true'
-            :duration='0.3'
-            v-on:change='handleChange'
-            :marks='speakerNetwork.possibleYears'
-            :tooltip="'none'"
-          />
-        </div>
-      </b-col>
-    </b-row>
-    <b-row
-      lg='12'
-      class='pt-2 h-70'
-      v-bind='speakerNetwork'
-      :key='speakerNetwork.id'
-      data-sauto-id='ignore'
-    >
-      <b-col>
-        <div v-if="isNetworkLoading">
-          <b-spinner
-            small
-            type="grow"
-          ></b-spinner>
-        </div>
-        <div v-if="!isNetworkLoading">
-          <d3-network
-            ref='egoChart'
-            class='network-wrapper'
-            :net-nodes='speakerNetwork.nodes'
-            :net-links='speakerNetwork.links'
-            :options='options'
-            :pane='this.pane'
-          />
-        </div>
-      </b-col>
-    </b-row>
+          <div
+              ref='sliderDiv'
+              class='pl-2'
+          >
+            <vue-slider
+                ref='slider'
+                v-model='speakerNetwork.year'
+                v-bind='sliderOptions'
+                :min='speakerNetwork.possibleYears[0]'
+                :max='speakerNetwork.possibleYears[speakerNetwork.possibleYears.length - 1]'
+                :data='speakerNetwork.possibleYears'
+                :process='false'
+                :lazy='true'
+                :adsorb='true'
+                :duration='0.3'
+                v-on:change='handleChange'
+                :marks='speakerNetwork.possibleYears'
+                :tooltip="'none'"
+            />
+          </div>
+        </b-col>
+      </b-row>
+      <b-row
+          lg='12'
+          class='pt-2 h-70'
+          v-bind='speakerNetwork'
+          :key='speakerNetwork.id'
+          data-sauto-id='ignore'
+      >
+        <b-col>
+          <div>
+            <d3-network
+                ref='egoChart'
+                class='network-wrapper'
+                :net-nodes='speakerNetwork.nodes'
+                :net-links='speakerNetwork.links'
+                :options='options'
+                :pane='this.pane'
+            />
+          </div>
+        </b-col>
+      </b-row>
+    </b-overlay>
+
   </b-container>
 </template>
 <!--v-on:change='updateNetwork(speakerNetwork)'-->

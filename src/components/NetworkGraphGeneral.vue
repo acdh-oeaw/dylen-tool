@@ -6,65 +6,62 @@
     style='background-color: white'
     v-if='generalNetwork'
   >
-    <b-row class='h-10'>
-      <b-col>
-        <span><b>{{ generalNetwork.party }}</b></span>
-      </b-col>
-    </b-row>
-    <b-row class='h-20 pb-2'>
-      <!--      <b-col xl='2'></b-col>-->
-      <b-col
-        class='pl-5 year-slider-row'
-        data-sauto-id='ignore'
+    <b-overlay :show="isNetworkLoading" rounded="sm">
+      <b-row class='h-10'>
+        <b-col>
+          <span><b>{{ generalNetwork.party }}</b></span>
+        </b-col>
+      </b-row>
+      <b-row class='h-20 pb-2'>
+        <!--      <b-col xl='2'></b-col>-->
+        <b-col
+            class='pl-5 year-slider-row'
+            data-sauto-id='ignore'
+        >
+          <div
+              ref='sliderDiv'
+              class='pl-2'
+          >
+            <vue-slider
+                ref='slider'
+                v-model='generalNetwork.year'
+                v-bind='sliderOptions'
+                :min='generalNetwork.possibleYears[0]'
+                :max='generalNetwork.possibleYears[generalNetwork.possibleYears.length - 1]'
+                :data='generalNetwork.possibleYears'
+                :process='false'
+                :lazy='true'
+                :adsorb='true'
+                :duration='0.3'
+                v-on:change='handleYearChange'
+                :marks='generalNetwork.possibleYears'
+                :tooltip="'none'"
+            />
+          </div>
+        </b-col>
+      </b-row>
+      <b-row
+          lg='12'
+          class='pt-2 h-70'
+          v-bind='generalNetwork'
+          :key='generalNetwork.id'
+          data-sauto-id='ignore'
       >
-        <div
-          ref='sliderDiv'
-          class='pl-2'
-        >
-          <vue-slider
-            ref='slider'
-            v-model='generalNetwork.year'
-            v-bind='sliderOptions'
-            :min='generalNetwork.possibleYears[0]'
-            :max='generalNetwork.possibleYears[generalNetwork.possibleYears.length - 1]'
-            :data='generalNetwork.possibleYears'
-            :process='false'
-            :lazy='true'
-            :adsorb='true'
-            :duration='0.3'
-            v-on:change='handleYearChange'
-            :marks='generalNetwork.possibleYears'
-            :tooltip="'none'"
-          />
-        </div>
-      </b-col>
-    </b-row>
-    <b-row
-      lg='12'
-      class='pt-2 h-70'
-      v-bind='generalNetwork'
-      :key='generalNetwork.id'
-      data-sauto-id='ignore'
-    >
-      <b-col>
-        <div
-          v-if="isNetworkLoading"
-          class="text-center"
-        >
-          <b-spinner />
-        </div>
-        <div v-if="!isNetworkLoading">
-          <d3-network
-            ref='egoChart'
-            class='network-wrapper'
-            :net-nodes='generalNetwork.nodes'
-            :net-links='generalNetwork.links'
-            :options='options'
-            :pane='this.pane'
-          />
-        </div>
-      </b-col>
-    </b-row>
+        <b-col>
+          <div>
+            <d3-network
+                ref='egoChart'
+                class='network-wrapper'
+                :net-nodes='generalNetwork.nodes'
+                :net-links='generalNetwork.links'
+                :options='options'
+                :pane='this.pane'
+            />
+          </div>
+        </b-col>
+      </b-row>
+    </b-overlay>
+
   </b-container>
 </template>
 <!--v-on:change='updateNetwork(generalNetwork)'-->
