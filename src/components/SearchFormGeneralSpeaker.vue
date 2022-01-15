@@ -87,7 +87,6 @@ export default {
   },
   data() {
     return {
-      defaultParty: "SPÖ",
       corpusEdit: false,
       isNetworkLoading: false,
       slider: 1,
@@ -100,7 +99,7 @@ export default {
   mounted() {
     let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane);
 
-    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : this.$data.defaultParty
+    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : "ÖVP"
 
     this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
       this.selectedSpeaker = this.availableSpeakers[0];
@@ -136,14 +135,14 @@ export default {
     },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {
-        party: this.$data.defaultParty,
+        party: "ÖVP",
         pane: this.queryPane
       });
       this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.defaultParty}).then(() => {
         this.selectedSpeaker = this.availableSpeakers[0];
       });
       this.$store.commit('main/changeSelectedSpeakerMetric', {
-        metric: null,
+        metric: "Degree Centrality",
         pane: this.queryPane
       });
       this.$store.commit('main/resetSelectedNetwork', {
