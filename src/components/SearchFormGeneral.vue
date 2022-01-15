@@ -99,7 +99,10 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {
+        pane: this.queryPane,
+        party: this.selectedParty
+      });
     },
     initialize() {
       this.selectedParty = "ÖVP"

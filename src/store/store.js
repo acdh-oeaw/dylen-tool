@@ -437,10 +437,11 @@ const mainModule = {
               logger.error(error);
           }
         },
-        async loadGeneralTimeSeriesData({state}, pane) {
+        async loadGeneralTimeSeriesData(state, payload) {
+          let party_converted = partyMapping[payload.party]
           try {
               const response = await axios.post(graphqlEndpoint,
-                  getGeneralNetworkTimeSeries(partyMapping[state[pane].generalNetwork.selectedParty]));
+                  getGeneralNetworkTimeSeries(party_converted));
               let timeSeries = response.data.data.getAvailableYearsForParty || {};
               let years = response.data.data.getAvailableYearsForParty.available_years.sort();
 
@@ -450,12 +451,12 @@ const mainModule = {
                 "jaccardSimilarity": timeSeries.jaccard_similarity
               }, years);
 
-              const payload = {
-                  pane: pane,
+              const add_payload = {
+                  pane: payload.pane,
                   data: data
               };
 
-              this.commit('main/addGeneralTimeSeriesData', payload);
+              this.commit('main/addGeneralTimeSeriesData', add_payload);
               logger.log('General Network loaded successfully.');
           } catch (error) {
               logger.error(error);
