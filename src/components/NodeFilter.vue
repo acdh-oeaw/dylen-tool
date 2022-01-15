@@ -26,10 +26,29 @@
       </b-col>
     </b-row>
     <b-row xl='12' class='mt-2'>
-      <b-col xl=12 class='mtb-2' style='font-size:0.9em'>
-        % of nodes to display: <b-badge variant="warning" style='font-size: 0.7em'>Use with caution</b-badge>
+      <b-col xl=12 class='mt-3 mb-2' style='font-size:0.9em'>
+        % of nodes to display:
+        <b-row xl='12'>
+          <b-col
+            xl='12'
+            class='text-center'
+          >
+            <b-badge
+                variant="warning"
+                style='font-size: 0.7em'
+            >Use with caution</b-badge>
+          </b-col>
+        </b-row>
+
         <b-modal id='threshold' title='Node filter with threshold slider'>
-          <alert-triangle-icon size="1.2x" class="custom-class" style='color:red'></alert-triangle-icon>
+          <b-row xl='12'>
+            <b-col
+              xl='12'
+              class='text-center'
+            >
+              <alert-triangle-icon size="2x" class="custom-class" style='color: #E2CD0D'></alert-triangle-icon> Caution<br>
+            </b-col>
+          </b-row>
           General Network graphs consist of large number of nodes and edges. <br>
           Visualizing such large graphs can be computation intensive and depending on the computational resources,
           the visualization might take longer time or might freeze the browser. <br>
@@ -73,7 +92,6 @@ export default {
   },
   mounted() {
     let defaultMetric = "Pagerank";
-
 
     let selectedMetric = this.getMetricByType(this.generalType);
 

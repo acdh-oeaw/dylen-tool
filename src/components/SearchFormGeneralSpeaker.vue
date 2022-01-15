@@ -81,40 +81,36 @@ import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
 
 export default {
-  props: ['isSidebar', 'pane', 'withLabels'],
+  props: ['pane'],
   components: {
     NodeFilter, VisualizeButton, ResetButton
   },
   data() {
     return {
+      defaultParty: "SPÖ",
       corpusEdit: false,
       isNetworkLoading: false,
       slider: 1,
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
       },
-      subcorpusEdit: false,
-      valueSlid: [0, 20],
-      targetwordEdit: false,
-      yearEdit: false
+      valueSlid: [0, 20]
     };
   },
   mounted() {
-    let defaultParty = "SPÖ";
+    let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane);
 
-    let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty']('pane1');
-
-    if (!selectedParty) {
-      this.selectedParty = defaultParty
-    } else {
-      this.selectedParty = selectedParty;
-    }
+    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : this.$data.defaultParty
 
     this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
       this.selectedSpeaker = this.availableSpeakers[0];
     });
   },
   methods: {
+    checkSelectedParty(party) {
+      if(party) return true
+      return false
+    },
     handleSliderValue(values) {
       this.$data.valueSlid=values
     },
@@ -138,25 +134,16 @@ export default {
       });
       this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
     },
-    setShowInfo() {
-      this.$emit('showInfoButton', true);
-      this.$store.commit('main/setShowInfo', { showInfo: false });
-    },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {
-        party: null,
+        party: this.$data.defaultParty,
         pane: this.queryPane
+      });
+      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.defaultParty}).then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
       });
       this.$store.commit('main/changeSelectedSpeakerMetric', {
         metric: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeAvailableSpeakers', {
-        speakers: [],
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSelectedSpeaker', {
-        speaker: null,
         pane: this.queryPane
       });
       this.$store.commit('main/resetSelectedNetwork', {
@@ -235,18 +222,6 @@ export default {
             pane: this.queryPane
           });
         }
-      }
-    },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane
-          });
       }
     }
   },
