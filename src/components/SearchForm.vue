@@ -93,19 +93,7 @@
             <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
           </b-col>
           <b-col xl='6'>
-            <b-button
-                block
-                class='reset-button query-bar-button'
-                size='sm'
-                variant='danger'
-                type='reset'
-                :data-sauto-id='"resetQueryButton-"+this.pane'
-                @click='initialize'
-                v-b-tooltip.hover
-                title="Reset query"
-            >
-              Reset
-            </b-button>
+            <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
           </b-col>
 
         </b-row>
@@ -116,9 +104,11 @@
 
 <script>
 import VisualizeButton from "@/components/VisualizeButton";
+import ResetButton from "@/components/ResetButton";
+
 export default {
   name: 'SearchForm',
-  components: {VisualizeButton},
+  components: {ResetButton, VisualizeButton},
   props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
@@ -348,11 +338,5 @@ export default {
 <style scoped>
 .align-end {
   text-align: end;
-}
-.reset-button {
-  border: none;
-  color: red;
-  background-color: white;
-  border-color: white;
 }
 </style>

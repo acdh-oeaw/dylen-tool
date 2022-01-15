@@ -135,7 +135,7 @@ const mainModule = {
             logger.error(error);
           }
         },
-        async loadGeneralNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
+        async loadGeneralNetwork({state}, {pane: pane, party: party_orig, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, years) {
             network.id = networkID;
             network.filter = {metric: state[pane].generalNetwork.selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
@@ -145,9 +145,10 @@ const mainModule = {
             network.type = 'Party';
           }
 
-          let party = partyMapping[state[pane].generalNetwork.selectedParty];
+          let party = partyMapping[party_orig];
 
           try {
+              state[pane].busy = true;
               const availableYearsQuery = getAvailableYearsForParty(party);
               const yearsResponse = await axios.post(graphqlEndpoint, availableYearsQuery);
               let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
@@ -168,9 +169,11 @@ const mainModule = {
               };
 
               this.commit('main/addGeneralNetwork', payload);
+              state[pane].busy = false;
               logger.log('General Network loaded successfully.');
           } catch (error) {
               logger.error(error);
+              state[pane].busy = false;
           }
         },
         async loadGeneralSpeakerNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
@@ -187,6 +190,8 @@ const mainModule = {
           let speaker = state[pane].generalNetworkSpeaker.selectedSpeaker;
 
           try {
+              state[pane].busy = true;
+
               const yearResponse = await axios.post(graphqlEndpoint, getMetadataSpeaker(speaker));
               let possibleYears = yearResponse.data.data.getAvailableYearsForSpeaker.available_years.sort();
               let maxYear = Math.max(...possibleYears.map(Number));
@@ -206,8 +211,12 @@ const mainModule = {
               };
 
               this.commit('main/addGeneralSpeakerNetwork', payload);
+              state[pane].busy = false;
+
               logger.log('General Speaker Network loaded successfully.');
           } catch (error) {
+              state[pane].busy = false;
+
               logger.error(error);
           }
         },
