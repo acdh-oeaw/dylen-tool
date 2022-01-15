@@ -26,7 +26,11 @@
           xl='12'
           class='pl-3 pt-0 h-100'
         >
-          <b-col xl='2' class='pt-0 mt-0' style='border-right: solid; border-color: cadetblue'>
+          <b-col
+            xl='2'
+            class='pt-0 mt-0'
+            style='border-right: solid; border-color: cadetblue'
+          >
             <query-bar></query-bar>
           </b-col>
           <b-col
@@ -200,6 +204,30 @@
                   </b-card>
                 </b-col>
               </b-row>
+            <h4 class="mt-3"><u>Parallel coordinates options</u></h4>
+            <b-row class='pt-3'>
+              <b>Axes to display (drag to reorder): </b>
+              <draggable
+                  :list="selectedMetrics"
+                  @start="drag=true"
+                  @end="drag=false"
+                  class="list-group w-100"
+                  :disabled="false"
+              >
+                <div
+                    class="list-group-item w-100"
+                    v-for="element in selectedMetrics"
+                    :key="element.name"
+                >{{camelCaseToSpaces(element.name)}}
+                  <b-form-checkbox
+                      v-model="element.enabled"
+                      switch
+                  >
+                    {{element.enabled ? "Enabled" : "Disabled"}}
+                  </b-form-checkbox>
+                </div>
+              </draggable>
+            </b-row>
           </b-col>
         </b-row>
 
@@ -209,11 +237,13 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import Results from '@/components/Results';
 import Modal from '@/components/SautoConfirmationModal';
 import TopNavigation from '@/components/TopNavigation';
 import Info from '@/components/Info';
-import QueryBar from "@/components/QueryBar";
+import QueryBar from '@/components/QueryBar';
+import { camelCaseToSpaces } from '@/helpers/utils';
 
 export default {
   name: 'App',
@@ -222,10 +252,14 @@ export default {
     TopNavigation,
     Results,
     Modal,
-    Info
+    Info,
+    draggable
   },
   data() {
-    return {};
+    return {
+      drag: false,
+      camelCaseToSpaces: camelCaseToSpaces
+    };
   },
   created() {
     this.$store.dispatch('main/loadAvailableCorpora');
@@ -265,13 +299,22 @@ export default {
     },
     settingsActive: {
       get() {
-         return this.$store.getters['main/settingsActive'];
+        return this.$store.getters['main/settingsActive'];
+      }
+    },
+    selectedMetrics: {
+      get() {
+        return this.$store.getters['main/parallelCoordinateMetrics'];
+      },
+      set(value) {
+        console.log(value);
+        this.$store.commit('main/setParallelCoordinateMetrics', value);
       }
     }
   },
   methods: {
     toggleSideBar(component) {
-      this.$store.commit('main/changeActiveSettings', {component: component})
+      this.$store.commit('main/changeActiveSettings', { component: component });
     },
     screenResizeHandler() {
       const size = this.$refs.app.getBoundingClientRect();
@@ -279,8 +322,8 @@ export default {
     }
   },
   watch: {
-    settingsActive: function(newVal, oldVal) {
-      console.log('settings changed: ' + newVal + oldVal)
+    settingsActive: function (newVal, oldVal) {
+      console.log('settings changed: ' + newVal + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
     }

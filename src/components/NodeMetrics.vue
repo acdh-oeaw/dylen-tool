@@ -85,6 +85,7 @@
 <script>
 import ParallelCoordinates from '@/components/ParallelCoordinates';
 import MetricsTable from '@/components/MetricsTable';
+import { snakeToCamel } from '@/helpers/utils';
 
 export default {
   name: 'NodeMetrics',
@@ -125,10 +126,14 @@ export default {
     prepareNode(network) {
       const nodes = [];
       for (const node of network) {
+        let camelMetrics = {};
+        for (let key in node.metrics)
+          camelMetrics[snakeToCamel(key)] = node.metrics[key];
+        console.log(camelMetrics);
         nodes.push({
           id: network.id + '_' + node.id,
           name: node.text,
-          _metrics: node.metrics
+          _metrics: camelMetrics
         });
       }
       return nodes;
@@ -159,11 +164,14 @@ export default {
       networks.forEach((network, idx) => {
         if (network) {
           for (const node of network.nodes) {
+            let camelMetrics = {};
+            for (let key in node.metrics)
+              camelMetrics[snakeToCamel(key)] = node.metrics[key];
             nodes.push({
               id: network.id + '_' + node.id,
               name: node.text,
               _normalisedFrequency: node.normalisedFrequency,
-              _metrics: node.metrics,
+              _metrics: camelMetrics,
               _pane: `pane${idx + 1}`
             });
           }

@@ -277,6 +277,7 @@
 </template>
 <script>
 import * as d3 from 'd3';
+import { camelCaseToSpaces } from '@/helpers/utils';
 
 export default {
   name: 'ParallelCoordinates',
@@ -288,7 +289,8 @@ export default {
         right: 140,
         bottom: 50,
         left: 140
-      }
+      },
+      camelCaseToSpaces: camelCaseToSpaces
     };
   },
   computed: {
@@ -306,7 +308,11 @@ export default {
       ];
     },
     metrics() {
-      return [
+      console.log(this.selectedNodes);
+      return this.$store.getters['main/parallelCoordinateMetrics']
+        .filter((m) => m.enabled)
+        .map((m) => m.name);
+      /* return [
         ...new Set(
           [
             this.allNodes
@@ -314,12 +320,10 @@ export default {
               .flat()
           ].flat()
         )
-      ];
+      ]; */
     },
     scaleY() {
       let scale = {};
-      console.log(this.selectedNodes.map((n) => n.name));
-
       this.metrics.forEach((metric) => {
         scale[metric] = d3
           .scaleLinear()
@@ -329,16 +333,11 @@ export default {
               this.selectedNodes.length > 0
                 ? this.selectedNodes
                 : this.allNodes,
-              (entry) => entry._metrics[metric]
+              (entry) => entry._metrics[metric] || 0
             ) * 1.1
           ])
           .range([this.chartSize[1], this.svgPadding.top]);
       });
-      /* scale['word'] = d3
-        .scalePoint()
-        .domain(this.selectedNodes.map((n) => n.name).sort())
-        .range([this.chartSize[1], this.svgPadding.top]); */
-      console.log(scale);
       return scale;
     },
     scaleX() {
@@ -442,13 +441,11 @@ export default {
   },
   methods: {
     generateLine(node) {
-      let data = Object.entries(node._metrics).slice(0, -1);
+      let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
+      console.log(node, data);
       return this.lineGenerator(data);
     },
-    camelCaseToSpaces(text) {
-      let result = text.replace(/([A-Z])/g, ' $1');
-      return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
-    },
+
     getLineColor(node) {
       if (node._pane === 'pane1')
         return this.$store.getters['main/selectionColors'][0];

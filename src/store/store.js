@@ -250,7 +250,7 @@ const mainModule = {
               getNetworkQuery(state[pane].selectedTargetword.id, year_param));
             const networkID = state[pane].selectedTargetword.id + state[pane].selectedYear.year;
             let network = response.data.data.getNetwork;
-            network.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
+            network.nodes.forEach(node => node.metrics["normalizedFrequency"] = node.normalisedFrequency);
             network.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
             assignValuesFromState(network, networkID);
 
@@ -556,7 +556,20 @@ const mainModule = {
     showInfoButton: false,
     availableMetrics: ['Degree Centrality', 'Eigenvector Centrality', 'Closeness Centrality', 'Betweenness Centrality',
       'Pagerank', 'Load Centrality', 'Harmonic Centrality', 'Clustering Coefficient'],
-    availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS']
+    availableParties: ['SPÖ', 'STRONACH', 'FPÖ', 'GRÜNE', 'ÖVP', 'BZÖ', 'NEOS'],
+    parallelCoordinateMetrics: [
+      {name: "normalizedFrequency", enabled: true},
+      {name: "degreeCentrality", enabled: true},
+      {name: "betweennessCentrality", enabled: true},
+      {name: "pagerank", enabled: true},
+      {name: "clusteringCoefficient", enabled: true},
+      {name: "closenessCentrality", enabled: false},
+      {name: "eigenvectorCentrality", enabled: false},
+      {name: "loadCentrality", enabled: false},
+      {name: "harmonicCentrality", enabled: false},
+      {name: "absoluteFrequency", enabled: false},
+  
+  ]
   },
   mutations: {
     changeActiveSettings(state, payload) {
@@ -752,6 +765,10 @@ const mainModule = {
     },
     setBusyState(state, payload){
       state[payload.pane].busy = payload.busy;
+    },
+    setParallelCoordinateMetrics(state, payload){
+      logger.log("payload", payload);
+      state.parallelCoordinateMetrics = payload;
     }
   },
   getters: {
@@ -799,7 +816,8 @@ const mainModule = {
     showInfoButton: (state) => state.showInfoButton,
     secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
-    busyState: state => pane => state[pane].busy
+    busyState: state => pane => state[pane].busy,
+    parallelCoordinateMetrics: state => state.parallelCoordinateMetrics
   }
 };
 
