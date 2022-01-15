@@ -271,7 +271,7 @@ export function getGeneralSpeakerNetworkQuery(entityName){
               text
               pos
               absolute_frequency
-              normalized_frequency
+              normalised_frequency
               metrics {
                 closeness_centrality
                 betweenness_centrality

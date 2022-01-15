@@ -208,6 +208,10 @@ const mainModule = {
 
               const networkID = speaker + '_' + maxYear;
               assignValuesFromState(network, networkID, possibleYears);
+              network.nodes.forEach(node => node["normalisedFrequency"] = node.normalised_frequency);
+              network.nodes.forEach(node => node["absoluteFrequency"] = node.absolute_frequency);
+              network.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
+              network.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
               filterBasedOnSlider(network);
 
               const payload = {
@@ -289,6 +293,8 @@ const mainModule = {
             updatedNetwork.possibleYears = oldNetwork.possibleYears;
             updatedNetwork.pos = oldNetwork.pos;
             updatedNetwork.type = oldNetwork.type;
+            updatedNetwork.nodes.forEach(node => node.metrics["normalizedFrequency"] = node.normalisedFrequency);
+            updatedNetwork.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
             logger.log('Ego Network %s updated successfully.', networkID);
 
             this.commit('main/updateEgoNetwork', {networkObj: updatedNetwork, pane: pane});
@@ -310,6 +316,11 @@ const mainModule = {
                 updatedNetwork.possibleYears = oldNetwork.possibleYears;
                 updatedNetwork.year = oldNetwork.year;
                 updatedNetwork.type = oldNetwork.type;
+                updatedNetwork.nodes.forEach(node => node["normalisedFrequency"] = node.normalised_frequency);
+                updatedNetwork.nodes.forEach(node => node["absoluteFrequency"] = node.absolute_frequency);
+                updatedNetwork.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
+                updatedNetwork.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
+
                 filterBasedOnSlider(updatedNetwork);
 
                 logger.log('Network %s updated successfully.', networkID);
@@ -335,6 +346,10 @@ const mainModule = {
                 updatedNetwork.possibleYears = oldNetwork.possibleYears;
                 updatedNetwork.year = oldNetwork.year;
                 updatedNetwork.type = oldNetwork.type;
+                updatedNetwork.nodes.forEach(node => node["normalisedFrequency"] = node.normalised_frequency);
+                updatedNetwork.nodes.forEach(node => node["absoluteFrequency"] = node.absolute_frequency);
+                updatedNetwork.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
+                updatedNetwork.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
                 filterBasedOnSlider(updatedNetwork);
 
                 logger.log('General Network %s updated successfully.', networkID);
