@@ -433,10 +433,10 @@ const mainModule = {
 
           return response
         },
-        async loadGeneralSpeakerTimeSeriesData({state}, pane) {
+        async loadGeneralSpeakerTimeSeriesData(state, {pane, speaker}) {
           try {
               const response = await axios.post(graphqlEndpoint,
-                  getMetadataSpeaker(state[pane].generalNetworkSpeaker.selectedSpeaker));
+                  getMetadataSpeaker(speaker));
               let timeSeries = response.data.data.getAvailableYearsForSpeaker || {};
               let years = response.data.data.getAvailableYearsForSpeaker.available_years.sort();
 
@@ -457,10 +457,10 @@ const mainModule = {
               logger.error(error);
           }
         },
-        async loadGeneralTimeSeriesData({state}, pane) {
-          try {
+        async loadGeneralTimeSeriesData(state, {pane, party}) {
+            try {
               const response = await axios.post(graphqlEndpoint,
-                  getGeneralNetworkTimeSeries(partyMapping[state[pane].generalNetwork.selectedParty]));
+                  getGeneralNetworkTimeSeries(partyMapping[party]));
               let timeSeries = response.data.data.getAvailableYearsForParty || {};
               let years = response.data.data.getAvailableYearsForParty.available_years.sort();
 

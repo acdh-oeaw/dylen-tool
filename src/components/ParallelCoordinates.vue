@@ -308,7 +308,7 @@ export default {
       ];
     },
     metrics() {
-      console.log(this.selectedNodes);
+      //console.log(this.selectedNodes);
       return this.$store.getters['main/parallelCoordinateMetrics']
         .filter((m) => m.enabled)
         .map((m) => m.name);

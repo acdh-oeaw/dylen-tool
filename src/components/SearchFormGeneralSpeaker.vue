@@ -131,7 +131,7 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', {pane:this.queryPane, speaker: this.selectedSpeaker});
     },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {
