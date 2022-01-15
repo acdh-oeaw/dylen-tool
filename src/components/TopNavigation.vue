@@ -58,8 +58,6 @@ export default {
   props: ['showInfo'],
   data() {
     return {
-      firstForm: true,
-      secondForm: false,
       typeOfNetwork: 'EgoNetwork'
     };
   },
@@ -71,28 +69,10 @@ export default {
   computed: {
     showInfoButton() {
       return this.$store.getters['main/showInfoButton']
-    },
-    showSecondButton() {
-      let numberOfVisualisedNetworks =  this.$store.getters['main/numberOfNetworksVisualised']
-      return numberOfVisualisedNetworks > 0;
-
-    },
-    showSecondForm() {
-      return this.$store.getters['main/secondFormVisibility']
     }
   },
   methods: {
-    queryButtonClicked(button) {
-      if (button === 1) {
-        this.firstForm = true;
-      } else if (button === 2) {
-        this.$store.commit('main/changeSecondFormVisibility', {
-          pane: 'pane2'
-        })
-      }
-    },
     onTypeOfNetworkSelect(event) {
-      //TODO: use getter from store
       this.typeOfNetwork = event;
       this.$store.commit('main/changeTopNavType', {
         networkType: event

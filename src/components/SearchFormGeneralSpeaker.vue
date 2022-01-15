@@ -1,124 +1,8 @@
 <template>
   <b-form @submit='onSubmit'>
-    <b-row v-if=!isVertical>
-      <b-col xl='8'>
-        <b-form-group
-          id='select-party-group-viz'
-          label='Party: '
-          label-size='sm'
-          label-cols-xl='4'
-        >
-          <b-form-select
-            size='sm'
-            v-model='selectedParty'
-            :data-sauto-id="'selectParty-'+this.pane"
-          >
-            <b-form-select-option
-              v-for='option in availableParties'
-              v-bind:key='option.id'
-              v-bind:value='option'
-              :data-sauto-id="'partyOption-' + option"
-            >
-              {{ option }}
-            </b-form-select-option>
-          </b-form-select>
-        </b-form-group>
-      </b-col>
-      <b-col xl='8'>
-        <b-form-group
-          id='select-speaker-group-viz'
-          label='Speaker: '
-          label-size='sm'
-          label-cols-xl='4'
-        >
-          <b-form-select
-            size='sm'
-            v-model='selectedSpeaker'
-            :data-sauto-id="'selectSpeaker-'+this.pane"
-          >
-            <b-form-select-option
-              v-for='optionSpeaker in availableSpeakers'
-              v-bind:key='optionSpeaker.id'
-              v-bind:value='optionSpeaker'
-              :data-sauto-id="'speakerOption-' + optionSpeaker"
-            >
-              {{ optionSpeaker }}
-            </b-form-select-option>
-          </b-form-select>
-        </b-form-group>
-        <b-form-select
-          size='sm'
-          v-model='selectedMetric'
-          :data-sauto-id="'selectSpeakerMetric-'+this.pane"
-        >
-          <b-form-select-option
-            v-for='option in availableMetrics'
-            v-bind:key='option.id'
-            v-bind:value='option'
-            :data-sauto-id="'metricSpeakerOption-' + option"
-          >
-            {{ option }}
-          </b-form-select-option>
-        </b-form-select>
-        <div class="mt-3">
-          <Slider
-          :format="sliderFormat"
-          showTooltip="drag"
-          tooltipPosition="bottom"
-          v-model="valueSlid" />
-        </div>
-      </b-col>
-      <b-col xl='4'>
-        <b-row align-h='end'>
-          <b-col
-            xl='12'
-            class='align-end'
-          >
-            <b-button
-              class='visualize-button'
-              size='sm'
-              type='submit'
-              block
-              variant='secondary'
-              :data-sauto-id='"queryButtonSpeaker-"+this.pane'
-              :disabled='!queryButtonActive'
-              @click='setShowInfo'
-            >
-              <div v-if="isNetworkLoading">
-                <b-spinner small></b-spinner>
-              </div>
-              <div v-if="!isNetworkLoading">
-                Visualize
-              </div>
-            </b-button>
-            <b-button
-              class='reset-button'
-              size='sm'
-              variant='secondary'
-              :data-sauto-id='"queryButtonSpeaker-"+this.pane'
-              @click='initialize'
-              v-b-tooltip.hover
-              title="Reset query"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-bootstrap-reboot"
-                viewBox="0 0 16 16"
-              >
-                <path d="M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 1 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8z" />
-                <path d="M6.641 11.671V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141zm0-3.75V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6z" />
-              </svg>
-            </b-button>
-          </b-col>
-        </b-row>
-      </b-col>
-    </b-row>
-    <b-row v-if='isVertical'>
+    <b-row>
       <b-col xl='12'>
-        <b-row xl='12'>
+        <b-row xl='12' class='mt-2'>
           <b-col xl='12'>
             <b-form-group
               id='select-party-group-viz'
@@ -129,6 +13,7 @@
               <b-form-select
                 size='sm'
                 v-model='selectedParty'
+                @change='changeSelectedPartyEvent'
                 :data-sauto-id="'selectParty-'+this.pane"
               >
                 <b-form-select-option
@@ -146,94 +31,43 @@
         <b-row xl='12'>
           <b-col xl='12'>
             <b-form-group
-              id='select-speaker-group-viz'
-              label='Speaker: '
-              label-size='sm'
-              label-cols-xl='4'
+                id='select-speaker-group-viz'
+                label='Speaker: '
+                label-size='sm'
+                label-cols-xl='4'
             >
               <b-form-select
-                size='sm'
-                v-model='selectedSpeaker'
-                :data-sauto-id="'selectSpeaker-'+this.pane"
+                  size='sm'
+                  v-model='selectedSpeaker'
+                  :data-sauto-id="'selectSpeaker-'+this.pane"
               >
                 <b-form-select-option
-                  v-for='optionSpeaker in availableSpeakers'
-                  v-bind:key='optionSpeaker.id'
-                  v-bind:value='optionSpeaker'
-                  :data-sauto-id="'speakerOption-' + optionSpeaker"
+                    v-for='optionSpeaker in availableSpeakers'
+                    v-bind:key='optionSpeaker.id'
+                    v-bind:value='optionSpeaker'
+                    :data-sauto-id="'speakerOption-' + optionSpeaker"
                 >
                   {{ optionSpeaker }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
-            <b-form-select
-              size='sm'
-              v-model='selectedMetric'
-              :data-sauto-id="'selectSpeakerMetric-'+this.pane"
-            >
-              <b-form-select-option
-                v-for='option in availableMetrics'
-                v-bind:key='option.id'
-                v-bind:value='option'
-                :data-sauto-id="'metricSpeakerOption-' + option"
-              >
-                {{ option }}
-              </b-form-select-option>
-            </b-form-select>
-            <div class="mt-3">
-              <Slider
-              :format="sliderFormat"
-              showTooltip="drag"
-              tooltipPosition="bottom"
-              v-model="valueSlid" />
-            </div>
           </b-col>
         </b-row>
-        <b-row align-h='end' xl='12'>
-          <b-col
-            xl='12'
-            class='align-end'
-          >
-            <div class="mt-2">
-              <b-button
-                class='visualize-button'
-                size='sm'
-                block
-                type='submit'
-                variant='secondary'
-                :data-sauto-id='"queryButtonSpeaker-"+this.pane'
-                :disabled='!queryButtonActive'
-                @click='setShowInfo'
-              >
-                <div v-if="isNetworkLoading">
-                  <b-spinner small></b-spinner>
-                </div>
-                <div v-if="!isNetworkLoading">
-                  Visualize
-                </div>
-              </b-button>
-              <b-button
-                class='reset-button'
-                size='sm'
-                variant='secondary'
-                :data-sauto-id='"queryButtonSpeaker-"+this.pane'
-                @click='initialize'
-                v-b-tooltip.hover
-                title="Reset query"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-bootstrap-reboot"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 1 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8z" />
-                  <path d="M6.641 11.671V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141zm0-3.75V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6z" />
-                </svg>
-              </b-button>
-            </div>
+        <b-row xl='12'>
+          <b-col xl='12'>
+            <node-filter
+                @sliderValueChanged='handleSliderValue'
+                :available-metrics='availableMetrics'
+                :general-type='"speaker"'
+                :pane='queryPane'></node-filter>
+          </b-col>
+        </b-row>
+        <b-row align-h='end' xl='12' class='mt-2'>
+          <b-col xl='6'>
+            <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
+          </b-col>
+          <b-col xl='6'>
+            <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
           </b-col>
         </b-row>
       </b-col>
@@ -242,11 +76,14 @@
 </template>
 
 <script>
-import Slider from '@vueform/slider/dist/slider.vue2.js';
+import NodeFilter from "@/components/NodeFilter";
+import VisualizeButton from "@/components/VisualizeButton";
+import ResetButton from "@/components/ResetButton";
+
 export default {
-  props: ['isSidebar', 'isVertical', 'pane', 'withLabels'],
+  props: ['pane'],
   components: {
-      Slider,
+    NodeFilter, VisualizeButton, ResetButton
   },
   data() {
     return {
@@ -256,14 +93,31 @@ export default {
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
       },
-      subcorpusEdit: false,
-      valueSlid: [0, 100],
-      targetwordEdit: false,
-      yearEdit: false
+      valueSlid: [0, 20]
     };
   },
-  mounted() {},
+  mounted() {
+    let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane);
+
+    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : "ÖVP"
+
+    this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
+      this.selectedSpeaker = this.availableSpeakers[0];
+    });
+  },
   methods: {
+    checkSelectedParty(party) {
+      if(party) return true
+      return false
+    },
+    handleSliderValue(values) {
+      this.$data.valueSlid=values
+    },
+    changeSelectedPartyEvent(evt) {
+      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, event:evt}).then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
+      });
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.isNetworkLoading = true;
@@ -273,30 +127,22 @@ export default {
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
         this.isNetworkLoading = false;
+        this.$emit('visualizeClicked')
       }).finally(() => {
         this.isNetworkLoading = false;
       });
       this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
     },
-    setShowInfo() {
-      this.$emit('showInfoButton', true);
-      this.$store.commit('main/setShowInfo', { showInfo: false });
-    },
     initialize() {
-      this.$store.commit('main/changeSelectedParty', {
-        party: null,
+      this.$store.commit('main/changeSelectedSpeakerParty', {
+        party: "ÖVP",
         pane: this.queryPane
       });
-      this.$store.commit('main/changeSelectedMetric', {
-        metric: null,
-        pane: this.queryPane
+      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.defaultParty}).then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
       });
-      this.$store.commit('main/changeAvailableSpeakers', {
-        speakers: [],
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSelectedSpeaker', {
-        speaker: null,
+      this.$store.commit('main/changeSelectedSpeakerMetric', {
+        metric: "Degree Centrality",
         pane: this.queryPane
       });
       this.$store.commit('main/resetSelectedNetwork', {
@@ -343,33 +189,19 @@ export default {
         return this.$store.getters['main/availableMetrics'];
       }
     },
-    selectedMetric: {
-      get() {
-        return this.$store.getters['main/selectedMetric'](this.queryPane);
-      },
-      set(val) {
-        if (val) {
-          this.$store.commit('main/changeSelectedMetric', {
-            metric: val,
-            pane: this.queryPane
-          });
-          console.log('Set metric to: ' + val);
-        }
-      }
-    },
     selectedParty: {
       get() {
-        const party = this.$store.getters['main/selectedParty'](this.queryPane)
-        this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, party);
+        const party = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane)
+        this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:party});
         return party;
       },
       set(val) {
         if (val) {
-          this.$store.commit('main/changeSelectedParty', {
+          this.$store.commit('main/changeSelectedSpeakerParty', {
             party: val,
             pane: this.queryPane
           });
-          this.$store.dispatch('main/loadAvailableSpeakers', this.queryPane, val);
+          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val});
         }
       }
     },
@@ -380,7 +212,7 @@ export default {
     },
     selectedSpeaker: {
       get() {
-        return this.$store.getters['main/selectedSpeaker'](this.queryPane);
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](this.queryPane);
       },
       set(val) {
         if (val) {
@@ -389,18 +221,6 @@ export default {
             pane: this.queryPane
           });
         }
-      }
-    },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane
-          });
       }
     }
   },
@@ -432,11 +252,5 @@ export default {
 }
 .align-end {
   text-align: end;
-}
-.reset-button {
-  border: none;
-  color: red;
-  background-color: white;
-  border-color: white;
 }
 </style>

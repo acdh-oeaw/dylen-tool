@@ -56,17 +56,17 @@
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
-              v-if="showFirstGraph && type === 'Ego'"
+              v-if="showSecondGraph && type === 'Ego'"
               ref='networkGraph2'
               pane='pane2'
             />
             <NetworkGraphGeneral
-              v-if="showFirstGraph && type === 'Party'"
+              v-if="showSecondGraph && type === 'Party'"
               ref='networkGraph2'
               pane='pane2'
             />
             <NetworkGraphSpeaker
-              v-if="showFirstGraph && type === 'Speaker'"
+              v-if="showSecondGraph && type === 'Speaker'"
               ref='networkGraph2'
               pane='pane2'
             />
@@ -155,9 +155,6 @@ export default {
     };
   },
   computed: {
-    networkCount() {
-      return this.$store.getters['main/numberOfNetworksVisualised'];
-    },
     showFirstGraph() {
       return this.$store.getters['main/selectedNetwork']('pane1') !== null;
     },
@@ -165,10 +162,13 @@ export default {
       return this.$store.getters['main/selectedNetwork']('pane2') !== null;
     },
     type() {
-      const network = this.$store.getters['main/selectedNetwork']('pane1');
+      const network1 = this.$store.getters['main/selectedNetwork']('pane1');
+      const network2 = this.$store.getters['main/selectedNetwork']('pane2');
 
-      if (network !== null) {
-        return network.type;
+      if (network1 !== null) {
+        return network1.type;
+      } else if (network2 !== null) {
+        return network2.type;
       }
       return null;
     }

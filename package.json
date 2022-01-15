@@ -19,6 +19,7 @@
     "vue": "^2.6.12",
     "vue-custom-range-slider": "^0.2.3",
     "vue-d3-network": "^0.1.28",
+    "vue-feather-icons": "^5.1.0",
     "vue-range-component": "^1.0.3",
     "vue-select": "^3.10.8",
     "vue-slider-component": "^3.2.11",

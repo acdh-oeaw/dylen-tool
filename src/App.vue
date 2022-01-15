@@ -62,166 +62,166 @@
       data-sauto-id='sidebar'
     >
       <div
-        class='px-4 py-3'
+        class='pr-4 pl-1 py-3'
         style='width: 300px'
       >
-        <b-button
-          type='button'
-          class='close'
-          aria-label='Close'
-          variant='light'
-          @click='toggleSideBar(activeSettings)'
-          data-sauto-id='sidebar-close-button'
-        >
-          <span aria-hidden='true'>×</span>
-        </b-button>
-        <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
-          <b-col>
-            <h4><u>Ego Network options</u></h4>
-            <h5 class='mt-3'>Part-of-speech colors</h5>
-            <b-row
-              v-for='key in Object.keys(posColors)'
-              :key='key'
-              class='my-3'
+        <b-row xl='12' align-content='end'>
+          <b-col xl='12'>
+            <b-button
+                type='button'
+                class='close'
+                aria-label='Close'
+                variant='light'
+                @click='toggleSideBar(activeSettings)'
+                data-sauto-id='sidebar-close-button'
             >
-              <b-col>{{
-                  key[0].toUpperCase() + key.slice(1).replace('_', ' ')
-                }}
-              </b-col>
-              <b-col>
-                <b-form-input
-                  :data-sauto-id="'color-option-' + key"
-                  type='color'
-                  v-model='posColors[key]'
-                ></b-form-input>
-              </b-col>
-            </b-row>
+              <span aria-hidden='true'>×</span>
+            </b-button>
           </b-col>
         </b-row>
-        <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
-          <b-col>
-            <h5 class='mt-3'>Node label options</h5>
-            <b-row class='pt-3'>
-              <b-col
-                xl='5'
-                class='text-right'
-              >Font size </b-col>
-              <b-col>
-                <b-form-input
-                  data-sauto-id='font-option'
-                  type='number'
-                  v-model='labelOptions.fontSize'
-                  :number='true'
-                  size='sm'
-                >
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class='pt-3'>
-              <b-col
-                xl='5'
-                class='text-right'
-              >Bold</b-col>
-              <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
-              <b-col data-sauto-id='ignore'>
-                <b-form-checkbox
-                  data-sauto-id='bold-checkbox-option'
-                  v-model='labelOptions.bold'
-                ></b-form-checkbox>
-              </b-col>
-            </b-row>
-            <b-row class='pt-3'>
-              <b-col
-                xl='5'
-                class='text-right'
-              >White label background</b-col>
-              <b-col data-sauto-id='ignore'>
-                <b-form-checkbox
-                  data-sauto-id='white-label-checkbox-option'
-                  v-model='labelOptions.background'
-                ></b-form-checkbox>
-              </b-col>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
-          <b-col>
-            <h5 class='mt-3'>Link options</h5>
-            <b-row class='pt-3'>
-              <b-col
-                xl='6'
-                class='text-right'
-              >Opacity: {{ linkOptions.opacity }}</b-col>
-              <b-col>
-                <b-form-input
-                  data-sauto-id='opacity-slider-option'
-                  type='range'
-                  v-model='linkOptions.opacity'
-                  :number='true'
-                  :min='0'
-                  :max='1'
-                  :step='0.1'
-                >
-                </b-form-input>
-              </b-col>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-row v-if='activeSettings === "nodeMetrics" || activeSettings === "all"'>
-          <b-col>
-            <h4 class='mt-3'><u>Table options</u></h4>
-            <b-row class='pt-3'>
-              <b-col
-                xl='7'
-                class='text-right'
-              >
-                Number of digits to display:
-                {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
-              </b-col>
-              <b-col>
-                <b-form-input
-                  data-sauto-id='digits-slider-option'
-                  type='range'
-                  v-model='tableOptions.digits'
-                  :number='true'
-                  :min='0'
-                  :max='11'
-                  :step='1'
-                >
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class='pt-3'>
-              <b-col
-                xl='7'
-                class='text-right'
-              >Show selected words on top</b-col>
-              <b-col data-sauto-id='ignore'>
-                <b-check
-                  data-sauto-id='selected-words-top-checkbox-option'
-                  v-model='tableOptions.selectedOnTop'
-                >
-                </b-check>
-              </b-col>
-            </b-row>
+        <b-row xl='12'>
+          <b-col xl='12'>
+              <b-row xl='12' v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
+                <b-col xl='12'>
+                  <b-card header='Ego network options'>
+                    <h6 class='mt-3'>Part-of-speech colors</h6>
+                    <b-row
+                        v-for='key in Object.keys(posColors)'
+                        :key='key'
+                        class='my-3 mr-0 pr-0'
+                    >
+                      <b-col>{{
+                          key[0].toUpperCase() + key.slice(1).replace('_', ' ')
+                        }}
+                      </b-col>
+                      <b-col>
+                        <b-form-input
+                            :data-sauto-id="'color-option-' + key"
+                            type='color'
+                            v-model='posColors[key]'
+                        ></b-form-input>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
+                <b-col>
+                  <b-card  header='Node label options'>
+                    <b-row class='pt-3'>
+                      <b-col xl='6' class='text-right'>Font size </b-col>
+                      <b-col>
+                        <b-form-input
+                            data-sauto-id='font-option'
+                            type='number'
+                            v-model='labelOptions.fontSize'
+                            size='sm'
+                        >
+                        </b-form-input>
+                      </b-col>
+                    </b-row>
+                    <b-row class='pt-3'>
+                      <b-col xl='6' class='text-right'>Bold</b-col>
+                      <!--Every checkbox needs to have a parent element with ignore as id. Don't ask, it's a workaround-->
+                      <b-col
+                          data-sauto-id='ignore'
+                      >
+                        <b-form-checkbox
+                            data-sauto-id='bold-checkbox-option'
+                            v-model='labelOptions.bold'
+                        ></b-form-checkbox>
+                      </b-col>
+                    </b-row>
+                    <b-row class='pt-3'>
+                      <b-col xl='6' class='text-right'>White label background</b-col>
+                      <b-col
+                          data-sauto-id='ignore'
+                      >
+                        <b-form-checkbox
+                            data-sauto-id='white-label-checkbox-option'
+                            v-model='labelOptions.background'
+                        ></b-form-checkbox>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row v-if='activeSettings === "egoNetwork" || activeSettings === "all"'>
+                <b-col>
+                  <b-card header='Link options'>
+                    <b-row class='pt-3'>
+                      <b-col xl='6' class='text-right'>Opacity: {{ linkOptions.opacity }}</b-col>
+                      <b-col>
+                        <b-form-input
+                            data-sauto-id='opacity-slider-option'
+                            type='range'
+                            v-model='linkOptions.opacity'
+                            :number='true'
+                            :min='0'
+                            :max='1'
+                            :step='0.1'
+                        >
+                        </b-form-input>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row v-if='activeSettings === "nodeMetrics" || activeSettings === "all"'>
+                <b-col>
+                  <b-card>
+                    <h4 class='mt-3'><u>Table options</u></h4>
+                    <b-row class='pt-3'>
+                      <b-col xl='7' class='text-right'>
+                        Number of digits to display:
+                        {{ tableOptions.digits > 10 ? 'all' : tableOptions.digits }}
+                      </b-col>
+                      <b-col>
+                        <b-form-input
+                            data-sauto-id='digits-slider-option'
+                            type='range'
+                            v-model='tableOptions.digits'
+                            :number='true'
+                            :min='0'
+                            :max='11'
+                            :step='1'
+                        >
+                        </b-form-input>
+                      </b-col>
+                    </b-row>
+                    <b-row class='pt-3'>
+                      <b-col xl='7' class='text-right'>Show selected words on top</b-col>
+                      <b-col
+                          data-sauto-id='ignore'
+                      >
+                        <b-check
+                            data-sauto-id='selected-words-top-checkbox-option'
+                            v-model='tableOptions.selectedOnTop'
+                        >
+                        </b-check>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-col>
+              </b-row>
             <h4 class="mt-3"><u>Parallel coordinates options</u></h4>
             <b-row class='pt-3'>
               <b>Axes to display (drag to reorder): </b>
               <draggable
-                :list="selectedMetrics"
-                @start="drag=true"
-                @end="drag=false"
-                class="list-group w-100"
-                :disabled="false"
+                  :list="selectedMetrics"
+                  @start="drag=true"
+                  @end="drag=false"
+                  class="list-group w-100"
+                  :disabled="false"
               >
                 <div
-                  class="list-group-item w-100"
-                  v-for="element in selectedMetrics"
-                  :key="element.name"
+                    class="list-group-item w-100"
+                    v-for="element in selectedMetrics"
+                    :key="element.name"
                 >{{camelCaseToSpaces(element.name)}}
                   <b-form-checkbox
-                    v-model="element.enabled"
-                    switch
+                      v-model="element.enabled"
+                      switch
                   >
                     {{element.enabled ? "Enabled" : "Disabled"}}
                   </b-form-checkbox>

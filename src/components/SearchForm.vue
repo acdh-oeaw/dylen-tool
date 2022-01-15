@@ -2,7 +2,6 @@
   <b-form @submit='onSubmit'>
     <b-row
         text-center
-        v-if='isVertical'
         xl='12'>
       <b-col xl='12'>
         <b-row xl='12'>
@@ -94,19 +93,7 @@
             <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
           </b-col>
           <b-col xl='6'>
-            <b-button
-                block
-                class='reset-button query-bar-button'
-                size='sm'
-                variant='danger'
-                type='reset'
-                :data-sauto-id='"resetQueryButton-"+this.pane'
-                @click='initialize'
-                v-b-tooltip.hover
-                title="Reset query"
-            >
-              Reset
-            </b-button>
+            <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
           </b-col>
 
         </b-row>
@@ -117,10 +104,12 @@
 
 <script>
 import VisualizeButton from "@/components/VisualizeButton";
+import ResetButton from "@/components/ResetButton";
+
 export default {
   name: 'SearchForm',
-  components: {VisualizeButton},
-  props: ['isVertical', 'isSidebar', 'pane', 'withLabels'],
+  components: {ResetButton, VisualizeButton},
+  props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
       corpusEdit: false,
@@ -163,7 +152,9 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('main/loadEgoNetwork', this.queryPane);
+      this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
+        this.$emit('visualizeClicked')
+      });
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
       let settingsComponent = this.$store.getters['main/activeSettings']
       if (!settingsComponent) {
@@ -207,9 +198,6 @@ export default {
       });
       this.$store.commit('main/resetSelectedNetwork', {
         network: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSecondFormVisibility', {
         pane: this.queryPane
       });
       this.$store.commit('main/resetTimeSeries', {
@@ -350,11 +338,5 @@ export default {
 <style scoped>
 .align-end {
   text-align: end;
-}
-.reset-button {
-  border: none;
-  color: red;
-  background-color: white;
-  border-color: white;
 }
 </style>
