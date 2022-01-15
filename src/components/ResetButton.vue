@@ -4,7 +4,7 @@
       class='reset-button query-bar-button'
       size='sm'
       variant='danger'
-      type='reset'
+      type='button'
       :data-sauto-id='"resetQueryButton-"+this.pane'
       @click='resetClicked'
       v-b-tooltip.hover

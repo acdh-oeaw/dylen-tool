@@ -254,10 +254,4 @@ export default {
 .align-end {
   text-align: end;
 }
-.reset-button {
-  border: none;
-  color: red;
-  background-color: white;
-  border-color: white;
-}
 </style>

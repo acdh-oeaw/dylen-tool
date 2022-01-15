@@ -91,7 +91,7 @@ export default {
     }
   },
   mounted() {
-    let defaultMetric = "Pagerank";
+    let defaultMetric = "Degree Centrality";
 
     let selectedMetric = this.getMetricByType(this.generalType);
 

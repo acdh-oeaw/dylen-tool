@@ -24,7 +24,7 @@
               >
                 <b-form-select-option
                     v-for='option in availableParties'
-                    v-bind:key='option.id'
+                    v-bind:key='option'
                     v-bind:value='option'
                     :data-sauto-id="'partyOption-' + option"
                 >
@@ -38,6 +38,7 @@
         <b-col xl='12'>
           <node-filter
               @sliderValueChanged='handleSliderValue'
+              :selected-metric='selectedMetric'
               :available-metrics='availableMetrics'
               :pane='queryPane'></node-filter>
         </b-col>
@@ -66,27 +67,17 @@ export default {
     VisualizeButton, ResetButton
   },
   name: 'SearchFormGeneral',
-  props: ['isSidebar', 'pane', 'withLabels'],
+  props: ['pane'],
   data() {
     return {
+      selectedParty: "ÖVP",
+      selectedMetric: "Pagerank",
       valueSlid: [0, 20],
       corpusEdit: false,
       isNetworkLoading: false,
-      subcorpusEdit: false,
-      targetwordEdit: false,
-      yearEdit: false
     };
   },
   mounted() {
-    let defaultParty = "ÖVP";
-
-    let selectedParty = this.$store.getters['main/selectedGeneralNetworkParty'](this.pane);
-
-    if (selectedParty.party === "") {
-      this.selectedParty = defaultParty;
-    } else {
-      this.selectedParty = selectedParty.party;
-    }
   },
   methods: {
     handleSliderValue(values) {
@@ -96,6 +87,7 @@ export default {
       evt.preventDefault();
       this.$store.dispatch('main/loadGeneralNetwork', {
         pane: this.queryPane,
+        party: this.selectedParty,
         sliderMin: this.$data.valueSlid[0]/100,
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
@@ -106,27 +98,14 @@ export default {
       });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
     },
-    findSearchTermInAvailableTargetwords() {
-      return this.availableTargetwords.find((t) => t.text === this.searchTerm);
-    },
-    setShowInfo() {
-      this.$emit('showInfoButton', true);
-      this.$store.commit('main/setShowInfo', {showInfo: false});
-    },
     initialize() {
-      this.$store.commit('main/changeSelectedParty', {
-        party: null,
-        pane: this.queryPane
-      });
+      this.selectedParty = "ÖVP"
       this.$store.commit('main/changeSelectedMetric', {
-        metric: null,
+        metric: "Degree Centrality",
         pane: this.queryPane
       });
       this.$store.commit('main/resetSelectedNetwork', {
         network: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSecondFormVisibility', {
         pane: this.queryPane
       });
       this.$store.commit('main/resetTimeSeries', {
@@ -164,32 +143,6 @@ export default {
       get() {
         return this.$store.getters['main/availableMetrics'];
       }
-    },
-    selectedParty: {
-      get() {
-        return this.$store.getters['main/selectedGeneralNetworkParty'](this.queryPane);
-      },
-      set(val) {
-        if (val) {
-          this.$store.commit('main/changeSelectedParty', {
-            party: val,
-            pane: this.queryPane
-          });
-          console.log('Set to: ' + val);
-        }
-      }
-    },
-    selectedYear: {
-      get() {
-        return this.$store.getters['main/selectedYear'](this.queryPane);
-      },
-      set(val) {
-        if (val)
-          this.$store.commit('main/changeSelectedYear', {
-            year: val,
-            pane: this.queryPane
-          });
-      }
     }
   },
   watch: {}
@@ -226,12 +179,5 @@ export default {
 
 .align-end {
   text-align: end;
-}
-
-.reset-button {
-  border: none;
-  color: red;
-  background-color: white;
-  border-color: white;
 }
 </style>

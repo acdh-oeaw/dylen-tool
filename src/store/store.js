@@ -135,7 +135,7 @@ const mainModule = {
             logger.error(error);
           }
         },
-        async loadGeneralNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
+        async loadGeneralNetwork({state}, {pane: pane, party: party_orig, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, years) {
             network.id = networkID;
             network.filter = {metric: state[pane].generalNetwork.selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
@@ -145,7 +145,7 @@ const mainModule = {
             network.type = 'Party';
           }
 
-          let party = partyMapping[state[pane].generalNetwork.selectedParty];
+          let party = partyMapping[party_orig];
 
           try {
               state[pane].busy = true;
