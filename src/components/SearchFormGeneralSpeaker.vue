@@ -79,6 +79,7 @@
 import NodeFilter from "@/components/NodeFilter";
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
+import {GENERAL_SPEAKER} from "@/helpers/vocabulary";
 
 export default {
   props: ['pane'],
@@ -131,7 +132,7 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', {pane:this.queryPane, speaker: this.selectedSpeaker});
+      this.$store.dispatch('main/loadTimeSeriesData_Generic', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {

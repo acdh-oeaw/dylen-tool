@@ -2,34 +2,35 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueCompositionAPI from '@vue/composition-api'
 
-import { BSpinner } from 'bootstrap-vue';
-Vue.component('b-spinner', BSpinner);
-
+import {BSpinner} from 'bootstrap-vue';
 import axios from 'axios';
 import {
     corpusNameMapping,
-    sourceNameMapping,
-    zipTimeSeriesAndYears,
+    filterBasedOnSlider,
     partyMapping,
-    filterBasedOnSlider
+    sourceNameMapping,
+    zipTimeSeriesAndYears
 } from '@/helpers/mappers';
 import props from '../properties/propertiesLoader';
 import {
     allAvailableCorporaQuery,
-    getAvailablePartiesQuery,
     getAutocompleteSuggestionsQuery,
+    getAvailablePartiesQuery,
+    getAvailableYearsForParty,
+    getGeneralNetworkQuery,
+    getGeneralSpeakerNetworkQuery,
+    getMetadataSpeaker,
     getNetworkQuery,
     getSourcesByCorpusQuery,
-    getTargetWordByIdQuery,
-    getGeneralNetworkQuery,
     getSpeakersForParty,
-    getAvailableYearsForParty,
-    getGeneralNetworkTimeSeries,
-    getGeneralSpeakerNetworkQuery,
-    getMetadataSpeaker
+    getTargetWordByIdQuery
 } from '@/queries/queries';
-import { ExportToCsv } from 'export-to-csv';
+import {ExportToCsv} from 'export-to-csv';
 import {speakers_not_fount} from "@/helpers/speakers_not_found";
+import {GENERAL_PARTY} from "@/helpers/vocabulary";
+import {getGeneralTimeSeries} from "@/helpers/api_client";
+
+Vue.component('b-spinner', BSpinner);
 
 Vue.prototype.axios = axios;
 Vue.use(Vuex);
@@ -38,6 +39,7 @@ Vue.use(VueCompositionAPI);
 const graphqlEndpoint = props.graphqlEndpoint;
 console.log(graphqlEndpoint)
 const logger = require('../helpers/logger');
+
 
 function compare(source1, source2) {
   if (source1.name < source2.name) {
@@ -70,7 +72,7 @@ const nodesToJSON = (state, allNodes, selectedNodes) => {
 
 
 const mainModule = {
-    actions: {
+  actions: {
         async initCorpora({ dispatch }) {
             const response = await axios.post(graphqlEndpoint, allAvailableCorporaQuery);
             const corporaPayload = {
@@ -433,53 +435,17 @@ const mainModule = {
 
           return response
         },
-        async loadGeneralSpeakerTimeSeriesData(state, {pane, speaker}) {
-          try {
-              const response = await axios.post(graphqlEndpoint,
-                  getMetadataSpeaker(speaker));
-              let timeSeries = response.data.data.getAvailableYearsForSpeaker || {};
-              let years = response.data.data.getAvailableYearsForSpeaker.available_years.sort();
-
-              let data = zipTimeSeriesAndYears({
-                "frobeniusSimilarity": timeSeries.frobenius_similarity,
-                "rankdcgSimilarity": timeSeries.rankdcg_similarity,
-                "jaccardSimilarity": timeSeries.jaccard_similarity
-              }, years);
-
-              const payload = {
-                  pane: pane,
-                  data: data
-              };
-
-              this.commit('main/addGeneralSpeakerTimeSeriesData', payload);
-              logger.log('General Network loaded successfully.');
-          } catch (error) {
-              logger.error(error);
-          }
-        },
-        async loadGeneralTimeSeriesData(state, {pane, party}) {
+        async loadTimeSeriesData_Generic(state, {pane, type, entity}) {
             try {
-              const response = await axios.post(graphqlEndpoint,
-                  getGeneralNetworkTimeSeries(partyMapping[party]));
-              let timeSeries = response.data.data.getAvailableYearsForParty || {};
-              let years = response.data.data.getAvailableYearsForParty.available_years.sort();
+                let data = await getGeneralTimeSeries(type, entity);
 
-              let data = zipTimeSeriesAndYears({
-                "frobeniusSimilarity": timeSeries.frobenius_similarity,
-                "rankdcgSimilarity": timeSeries.rankdcg_similarity,
-                "jaccardSimilarity": timeSeries.jaccard_similarity
-              }, years);
+                const payload = { pane: pane, data: data };
+                type === GENERAL_PARTY ?  this.commit('main/addGeneralTimeSeriesData', payload) : this.commit('main/addGeneralSpeakerTimeSeriesData', payload);
 
-              const payload = {
-                  pane: pane,
-                  data: data
-              };
-
-              this.commit('main/addGeneralTimeSeriesData', payload);
-              logger.log('General Network loaded successfully.');
-          } catch (error) {
-              logger.error(error);
-          }
+                logger.log('General Network loaded successfully.');
+            } catch (error) {
+                logger.error(error);
+            }
         },
         async loadTimeSeriesData({ state }, pane) {
           try {
@@ -588,7 +554,7 @@ const mainModule = {
       {name: "loadCentrality", enabled: false},
       {name: "harmonicCentrality", enabled: false},
       {name: "absoluteFrequency", enabled: false},
-  
+
   ]
   },
   mutations: {

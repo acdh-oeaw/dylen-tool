@@ -60,6 +60,7 @@
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
 import NodeFilter from "@/components/NodeFilter";
+import {GENERAL_PARTY} from "@/helpers/vocabulary";
 
 export default {
   components: {
@@ -96,9 +97,10 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralTimeSeriesData', {
-        pane:this.queryPane,
-        party: this.selectedParty
+      this.$store.dispatch('main/loadTimeSeriesData_Generic', {
+        pane: this.queryPane,
+        type: GENERAL_PARTY,
+        entity: this.selectedParty
       });
     },
     initialize() {
