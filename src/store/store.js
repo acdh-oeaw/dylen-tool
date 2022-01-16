@@ -4,13 +4,7 @@ import VueCompositionAPI from '@vue/composition-api'
 
 import {BSpinner} from 'bootstrap-vue';
 import axios from 'axios';
-import {
-    corpusNameMapping,
-    filterBasedOnSlider,
-    partyMapping,
-    sourceNameMapping,
-    zipTimeSeriesAndYears
-} from '@/helpers/mappers';
+import {corpusNameMapping, filterBasedOnSlider, partyMapping, sourceNameMapping,} from '@/helpers/mappers';
 import props from '../properties/propertiesLoader';
 import {
     allAvailableCorporaQuery,
@@ -28,7 +22,8 @@ import {
 import {ExportToCsv} from 'export-to-csv';
 import {speakers_not_fount} from "@/helpers/speakers_not_found";
 import {GENERAL_PARTY} from "@/helpers/vocabulary";
-import {getGeneralTimeSeries} from "@/helpers/api_client";
+import {getEgoNetworkTimeSeries, getGeneralTimeSeries} from "@/helpers/api_client";
+import {compare} from "@/helpers/utils";
 
 Vue.component('b-spinner', BSpinner);
 
@@ -37,19 +32,10 @@ Vue.use(Vuex);
 Vue.use(VueCompositionAPI);
 
 const graphqlEndpoint = props.graphqlEndpoint;
-console.log(graphqlEndpoint)
 const logger = require('../helpers/logger');
 
+logger.log(graphqlEndpoint)
 
-function compare(source1, source2) {
-  if (source1.name < source2.name) {
-    return -1;
-  }
-  if (source1.name > source2.name) {
-    return 1;
-  }
-  return 0;
-}
 
 const nodesToJSON = (state, allNodes, selectedNodes) => {
   return allNodes.map((node) => {
@@ -89,15 +75,17 @@ const mainModule = {
             this.commit('main/loadParties', partyPayload);
             await dispatch('loadSources');
         },
-        async speakersForParty({state}, payload) {
-          let party = partyMapping[state[payload.pane].generalNetworkSpeaker.selectedParty];
+        async speakersForParty(state, payload) {
+          if (payload.party) {
+              let party = partyMapping[payload.party];
 
-          const response = await axios.post(graphqlEndpoint, getSpeakersForParty(party));
-          const speakerResponse = response.data.data.findSpeakerByParty;
-          let not_found = speakers_not_fount[party]
+              const response = await axios.post(graphqlEndpoint, getSpeakersForParty(party));
+              const speakerResponse = response.data.data.findSpeakerByParty;
+              let not_found = speakers_not_fount[party]
 
-          let speakers = speakerResponse.speakers.filter(s => !not_found.includes(s))
-          this.commit('main/changeAvailableSpeakers', {speakers: speakers.sort(), pane: payload.pane});
+              let speakers = speakerResponse.speakers.filter(s => !not_found.includes(s))
+              this.commit('main/changeAvailableSpeakers', {speakers: speakers.sort(), pane: payload.pane});
+          }
         },
         async loadSources({ state }) {
             for (const corpus of state.availableCorpora) {
@@ -153,7 +141,7 @@ const mainModule = {
               state[pane].busy = true;
               const availableYearsQuery = getAvailableYearsForParty(party);
               const yearsResponse = await axios.post(graphqlEndpoint, availableYearsQuery);
-              let years = yearsResponse.data.data.getAvailableYearsForParty.available_years;
+              let years = yearsResponse.data.data['getAvailableYearsForParty']['available_years'];
               let year = Math.max(...years);
 
               const query = getGeneralNetworkQuery(party, year);
@@ -206,7 +194,7 @@ const mainModule = {
               const query = getGeneralSpeakerNetworkQuery(speaker);
               const response = await axios.post(graphqlEndpoint, query);
 
-              let network = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == maxYear);
+              let network = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year === maxYear.toString());
 
               const networkID = speaker + '_' + maxYear;
               assignValuesFromState(network, networkID, possibleYears);
@@ -339,7 +327,7 @@ const mainModule = {
                   getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
 
                 const networkID = oldNetwork.speaker + '_' + oldNetwork.year;
-                let updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
+                let updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year === oldNetwork.year);
 
                 updatedNetwork.party = oldNetwork.party;
                 updatedNetwork.speaker = oldNetwork.speaker;
@@ -435,7 +423,7 @@ const mainModule = {
 
           return response
         },
-        async loadTimeSeriesData_Generic(state, {pane, type, entity}) {
+        async loadGeneralTimeSeriesData(state, {pane, type, entity}) {
             try {
                 let data = await getGeneralTimeSeries(type, entity);
 
@@ -451,12 +439,8 @@ const mainModule = {
           try {
             if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id))
               state[pane].selectedTargetword = state[pane].autocompleteSuggestions[0];
-            const response = await axios.post(graphqlEndpoint,
-              getTargetWordByIdQuery(state[pane].selectedTargetword.id));
-            let timeSeries = response.data.data.getTargetWordById.timeSeries || {};
-            let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
-            let data = zipTimeSeriesAndYears(timeSeries, years);
-            const payload = {
+              let data = await getEgoNetworkTimeSeries(state, pane);
+              const payload = {
               pane: pane,
               data: data
             };
@@ -1008,11 +992,10 @@ export var mixin = {
       const x = clientX - elementSizes.left;
       const y = clientY - elementSizes.top;
 
-      const positions = {
-        x: (x * 100) / elementSizes.width,
-        y: (y * 100) / elementSizes.height
+      return {
+          x: (x * 100) / elementSizes.width,
+          y: (y * 100) / elementSizes.height
       };
-      return positions;
     },
     getNearestSautoId(element) {
       if (element.getAttribute('data-sauto-id') === null) {

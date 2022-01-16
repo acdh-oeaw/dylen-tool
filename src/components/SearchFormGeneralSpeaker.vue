@@ -132,7 +132,7 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadTimeSeriesData_Generic', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {
@@ -202,7 +202,9 @@ export default {
             party: val,
             pane: this.queryPane
           });
-          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val});
+          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val}).then(() => {
+            this.selectedSpeaker = this.availableSpeakers[0];
+          })
         }
       }
     },

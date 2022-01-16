@@ -27,3 +27,13 @@ export function snakeToCamel (str){
     .replace('_', '')
   );
 }
+
+export function compare(source1, source2) {
+    if (source1.name < source2.name) {
+        return -1;
+    }
+    if (source1.name > source2.name) {
+        return 1;
+    }
+    return 0;
+}

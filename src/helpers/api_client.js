@@ -1,10 +1,25 @@
-import {GENERAL_PARTY} from "@/helpers/vocabulary";
-import {allQueriesToReponseProperty, getGeneralNetworkTimeSeries, getMetadataSpeaker} from "@/queries/queries";
+import {EGO_NETWORK, GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/vocabulary";
+import {
+    allQueriesToReponseProperty,
+    getGeneralNetworkTimeSeries,
+    getMetadataSpeaker,
+    getTargetWordByIdQuery
+} from "@/queries/queries";
 import {partyMapping, zipTimeSeriesAndYears} from "@/helpers/mappers";
 import axios from "axios";
 import props from "@/properties/propertiesLoader";
 
 const graphqlEndpoint = props.graphqlEndpoint;
+function timeSeriesQueryByType(type, entity) {
+    switch (type) {
+        case EGO_NETWORK:
+            return getTargetWordByIdQuery(entity)
+        case GENERAL_PARTY:
+            return getGeneralNetworkTimeSeries(partyMapping[entity])
+        case GENERAL_SPEAKER:
+            return getMetadataSpeaker(entity)
+    }
+}
 
 function convertGeneralTimeSeriesMetricNames(timeSeries) {
     return {
@@ -14,8 +29,9 @@ function convertGeneralTimeSeriesMetricNames(timeSeries) {
     };
 }
 
+
 export async function getGeneralTimeSeries(type, entity) {
-    const query = type === GENERAL_PARTY ? getGeneralNetworkTimeSeries(partyMapping[entity]) : getMetadataSpeaker(entity)
+    const query = timeSeriesQueryByType(type, entity)
     let response = await axios.post(graphqlEndpoint, query)
     const responseProperty = type === GENERAL_PARTY ? allQueriesToReponseProperty.GET_AVAILABLE_YEARS_FOR_PARTY : allQueriesToReponseProperty.GET_METADATA_SPEAKER
     let timeSeries = response.data.data[responseProperty] || {};
@@ -23,3 +39,12 @@ export async function getGeneralTimeSeries(type, entity) {
 
     return zipTimeSeriesAndYears(convertGeneralTimeSeriesMetricNames(timeSeries), years);
 }
+
+export async function getEgoNetworkTimeSeries(state, pane) {
+    const response = await axios.post(graphqlEndpoint,
+        getTargetWordByIdQuery(state[pane].selectedTargetword.id));
+    let timeSeries = response.data.data[allQueriesToReponseProperty.GET_TARGETWORD_BY_ID].timeSeries || {};
+    let years = response.data.data.getTargetWordById.networks.map(e => e.year).slice().sort();
+    return zipTimeSeriesAndYears(timeSeries, years);
+}
+

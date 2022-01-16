@@ -97,7 +97,7 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadTimeSeriesData_Generic', {
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {
         pane: this.queryPane,
         type: GENERAL_PARTY,
         entity: this.selectedParty

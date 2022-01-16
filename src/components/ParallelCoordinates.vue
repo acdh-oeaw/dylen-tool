@@ -433,7 +433,7 @@ export default {
   methods: {
     generateLine(node) {
       let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
-      console.log(node, data);
+      //console.log(node, data);
       return this.lineGenerator(data);
     },
 
