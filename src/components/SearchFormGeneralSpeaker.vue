@@ -91,7 +91,6 @@ export default {
     return {
       defaultParty: "ÖVP",
       corpusEdit: false,
-      isNetworkLoading: false,
       slider: 1,
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
@@ -126,16 +125,13 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.isNetworkLoading = true;
       this.$store.dispatch('main/loadGeneralSpeakerNetwork', {
         pane: this.queryPane,
         sliderMin: this.$data.valueSlid[0]/100,
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
-        this.isNetworkLoading = false;
         this.$emit('visualizeClicked')
       }).finally(() => {
-        this.isNetworkLoading = false;
       });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
@@ -151,6 +147,7 @@ export default {
         metric: "Degree Centrality",
         pane: this.queryPane
       });
+      //TODO don't use this generic one
       this.$store.commit('main/resetSelectedNetwork', {
         network: null,
         pane: this.queryPane
@@ -186,7 +183,6 @@ export default {
     },
     availableParties: {
       get() {
-        //return this.$store.getters['main/availableParties'];
         return this.$store.getters['main/availableParties'];
       }
     },
