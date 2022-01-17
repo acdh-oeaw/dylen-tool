@@ -67,6 +67,7 @@
 import LineChart from '@/components/LineChart';
 import {relativeToMap, timeSeriesKeyMap} from "@/helpers/mappers";
 import TimeSeriesTable from "@/components/TimeSeriesTable";
+import {GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
   name: 'TimeSeries',
@@ -132,7 +133,15 @@ export default {
     },
     labels() {
       return ['pane1', 'pane2'].map(
-        (p) => this.$store.getters['main/selectedTargetword'](p)?.text
+        (p) => {
+          let networkType = this.$store.getters['main/topNav'].networkType
+          if(networkType === GENERAL_PARTY) {
+            return this.$store.getters['main/selectedGeneralNetworkParty'](p) ? this.$store.getters['main/selectedGeneralNetworkParty'](p).party : ''
+          } else if (networkType === GENERAL_SPEAKER) {
+            return this.$store.getters['main/selectedGeneralNetworkSpeaker'](p).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](p) : ''
+          }
+          return this.$store.getters['main/selectedTargetword'](p)?.text
+        }
       );
     },
     timeSeriesData() {

@@ -60,8 +60,10 @@
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
 import NodeFilter from "@/components/NodeFilter";
+import {networkTypeMixin, GENERAL_PARTY} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   components: {
     NodeFilter,
     VisualizeButton, ResetButton
@@ -96,7 +98,11 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {
+        pane: this.queryPane,
+        type: GENERAL_PARTY,
+        entity: this.selectedParty
+      });
     },
     initialize() {
       this.selectedParty = "ÖVP"
@@ -106,6 +112,9 @@ export default {
       });
       this.$store.commit('main/resetSelectedNetwork', {
         network: null,
+        pane: this.queryPane
+      });
+      this.$store.commit('main/resetGeneralNetwork', {
         pane: this.queryPane
       });
       this.$store.commit('main/resetTimeSeries', {

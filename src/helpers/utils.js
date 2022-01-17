@@ -20,10 +20,20 @@ export function camelToSnake (str){
   );
 }
 export function snakeToCamel (str){
-  return str.toLowerCase().replace(/([-_][a-z])/g, group =>
+  return str.replace(/([-_][a-z])/g, group =>
   group
     .toUpperCase()
     .replace('-', '')
     .replace('_', '')
   );
+}
+
+export function compare(source1, source2) {
+    if (source1.name < source2.name) {
+        return -1;
+    }
+    if (source1.name > source2.name) {
+        return 1;
+    }
+    return 0;
 }

@@ -79,8 +79,10 @@
 import NodeFilter from "@/components/NodeFilter";
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
+import {networkTypeMixin, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   props: ['pane'],
   components: {
     NodeFilter, VisualizeButton, ResetButton
@@ -131,7 +133,7 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {
@@ -201,7 +203,9 @@ export default {
             party: val,
             pane: this.queryPane
           });
-          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val});
+          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val}).then(() => {
+            this.selectedSpeaker = this.availableSpeakers[0];
+          })
         }
       }
     },

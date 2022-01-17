@@ -208,6 +208,7 @@ export default {
         for (const node of network.nodes) {
           let camelMetrics = {};
           for (let key in node.metrics)
+            //TODO: Not the right place to change this.. change it when it gets loaded from the backend
             camelMetrics[snakeToCamel(key)] = node.metrics[key];
           nodes.push({
             id: network.id + '_' + node.id,
@@ -216,7 +217,10 @@ export default {
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
             _metrics: camelMetrics,
-            _pane: this.pane
+            _pane: this.pane,
+            _absoluteFrequency: node.absoluteFrequency,
+            _normalisedFrequency: node.normalisedFrequency,
+            _pos: node.pos
           });
         }
         for (const link of network.edges) {
