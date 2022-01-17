@@ -15,7 +15,7 @@
           >
             <b-col>
               <b-row>
-                <b-col v-if="type==='EgoNetwork'">
+                <b-col v-if="type===EGO_NETWORK">
                   <b-card class='mt-2'>
                     <search-form
                         :is-vertical='true'
@@ -27,7 +27,7 @@
                     </search-form>
                   </b-card>
                 </b-col>
-                <b-col v-if="type==='GeneralNetworkNetwork'">
+                <b-col v-if="type===GENERAL_PARTY">
                   <b-card class='mt-2'>
                     <search-form-general
                         :is-vertical='true'
@@ -40,7 +40,7 @@
                   </b-card>
 
                 </b-col>
-                <b-col v-if="type==='GeneralNetworkSpeaker'" class='mt-2'>
+                <b-col v-if="type===GENERAL_SPEAKER" class='mt-2'>
                   <b-card>
                     <search-form-general-speaker
                         :is-vertical='true'
@@ -86,7 +86,7 @@
             </b-col>
             <b-col
                 xl='12'
-                v-if="secondFormVisibility && type==='EgoNetwork'">
+                v-if="secondFormVisibility && type===EGO_NETWORK">
               <b-card>
                 <search-form
                     :with-labels='false'
@@ -99,7 +99,7 @@
             </b-col>
             <b-col
                 xl='12'
-                v-if="secondFormVisibility && type==='GeneralNetworkNetwork'">
+                v-if="secondFormVisibility && type===GENERAL_PARTY">
               <b-card>
                 <search-form-general
                     :with-labels='false'
@@ -110,7 +110,7 @@
               </b-card>
 
             </b-col>
-            <b-col v-if="secondFormVisibility && type==='GeneralNetworkSpeaker'">
+            <b-col v-if="secondFormVisibility && type===GENERAL_SPEAKER">
               <b-card>
                 <search-form-general-speaker
                     :with-labels='false'
@@ -133,8 +133,10 @@
 import SearchForm from '@/components/SearchForm';
 import SearchFormGeneral from '@/components/SearchFormGeneral';
 import SearchFormGeneralSpeaker from '@/components/SearchFormGeneralSpeaker';
+import {networkTypeMixin} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   name: "QueryBar",
   props: [],
   components: {

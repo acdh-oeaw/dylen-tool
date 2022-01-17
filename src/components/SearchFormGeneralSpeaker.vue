@@ -79,9 +79,10 @@
 import NodeFilter from "@/components/NodeFilter";
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
-import {GENERAL_SPEAKER} from "@/helpers/vocabulary";
+import {networkTypeMixin, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   props: ['pane'],
   components: {
     NodeFilter, VisualizeButton, ResetButton

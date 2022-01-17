@@ -60,9 +60,10 @@
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
 import NodeFilter from "@/components/NodeFilter";
-import {GENERAL_PARTY} from "@/helpers/vocabulary";
+import {networkTypeMixin, GENERAL_PARTY} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   components: {
     NodeFilter,
     VisualizeButton, ResetButton

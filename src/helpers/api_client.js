@@ -1,4 +1,3 @@
-import {EGO_NETWORK, GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/vocabulary";
 import {
     allQueriesToReponseProperty,
     getGeneralNetworkTimeSeries,
@@ -8,8 +7,10 @@ import {
 import {partyMapping, zipTimeSeriesAndYears} from "@/helpers/mappers";
 import axios from "axios";
 import props from "@/properties/propertiesLoader";
+import {EGO_NETWORK, GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 const graphqlEndpoint = props.graphqlEndpoint;
+
 function timeSeriesQueryByType(type, entity) {
     switch (type) {
         case EGO_NETWORK:

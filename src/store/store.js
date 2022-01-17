@@ -21,9 +21,9 @@ import {
 } from '@/queries/queries';
 import {ExportToCsv} from 'export-to-csv';
 import {speakers_not_fount} from "@/helpers/speakers_not_found";
-import {GENERAL_PARTY} from "@/helpers/vocabulary";
 import {getEgoNetworkTimeSeries, getGeneralTimeSeries} from "@/helpers/api_client";
 import {compare} from "@/helpers/utils";
+import {GENERAL_PARTY} from "@/helpers/mixins";
 
 Vue.component('b-spinner', BSpinner);
 

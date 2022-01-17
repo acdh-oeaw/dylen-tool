@@ -63,7 +63,7 @@
           <b-form-checkbox
             class='b-0'
             v-model='options.showClusters'
-            @change='clickOnShowClusters'
+            @change='!options.showClusters'
             :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
             show clusters
@@ -318,10 +318,6 @@ export default {
     }
   },
   methods: {
-    clickOnShowClusters() {
-      this.options.showClusters = !this.options.showClusters();
-      //this.simulation.restart();
-    },
     createContextMenu(event, d) {
       const x = event.clientX,
         y = event.clientY;

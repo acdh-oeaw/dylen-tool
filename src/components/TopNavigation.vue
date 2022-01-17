@@ -16,9 +16,9 @@
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
               <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                  <b-nav-item href="#" @click='onTypeOfNetworkSelect("EgoNetwork")'>Ego Network</b-nav-item>
-                  <b-nav-item href="#" @click='onTypeOfNetworkSelect("GeneralNetworkNetwork")'>General Network</b-nav-item>
-                  <b-nav-item href="#" @click='onTypeOfNetworkSelect("GeneralNetworkSpeaker")'>General Network Speaker</b-nav-item>
+                  <b-nav-item href="#" @click='onTypeOfNetworkSelect(EGO_NETWORK)'>Ego Network</b-nav-item>
+                  <b-nav-item href="#" @click='onTypeOfNetworkSelect(GENERAL_PARTY)'>General Network</b-nav-item>
+                  <b-nav-item href="#" @click='onTypeOfNetworkSelect(GENERAL_SPEAKER)'>General Network Speaker</b-nav-item>
                 </b-navbar-nav>
               </b-collapse>
               <b-row align-h='end'>
@@ -49,8 +49,10 @@
 
 <script>
 import Setting from '@/components/Setting'
+import {EGO_NETWORK, networkTypeMixin} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   name: 'TopNavigation',
   components: {
     Setting
@@ -58,7 +60,7 @@ export default {
   props: ['showInfo'],
   data() {
     return {
-      typeOfNetwork: 'EgoNetwork'
+      typeOfNetwork: EGO_NETWORK
     };
   },
   created() {
@@ -72,10 +74,10 @@ export default {
     }
   },
   methods: {
-    onTypeOfNetworkSelect(event) {
-      this.typeOfNetwork = event;
+    onTypeOfNetworkSelect(networkTypeEvent) {
+      this.typeOfNetwork = networkTypeEvent;
       this.$store.commit('main/changeTopNavType', {
-        networkType: event
+        networkType: networkTypeEvent
       });
     },
     toggleSideBar() {

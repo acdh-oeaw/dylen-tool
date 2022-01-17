@@ -278,8 +278,10 @@
 <script>
 import * as d3 from 'd3';
 import { camelCaseToSpaces } from '@/helpers/utils';
+import {networkTypeMixin, EGO_NETWORK, GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   name: 'ParallelCoordinates',
   props: ['allNodes', 'selectedNodes', 'options'],
   data() {
@@ -294,6 +296,9 @@ export default {
     };
   },
   computed: {
+    networkType() {
+      return this.$store.getters['main/topNav'].networkType;
+    },
     hoverNodes() {
       let sharedNode = this.$store.getters['main/focusNode'];
       return this.selectedNodes.filter((node) => sharedNode === node.id);
@@ -416,11 +421,29 @@ export default {
       );
     },
     targetWordLabelLeft() {
-      return {
-        text: this.$store.getters['main/selectedTargetword']('pane1').text,
-        year: this.$store.getters['main/selectedYear']('pane1')?.year,
-        color: this.$store.getters['main/selectionColors'][0]
-      };
+      switch (this.networkType) {
+        case EGO_NETWORK:
+          return {
+            text: this.$store.getters['main/selectedTargetword']('pane1').text,
+            year: this.$store.getters['main/selectedYear']('pane1')?.year,
+            color: this.$store.getters['main/selectionColors'][0]
+          };
+        case GENERAL_PARTY:
+          return {
+            text: this.$store.getters['main/selectedGeneralNetworkParty']('pane1').party,
+            year: this.$store.getters['main/selectedYear']('pane1')?.year,
+            color: this.$store.getters['main/selectionColors'][0]
+          }
+        case GENERAL_SPEAKER:
+          return {
+            party: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker']('pane1').party,
+            text: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker']('pane1').speaker,
+            year: this.$store.getters['main/selectedYear']('pane1')?.year,
+            color: this.$store.getters['main/selectionColors'][0]
+          }
+        default:
+          return {}
+      }
     },
     targetWordLabelRight() {
       return {
