@@ -327,7 +327,7 @@ const mainModule = {
                   getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
 
                 const networkID = oldNetwork.speaker + '_' + oldNetwork.year;
-                let updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year === oldNetwork.year);
+                let updatedNetwork = response.data.data.getGeneralSourceBySpeakerYear.networks.find(nw => nw.year == oldNetwork.year);
 
                 updatedNetwork.party = oldNetwork.party;
                 updatedNetwork.speaker = oldNetwork.speaker;
