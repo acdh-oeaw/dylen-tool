@@ -126,6 +126,18 @@ const mainModule = {
             logger.error(error);
           }
         },
+        async resetSelectedNetwork({state}, {pane: pane}) {
+            state[pane].selectedNetwork.nodes
+                .filter((node) =>
+                    state['nodeMetrics'].selectedNodes.find(
+                        (n) => n.id === node.id && n._pane === node._pane
+                    )
+                )
+                .forEach((node) => {
+                    this.commit('main/removeSelectedNodeForNodeMetrics', node);
+                });
+            state[pane].selectedNetwork = null;
+        },
         async loadGeneralNetwork({state}, {pane: pane, party: party_orig, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, years) {
             network.id = networkID;
@@ -232,10 +244,10 @@ const mainModule = {
             //TODO: use constant.. hardcoding types as string is very errorprone
             network.type = 'Ego';
           }
-          console.log('change busy state to true')
+
           state[pane].busy = true;
+
           if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
-            console.log(state[pane].autocompleteSuggestions)
             let response = await dispatch("loadTargetwordBySearchTerm", {
               pane: pane,
               searchTerm: state[pane].autocompleteSuggestions[0]
@@ -693,6 +705,9 @@ const mainModule = {
       let payloadIndex = state['nodeMetrics'].selectedNodes.indexOf(payload);
       state['nodeMetrics'].selectedNodes.splice(payloadIndex, 1);
     },
+    removeAllSelectedNodes(state) {
+      state['nodeMetrics'].selectedNodes = []
+    },
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
     },
@@ -705,9 +720,6 @@ const mainModule = {
       state[payload['pane']].generalNetworkSpeaker.network = payload.network
       state[payload['pane']].generalNetworkSpeaker.form.selectedYear = payload.network.year
       state[payload['pane']].generalNetworkSpeaker.loaded = true
-    },
-    resetSelectedNetwork(state, payload) {
-      state[payload['pane']].selectedNetwork = null;
     },
     resetGeneralSpeakerNetwork(state, payload) {
       state[payload['pane']].generalNetworkSpeaker.selectedParty = '';

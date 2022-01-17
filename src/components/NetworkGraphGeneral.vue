@@ -165,21 +165,6 @@ export default {
       this.allNodesSelected = false;
       this.deselectAllNodes();
     },
-    selectionCheckboxChanged() {
-      if (this.allNodesSelected) this.selectAllNodes();
-      else this.deselectAllNodes();
-    },
-    selectAllNodes() {
-      this.generalNetwork.nodes
-        .filter(
-          (node) =>
-            this.$store.getters['main/selectedNodesForMetrics'].indexOf(node) <
-            0
-        )
-        .forEach((node) => {
-          this.$store.commit('main/addSelectedNodeForNodeMetrics', node);
-        });
-    },
     deselectAllNodes() {
       this.generalNetwork.nodes
         .filter(

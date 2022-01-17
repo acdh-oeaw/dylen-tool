@@ -75,7 +75,6 @@ export default {
       selectedParty: "ÖVP",
       valueSlid: [0, 20],
       corpusEdit: false,
-      isNetworkLoading: false,
     };
   },
   mounted() {
@@ -89,16 +88,17 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      this.$store.dispatch('main/resetSelectedNetwork', {
+        pane: this.queryPane
+      })
       this.$store.dispatch('main/loadGeneralNetwork', {
         pane: this.queryPane,
         party: this.selectedParty,
         sliderMin: this.$data.valueSlid[0]/100,
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
-        this.isNetworkLoading = false;
         this.$emit('visualizeClicked')
       }).finally(() => {
-        this.isNetworkLoading = false;
       });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', {
         pane: this.queryPane,
