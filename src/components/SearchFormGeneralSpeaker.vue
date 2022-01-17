@@ -79,14 +79,17 @@
 import NodeFilter from "@/components/NodeFilter";
 import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
+import {networkTypeMixin, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   props: ['pane'],
   components: {
     NodeFilter, VisualizeButton, ResetButton
   },
   data() {
     return {
+      defaultParty: "ÖVP",
       corpusEdit: false,
       isNetworkLoading: false,
       slider: 1,
@@ -99,7 +102,7 @@ export default {
   mounted() {
     let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane);
 
-    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : "ÖVP"
+    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : this.defaultParty
 
     this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
       this.selectedSpeaker = this.availableSpeakers[0];
@@ -134,11 +137,11 @@ export default {
       }).finally(() => {
         this.isNetworkLoading = false;
       });
-      this.$store.dispatch('main/loadGeneralSpeakerTimeSeriesData', this.queryPane);
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
       this.$store.commit('main/changeSelectedSpeakerParty', {
-        party: "ÖVP",
+        party: this.defaultParty,
         pane: this.queryPane
       });
       this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.defaultParty}).then(() => {
@@ -204,7 +207,9 @@ export default {
             party: val,
             pane: this.queryPane
           });
-          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val});
+          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val}).then(() => {
+            this.selectedSpeaker = this.availableSpeakers[0];
+          })
         }
       }
     },

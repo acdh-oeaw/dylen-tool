@@ -63,7 +63,7 @@
           <b-form-checkbox
             class='b-0'
             v-model='options.showClusters'
-            @chante='clickOnShowClusters'
+            @change='!options.showClusters'
             :data-sauto-id="'select-all-checkbox-'+this.pane"
           >
             show clusters
@@ -123,7 +123,6 @@ export default {
   },
   watch: {
     showClusters: function () {
-      console.log('watch showclusters: ' + this.options.showClusters);
       this.updateSimulation();
     },
     netNodes: function () {
@@ -319,10 +318,6 @@ export default {
     }
   },
   methods: {
-    clickOnShowClusters() {
-      this.options.showClusters = true;
-      //this.simulation.restart();
-    },
     createContextMenu(event, d) {
       const x = event.clientX,
         y = event.clientY;
@@ -354,6 +349,7 @@ export default {
       d3.selectAll(`.menuEntry`)
         .append('span')
         .text((entry) => {
+          console.log('entryTitle: ' +  entry.title)
           return `${entry.title}${entry.value(d)}`;
         })
         .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'));

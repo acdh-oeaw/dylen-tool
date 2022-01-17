@@ -123,21 +123,6 @@ export default {
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
     },
-    prepareNode(network) {
-      const nodes = [];
-      for (const node of network) {
-        let camelMetrics = {};
-        for (let key in node.metrics)
-          camelMetrics[snakeToCamel(key)] = node.metrics[key];
-        console.log(camelMetrics);
-        nodes.push({
-          id: network.id + '_' + node.id,
-          name: node.text,
-          _metrics: camelMetrics
-        });
-      }
-      return nodes;
-    },
     csvExport() {
       this.$store.dispatch('main/downloadMetricsAsCSV', {
         allNodes: this.allNodes,

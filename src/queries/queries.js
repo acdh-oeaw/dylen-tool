@@ -1,3 +1,18 @@
+export const allQueriesToReponseProperty = {
+    'ALL_AVAILABLE_CORPORA':'allAvailableCorpora',
+    'GET_NETWORKS_BY_CORPUS_AND_SOURCE':'getNetworksByCorpusAndSource',
+    'GET_SOURCES_BY_CORPUS_QUERY':'getSourcesByCorpus',
+    'GET_NETWORK_QUERY':'getNetwork',
+    'GET_GENERAL_NETWORK_QUERY':'getGeneralSourceByPartyYear',
+    'GET_TARGETWORD_BY_ID':'getTargetWordById',
+    'GET_AUTOCOMPLETE_SUGGESTIONS_QUERY':'getAutocompleteSuggestions',
+    'GET_AVAILABLE_PARTIES':'getAutocompleteSuggestions',
+    'GET_AVAILABLE_YEARS_FOR_PARTY':'getAvailableYearsForParty',
+    'GET_METADATA_SPEAKER':'getAvailableYearsForSpeaker',
+    'GET_GENERAL_NETWORK_TIME_SERIES':'getAvailableYearsForParty',
+    'GET_SPEAKERS_FOR_PARTY':'findSpeakerByParty',
+    'GET_GENERAL_SPEAKER_NETWORK_QUERY':'getGeneralSourceBySpeakerYear'
+}
 export const allAvailableCorporaQuery = {
   query: `{
         allAvailableCorpora
@@ -81,7 +96,7 @@ export function getGeneralNetworkQuery(entity, year) {
             text
             pos
             absolute_frequency
-            normalized_frequency
+            normalised_frequency
             metrics {
               degree_centrality
               closeness_centrality
@@ -271,7 +286,7 @@ export function getGeneralSpeakerNetworkQuery(entityName){
               text
               pos
               absolute_frequency
-              normalized_frequency
+              normalised_frequency
               metrics {
                 closeness_centrality
                 betweenness_centrality

@@ -213,7 +213,10 @@ export default {
             _size: node.similarity * 40 /* Math.pow(200, node.similarity)*/,
             _color: this.chartColors[0][node.clusterId],
             _metrics: camelMetrics,
-            _pane: this.pane
+            _pane: this.pane,
+            _absoluteFrequency: node.absoluteFrequency,
+            _normalisedFrequency: node.normalisedFrequency,
+            _pos: this.pos
           });
         }
         for (const link of network.edges) {

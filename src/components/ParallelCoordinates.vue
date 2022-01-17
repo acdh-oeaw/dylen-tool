@@ -223,7 +223,7 @@
             <tspan>deselect all</tspan>
           </text>
         </g>
-        <g v-if="targetWordLabelRight.text != ''">
+        <g v-if="targetWordLabelRight.text !== ''">
           <text
             :y='svgPadding.top - 20'
             :x='chartSize[0]+svgPadding.right'
@@ -278,8 +278,10 @@
 <script>
 import * as d3 from 'd3';
 import { camelCaseToSpaces } from '@/helpers/utils';
+import {networkTypeMixin, EGO_NETWORK, GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
+  mixins: [networkTypeMixin],
   name: 'ParallelCoordinates',
   props: ['allNodes', 'selectedNodes', 'options'],
   data() {
@@ -294,6 +296,9 @@ export default {
     };
   },
   computed: {
+    networkType() {
+      return this.$store.getters['main/topNav'].networkType;
+    },
     hoverNodes() {
       let sharedNode = this.$store.getters['main/focusNode'];
       return this.selectedNodes.filter((node) => sharedNode === node.id);
@@ -308,19 +313,10 @@ export default {
       ];
     },
     metrics() {
-      console.log(this.selectedNodes);
+      //console.log(this.selectedNodes);
       return this.$store.getters['main/parallelCoordinateMetrics']
         .filter((m) => m.enabled)
         .map((m) => m.name);
-      /* return [
-        ...new Set(
-          [
-            this.allNodes
-              .map((n) => Object.keys(n._metrics).slice(0, -1))
-              .flat()
-          ].flat()
-        )
-      ]; */
     },
     scaleY() {
       let scale = {};
@@ -425,24 +421,41 @@ export default {
       );
     },
     targetWordLabelLeft() {
-      return {
-        text: this.$store.getters['main/selectedTargetword']('pane1').text,
-        year: this.$store.getters['main/selectedYear']('pane1')?.year,
-        color: this.$store.getters['main/selectionColors'][0]
-      };
+      return this.getWordLabel(this.networkType, 'pane1')
     },
     targetWordLabelRight() {
-      return {
-        text: this.$store.getters['main/selectedTargetword']('pane2').text,
-        year: this.$store.getters['main/selectedYear']('pane2')?.year,
-        color: this.$store.getters['main/selectionColors'][1]
-      };
+      return this.getWordLabel(this.networkType, 'pane2')
     }
   },
   methods: {
+    getWordLabel(networkType, pane) {
+      switch (networkType) {
+        case EGO_NETWORK:
+          return {
+            text: this.$store.getters['main/selectedTargetword'](pane).text,
+            year: this.$store.getters['main/selectedYear'](pane)?.year,
+            color: this.$store.getters['main/selectionColors'][0]
+          };
+        case GENERAL_PARTY:
+          return {
+            text: this.$store.getters['main/selectedGeneralNetworkParty'](pane) ? this.$store.getters['main/selectedGeneralNetworkParty'](pane).party : '',
+            year: this.$store.getters['main/selectedGeneralNetworkParty'](pane) ? this.$store.getters['main/selectedGeneralNetworkParty'](pane).year : '',
+            color: this.$store.getters['main/selectionColors'][0]
+          }
+        case GENERAL_SPEAKER:
+          return {
+            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](pane) : '',
+            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane) : '',
+            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).selectedYear : '',
+            color: this.$store.getters['main/selectionColors'][0]
+          }
+        default:
+          return {}
+      }
+    },
     generateLine(node) {
       let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
-      console.log(node, data);
+      //console.log(node, data);
       return this.lineGenerator(data);
     },
 

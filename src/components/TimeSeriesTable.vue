@@ -203,9 +203,6 @@ export default {
       }
     },
     customFilter(row, filter) {
-      console.log('filtering on: ' + this.filterOn)
-      console.log('filter filter: ' +  filter)
-
       const targetwordCheck = filter[0] !== null? row.targetword.toLowerCase().startsWith(filter[0].toLowerCase()): null
       const metricCheck = filter[1] !== null? row.metric.toLowerCase().startsWith(filter[1].toLowerCase()): null
       const relativeToCheck = filter[2] !== null? row.relativeTo.toLowerCase().startsWith(filter[2].toLowerCase()): null
