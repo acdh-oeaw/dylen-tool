@@ -421,39 +421,38 @@ export default {
       );
     },
     targetWordLabelLeft() {
-      switch (this.networkType) {
+      return this.getWordLabel(this.networkType, 'pane1')
+    },
+    targetWordLabelRight() {
+      return this.getWordLabel(this.networkType, 'pane2')
+    }
+  },
+  methods: {
+    getWordLabel(networkType, pane) {
+      switch (networkType) {
         case EGO_NETWORK:
           return {
-            text: this.$store.getters['main/selectedTargetword']('pane1').text,
-            year: this.$store.getters['main/selectedYear']('pane1')?.year,
+            text: this.$store.getters['main/selectedTargetword'](pane).text,
+            year: this.$store.getters['main/selectedYear'](pane)?.year,
             color: this.$store.getters['main/selectionColors'][0]
           };
         case GENERAL_PARTY:
           return {
-            text: this.$store.getters['main/selectedGeneralNetworkParty']('pane1').party,
-            year: this.$store.getters['main/selectedYear']('pane1')?.year,
+            text: this.$store.getters['main/selectedGeneralNetworkParty'](pane) ? this.$store.getters['main/selectedGeneralNetworkParty'](pane).party : '',
+            year: this.$store.getters['main/selectedGeneralNetworkParty'](pane) ? this.$store.getters['main/selectedGeneralNetworkParty'](pane).year : '',
             color: this.$store.getters['main/selectionColors'][0]
           }
         case GENERAL_SPEAKER:
           return {
-            party: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker']('pane1').party,
-            text: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker']('pane1').speaker,
-            year: this.$store.getters['main/selectedYear']('pane1')?.year,
+            party: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane).party,
+            text: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane).speaker,
+            year: this.$store.getters['main/selectedYear'](pane)?.year,
             color: this.$store.getters['main/selectionColors'][0]
           }
         default:
           return {}
       }
     },
-    targetWordLabelRight() {
-      return {
-        text: this.$store.getters['main/selectedTargetword']('pane2').text,
-        year: this.$store.getters['main/selectedYear']('pane2')?.year,
-        color: this.$store.getters['main/selectionColors'][1]
-      };
-    }
-  },
-  methods: {
     generateLine(node) {
       let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
       //console.log(node, data);

@@ -748,7 +748,7 @@ const mainModule = {
     selectionColors: (state) => state.selectionColors,
     availableCorpora: (state) => state.availableCorpora,
     availableSpeakers: (state) => (pane) => state[pane].availableSpeakers,
-    selectedGeneralNetworkParty: (state) => (pane) => state[pane].generalNetwork.selectedParty,
+    selectedGeneralNetworkParty: (state) => (pane) => state[pane].selectedNetwork,
     selectedGeneralNetworkMetric: (state) => (pane) => state[pane].generalNetwork.selectedMetric,
     selectedGeneralNetworkSpeakerParty: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedParty,
     selectedGeneralNetworkSpeakerMetric: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedMetric,
