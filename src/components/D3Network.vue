@@ -94,6 +94,15 @@
         <g class='nodes'></g>
       </g>
     </svg>
+
+    <b-modal
+      v-model="targetWordNotFound"
+      title="Target word not found"
+      title-text-variant="danger"
+      ok-only
+    >
+      The target word could not be found. The previous ego network is kept instead.
+    </b-modal>
   </div>
 </template>
 
@@ -116,7 +125,8 @@ export default {
       menuItems: [
         {
           title: '',
-          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
+          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`,
+          class: 'title'
         },
         {
           title: 'Select as target word',
@@ -126,7 +136,7 @@ export default {
             this.setWordAsSearchTerm(d);
           },
           networkType: 'Ego',
-          class: 'clickable'
+          class: 'clickable btn btn-info'
         }
       ]
     };
@@ -164,6 +174,14 @@ export default {
     }
   },
   computed: {
+    targetWordNotFound: {
+      get() {
+        return this.$store.getters['main/targetWordNotFound'];
+      },
+      set(val) {
+        this.$store.commit('main/setTargetWordNotFound', val);
+      }
+    },
     networkType() {
       return this.$store.getters['main/selectedNetwork']('pane1').type;
     },
@@ -361,19 +379,21 @@ export default {
         )
         .enter()
         .append('div')
-        .attr('class', (d) => `menuEntry ${d.class}`);
+        .attr('class', (d) => `menuEntry ${d.class || ''}`);
 
-      d3.selectAll(`.menuEntry`)
+      let menuEntries = d3
+        .selectAll(`.menuEntry`)
         .append('span')
         .text((entry) => {
           return `${entry.title}${entry.value(d)}`;
         })
-        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'))
         .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
         .on('click', (event, entry) => {
           event.preventDefault();
           entry.onClick(d.name);
         });
+
+      menuEntries.filter((d) => d.hr).append('hr');
 
       event.preventDefault();
     },
@@ -633,9 +653,19 @@ svg .labels text {
 .menuEntry.clickable {
   padding: 5px;
   padding-left: 0;
-  font-size: 14px;
+  font-size: 12px;
+  width: calc(100% - 10px);
+  margin-bottom: 2px;
 }
-.menuEntry.clickable span:hover {
-  font-weight: 500 !important;
+.menuEntry.info_right {
+  text-align: right;
+}
+.menuEntry hr {
+  margin: 2px 0;
+}
+.menuEntry.title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 5px;
 }
 </style>

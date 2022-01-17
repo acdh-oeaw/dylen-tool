@@ -462,7 +462,7 @@ const mainModule = {
                 if(state[payload.pane].autocompleteSuggestions.length === 0 || !matchingSuggestion){
                   state[payload.pane].searchTerm = oldSearchTerm;
                   state[payload.pane].autocompleteSuggestions = oldSuggestions;
-                  alert("The target word could not be found");
+                  state.targetWordNotFound = true;
                 }
                 else {
                   let response = await this.dispatch("main/loadTargetwordBySearchTerm", {
@@ -492,6 +492,7 @@ const mainModule = {
       secondForm: false
     },
     focusNode: null,
+    targetWordNotFound: false,
     pane1: {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -776,7 +777,10 @@ const mainModule = {
     setParallelCoordinateMetrics(state, payload){
       logger.log("payload", payload);
       state.parallelCoordinateMetrics = payload;
-    }
+    },
+    setTargetWordNotFound(state, value){
+      state.targetWordNotFound = value;
+    },
   },
   getters: {
     focusNode: (state) => {
@@ -825,7 +829,8 @@ const mainModule = {
     secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy,
-    parallelCoordinateMetrics: state => state.parallelCoordinateMetrics
+    parallelCoordinateMetrics: state => state.parallelCoordinateMetrics,
+    targetWordNotFound: state => state.targetWordNotFound
   }
 };
 
