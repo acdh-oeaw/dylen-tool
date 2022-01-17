@@ -77,6 +77,7 @@
 <script>
 import {InfoIcon, AlertTriangleIcon} from 'vue-feather-icons'
 import Slider from '@vueform/slider/dist/slider.vue2.js';
+import {GENERAL_SPEAKER} from "@/helpers/mixins";
 
 export default {
   components: {InfoIcon, AlertTriangleIcon, Slider},
@@ -108,7 +109,7 @@ export default {
       this.$emit('sliderValueChanged', this.$data.valueSlid);
     },
     getMetricByType(entityType) {
-      if (entityType === "speaker") {
+      if (entityType === GENERAL_SPEAKER) {
         return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.pane)
       } else {
         return this.$store.getters['main/selectedGeneralNetworkMetric'](this.pane);
@@ -122,7 +123,7 @@ export default {
       },
       set(val) {
         if (val) {
-          if (this.generalType === "speaker") {
+          if (this.generalType === GENERAL_SPEAKER) {
             this.$store.commit('main/changeSelectedSpeakerMetric', {
               metric: val,
               pane: this.pane

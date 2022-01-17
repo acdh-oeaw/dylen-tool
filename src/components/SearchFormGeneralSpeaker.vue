@@ -58,7 +58,7 @@
             <node-filter
                 @sliderValueChanged='handleSliderValue'
                 :available-metrics='availableMetrics'
-                :general-type='"speaker"'
+                :general-type='GENERAL_SPEAKER'
                 :pane='queryPane'></node-filter>
           </b-col>
         </b-row>
@@ -139,28 +139,13 @@ export default {
       this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
-      this.$store.commit('main/changeSelectedSpeakerParty', {
+      this.$store.dispatch('main/resetGeneralNetworkSpeaker', {
+        pane: this.queryPane,
         party: this.defaultParty,
-        pane: this.queryPane
-      });
-      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.defaultParty}).then(() => {
-        this.selectedSpeaker = this.availableSpeakers[0];
-      });
-      this.$store.commit('main/changeSelectedSpeakerMetric', {
         metric: "Degree Centrality",
-        pane: this.queryPane
-      });
-      //TODO don't use this generic one
-      this.$store.commit('main/resetSelectedNetwork', {
-        network: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSecondFormVisibility', {
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetTimeSeries', {
-        pane: this.queryPane
-      });
+      }).then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
+      })
       console.log('initialised');
     }
   },
@@ -202,11 +187,10 @@ export default {
       },
       set(val) {
         if (val) {
-          this.$store.commit('main/changeSelectedSpeakerParty', {
+          this.$store.dispatch('main/changeSelectedSpeakerParty', {
             party: val,
             pane: this.queryPane
-          });
-          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val}).then(() => {
+          }).then(() => {
             this.selectedSpeaker = this.availableSpeakers[0];
           })
         }

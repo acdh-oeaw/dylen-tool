@@ -108,14 +108,8 @@ export default {
     },
     initialize() {
       this.selectedParty = "ÖVP"
-      this.$store.dispatch('main/resetSelectedNetwork', {
-        network: null,
-        pane: this.queryPane
-      });
+
       this.$store.dispatch('main/resetGeneralNetwork', {
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetTimeSeries', {
         pane: this.queryPane
       });
       console.log('initialised');

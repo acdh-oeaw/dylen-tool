@@ -338,6 +338,15 @@ const mainModule = {
             },
         async resetGeneralNetwork(state, payload) {
             this.commit('main/resetGeneralNetwork', payload)
+            this.commit('main/resetTimeSeries', payload)
+            this.dispatch('main/resetSelectedNetwork', payload)
+        },
+        async resetGeneralNetworkSpeaker(state, payload) {
+            this.commit('main/changeSelectedSpeakerMetric', payload);
+            this.commit('main/resetTimeSeries', payload);
+            this.dispatch('main/resetSelectedNetwork', payload)
+            this.commit('main/setSelectedSpeakerParty', payload);
+            this.dispatch('main/loadAvailableSpeakers', payload);
         },
         async loadUpdatedSpeakerNetwork(state, {network: oldNetwork, pane: pane}) {
             try {
@@ -368,7 +377,10 @@ const mainModule = {
                 logger.error(error);
             }
         },
-
+        async changeSelectedSpeakerParty(state, payload) {
+            this.commit('main/setSelectedSpeakerParty', payload);
+            this.dispatch('main/loadAvailableSpeakers', payload)
+        },
         async loadAutocompleteSuggestions({ state }, { pane }) {
             console.log('loading autocomplete suggestions...')
           const suggestionsResponse = await axios.post(graphqlEndpoint,
@@ -583,11 +595,6 @@ const mainModule = {
       state.settings.active = component !== 'closed'
       state.settings.component = component
     },
-    changeSecondFormVisibility(state, payload) {
-      if (payload.pane === 'pane2') {
-        state.topNav.secondForm = !state.topNav.secondForm;
-      }
-    },
     changeTopNavType(state, payload) {
       state.topNav.networkType = payload['networkType'];
     },
@@ -644,7 +651,7 @@ const mainModule = {
       //TODO group this with other generalnetworkspeaker states
       state[payload.pane].availableSpeakers = payload.speakers;
     },
-    changeSelectedSpeakerParty(state, payload) {
+    setSelectedSpeakerParty(state, payload) {
       state[payload.pane].generalNetworkSpeaker.form.selectedParty = payload.party;
       state[payload.pane].generalNetworkSpeaker.loaded = false;
     },
@@ -832,7 +839,6 @@ const mainModule = {
       return count;
     },
     showInfoButton: (state) => state.showInfoButton,
-    secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy,
     parallelCoordinateMetrics: state => state.parallelCoordinateMetrics
