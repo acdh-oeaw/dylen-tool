@@ -200,8 +200,7 @@ export default {
         targetword: null,
         pane: this.queryPane
       });
-      this.$store.commit('main/resetSelectedNetwork', {
-        network: null,
+      this.$store.dispatch('main/resetSelectedNetwork', {
         pane: this.queryPane
       });
       this.$store.commit('main/resetTimeSeries', {

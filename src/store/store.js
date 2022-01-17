@@ -127,15 +127,17 @@ const mainModule = {
           }
         },
         async resetSelectedNetwork({state}, {pane: pane}) {
-            state[pane].selectedNetwork.nodes
-                .filter((node) =>
-                    state['nodeMetrics'].selectedNodes.find(
-                        (n) => n.id === node.id && n._pane === node._pane
+            if (state[pane].selectedNetwork) {
+                state[pane].selectedNetwork.nodes
+                    .filter((node) =>
+                        state['nodeMetrics'].selectedNodes.find(
+                            (n) => n.id === node.id && n._pane === node._pane
+                        )
                     )
-                )
-                .forEach((node) => {
-                    this.commit('main/removeSelectedNodeForNodeMetrics', node);
-                });
+                    .forEach((node) => {
+                        this.commit('main/removeSelectedNodeForNodeMetrics', node);
+                    });
+            }
             state[pane].selectedNetwork = null;
         },
         async loadGeneralNetwork({state}, {pane: pane, party: party_orig, sliderMin: slidValMin, sliderMax: slidValMax}) {
@@ -334,6 +336,9 @@ const mainModule = {
                 logger.error(error);
               }
             },
+        async resetGeneralNetwork(state, payload) {
+            this.commit('main/resetGeneralNetwork', payload)
+        },
         async loadUpdatedSpeakerNetwork(state, {network: oldNetwork, pane: pane}) {
             try {
                 const response = await axios.post(graphqlEndpoint,
@@ -724,6 +729,10 @@ const mainModule = {
     resetGeneralSpeakerNetwork(state, payload) {
       state[payload['pane']].generalNetworkSpeaker.selectedParty = '';
       state[payload['pane']].generalNetworkSpeaker.selectedMetric = '';
+    },
+    resetGeneralNetwork(state, payload) {
+      state[payload['pane']].generalNetwork.selectedParty = '';
+      state[payload['pane']].generalNetwork.selectedMetric = '';
     },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
