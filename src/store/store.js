@@ -453,14 +453,15 @@ const mainModule = {
         },
         async loadEgoNetworkForSurroundingNode({state}, payload){
           let oldSearchTerm = state[payload.pane].searchTerm;
+          let oldSuggestions = state[payload.pane].autocompleteSuggestions;
           if (payload.searchTerm) {
             state[payload.pane].searchTerm = payload.searchTerm;
             if(state[payload.pane].searchTerm.toLowerCase() !== state[payload.pane].selectedTargetword.text.toLowerCase()) {
                 await this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
                 let matchingSuggestion = state[payload.pane].autocompleteSuggestions.find(s => s.text == payload.searchTerm);
                 if(state[payload.pane].autocompleteSuggestions.length === 0 || !matchingSuggestion){
-                  console.log("Targetword not found", payload.searchTerm);
                   state[payload.pane].searchTerm = oldSearchTerm;
+                  state[payload.pane].autocompleteSuggestions = oldSuggestions;
                   alert("The target word could not be found");
                 }
                 else {

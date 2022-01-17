@@ -124,7 +124,9 @@ export default {
           onClick: (d) => {
             console.log('Select as target word:', d);
             this.setWordAsSearchTerm(d);
-          }
+          },
+          networkType: 'Ego',
+          class: 'clickable'
         }
       ]
     };
@@ -162,6 +164,9 @@ export default {
     }
   },
   computed: {
+    networkType() {
+      return this.$store.getters['main/selectedNetwork']('pane1').type;
+    },
     sharedNode() {
       return this.$store.getters['main/focusNode'];
     },
@@ -349,10 +354,14 @@ export default {
         .style('left', `${x}px`)
         .style('position', 'fixed')
         .selectAll('tmp')
-        .data(this.menuItems.concat(metricEntries))
+        .data(
+          this.menuItems
+            .filter((i) => !i.networkType || i.networkType == this.networkType)
+            .concat(metricEntries)
+        )
         .enter()
         .append('div')
-        .attr('class', 'menuEntry');
+        .attr('class', (d) => `menuEntry ${d.class}`);
 
       d3.selectAll(`.menuEntry`)
         .append('span')
@@ -620,5 +629,13 @@ svg .labels text {
   stroke: transparent;
   margin: 0 5px;
   font-size: 12px;
+}
+.menuEntry.clickable {
+  padding: 5px;
+  padding-left: 0;
+  font-size: 14px;
+}
+.menuEntry.clickable span:hover {
+  font-weight: 500 !important;
 }
 </style>
