@@ -57,7 +57,7 @@ const nodesToJSON = (state, allNodes, selectedNodes) => {
   });
 };
 
-
+//TODO Split up this module into smaller submodules
 const mainModule = {
   actions: {
         async initCorpora({ dispatch }) {
