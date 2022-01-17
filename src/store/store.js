@@ -337,7 +337,6 @@ const mainModule = {
               }
             },
         async resetGeneralNetwork(state, payload) {
-            this.commit('main/resetGeneralNetwork', payload)
             this.commit('main/resetTimeSeries', payload)
             this.dispatch('main/resetSelectedNetwork', payload)
         },
@@ -645,6 +644,7 @@ const mainModule = {
       state[payload.pane].generalNetwork.selectedParty = payload.party;
     },
     changeSelectedMetric(state, payload) {
+      console.log('setting selected metic to: ' + payload.metric)
       state[payload.pane].generalNetwork.selectedMetric = payload.metric;
     },
     changeAvailableSpeakers(state, payload) {
@@ -736,10 +736,6 @@ const mainModule = {
     resetGeneralSpeakerNetwork(state, payload) {
       state[payload['pane']].generalNetworkSpeaker.selectedParty = '';
       state[payload['pane']].generalNetworkSpeaker.selectedMetric = '';
-    },
-    resetGeneralNetwork(state, payload) {
-      state[payload['pane']].generalNetwork.selectedParty = '';
-      state[payload['pane']].generalNetwork.selectedMetric = '';
     },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;

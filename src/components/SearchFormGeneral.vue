@@ -110,7 +110,8 @@ export default {
       this.selectedParty = "ÖVP"
 
       this.$store.dispatch('main/resetGeneralNetwork', {
-        pane: this.queryPane
+        pane: this.queryPane,
+        party: this.selectedParty,
       });
       console.log('initialised');
     }

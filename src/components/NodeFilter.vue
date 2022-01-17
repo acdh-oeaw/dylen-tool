@@ -85,6 +85,7 @@ export default {
   props: ['availableMetrics', 'pane', 'generalType'],
   data() {
     return {
+      defaultMetric: "Degree Centrality",
       valueSlid: [0,20],
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
@@ -93,11 +94,9 @@ export default {
   },
   mounted() {
 
-    let defaultMetric = "Degree Centrality";
-
     let selectedMetric = this.getMetricByType(this.generalType);
 
-    this.selectedMetric = selectedMetric.metric === ""? defaultMetric : selectedMetric.metric
+    this.selectedMetric = selectedMetric.metric === ""? this.defaultMetric : selectedMetric.metric
 
     this.$root.$on('networkTypeChanged', () => {
       this.selectedMetric = "Degree Centrality"
