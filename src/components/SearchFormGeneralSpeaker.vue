@@ -125,6 +125,9 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      this.$store.dispatch('main/resetSelectedNetwork', {
+        pane: this.queryPane
+      })
       this.$store.dispatch('main/loadGeneralSpeakerNetwork', {
         pane: this.queryPane,
         sliderMin: this.$data.valueSlid[0]/100,
