@@ -65,7 +65,7 @@
           fill='none'
           :stroke="`${getLineColor(node)}${hoverNodes.indexOf(node) >= 0 ? 'ff' : '99'}`"
           :stroke-width='hoverNodes.indexOf(node) >= 0 ? 4 : 1'
-          @mouseenter='(e) => {onMouseEnter(e, node);mouseOver(e, "parallel-coordinates-line")}'
+          @mouseenter='(e) => {onMouseEnter(e, node); mouseOver(e, "parallel-coordinates-line")}'
           @mouseleave='(e) => onMouseLeave(e, node)'
         />
       </g>
@@ -272,13 +272,20 @@
           />
         </g>
       </g>
+      <g class="metricLabels"></g>
     </g>
   </svg>
 </template>
 <script>
 import * as d3 from 'd3';
-import { camelCaseToSpaces } from '@/helpers/utils';
-import {networkTypeMixin, EGO_NETWORK, GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/mixins";
+import { camelCaseToSpaces, roundToMaxDigit } from '@/helpers/utils';
+
+import {
+  networkTypeMixin,
+  EGO_NETWORK,
+  GENERAL_PARTY,
+  GENERAL_SPEAKER
+} from '@/helpers/mixins';
 
 export default {
   mixins: [networkTypeMixin],
@@ -421,10 +428,10 @@ export default {
       );
     },
     targetWordLabelLeft() {
-      return this.getWordLabel(this.networkType, 'pane1')
+      return this.getWordLabel(this.networkType, 'pane1');
     },
     targetWordLabelRight() {
-      return this.getWordLabel(this.networkType, 'pane2')
+      return this.getWordLabel(this.networkType, 'pane2');
     }
   },
   methods: {
@@ -438,19 +445,25 @@ export default {
           };
         case GENERAL_PARTY:
           return {
-            text: this.$store.getters['main/selectedGeneralNetworkParty'](pane) ? this.$store.getters['main/selectedGeneralNetworkParty'](pane).party : '',
-            year: this.$store.getters['main/selectedGeneralNetworkParty'](pane) ? this.$store.getters['main/selectedGeneralNetworkParty'](pane).year : '',
+            text: this.$store.getters['main/selectedGeneralNetworkParty'](pane)
+              ? this.$store.getters['main/selectedGeneralNetworkParty'](pane)
+                  .party
+              : '',
+            year: this.$store.getters['main/selectedGeneralNetworkParty'](pane)
+              ? this.$store.getters['main/selectedGeneralNetworkParty'](pane)
+                  .year
+              : '',
             color: this.$store.getters['main/selectionColors'][0]
-          }
+          };
         case GENERAL_SPEAKER:
           return {
             party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](pane) : '',
             text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane) : '',
             year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).network.year : '',
             color: this.$store.getters['main/selectionColors'][0]
-          }
+          };
         default:
-          return {}
+          return {};
       }
     },
     generateLine(node) {
@@ -474,6 +487,20 @@ export default {
       if (sauto) {
         this.mouseMove(e, 'parallel-coordinates-*');
       }
+      d3.select('.metricLabels .infoLabels').remove();
+      d3.select('.metricLabels')
+        .append('g')
+        .attr('class', 'infoLabels')
+        .selectAll('text')
+        .data(this.metrics)
+        .join('text')
+        .text((d) => roundToMaxDigit(node._metrics[d], 2))
+        .attr('y', (d) => this.scaleY[d](node._metrics[d]))
+        .attr('x', (d) => this.scaleX(d))
+        .style('font-size', '10px')
+        .style('font-weight', 'bold')
+        .attr('text-anchor', 'middle')
+        .attr('filter', 'url(#solid)');
     },
     mouseOver(e, sautoId) {
       this.mouseMove(e, sautoId);
@@ -482,6 +509,7 @@ export default {
       let sharedNode = this.$store.getters['main/focusNode'];
       if (sharedNode === node.id)
         this.$store.commit('main/removeFocusNode', { node: node.id });
+      d3.select('.metricLabels .infoLabels').remove();
     },
     deselectNode(node) {
       this.$store.commit('main/removeSelectedNodeForNodeMetrics', node);
