@@ -38,7 +38,7 @@
         <b-col xl='12'>
           <node-filter
               @sliderValueChanged='handleSliderValue'
-              :selected-metric='selectedMetric'
+              :general-type='GENERAL_PARTY'
               :available-metrics='availableMetrics'
               :pane='queryPane'></node-filter>
         </b-col>
@@ -73,7 +73,6 @@ export default {
   data() {
     return {
       selectedParty: "ÖVP",
-      selectedMetric: "Pagerank",
       valueSlid: [0, 20],
       corpusEdit: false,
       isNetworkLoading: false,
@@ -109,10 +108,6 @@ export default {
     },
     initialize() {
       this.selectedParty = "ÖVP"
-      this.$store.commit('main/changeSelectedMetric', {
-        metric: "Degree Centrality",
-        pane: this.queryPane
-      });
       this.$store.commit('main/resetSelectedNetwork', {
         network: null,
         pane: this.queryPane

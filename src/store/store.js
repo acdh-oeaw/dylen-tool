@@ -713,10 +713,6 @@ const mainModule = {
       state[payload['pane']].generalNetworkSpeaker.selectedParty = '';
       state[payload['pane']].generalNetworkSpeaker.selectedMetric = '';
     },
-    resetGeneralNetwork(state, payload) {
-      state[payload['pane']].generalNetwork.selectedParty = '';
-      state[payload['pane']].generalNetwork.selectedMetric = '';
-    },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated Ego Network for pane ' + payload.pane);
