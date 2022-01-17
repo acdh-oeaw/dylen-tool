@@ -450,6 +450,29 @@ const mainModule = {
       } catch (error) {
         logger.error(error);
       }
+        },
+        async loadEgoNetworkForSurroundingNode({state}, payload){
+          let oldSearchTerm = state[payload.pane].searchTerm;
+          if (payload.searchTerm) {
+            state[payload.pane].searchTerm = payload.searchTerm;
+            if(state[payload.pane].searchTerm.toLowerCase() !== state[payload.pane].selectedTargetword.text.toLowerCase()) {
+                await this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
+                let matchingSuggestion = state[payload.pane].autocompleteSuggestions.find(s => s.text == payload.searchTerm);
+                if(state[payload.pane].autocompleteSuggestions.length === 0 || !matchingSuggestion){
+                  console.log("Targetword not found", payload.searchTerm);
+                  state[payload.pane].searchTerm = oldSearchTerm;
+                  alert("The target word could not be found");
+                }
+                else {
+                  let response = await this.dispatch("main/loadTargetwordBySearchTerm", {
+                    pane: payload.pane,
+                    searchTerm: matchingSuggestion
+                  });
+                  state[payload.pane].selectedTargetword = response.data.data.getTargetWordById;
+                  await this.dispatch("main/loadEgoNetwork", payload.pane);
+                }
+            }
+          }
         }
 
   },

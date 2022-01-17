@@ -117,6 +117,14 @@ export default {
         {
           title: '',
           value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
+        },
+        {
+          title: 'Select as target word',
+          value: () => ``,
+          onClick: (d) => {
+            console.log('Select as target word:', d);
+            this.setWordAsSearchTerm(d);
+          }
         }
       ]
     };
@@ -349,10 +357,14 @@ export default {
       d3.selectAll(`.menuEntry`)
         .append('span')
         .text((entry) => {
-          console.log('entryTitle: ' +  entry.title)
           return `${entry.title}${entry.value(d)}`;
         })
-        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'));
+        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'))
+        .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
+        .on('click', (event, entry) => {
+          event.preventDefault();
+          entry.onClick(d.name);
+        });
 
       event.preventDefault();
     },
@@ -556,6 +568,12 @@ export default {
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');
       return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
+    },
+    setWordAsSearchTerm(word) {
+      this.$store.dispatch('main/loadEgoNetworkForSurroundingNode', {
+        pane: this.pane,
+        searchTerm: word
+      });
     }
   },
   mounted() {
