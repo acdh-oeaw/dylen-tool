@@ -114,6 +114,9 @@ export default {
         network: null,
         pane: this.queryPane
       });
+      this.$store.commit('main/resetGeneralNetwork', {
+        pane: this.queryPane
+      });
       this.$store.commit('main/resetTimeSeries', {
         pane: this.queryPane
       });

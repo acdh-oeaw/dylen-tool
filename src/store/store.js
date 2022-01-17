@@ -472,7 +472,7 @@ const mainModule = {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
       generalNetwork: { selectedParty: {party: ''}, selectedMetric: {metric: ''}},
-      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}},
+      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}, year: null, loaded: false},
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -609,6 +609,7 @@ const mainModule = {
     },
     changeSelectedSpeakerParty(state, payload) {
       state[payload.pane].generalNetworkSpeaker.selectedParty = payload.party;
+      state[payload.pane].generalNetworkSpeaker.loaded = false;
     },
     changeSelectedSpeakerMetric(state, payload) {
       state[payload.pane].generalNetworkSpeaker.selectedMetric = payload.metric;
@@ -676,12 +677,24 @@ const mainModule = {
     },
     addGeneralNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
+      state[payload['pane']].generalNetwork.selectedParty = payload.network.party;
     },
     addGeneralSpeakerNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
+      state[payload['pane']].generalNetworkSpeaker.selectedParty = payload.network.speaker;
+      state[payload['pane']].generalNetworkSpeaker.selectedYear = payload.network.year
+      state[payload['pane']].generalNetworkSpeaker.loaded = true
     },
     resetSelectedNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = null;
+    },
+    resetGeneralSpeakerNetwork(state, payload) {
+      state[payload['pane']].generalNetworkSpeaker.selectedParty = '';
+      state[payload['pane']].generalNetworkSpeaker.selectedMetric = '';
+    },
+    resetGeneralNetwork(state, payload) {
+      state[payload['pane']].generalNetwork.selectedParty = '';
+      state[payload['pane']].generalNetwork.selectedMetric = '';
     },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
@@ -753,6 +766,7 @@ const mainModule = {
     selectedGeneralNetworkSpeakerParty: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedParty,
     selectedGeneralNetworkSpeakerMetric: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedMetric,
     selectedGeneralNetworkSpeakerSpeaker: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedSpeaker,
+    selectedGeneralNetworkSpeaker: (state) => (pane) => state[pane].generalNetworkSpeaker,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
     availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
     selectedSubcorpus: (state) => (pane) => state[pane].selectedSubcorpus,

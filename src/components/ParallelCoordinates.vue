@@ -444,9 +444,9 @@ export default {
           }
         case GENERAL_SPEAKER:
           return {
-            party: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane).party,
-            text: this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane).speaker,
-            year: this.$store.getters['main/selectedYear'](pane)?.year,
+            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](pane) : '',
+            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane) : '',
+            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).selectedYear : '',
             color: this.$store.getters['main/selectionColors'][0]
           }
         default:
