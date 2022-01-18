@@ -380,14 +380,33 @@ const mainModule = {
             this.commit('main/setSelectedSpeakerParty', payload);
             this.dispatch('main/loadAvailableSpeakers', payload)
         },
-        async loadAutocompleteSuggestions({ state }, { pane }) {
-            console.log('loading autocomplete suggestions...')
+        async loadAutocompleteSuggestions({ state }, { pane, searchTerm, commit }) {
+          let oldSearchTerm = state[pane].searchTerm;
+          let oldSuggestions = state[pane].autocompleteSuggestions;
+          if(searchTerm)
+            state[pane].searchTerm = searchTerm;
           const suggestionsResponse = await axios.post(graphqlEndpoint,
             getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
           this.commit('main/setAutocompleteSuggestions', {
             suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
             pane: pane
           });
+          if (commit){
+            let matchingSuggestion = state[pane].autocompleteSuggestions.find(s => s.text == state[pane].searchTerm);
+                if(state[pane].autocompleteSuggestions.length === 0 || !matchingSuggestion){
+                  state[pane].searchTerm = oldSearchTerm;
+                  state[pane].autocompleteSuggestions = oldSuggestions;
+                  state.targetWordNotFound = true;
+                }
+                else {
+                  let response = await this.dispatch("main/loadTargetwordBySearchTerm", {
+                    pane: pane,
+                    searchTerm: matchingSuggestion
+                  });
+                  state[pane].selectedTargetword = response.data.data.getTargetWordById;
+                  await Promise.all([this.dispatch("main/loadEgoNetwork", pane),this.dispatch("main/loadTimeSeriesData", pane)]);
+                }
+          }
         },
         async loadAutocompleteSuggestionsForNewSubCorpus({ state, dispatch }, { pane }) {
           const suggestionsResponse = await axios.post(graphqlEndpoint,
@@ -479,7 +498,8 @@ const mainModule = {
       } catch (error) {
         logger.error(error);
       }
-        }
+        },
+       
 
   },
   namespaced: true,
@@ -497,6 +517,7 @@ const mainModule = {
       secondForm: false
     },
     focusNode: null,
+    targetWordNotFound: false,
     pane1: {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
@@ -789,7 +810,10 @@ const mainModule = {
     setParallelCoordinateMetrics(state, payload){
       logger.log("payload", payload);
       state.parallelCoordinateMetrics = payload;
-    }
+    },
+    setTargetWordNotFound(state, value){
+      state.targetWordNotFound = value;
+    },
   },
   getters: {
     focusNode: (state) => {
@@ -837,7 +861,8 @@ const mainModule = {
     showInfoButton: (state) => state.showInfoButton,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy,
-    parallelCoordinateMetrics: state => state.parallelCoordinateMetrics
+    parallelCoordinateMetrics: state => state.parallelCoordinateMetrics,
+    targetWordNotFound: state => state.targetWordNotFound
   }
 };
 

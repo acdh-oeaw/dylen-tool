@@ -94,12 +94,14 @@
         <g class='nodes'></g>
       </g>
     </svg>
+
   </div>
 </template>
 
 <script>
 import * as d3 from 'd3';
 import { mixin } from '@/store/store';
+import { EGO_NETWORK } from '@/helpers/mixins';
 
 export default {
   name: 'D3Network',
@@ -116,7 +118,18 @@ export default {
       menuItems: [
         {
           title: '',
-          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`
+          value: (d) => `${d.name} (${d._pos.replace('_', ' ')})`,
+          class: 'title'
+        },
+        {
+          title: 'Select as target word',
+          value: () => ``,
+          onClick: (d) => {
+            console.log('Select as target word:', d);
+            this.setWordAsSearchTerm(d);
+          },
+          networkType: EGO_NETWORK,
+          class: 'clickable btn btn-info'
         }
       ]
     };
@@ -154,6 +167,9 @@ export default {
     }
   },
   computed: {
+    networkType() {
+      return this.$store.getters['main/selectedNetwork']('pane1').type;
+    },
     sharedNode() {
       return this.$store.getters['main/focusNode'];
     },
@@ -341,18 +357,28 @@ export default {
         .style('left', `${x}px`)
         .style('position', 'fixed')
         .selectAll('tmp')
-        .data(this.menuItems.concat(metricEntries))
+        .data(
+          this.menuItems
+            .filter((i) => !i.networkType || i.networkType == this.networkType)
+            .concat(metricEntries)
+        )
         .enter()
         .append('div')
-        .attr('class', 'menuEntry');
+        .attr('class', (d) => `menuEntry ${d.class || ''}`);
 
-      d3.selectAll(`.menuEntry`)
+      let menuEntries = d3
+        .selectAll(`.menuEntry`)
         .append('span')
         .text((entry) => {
-          console.log('entryTitle: ' +  entry.title)
           return `${entry.title}${entry.value(d)}`;
         })
-        .style('font-weight', (_, i) => (i == 0 ? 'bold' : 'normal'));
+        .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
+        .on('click', (event, entry) => {
+          event.preventDefault();
+          entry.onClick(d.name);
+        });
+
+      menuEntries.filter((d) => d.hr).append('hr');
 
       event.preventDefault();
     },
@@ -556,6 +582,13 @@ export default {
     camelCaseToSpaces(text) {
       let result = text.replace(/([A-Z])/g, ' $1');
       return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
+    },
+    setWordAsSearchTerm(word) {
+      this.$store.dispatch('main/loadAutocompleteSuggestions', {
+        pane: this.pane,
+        searchTerm: word,
+        commit: true
+      });
     }
   },
   mounted() {
@@ -602,5 +635,23 @@ svg .labels text {
   stroke: transparent;
   margin: 0 5px;
   font-size: 12px;
+}
+.menuEntry.clickable {
+  padding: 5px;
+  padding-left: 0;
+  font-size: 12px;
+  width: calc(100% - 10px);
+  margin-bottom: 2px;
+}
+.menuEntry.info_right {
+  text-align: right;
+}
+.menuEntry hr {
+  margin: 2px 0;
+}
+.menuEntry.title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 5px;
 }
 </style>
