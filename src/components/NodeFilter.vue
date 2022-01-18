@@ -93,15 +93,12 @@ export default {
     }
   },
   mounted() {
-
     let selectedMetric = this.getMetricByType(this.generalType);
-
     this.selectedMetric = selectedMetric.metric === ""? this.defaultMetric : selectedMetric.metric
 
     this.$root.$on('networkTypeChanged', () => {
-      this.selectedMetric = "Degree Centrality"
+      this.selectedMetric = this.defaultMetric
     })
-
   },
   methods: {
     valueChanged() {
@@ -133,7 +130,6 @@ export default {
               pane: this.pane
             });
           }
-
           console.log('Set metric to: ' + val);
         }
       }

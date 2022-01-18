@@ -89,6 +89,7 @@ export default {
   },
   data() {
     return {
+      defaultMetric: "Degree Centrality",
       defaultParty: "ÖVP",
       corpusEdit: false,
       slider: 1,
@@ -142,7 +143,7 @@ export default {
       this.$store.dispatch('main/resetGeneralNetworkSpeaker', {
         pane: this.queryPane,
         party: this.defaultParty,
-        metric: "Degree Centrality",
+        metric: this.defaultMetric,
       }).then(() => {
         this.selectedSpeaker = this.availableSpeakers[0];
       })
