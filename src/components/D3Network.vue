@@ -101,6 +101,7 @@
 <script>
 import * as d3 from 'd3';
 import { mixin } from '@/store/store';
+import { EGO_NETWORK } from '@/helpers/mixins';
 
 export default {
   name: 'D3Network',
@@ -127,7 +128,7 @@ export default {
             console.log('Select as target word:', d);
             this.setWordAsSearchTerm(d);
           },
-          networkType: 'Ego',
+          networkType: EGO_NETWORK,
           class: 'clickable btn btn-info'
         }
       ]
