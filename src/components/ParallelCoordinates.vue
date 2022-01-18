@@ -223,7 +223,7 @@
             <tspan>deselect all</tspan>
           </text>
         </g>
-        <g v-if="targetWordLabelRight.text != ''">
+        <g v-if="targetWordLabelRight.text !== ''">
           <text
             :y='svgPadding.top - 20'
             :x='chartSize[0]+svgPadding.right'
@@ -457,26 +457,9 @@ export default {
           };
         case GENERAL_SPEAKER:
           return {
-            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
-              pane
-            ).loaded
-              ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](
-                  pane
-                )
-              : '',
-            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
-              pane
-            ).loaded
-              ? this.$store.getters[
-                  'main/selectedGeneralNetworkSpeakerSpeaker'
-                ](pane)
-              : '',
-            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
-              pane
-            ).loaded
-              ? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane)
-                  .selectedYear
-              : '',
+            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](pane) : '',
+            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane) : '',
+            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).network.year : '',
             color: this.$store.getters['main/selectionColors'][0]
           };
         default:

@@ -119,7 +119,11 @@ export default {
       searchTermSelected: false
     };
   },
-  mounted() {},
+  mounted() {
+    this.$root.$on('networkTypeChanged', () => {
+      this.initialize()
+    })
+  },
   methods: {
     checkInvalidChars(val) {
       let invalidChars = []
@@ -196,8 +200,7 @@ export default {
         targetword: null,
         pane: this.queryPane
       });
-      this.$store.commit('main/resetSelectedNetwork', {
-        network: null,
+      this.$store.dispatch('main/resetSelectedNetwork', {
         pane: this.queryPane
       });
       this.$store.commit('main/resetTimeSeries', {
