@@ -351,14 +351,33 @@ const mainModule = {
             }
         },
 
-        async loadAutocompleteSuggestions({ state }, { pane }) {
-            console.log('loading autocomplete suggestions...')
+        async loadAutocompleteSuggestions({ state }, { pane, searchTerm, commit }) {
+          let oldSearchTerm = state[pane].searchTerm;
+          let oldSuggestions = state[pane].autocompleteSuggestions;
+          if(searchTerm)
+            state[pane].searchTerm = searchTerm;
           const suggestionsResponse = await axios.post(graphqlEndpoint,
             getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
           this.commit('main/setAutocompleteSuggestions', {
             suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
             pane: pane
           });
+          if (commit){
+            let matchingSuggestion = state[pane].autocompleteSuggestions.find(s => s.text == state[pane].searchTerm);
+                if(state[pane].autocompleteSuggestions.length === 0 || !matchingSuggestion){
+                  state[pane].searchTerm = oldSearchTerm;
+                  state[pane].autocompleteSuggestions = oldSuggestions;
+                  state.targetWordNotFound = true;
+                }
+                else {
+                  let response = await this.dispatch("main/loadTargetwordBySearchTerm", {
+                    pane: pane,
+                    searchTerm: matchingSuggestion
+                  });
+                  state[pane].selectedTargetword = response.data.data.getTargetWordById;
+                  await Promise.all([this.dispatch("main/loadEgoNetwork", pane),this.dispatch("main/loadTimeSeriesData", pane)]);
+                }
+          }
         },
         async loadAutocompleteSuggestionsForNewSubCorpus({ state, dispatch }, { pane }) {
           const suggestionsResponse = await axios.post(graphqlEndpoint,
@@ -451,30 +470,7 @@ const mainModule = {
         logger.error(error);
       }
         },
-        async loadEgoNetworkForSurroundingNode({state}, payload){
-          let oldSearchTerm = state[payload.pane].searchTerm;
-          let oldSuggestions = state[payload.pane].autocompleteSuggestions;
-          if (payload.searchTerm) {
-            state[payload.pane].searchTerm = payload.searchTerm;
-            if(state[payload.pane].searchTerm.toLowerCase() !== state[payload.pane].selectedTargetword.text.toLowerCase()) {
-                await this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
-                let matchingSuggestion = state[payload.pane].autocompleteSuggestions.find(s => s.text == payload.searchTerm);
-                if(state[payload.pane].autocompleteSuggestions.length === 0 || !matchingSuggestion){
-                  state[payload.pane].searchTerm = oldSearchTerm;
-                  state[payload.pane].autocompleteSuggestions = oldSuggestions;
-                  state.targetWordNotFound = true;
-                }
-                else {
-                  let response = await this.dispatch("main/loadTargetwordBySearchTerm", {
-                    pane: payload.pane,
-                    searchTerm: matchingSuggestion
-                  });
-                  state[payload.pane].selectedTargetword = response.data.data.getTargetWordById;
-                  await this.dispatch("main/loadEgoNetwork", payload.pane);
-                }
-            }
-          }
-        }
+       
 
   },
   namespaced: true,

@@ -584,9 +584,10 @@ export default {
       return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
     setWordAsSearchTerm(word) {
-      this.$store.dispatch('main/loadEgoNetworkForSurroundingNode', {
+      this.$store.dispatch('main/loadAutocompleteSuggestions', {
         pane: this.pane,
-        searchTerm: word
+        searchTerm: word,
+        commit: true
       });
     }
   },
