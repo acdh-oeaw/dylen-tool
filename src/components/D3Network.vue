@@ -95,14 +95,6 @@
       </g>
     </svg>
 
-    <b-modal
-      v-model="targetWordNotFound"
-      title="Target word not found"
-      title-text-variant="danger"
-      ok-only
-    >
-      The target word could not be found. The previous ego network is kept instead.
-    </b-modal>
   </div>
 </template>
 
@@ -174,14 +166,6 @@ export default {
     }
   },
   computed: {
-    targetWordNotFound: {
-      get() {
-        return this.$store.getters['main/targetWordNotFound'];
-      },
-      set(val) {
-        this.$store.commit('main/setTargetWordNotFound', val);
-      }
-    },
     networkType() {
       return this.$store.getters['main/selectedNetwork']('pane1').type;
     },
