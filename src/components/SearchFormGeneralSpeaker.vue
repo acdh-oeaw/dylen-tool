@@ -58,7 +58,7 @@
             <node-filter
                 @sliderValueChanged='handleSliderValue'
                 :available-metrics='availableMetrics'
-                :general-type='"speaker"'
+                :general-type='GENERAL_SPEAKER'
                 :pane='queryPane'></node-filter>
           </b-col>
         </b-row>
@@ -89,8 +89,9 @@ export default {
   },
   data() {
     return {
+      defaultMetric: "Degree Centrality",
+      defaultParty: "ÖVP",
       corpusEdit: false,
-      isNetworkLoading: false,
       slider: 1,
       sliderFormat: function (value) {
         return `${Math.round(value)}%`
@@ -101,11 +102,14 @@ export default {
   mounted() {
     let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane);
 
-    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : "ÖVP"
+    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : this.defaultParty
 
     this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
       this.selectedSpeaker = this.availableSpeakers[0];
     });
+    this.$root.$on('networkTypeChanged', () => {
+      this.initialize()
+    })
   },
   methods: {
     checkSelectedParty(party) {
@@ -122,41 +126,27 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.isNetworkLoading = true;
+      this.$store.dispatch('main/resetSelectedNetwork', {
+        pane: this.queryPane
+      })
       this.$store.dispatch('main/loadGeneralSpeakerNetwork', {
         pane: this.queryPane,
         sliderMin: this.$data.valueSlid[0]/100,
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
-        this.isNetworkLoading = false;
         this.$emit('visualizeClicked')
       }).finally(() => {
-        this.isNetworkLoading = false;
       });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
-      this.$store.commit('main/changeSelectedSpeakerParty', {
-        party: "ÖVP",
-        pane: this.queryPane
-      });
-      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.defaultParty}).then(() => {
+      this.$store.dispatch('main/resetGeneralNetworkSpeaker', {
+        pane: this.queryPane,
+        party: this.defaultParty,
+        metric: this.defaultMetric,
+      }).then(() => {
         this.selectedSpeaker = this.availableSpeakers[0];
-      });
-      this.$store.commit('main/changeSelectedSpeakerMetric', {
-        metric: "Degree Centrality",
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetSelectedNetwork', {
-        network: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/changeSecondFormVisibility', {
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetTimeSeries', {
-        pane: this.queryPane
-      });
+      })
       console.log('initialised');
     }
   },
@@ -182,7 +172,6 @@ export default {
     },
     availableParties: {
       get() {
-        //return this.$store.getters['main/availableParties'];
         return this.$store.getters['main/availableParties'];
       }
     },
@@ -199,11 +188,10 @@ export default {
       },
       set(val) {
         if (val) {
-          this.$store.commit('main/changeSelectedSpeakerParty', {
+          this.$store.dispatch('main/changeSelectedSpeakerParty', {
             party: val,
             pane: this.queryPane
-          });
-          this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:val}).then(() => {
+          }).then(() => {
             this.selectedSpeaker = this.availableSpeakers[0];
           })
         }

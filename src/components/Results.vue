@@ -94,8 +94,8 @@
             >
               <b-icon :icon="fullscreen['nodeMetrics'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
-            <NodeMetrics ref='nodeMetrics'>
-            </NodeMetrics>
+            <node-metrics ref='nodeMetrics'>
+            </node-metrics>
           </pane>
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
             <button

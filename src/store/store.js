@@ -24,6 +24,7 @@ import {speakers_not_fount} from "@/helpers/speakers_not_found";
 import {getEgoNetworkTimeSeries, getGeneralTimeSeries} from "@/helpers/api_client";
 import {compare} from "@/helpers/utils";
 import {GENERAL_PARTY} from "@/helpers/mixins";
+import {sautoModule} from "@/store/sauto";
 
 Vue.component('b-spinner', BSpinner);
 
@@ -56,7 +57,7 @@ const nodesToJSON = (state, allNodes, selectedNodes) => {
   });
 };
 
-
+//TODO Split up this module into smaller submodules
 const mainModule = {
   actions: {
         async initCorpora({ dispatch }) {
@@ -125,6 +126,20 @@ const mainModule = {
             logger.error(error);
           }
         },
+        async resetSelectedNetwork({state}, {pane: pane}) {
+            if (state[pane].selectedNetwork) {
+                state[pane].selectedNetwork.nodes
+                    .filter((node) =>
+                        state['nodeMetrics'].selectedNodes.find(
+                            (n) => n.id === node.id && n._pane === node._pane
+                        )
+                    )
+                    .forEach((node) => {
+                        this.commit('main/removeSelectedNodeForNodeMetrics', node);
+                    });
+            }
+            state[pane].selectedNetwork = null;
+        },
         async loadGeneralNetwork({state}, {pane: pane, party: party_orig, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, years) {
             network.id = networkID;
@@ -174,15 +189,15 @@ const mainModule = {
         async loadGeneralSpeakerNetwork({state}, {pane: pane, sliderMin: slidValMin, sliderMax: slidValMax}) {
           function assignValuesFromState(network, networkID, possibleYears) {
             network.id = networkID;
-            network.speaker = state[pane].generalNetworkSpeaker.selectedSpeaker;
-            network.party = partyMapping[state[pane].generalNetworkSpeaker.selectedParty];
+            network.speaker = state[pane].generalNetworkSpeaker.form.selectedSpeaker;
+            network.party = partyMapping[state[pane].generalNetworkSpeaker.form.selectedParty];
             network.possibleYears = possibleYears.map(Number).sort();
-            network.filter = {metric: state[pane].generalNetworkSpeaker.selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
+            network.filter = {metric: state[pane].generalNetworkSpeaker.form.selectedMetric, valueMin: slidValMin, valueMax: slidValMax};
             network.year = Math.max(...possibleYears.map(Number));
             network.type = 'Speaker';
           }
 
-          let speaker = state[pane].generalNetworkSpeaker.selectedSpeaker;
+          let speaker = state[pane].generalNetworkSpeaker.form.selectedSpeaker;
 
           try {
               state[pane].busy = true;
@@ -231,10 +246,10 @@ const mainModule = {
             //TODO: use constant.. hardcoding types as string is very errorprone
             network.type = 'Ego';
           }
-          console.log('change busy state to true')
+
           state[pane].busy = true;
+
           if (!(state[pane].selectedTargetword && state[pane].selectedTargetword.id)){
-            console.log(state[pane].autocompleteSuggestions)
             let response = await dispatch("loadTargetwordBySearchTerm", {
               pane: pane,
               searchTerm: state[pane].autocompleteSuggestions[0]
@@ -321,6 +336,17 @@ const mainModule = {
                 logger.error(error);
               }
             },
+        async resetGeneralNetwork(state, payload) {
+            this.commit('main/resetTimeSeries', payload)
+            this.dispatch('main/resetSelectedNetwork', payload)
+        },
+        async resetGeneralNetworkSpeaker(state, payload) {
+            this.commit('main/changeSelectedSpeakerMetric', payload);
+            this.commit('main/resetTimeSeries', payload);
+            this.dispatch('main/resetSelectedNetwork', payload)
+            this.commit('main/setSelectedSpeakerParty', payload);
+            this.dispatch('main/loadAvailableSpeakers', payload);
+        },
         async loadUpdatedSpeakerNetwork(state, {network: oldNetwork, pane: pane}) {
             try {
                 const response = await axios.post(graphqlEndpoint,
@@ -344,13 +370,16 @@ const mainModule = {
 
                 logger.log('General Network %s updated successfully.', networkID);
 
-                this.commit('main/updateGeneralSpeakerNetwork', {networkObj: updatedNetwork, pane: pane});
+                this.commit('main/addGeneralSpeakerNetwork', {network: updatedNetwork, pane: pane});
                 this.commit('main/changeSelectedYear', {pane: pane, year: updatedNetwork})
             } catch (error) {
                 logger.error(error);
             }
         },
-
+        async changeSelectedSpeakerParty(state, payload) {
+            this.commit('main/setSelectedSpeakerParty', payload);
+            this.dispatch('main/loadAvailableSpeakers', payload)
+        },
         async loadAutocompleteSuggestions({ state }, { pane, searchTerm, commit }) {
           let oldSearchTerm = state[pane].searchTerm;
           let oldSuggestions = state[pane].autocompleteSuggestions;
@@ -493,7 +522,16 @@ const mainModule = {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
       generalNetwork: { selectedParty: {party: ''}, selectedMetric: {metric: ''}},
-      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}, year: null, loaded: false},
+      generalNetworkSpeaker: {
+          form: {
+              selectedParty: '',
+              selectedMetric: {metric: ''},
+              selectedSpeaker: {speaker: ''},
+          },
+          network: null,
+          year: null,
+          loaded: false
+      },
       selectedSubcorpus: { id: '', name: '', targetWords: [] },
       selectedTargetword: { id: '', text: '' },
       selectedYear: null,
@@ -508,7 +546,16 @@ const mainModule = {
       availableSpeakers: [],
       selectedCorpus: { id: '', name: '', sources: [] },
       generalNetwork: { selectedParty: {party: ''}, selectedMetric: {metric: ''}},
-      generalNetworkSpeaker: { selectedParty: '', selectedMetric: {metric: ''}, selectedSpeaker: {speaker: ''}},
+      generalNetworkSpeaker: {
+        form: {
+            selectedParty: '',
+            selectedMetric: {metric: ''},
+            selectedSpeaker: {speaker: ''},
+        },
+        network: null,
+        year: null,
+        loaded: false
+      },
       selectedMetric: {metric: ''},
       selectedParty: {party: ''},
       selectedSpeaker: {speaker: ''},
@@ -568,11 +615,6 @@ const mainModule = {
       state.settings.active = component !== 'closed'
       state.settings.component = component
     },
-    changeSecondFormVisibility(state, payload) {
-      if (payload.pane === 'pane2') {
-        state.topNav.secondForm = !state.topNav.secondForm;
-      }
-    },
     changeTopNavType(state, payload) {
       state.topNav.networkType = payload['networkType'];
     },
@@ -623,20 +665,23 @@ const mainModule = {
       state[payload.pane].generalNetwork.selectedParty = payload.party;
     },
     changeSelectedMetric(state, payload) {
+      console.log('setting selected metic to: ' + payload.metric)
       state[payload.pane].generalNetwork.selectedMetric = payload.metric;
     },
     changeAvailableSpeakers(state, payload) {
+      //TODO group this with other generalnetworkspeaker states
       state[payload.pane].availableSpeakers = payload.speakers;
     },
-    changeSelectedSpeakerParty(state, payload) {
-      state[payload.pane].generalNetworkSpeaker.selectedParty = payload.party;
+    setSelectedSpeakerParty(state, payload) {
+      state[payload.pane].generalNetworkSpeaker.form.selectedParty = payload.party;
       state[payload.pane].generalNetworkSpeaker.loaded = false;
     },
     changeSelectedSpeakerMetric(state, payload) {
-      state[payload.pane].generalNetworkSpeaker.selectedMetric = payload.metric;
+      state[payload.pane].generalNetworkSpeaker.form.selectedMetric = payload.metric;
     },
     changeSelectedSpeaker(state, payload) {
-      state[payload.pane].generalNetworkSpeaker.selectedSpeaker = payload.speaker;
+      state[payload.pane].generalNetworkSpeaker.form.selectedSpeaker = payload.speaker;
+      state[payload.pane].generalNetworkSpeaker.loaded = false;
     },
     changeSelectedSubcorpus(state, payload) {
       console.log('changing selected subcorpus');
@@ -693,6 +738,9 @@ const mainModule = {
       let payloadIndex = state['nodeMetrics'].selectedNodes.indexOf(payload);
       state['nodeMetrics'].selectedNodes.splice(payloadIndex, 1);
     },
+    removeAllSelectedNodes(state) {
+      state['nodeMetrics'].selectedNodes = []
+    },
     addEgoNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
     },
@@ -702,20 +750,13 @@ const mainModule = {
     },
     addGeneralSpeakerNetwork(state, payload) {
       state[payload['pane']].selectedNetwork = payload.network;
-      state[payload['pane']].generalNetworkSpeaker.selectedParty = payload.network.speaker;
-      state[payload['pane']].generalNetworkSpeaker.selectedYear = payload.network.year
+      state[payload['pane']].generalNetworkSpeaker.network = payload.network
+      state[payload['pane']].generalNetworkSpeaker.form.selectedYear = payload.network.year
       state[payload['pane']].generalNetworkSpeaker.loaded = true
-    },
-    resetSelectedNetwork(state, payload) {
-      state[payload['pane']].selectedNetwork = null;
     },
     resetGeneralSpeakerNetwork(state, payload) {
       state[payload['pane']].generalNetworkSpeaker.selectedParty = '';
       state[payload['pane']].generalNetworkSpeaker.selectedMetric = '';
-    },
-    resetGeneralNetwork(state, payload) {
-      state[payload['pane']].generalNetwork.selectedParty = '';
-      state[payload['pane']].generalNetwork.selectedMetric = '';
     },
     updateEgoNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
@@ -724,10 +765,6 @@ const mainModule = {
     updateGeneralNetwork(state, payload) {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated General Network for pane ' + payload.pane);
-    },
-    updateGeneralSpeakerNetwork(state, payload) {
-      state[payload.pane].selectedNetwork = payload.networkObj;
-      logger.log('Updated General Speaker Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
       console.log('setting autocomplete')
@@ -787,9 +824,9 @@ const mainModule = {
     availableSpeakers: (state) => (pane) => state[pane].availableSpeakers,
     selectedGeneralNetworkParty: (state) => (pane) => state[pane].selectedNetwork,
     selectedGeneralNetworkMetric: (state) => (pane) => state[pane].generalNetwork.selectedMetric,
-    selectedGeneralNetworkSpeakerParty: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedParty,
-    selectedGeneralNetworkSpeakerMetric: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedMetric,
-    selectedGeneralNetworkSpeakerSpeaker: (state) => (pane) => state[pane].generalNetworkSpeaker.selectedSpeaker,
+    selectedGeneralNetworkSpeakerParty: (state) => (pane) => state[pane].generalNetworkSpeaker.form.selectedParty,
+    selectedGeneralNetworkSpeakerMetric: (state) => (pane) => state[pane].generalNetworkSpeaker.form.selectedMetric,
+    selectedGeneralNetworkSpeakerSpeaker: (state) => (pane) => state[pane].generalNetworkSpeaker.form.selectedSpeaker,
     selectedGeneralNetworkSpeaker: (state) => (pane) => state[pane].generalNetworkSpeaker,
     selectedCorpus: (state) => (pane) => state[pane].selectedCorpus,
     availableSourcesByCorpus: (state) => (selectedCorpus) => state['availableSourcesByCorpus'][selectedCorpus],
@@ -822,7 +859,6 @@ const mainModule = {
       return count;
     },
     showInfoButton: (state) => state.showInfoButton,
-    secondFormVisibility: (state) => state['topNav'].secondForm,
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy,
     parallelCoordinateMetrics: state => state.parallelCoordinateMetrics,
@@ -830,77 +866,6 @@ const mainModule = {
   }
 };
 
-const sautoModule = {
-  namespaced: true,
-  state: {
-    connection: null,
-    lastOverElement: null,
-    sauto: false,
-    size: null,
-    currentDrag: null
-  },
-  actions: {
-    setBoundingClientRect({ state }, { size }) {
-      state.size = size;
-    },
-    async connect({ state }) {
-      if (state.sauto) {
-        logger.log(props.sautoURI);
-        state.connection = new WebSocket(props.sautoURI);
-        state.connection.onerror = function(event) {
-          logger.error(event);
-        };
-        state.connection.onopen = function() {
-          logger.log('Connection with Sauto backed established successfully.');
-          state.connection.send(
-            JSON.stringify({
-              appVersion: props.appVersion,
-              type: 'VersionInfo'
-            })
-          );
-        };
-      }
-    },
-    agree({ state }, { agreed }) {
-      state.sauto = agreed;
-      if (agreed) {
-        this.dispatch('sauto/connect');
-      }
-    },
-    async handleMouseMove({ state }, { movement }) {
-      //send mouse positions
-      movement.type = 'MousePosition';
-      state.connection.send(JSON.stringify(movement));
-    },
-    async handleMouseOver({ state }, { mouseOver }) {
-      state.connection.send(JSON.stringify(mouseOver));
-    },
-    async handleKeyPress({ state }, { keyPress }) {
-      state.connection.send(JSON.stringify(keyPress));
-    },
-    async handleResize({ state }, { resized }) {
-      if (resized.paneId !== undefined) {
-        resized.type = 'Resize';
-        state.connection.send(JSON.stringify(resized));
-      }
-    },
-    async handleMouseClick({ state }, { click }) {
-      //send mouse click
-      click.type = 'MouseClick';
-      state.connection.send(JSON.stringify(click));
-    },
-    async handleDrag({ state }, { drag }) {
-      //send mouse drag and drop
-      drag.type = 'Drag';
-      state.connection.send(JSON.stringify(drag));
-    },
-    async handleScroll({ state }, { scroll }) {
-      //send mouse scroll
-      scroll.type = 'Scroll';
-      state.connection.send(JSON.stringify(scroll));
-    }
-  }
-};
 const store = new Vuex.Store({
   modules: {
     main: mainModule,

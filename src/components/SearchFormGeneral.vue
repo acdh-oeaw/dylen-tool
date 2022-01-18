@@ -38,7 +38,7 @@
         <b-col xl='12'>
           <node-filter
               @sliderValueChanged='handleSliderValue'
-              :selected-metric='selectedMetric'
+              :general-type='GENERAL_PARTY'
               :available-metrics='availableMetrics'
               :pane='queryPane'></node-filter>
         </b-col>
@@ -73,13 +73,14 @@ export default {
   data() {
     return {
       selectedParty: "ÖVP",
-      selectedMetric: "Pagerank",
       valueSlid: [0, 20],
       corpusEdit: false,
-      isNetworkLoading: false,
     };
   },
   mounted() {
+    this.$root.$on('networkTypeChanged', () => {
+      this.initialize()
+    })
   },
   methods: {
     handleSliderValue(values) {
@@ -87,16 +88,17 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      this.$store.dispatch('main/resetSelectedNetwork', {
+        pane: this.queryPane
+      })
       this.$store.dispatch('main/loadGeneralNetwork', {
         pane: this.queryPane,
         party: this.selectedParty,
         sliderMin: this.$data.valueSlid[0]/100,
         sliderMax: this.$data.valueSlid[1]/100,
       }).then(() => {
-        this.isNetworkLoading = false;
         this.$emit('visualizeClicked')
       }).finally(() => {
-        this.isNetworkLoading = false;
       });
       this.$store.dispatch('main/loadGeneralTimeSeriesData', {
         pane: this.queryPane,
@@ -106,19 +108,10 @@ export default {
     },
     initialize() {
       this.selectedParty = "ÖVP"
-      this.$store.commit('main/changeSelectedMetric', {
-        metric: "Degree Centrality",
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetSelectedNetwork', {
-        network: null,
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetGeneralNetwork', {
-        pane: this.queryPane
-      });
-      this.$store.commit('main/resetTimeSeries', {
-        pane: this.queryPane
+
+      this.$store.dispatch('main/resetGeneralNetwork', {
+        pane: this.queryPane,
+        party: this.selectedParty,
       });
       console.log('initialised');
     }
