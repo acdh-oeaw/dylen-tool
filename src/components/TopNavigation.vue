@@ -95,6 +95,6 @@ export default {
 <style>
 .top-nav {
   border-bottom: solid thick;
-  border-bottom-color: cadetblue;
+  border-bottom-color: darkgrey;
 }
 </style>
