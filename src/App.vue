@@ -25,12 +25,12 @@
         <b-row
           xl='12'
           class='pl-3 pt-0 h-100'
-          style='border-color: darkgrey; border-bottom: solid'
+          style='border-color: lightgrey; border-bottom: solid'
         >
           <b-col
             xl='2'
             class='pt-0 mt-0'
-            style='border-right: solid; border-color: darkgrey'
+            style='border-right: solid; border-color:lightgrey'
           >
             <query-bar></query-bar>
           </b-col>
@@ -66,8 +66,8 @@
                   xl='12'
                   class='text-right pr-4'
               >
-                <a href='https://dylen.acdh.oeaw.ac.at/about/' target='_blank'>More about the project | </a>
-                <a href="https://dylen.acdh.oeaw.ac.at/imprint" target="_blank">Imprint | </a>
+                <a href='https://dylen.acdh.oeaw.ac.at/about/' target='_blank'>More about the project</a><span> | </span>
+                <a href="https://dylen.acdh.oeaw.ac.at/imprint" target="_blank">Imprint</a><span> | </span>
                 <a href='mailto:acdh-helpdesk@oeaw.ac.at' target='_black'>Helpdesk</a>
               </b-col>
             </b-row>
@@ -466,5 +466,10 @@ body {
 
 a:link {
   color: white;
+}
+a:visited {
+  color: indianred;
+  background-color: transparent;
+  text-decoration: none;
 }
 </style>
