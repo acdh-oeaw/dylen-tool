@@ -25,12 +25,12 @@
         <b-row
           xl='12'
           class='pl-3 pt-0 h-100'
-          style='border-color: lightgrey; border-bottom: solid'
+          style='border-bottom: solid; border-bottom-color: lightgrey;'
         >
           <b-col
             xl='2'
             class='pt-0 mt-0'
-            style='border-right: solid; border-color:lightgrey'
+            style='border-right: solid; border-right-color:lightgrey'
           >
             <query-bar></query-bar>
           </b-col>
