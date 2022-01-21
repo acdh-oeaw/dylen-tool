@@ -30,7 +30,7 @@
           <b-col
             xl='2'
             class='pt-0 mt-0'
-            style='border-right: solid; border-right-color:lightgrey'
+            style='border-right: solid; border-right-color:lightgrey; overflow:auto; max-height: 100%;'
           >
             <query-bar></query-bar>
           </b-col>
