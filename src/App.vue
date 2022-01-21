@@ -39,7 +39,7 @@
             xl='10'
           >
             <div
-              class='h-100 pr-4'
+              class='h-100'
               data-sauto-id='results'
             >
               <Results />

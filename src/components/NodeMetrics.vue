@@ -117,8 +117,8 @@ export default {
       const widthRefElem = (this.$refs.parCoords || this.$refs.table).$el
         .parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.9 - 50;
-      const chartWidth = widthRefElem?.clientWidth / 1.08;
+      const chartHeight = heightRefElem.clientHeight - 50;
+      const chartWidth = widthRefElem?.clientWidth;
 
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
