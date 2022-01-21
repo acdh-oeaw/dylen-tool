@@ -2,7 +2,7 @@
   <div
     id='app'
     ref='app'
-    style='margin-top: 0; height: 90%'
+    style='margin-top: 0; height: 100%'
     @mousemove='mouseMove'
     @click='mouseClick'
     @wheel='scroll'
@@ -13,7 +13,7 @@
       class='main full'
     >
       <b-container
-        class='pb-5 h-100 pr-0 pl-0'
+        class='h-100 pr-0 pl-0 d-flex flex-column'
         fluid
       >
         <b-row class="mx-0">
@@ -24,8 +24,8 @@
         </b-row>
         <b-row
           xl='12'
-          class='pl-3 pt-0 h-100 mx-0'
-          style='border-bottom: solid; border-bottom-color: lightgrey;'
+          class='pl-3 pt-0 mx-0 flex-grow-1'
+          style='border-bottom: solid; border-bottom-color: lightgrey; overflow: auto; height: calc(100% - 88px)'
         >
           <b-col
             xl='2'
@@ -55,10 +55,13 @@
         </b-row>
         <Modal />
         <b-row
-          class='mb-1 py-3 mx-0'
+          class='py-2 mx-0 align-items-center footer'
           style='background-color: #17a2b8; color: white'
         >
-          <b-col xl='11'>
+          <b-col
+            xl='11'
+            class="align-middle"
+          >
             <b-row xl='12'>
               <b-col
                 xl='12'
@@ -96,7 +99,7 @@
               target="_blank"
             ><img
                 class='partner-logos'
-                style='max-width:40%; height:auto'
+                style='max-height:50px; width:auto'
                 src="@/assets/acdh-ch-logo96.png"
                 alt=""
               ></a>
@@ -490,10 +493,10 @@ body {
   }
 }
 
-a:link {
+.footer a:link {
   color: white;
 }
-a:visited {
+.footer a:visited {
   color: indianred;
   background-color: transparent;
   text-decoration: none;
