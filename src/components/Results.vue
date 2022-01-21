@@ -6,8 +6,7 @@
       @resized='resized("vertical")'
       @pane-maximize='resized'
     >
-      <pane
-        :size="(fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 100 : (fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 0 : 50">
+      <pane :size="(fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 100 : (fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 0 : 50">
         <splitpanes
           horizontal
           @resized='resized("left-horizontal")'
@@ -15,30 +14,30 @@
         >
           <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <setting
-                position='result'
-                setting-component='egoNetwork'
+              position='result'
+              setting-component='egoNetwork'
             ></setting>
             <button
-                @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
-                class='fullscreen-button'
-                variant='light'
-                data-sauto-id='ignore'
+              @click="(event) => toggleFullscreen('networkGraph1', event,'toggleFullScreenButton-pane1')"
+              class='fullscreen-button'
+              variant='light'
+              data-sauto-id='ignore'
             >
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
 
             <NetworkGraph
-              v-if="showFirstGraph && type === 'Ego'"
+              v-if="!timeoutWarning1 && showFirstGraph && type === 'Ego'"
               ref='networkGraph1'
               pane='pane1'
             />
             <NetworkGraphGeneral
-              v-if="showFirstGraph && type === 'Party'"
+              v-if="!timeoutWarning1 && showFirstGraph && type === 'Party'"
               ref='networkGraph1'
               pane='pane1'
             />
             <NetworkGraphSpeaker
-              v-if="showFirstGraph && type === 'Speaker'"
+              v-if="!timeoutWarning1 && showFirstGraph && type === 'Speaker'"
               ref='networkGraph1'
               pane='pane1'
             />
@@ -56,17 +55,17 @@
               <b-icon :icon="fullscreen['networkGraph2'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
             <NetworkGraph
-              v-if="showSecondGraph && type === 'Ego'"
+              v-if="!timeoutWarning2 && showSecondGraph && type === 'Ego'"
               ref='networkGraph2'
               pane='pane2'
             />
             <NetworkGraphGeneral
-              v-if="showSecondGraph && type === 'Party'"
+              v-if="!timeoutWarning2 && showSecondGraph && type === 'Party'"
               ref='networkGraph2'
               pane='pane2'
             />
             <NetworkGraphSpeaker
-              v-if="showSecondGraph && type === 'Speaker'"
+              v-if="!timeoutWarning2 && showSecondGraph && type === 'Speaker'"
               ref='networkGraph2'
               pane='pane2'
             />
@@ -75,7 +74,8 @@
       </pane>
       <pane
         :size="(fullscreen['nodeMetrics'] + fullscreen['timeSeries']) ? 100 : (fullscreen['networkGraph1'] + fullscreen['networkGraph2']) ? 0 : 50"
-        v-if='showFirstGraph || showSecondGraph'>
+        v-if='showFirstGraph || showSecondGraph'
+      >
         <splitpanes
           horizontal
           @resized='resized("right-horizontal")'
@@ -83,8 +83,8 @@
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
             <setting
-                position='result'
-                setting-component='nodeMetrics'
+              position='result'
+              setting-component='nodeMetrics'
             ></setting>
             <button
               @click="(event) => toggleFullscreen('nodeMetrics', event,'toggleFullScreenButton-nodeMetrics')"
@@ -127,7 +127,11 @@ import NodeMetrics from '@/components/NodeMetrics';
 import TimeSeries from '@/components/TimeSeries';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import Setting from "@/components/Setting";
+import Setting from '@/components/Setting';
+import {
+  NETWORK_SIZE_SHOW_WARNING,
+  NETWORK_SIZE_CANCEL
+} from '@/helpers/mixins';
 
 export default {
   name: 'Results',
@@ -171,6 +175,38 @@ export default {
         return network2.type;
       }
       return null;
+    },
+    timeoutWarning1: {
+      get() {
+        return (
+          this.$store.getters['main/timeoutWarning']('pane1') ===
+            NETWORK_SIZE_SHOW_WARNING ||
+          this.$store.getters['main/timeoutWarning']('pane1') ===
+            NETWORK_SIZE_CANCEL
+        );
+      },
+      set(val) {
+        this.$store.commit('main/setTimeoutWarning', {
+          pane: 'pane1',
+          value: val
+        });
+      }
+    },
+    timeoutWarning2: {
+      get() {
+        return (
+          this.$store.getters['main/timeoutWarning']('pane2') ===
+            NETWORK_SIZE_SHOW_WARNING ||
+          this.$store.getters['main/timeoutWarning']('pane2') ===
+            NETWORK_SIZE_CANCEL
+        );
+      },
+      set(val) {
+        this.$store.commit('main/setTimeoutWarning', {
+          pane: 'pane2',
+          value: val
+        });
+      }
     }
   },
   mounted() {
@@ -182,7 +218,7 @@ export default {
   },
   methods: {
     toggleSideBar(component) {
-      this.$store.commit('main/changeActiveSettings', {component: component})
+      this.$store.commit('main/changeActiveSettings', { component: component });
     },
     resized(paneId) {
       for (let ref in this.$refs) {

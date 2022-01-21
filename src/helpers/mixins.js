@@ -12,3 +12,19 @@ export const networkTypeMixin = {
         }
     }
 }
+
+export const NETWORK_SIZE_OK = 'OK'
+export const NETWORK_SIZE_SHOW_WARNING = 'SHOW_WARNING'
+export const NETWORK_SIZE_IGNORE = 'IGNORE'
+export const NETWORK_SIZE_CANCEL = 'CANCEL'
+
+export const networkSizeMixin = {
+    data() {
+        return {
+            NETWORK_SIZE_OK,
+            NETWORK_SIZE_SHOW_WARNING,
+            NETWORK_SIZE_IGNORE,
+            NETWORK_SIZE_CANCEL
+        }
+    }
+}
