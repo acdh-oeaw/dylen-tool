@@ -16,15 +16,15 @@
         class='pb-5 h-100 pr-0 pl-0'
         fluid
       >
-        <b-row>
-          <b-col>
+        <b-row class="mx-0">
+          <b-col class="px-0">
             <top-navigation>
             </top-navigation>
           </b-col>
         </b-row>
         <b-row
           xl='12'
-          class='pl-3 pt-0 h-100'
+          class='pl-3 pt-0 h-100 mx-0'
           style='border-bottom: solid; border-bottom-color: lightgrey;'
         >
           <b-col
@@ -54,26 +54,52 @@
           </b-col>
         </b-row>
         <Modal />
-        <b-row class='mb-1 py-3' style='background-color: #17a2b8; color: white'>
+        <b-row
+          class='mb-1 py-3 mx-0'
+          style='background-color: #17a2b8; color: white'
+        >
           <b-col xl='11'>
             <b-row xl='12'>
-              <b-col xl='12' class='text-right pr-4'>
+              <b-col
+                xl='12'
+                class='text-right pr-4'
+              >
                 The Dylen project is funded by the ÖAW go!digital Next Generation grant (GDNG 2018-020)
               </b-col>
             </b-row>
-            <b-row xl='12' class='pb-1 mb-1'>
+            <b-row
+              xl='12'
+              class='pb-1 mb-1'
+            >
               <b-col
-                  xl='12'
-                  class='text-right pr-4'
+                xl='12'
+                class='text-right pr-4'
               >
-                <a href='https://dylen.acdh.oeaw.ac.at/about/' target='_blank'>More about the project</a><span> | </span>
-                <a href="https://dylen.acdh.oeaw.ac.at/imprint" target="_blank">Imprint</a><span> | </span>
-                <a href='mailto:acdh-helpdesk@oeaw.ac.at' target='_black'>Helpdesk</a>
+                <a
+                  href='https://dylen.acdh.oeaw.ac.at/about/'
+                  target='_blank'
+                >More about the project</a><span> | </span>
+                <a
+                  href="https://dylen.acdh.oeaw.ac.at/imprint"
+                  target="_blank"
+                >Imprint</a><span> | </span>
+                <a
+                  href='mailto:acdh-helpdesk@oeaw.ac.at'
+                  target='_black'
+                >Helpdesk</a>
               </b-col>
             </b-row>
           </b-col>
           <b-col xl='1'>
-            <a href="http://www.oeaw.ac.at/" target="_blank"><img class='partner-logos' style='max-width:40%; height:auto' src="@/assets/acdh-ch-logo96.png" alt=""></a>
+            <a
+              href="http://www.oeaw.ac.at/"
+              target="_blank"
+            ><img
+                class='partner-logos'
+                style='max-width:40%; height:auto'
+                src="@/assets/acdh-ch-logo96.png"
+                alt=""
+              ></a>
           </b-col>
         </b-row>
 
