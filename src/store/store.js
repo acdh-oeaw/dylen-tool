@@ -24,6 +24,7 @@ import {speakers_not_fount} from "@/helpers/speakers_not_found";
 import {getEgoNetworkTimeSeries, getGeneralTimeSeries} from "@/helpers/api_client";
 import {compare} from "@/helpers/utils";
 import {GENERAL_PARTY} from "@/helpers/mixins";
+import { NETWORK_SIZE_OK, NETWORK_SIZE_SHOW_WARNING } from '@/helpers/mixins';
 import {sautoModule} from "@/store/sauto";
 
 Vue.component('b-spinner', BSpinner);
@@ -173,6 +174,11 @@ const mainModule = {
               assignValuesFromState(network, networkID, years);
               filterBasedOnSlider(network);
 
+              if (network.nodes.length > 1000 || network.edges.length > 1000)
+                state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
+              else
+                state[pane].timeoutWarning = NETWORK_SIZE_OK;
+
               const payload = {
                   pane: pane,
                   network: network
@@ -218,6 +224,11 @@ const mainModule = {
               network.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
               network.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
               filterBasedOnSlider(network);
+
+              if (network.nodes.length > 1000 || network.edges.length > 1000)
+                state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
+              else
+                state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
               const payload = {
                   pane: pane,
@@ -308,7 +319,7 @@ const mainModule = {
             logger.error(error);
           }
         },
-        async loadUpdatedGeneralNetwork(state, {network: oldNetwork, pane: pane}) {
+        async loadUpdatedGeneralNetwork({state}, {network: oldNetwork, pane: pane}) {
             try {
                 let response = await axios.post(graphqlEndpoint,
                   getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
@@ -327,6 +338,11 @@ const mainModule = {
                 updatedNetwork.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
 
                 filterBasedOnSlider(updatedNetwork);
+                console.log(state, pane, state[pane])
+                if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
+                state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
+                else
+                state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
                 logger.log('Network %s updated successfully.', networkID);
 
@@ -347,7 +363,7 @@ const mainModule = {
             this.commit('main/setSelectedSpeakerParty', payload);
             this.dispatch('main/loadAvailableSpeakers', payload);
         },
-        async loadUpdatedSpeakerNetwork(state, {network: oldNetwork, pane: pane}) {
+        async loadUpdatedSpeakerNetwork({state}, {network: oldNetwork, pane: pane}) {
             try {
                 const response = await axios.post(graphqlEndpoint,
                   getGeneralSpeakerNetworkQuery(oldNetwork.speaker));
@@ -367,6 +383,11 @@ const mainModule = {
                 updatedNetwork.nodes.forEach(node => node.metrics["normalisedFrequency"] = node.normalisedFrequency);
                 updatedNetwork.nodes.forEach(node => node.metrics["absoluteFrequency"] = node.absoluteFrequency);
                 filterBasedOnSlider(updatedNetwork);
+
+                if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
+                state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
+                else
+                state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
                 logger.log('General Network %s updated successfully.', networkID);
 
@@ -540,7 +561,8 @@ const mainModule = {
       autocompleteSuggestions: [],
       timeSeriesData: {},
       busy: false,
-      errors: []
+      errors: [],
+      timeoutWarning: NETWORK_SIZE_OK
     },
     pane2: {
       availableSpeakers: [],
@@ -567,7 +589,8 @@ const mainModule = {
       autocompleteSuggestions: [],
       timeSeriesData: {},
       busy: false,
-      errors: []
+      errors: [],
+      timeoutWarning: NETWORK_SIZE_OK
     },
     nodeMetrics: {
       selectedNodes: []
@@ -814,6 +837,9 @@ const mainModule = {
     setTargetWordNotFound(state, value){
       state.targetWordNotFound = value;
     },
+    setTimeoutWarning(state, {pane, value}){
+      state[pane].timeoutWarning = value;
+    },
   },
   getters: {
     focusNode: (state) => {
@@ -862,7 +888,8 @@ const mainModule = {
     timeSeriesData: (state) => (pane) => state[pane].timeSeriesData,
     busyState: state => pane => state[pane].busy,
     parallelCoordinateMetrics: state => state.parallelCoordinateMetrics,
-    targetWordNotFound: state => state.targetWordNotFound
+    targetWordNotFound: state => state.targetWordNotFound,
+    timeoutWarning: state => pane => state[pane].timeoutWarning,
   }
 };
 
