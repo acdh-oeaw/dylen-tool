@@ -12,7 +12,7 @@
           class='top-nav'>
         <b-col xl='12'>
           <b-navbar toggleable="sm" type="dark" variant="info">
-            <b-navbar-brand href="#">DYLEN</b-navbar-brand>
+            <b-navbar-brand href="#" class='pr-3 pt-2'>DYLEN</b-navbar-brand>
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
               <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
@@ -95,6 +95,6 @@ export default {
 <style>
 .top-nav {
   border-bottom: solid thick;
-  border-bottom-color: cadetblue;
+  border-bottom-color: lightgrey;
 }
 </style>

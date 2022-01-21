@@ -2,7 +2,7 @@
   <div
     id='app'
     ref='app'
-    style='margin-top: 0; height: 95%'
+    style='margin-top: 0; height: 90%'
     @mousemove='mouseMove'
     @click='mouseClick'
     @wheel='scroll'
@@ -25,11 +25,12 @@
         <b-row
           xl='12'
           class='pl-3 pt-0 h-100'
+          style='border-bottom: solid; border-bottom-color: lightgrey;'
         >
           <b-col
             xl='2'
             class='pt-0 mt-0'
-            style='border-right: solid; border-color: cadetblue'
+            style='border-right: solid; border-right-color:lightgrey'
           >
             <query-bar></query-bar>
           </b-col>
@@ -53,9 +54,31 @@
           </b-col>
         </b-row>
         <Modal />
+        <b-row class='mb-1 py-3' style='background-color: #17a2b8; color: white'>
+          <b-col xl='11'>
+            <b-row xl='12'>
+              <b-col xl='12' class='text-right pr-4'>
+                The Dylen project is funded by the ÖAW go!digital Next Generation grant (GDNG 2018-020)
+              </b-col>
+            </b-row>
+            <b-row xl='12' class='pb-1 mb-1'>
+              <b-col
+                  xl='12'
+                  class='text-right pr-4'
+              >
+                <a href='https://dylen.acdh.oeaw.ac.at/about/' target='_blank'>More about the project</a><span> | </span>
+                <a href="https://dylen.acdh.oeaw.ac.at/imprint" target="_blank">Imprint</a><span> | </span>
+                <a href='mailto:acdh-helpdesk@oeaw.ac.at' target='_black'>Helpdesk</a>
+              </b-col>
+            </b-row>
+          </b-col>
+          <b-col xl='1'>
+            <a href="http://www.oeaw.ac.at/" target="_blank"><img class='partner-logos' style='max-width:40%; height:auto' src="@/assets/acdh-ch-logo96.png" alt=""></a>
+          </b-col>
+        </b-row>
+
       </b-container>
     </div>
-
     <div
       ref='sidebar'
       class='sidebar collapsed'
@@ -270,7 +293,6 @@
             </b-row>
           </b-col>
         </b-row>
-
       </div>
     </div>
     <alert-area></alert-area>
@@ -440,5 +462,14 @@ body {
   .main {
     margin-right: 0px;
   }
+}
+
+a:link {
+  color: white;
+}
+a:visited {
+  color: indianred;
+  background-color: transparent;
+  text-decoration: none;
 }
 </style>
