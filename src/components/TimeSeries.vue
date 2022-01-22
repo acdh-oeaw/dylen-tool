@@ -9,16 +9,16 @@
       class='text-center'
       align-h='center'
     >
-      <b-col class="h-10"><b>Time series Analysis</b></b-col>
+      <b-col class='h-10'><b>Time series Analysis</b></b-col>
       <b-button
-          class='mr-5'
-          size='sm'
-          :pressed.sync='showTable'
-          variant='outline-secondary'
-          data-sauto-id='table-button'
+        class='mr-5'
+        size='sm'
+        :pressed.sync='showTable'
+        variant='outline-secondary'
+        data-sauto-id='time-series-table-button'
       >
-        <b-icon v-if='showTable' icon='graph-up'></b-icon>
-        <b-icon v-if='!showTable' icon='table'></b-icon>
+        <b-icon v-if='showTable' icon='graph-up' data-sauto-id='time-series-table-button'></b-icon>
+        <b-icon v-if='!showTable' icon='table' data-sauto-id='time-series-table-button'></b-icon>
       </b-button>
     </b-row>
     <b-row
@@ -28,35 +28,35 @@
       <b-col class='h-100'>
         <b-select
           v-if='!showTable'
-          class="w-50"
-          v-model="selectedMetric"
-          :options="metricOptions"
-          size="sm"
+          class='w-50'
+          v-model='selectedMetric'
+          :options='metricOptions'
+          size='sm'
           data-sauto-id='timeSeries-metric-option'
         >
 
         </b-select>
         <b-select
           v-if='!showTable'
-          class="w-50"
-          v-model="selectedRelativeTo"
-          :options="relativeToOptions"
-          size="sm"
+          class='w-50'
+          v-model='selectedRelativeTo'
+          :options='relativeToOptions'
+          size='sm'
           data-sauto-id='timeSeries-relative-option'
         >
         </b-select>
         <LineChart
           v-if='!showTable'
-          ref="lineChart"
+          ref='lineChart'
           :options='options'
-          :data="selectedTimeSeriesData"
-          :colors="lineColors"
-          :labels="labels"
+          :data='selectedTimeSeriesData'
+          :colors='lineColors'
+          :labels='labels'
           data-sauto-id='timeSeries'
         ></LineChart>
         <time-series-table
-            v-if='showTable'
-            :options='options'>
+          v-if='showTable'
+          :options='options'>
         </time-series-table>
       </b-col>
     </b-row>
@@ -65,13 +65,13 @@
 
 <script>
 import LineChart from '@/components/LineChart';
-import {relativeToMap, timeSeriesKeyMap} from "@/helpers/mappers";
-import TimeSeriesTable from "@/components/TimeSeriesTable";
-import {GENERAL_PARTY, GENERAL_SPEAKER} from "@/helpers/mixins";
+import { relativeToMap, timeSeriesKeyMap } from '@/helpers/mappers';
+import TimeSeriesTable from '@/components/TimeSeriesTable';
+import { GENERAL_PARTY, GENERAL_SPEAKER } from '@/helpers/mixins';
 
 export default {
   name: 'TimeSeries',
-  components: {TimeSeriesTable, LineChart },
+  components: { TimeSeriesTable, LineChart },
   props: ['panes'],
   data() {
     return {
@@ -134,13 +134,13 @@ export default {
     labels() {
       return ['pane1', 'pane2'].map(
         (p) => {
-          let networkType = this.$store.getters['main/topNav'].networkType
-          if(networkType === GENERAL_PARTY) {
-            return this.$store.getters['main/selectedGeneralNetworkParty'](p) ? this.$store.getters['main/selectedGeneralNetworkParty'](p).party : ''
+          let networkType = this.$store.getters['main/topNav'].networkType;
+          if (networkType === GENERAL_PARTY) {
+            return this.$store.getters['main/selectedGeneralNetworkParty'](p) ? this.$store.getters['main/selectedGeneralNetworkParty'](p).party : '';
           } else if (networkType === GENERAL_SPEAKER) {
-            return this.$store.getters['main/selectedGeneralNetworkSpeaker'](p).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](p) : ''
+            return this.$store.getters['main/selectedGeneralNetworkSpeaker'](p).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](p) : '';
           }
-          return this.$store.getters['main/selectedTargetword'](p)?.text
+          return this.$store.getters['main/selectedTargetword'](p)?.text;
         }
       );
     },
