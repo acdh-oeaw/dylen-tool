@@ -28,6 +28,7 @@
           style='border-bottom: solid; border-bottom-color: lightgrey;'
         >
           <b-col
+            data-sauto-id='left-query-bar'
             xl='2'
             class='pt-0 mt-0'
             style='border-right: solid; border-right-color:lightgrey'

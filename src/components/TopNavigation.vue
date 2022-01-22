@@ -16,9 +16,9 @@
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
               <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                  <b-nav-item href="#" @click='onTypeOfNetworkSelect(EGO_NETWORK)'>Ego Network</b-nav-item>
-                  <b-nav-item href="#" @click='onTypeOfNetworkSelect(GENERAL_PARTY)'>General Network</b-nav-item>
-                  <b-nav-item href="#" @click='onTypeOfNetworkSelect(GENERAL_SPEAKER)'>General Network Speaker</b-nav-item>
+                  <b-nav-item data-sauto-id='ego-network-tab' href="#" @click='onTypeOfNetworkSelect(EGO_NETWORK)'>Ego Network</b-nav-item>
+                  <b-nav-item data-sauto-id='general-network-tab' href="#" @click='onTypeOfNetworkSelect(GENERAL_PARTY)'>General Network</b-nav-item>
+                  <b-nav-item data-sauto-id='general-network-speaker-tab' href="#" @click='onTypeOfNetworkSelect(GENERAL_SPEAKER)'>General Network Speaker</b-nav-item>
                 </b-navbar-nav>
               </b-collapse>
               <b-row align-h='end'>
