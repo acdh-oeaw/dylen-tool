@@ -520,7 +520,7 @@ const mainModule = {
         logger.error(error);
       }
         },
-       
+
 
   },
   namespaced: true,
