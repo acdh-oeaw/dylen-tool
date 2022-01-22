@@ -55,7 +55,7 @@
           </b-col>
         </b-row>
         <Modal />
-        <b-row class='mb-1 py-3' style='background-color: #17a2b8; color: white'>
+        <b-row data-sauto-id='bottom-info-bar' class='mb-1 py-3' style='background-color: #17a2b8; color: white'>
           <b-col xl='11'>
             <b-row xl='12'>
               <b-col xl='12' class='text-right pr-4'>
@@ -280,8 +280,10 @@
                       class="list-group-item w-100"
                       v-for="element in selectedMetrics"
                       :key="element.name"
+                      data-sauto-id='ignore'
                     >{{camelCaseToSpaces(element.name)}}
                       <b-form-checkbox
+                        :data-sauto-id='"parallel-coordinates-"+element.name+"-checkbox-option"'
                         v-model="element.enabled"
                         switch
                       >
@@ -389,7 +391,7 @@ export default {
   },
   watch: {
     settingsActive: function (newVal, oldVal) {
-      console.log('settings changed: ' + newVal + oldVal);
+      console.log('settings active changed from ' + newVal + " to " + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
     }
