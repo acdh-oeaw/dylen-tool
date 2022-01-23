@@ -378,9 +378,12 @@ export default {
         })
         .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
         .on('click', (event, entry) => {
-          event.preventDefault();
-          entry.onClick(d.name);
-          this.mouseClick(event, 'context-menu-select-as-targetword-' + this.pane);
+          if(typeof entry.onClick === 'function'){
+            event.preventDefault();
+            entry.onClick(d.name);
+            this.mouseClick(event, 'context-menu-select-as-targetword-' + this.pane);
+          }
+
         });
 
       menuEntries.filter((d) => d.hr).append('hr');
