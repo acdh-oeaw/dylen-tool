@@ -1,24 +1,25 @@
 <template>
   <b-card class='mt-0'>
     <b-row xl='12'>
-      <b-col xl=12 class='mt-0 text-center' style='font-size:0.9em'>
-        <info-icon size="1.2x" class="custom-class" style='color:red' v-b-modal.threshold></info-icon>
+      <b-col xl='12' class='mt-0 text-center' style='font-size:0.9em'>
+        <info-icon size='1.2x' class='custom-class' style='color:red' v-b-modal="'threshold-'+this.pane"
+                   data-sauto-id='node-filter-info'></info-icon>
         <b> Node filter</b>
       </b-col>
     </b-row>
     <b-row xl='12'>
-      <b-col xl=12 class='pt-2' style='font-size:0.9em'>
+      <b-col xl='12' class='pt-2' style='font-size:0.9em'>
         Metric:
         <b-form-select
-            size='sm'
-            v-model='selectedMetric'
-            :data-sauto-id="'selectGeneralMetric-'+this.pane"
+          size='sm'
+          v-model='selectedMetric'
+          :data-sauto-id="'selectGeneralMetric-'+this.pane"
         >
           <b-form-select-option
-              v-for='option in availableMetrics'
-              v-bind:key='option.id'
-              v-bind:value='option'
-              :data-sauto-id="'metricGeneralOption-' + option"
+            v-for='option in availableMetrics'
+            v-bind:key='option.id'
+            v-bind:value='option'
+            data-sauto-id='metricGeneralOption'
           >
             {{ option }}
           </b-form-select-option>
@@ -26,7 +27,7 @@
       </b-col>
     </b-row>
     <b-row xl='12' class='mt-2'>
-      <b-col xl=12 class='mt-3 mb-2' style='font-size:0.9em'>
+      <b-col xl='12' class='mt-3 mb-2' style='font-size:0.9em'>
         % of nodes to display:
         <b-row xl='12'>
           <b-col
@@ -34,19 +35,21 @@
             class='text-center'
           >
             <b-badge
-                variant="warning"
-                style='font-size: 0.7em'
-            >Use with caution</b-badge>
+              variant='warning'
+              style='font-size: 0.7em'
+            >Use with caution
+            </b-badge>
           </b-col>
         </b-row>
 
-        <b-modal id='threshold' title='Node filter with threshold slider'>
+        <b-modal :id='"threshold-"+this.pane' title='Node filter with threshold slider' ok-only>
           <b-row xl='12'>
             <b-col
               xl='12'
               class='text-center'
             >
-              <alert-triangle-icon size="2x" class="custom-class" style='color: #E2CD0D'></alert-triangle-icon> Caution<br>
+              <alert-triangle-icon size='2x' class='custom-class' style='color: #E2CD0D'></alert-triangle-icon>
+              Caution<br>
             </b-col>
           </b-row>
           General Network graphs consist of large number of nodes and edges. <br>
@@ -63,11 +66,13 @@
     <b-row xl='12'>
       <b-col xl='12' class='mt-2 pb-4'>
         <Slider
-            @change='valueChanged'
-            :format="sliderFormat"
-            showTooltip="always"
-            tooltipPosition="bottom"
-            v-model="valueSlid"/>
+          @change='valueChanged'
+          :format='sliderFormat'
+          showTooltip='always'
+          tooltipPosition='bottom'
+          v-model='valueSlid'
+          :data-sauto-id='"node-filter-slider-"+this.pane'
+        />
       </b-col>
 
     </b-row>
@@ -75,30 +80,30 @@
 </template>
 
 <script>
-import {InfoIcon, AlertTriangleIcon} from 'vue-feather-icons'
+import { InfoIcon, AlertTriangleIcon } from 'vue-feather-icons';
 import Slider from '@vueform/slider/dist/slider.vue2.js';
-import {GENERAL_SPEAKER} from "@/helpers/mixins";
+import { GENERAL_SPEAKER } from '@/helpers/mixins';
 
 export default {
-  components: {InfoIcon, AlertTriangleIcon, Slider},
-  name: "NodeFilter",
+  components: { InfoIcon, AlertTriangleIcon, Slider },
+  name: 'NodeFilter',
   props: ['availableMetrics', 'pane', 'generalType'],
   data() {
     return {
-      defaultMetric: "Degree Centrality",
-      valueSlid: [0,20],
-      sliderFormat: function (value) {
-        return `${Math.round(value)}%`
+      defaultMetric: 'Degree Centrality',
+      valueSlid: [0, 20],
+      sliderFormat: function(value) {
+        return `${Math.round(value)}%`;
       }
-    }
+    };
   },
   mounted() {
     let selectedMetric = this.getMetricByType(this.generalType);
-    this.selectedMetric = selectedMetric.metric === ""? this.defaultMetric : selectedMetric.metric
+    this.selectedMetric = selectedMetric.metric === '' ? this.defaultMetric : selectedMetric.metric;
 
     this.$root.$on('networkTypeChanged', () => {
-      this.selectedMetric = this.defaultMetric
-    })
+      this.selectedMetric = this.defaultMetric;
+    });
   },
   methods: {
     valueChanged() {
@@ -106,7 +111,7 @@ export default {
     },
     getMetricByType(entityType) {
       if (entityType === GENERAL_SPEAKER) {
-        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.pane)
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.pane);
       } else {
         return this.$store.getters['main/selectedGeneralNetworkMetric'](this.pane);
       }
@@ -115,7 +120,7 @@ export default {
   computed: {
     selectedMetric: {
       get() {
-        return this.getMetricByType(this.generalType)
+        return this.getMetricByType(this.generalType);
       },
       set(val) {
         if (val) {
@@ -133,9 +138,9 @@ export default {
           console.log('Set metric to: ' + val);
         }
       }
-    },
+    }
   }
-}
+};
 </script>
 
 <style scoped>
