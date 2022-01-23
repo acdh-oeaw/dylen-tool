@@ -58,7 +58,7 @@ export const sautoModule = {
         async handleMouseClick({ state }, { click }) {
             //send mouse click
             click.type = 'MouseClick';
-            // console.log(click.id) //todo delete
+            console.log(click.id) //todo delete
             state.connection.send(JSON.stringify(click));
         },
         async handleDrag({ state }, { drag }) {

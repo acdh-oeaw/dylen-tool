@@ -33,10 +33,7 @@
           <b-button
             style='padding:0'
             variant='none'
-            @click='(event) => {
-                filterClicked("selected","filterSelected")
-                event.stopPropagation()
-              }'
+            @click='(event) => filterClicked(event, "selected","filterSelected")'
           >
             <b-icon
               v-if='filterOn.indexOf("selected") < 0'
@@ -57,11 +54,7 @@
               id='word-filter-input'
               style='padding:0'
               variant='none'
-              @click='(event) => {
-                filterClicked("word","filterWord")
-                event.stopPropagation()
-
-              }'
+              @click='(event) => filterClicked(event, "word","filterWord")'
             >
               <b-icon
                 v-if='filterOn.indexOf("word") < 0'
@@ -91,6 +84,7 @@
                     v-model="filterWord"
                     type="search"
                     placeholder="Type to Filter"
+                    @keypress='e => keyPress(e,"metrics-filter")'
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
@@ -106,11 +100,7 @@
             id='network-filter-input'
             style='padding:0'
             variant='none'
-            @click='(event) => {
-                filterClicked("network","filterNetwork")
-                event.stopPropagation()
-
-              }'
+            @click='(event) => filterClicked(event, "network","filterNetwork")'
           >
             <b-icon
               v-if='filterOn.indexOf("network") < 0'
@@ -140,6 +130,7 @@
                   v-model="filterNetwork"
                   type="search"
                   placeholder="Type to Filter"
+                  @keypress='e => keyPress(e,"metrics-filter")'
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
@@ -330,9 +321,9 @@ export default {
       this.mouseClick(event, 'table-select-all');
     },
     customFilter(row, filter) {
-      console.log('filtering on: ' + this.filterOn);
-      console.log('filter row: ' + JSON.stringify(row));
-      console.log('filter filter: ' + filter);
+      // console.log('filtering on: ' + this.filterOn);
+      // console.log('filter row: ' + JSON.stringify(row));
+      // console.log('filter filter: ' + filter);
 
       const selectedCheck =
         filter[0] !== null ? row.selected === filter[0] : null;
@@ -351,7 +342,7 @@ export default {
         (networkCheck || networkCheck === null)
       );
     },
-    filterClicked(column, filterName) {
+    filterClicked(event, column, filterName) {
       let i = this.filterOn.indexOf(column);
       if (i < 0) {
         this.filterOn.push(column);
@@ -360,6 +351,8 @@ export default {
         this.filterOn.splice(i, 1);
         this[filterName] = null;
       }
+      this.mouseClick(event, 'node-metrics-filter');
+      event.stopPropagation()
     },
     selectAllNodes() {
       this.tableData
