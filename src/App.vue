@@ -35,7 +35,7 @@
             <query-bar></query-bar>
           </b-col>
           <b-col
-            class='h-100'
+            class='h-100 overflow-hidden'
             xl='10'
           >
             <div
@@ -114,14 +114,18 @@
       data-sauto-id='sidebar'
     >
       <div
-        class='pr-4 pl-1 py-3'
+        class='pr-4 pl-1 py-1'
         style='width: 300px'
       >
         <b-row
           xl='12'
           align-content='end'
         >
-          <b-col xl='12'>
+          <b-col
+            xl='12'
+            class="position-absolute pt-1"
+            style="top: 0; z-index: 2; right: 0;"
+          >
             <b-button
               type='button'
               class='close'

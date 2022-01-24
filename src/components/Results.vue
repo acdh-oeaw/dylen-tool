@@ -12,7 +12,7 @@
           @resized='resized("left-horizontal")'
           @pane-maximize='resized'
         >
-          <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+          <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <setting
               position='result'
               setting-component='egoNetwork'
