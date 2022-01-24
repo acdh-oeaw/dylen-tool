@@ -67,7 +67,7 @@
             <b-row xl='12' class='pb-1 mb-1'>
               <b-col
                   xl='12'
-                  class='text-right pr-4'
+                  class='text-right pr-4 footer-links'
               >
                 <a href='https://dylen.acdh.oeaw.ac.at/about/' target='_blank'>More about the project</a><span> | </span>
                 <a href="https://dylen.acdh.oeaw.ac.at/imprint" target="_blank">Imprint</a><span> | </span>
@@ -469,10 +469,10 @@ body {
   }
 }
 
-a:link {
+.footer-links a:link {
   color: white;
 }
-a:visited {
+.footer-links a:visited {
   color: indianred;
   background-color: transparent;
   text-decoration: none;
