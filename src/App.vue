@@ -42,7 +42,7 @@
               class='h-100'
               data-sauto-id='results'
             >
-              <Results />
+              <Results ref="results" />
             </div>
             <div
               class='h-100 w-100 infoContainer'
@@ -420,6 +420,7 @@ export default {
       console.log('settings changed: ' + newVal + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
+      window.setTimeout(() => this.$refs['results'].resized(), 500);
     }
   }
 };
