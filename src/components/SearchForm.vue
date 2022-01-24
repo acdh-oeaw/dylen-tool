@@ -73,7 +73,7 @@
                   :list='`datalist-${pane}`'
                   :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
                   @change='handleSearchTermSelect'
-                  @keypress='this.keyPress'
+                  @keypress='e => this.keyPress(e,"selectTargetWord")'
                   autocomplete='off'
               ></b-form-input>
               <datalist v-if='showSuggestions' :id='`datalist-${pane}`'>

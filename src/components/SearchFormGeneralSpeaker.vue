@@ -20,7 +20,7 @@
                   v-for='option in availableParties'
                   v-bind:key='option.id'
                   v-bind:value='option'
-                  :data-sauto-id="'partyOption-' + option"
+                  data-sauto-id="partyOption"
                 >
                   {{ option }}
                 </b-form-select-option>
@@ -45,7 +45,7 @@
                     v-for='optionSpeaker in availableSpeakers'
                     v-bind:key='optionSpeaker.id'
                     v-bind:value='optionSpeaker'
-                    :data-sauto-id="'speakerOption-' + optionSpeaker"
+                    data-sauto-id="speakerOption"
                 >
                   {{ optionSpeaker }}
                 </b-form-select-option>

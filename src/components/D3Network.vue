@@ -128,7 +128,6 @@ export default {
           value: () => ``,
           onClick: (d) => {
             console.log('Select as target word:', d);
-            // this.mouseClick(event, 'right-click-' + this.pane + '-node');
             this.setWordAsSearchTerm(d);
           },
           networkType: EGO_NETWORK,
@@ -373,15 +372,18 @@ export default {
 
       let menuEntries = d3
         .selectAll(`.menuEntry`)
-        .append('span')
+        .append('div')
         .text((entry) => {
           return `${entry.title}${entry.value(d)}`;
         })
         .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
         .on('click', (event, entry) => {
-          event.preventDefault();
-          entry.onClick(d.name);
-          this.mouseClick(event, 'context-menu-select-as-targetword-' + this.pane);
+          if(typeof entry.onClick === 'function'){
+            event.preventDefault();
+            entry.onClick(d.name);
+            this.mouseClick(event, 'context-menu-select-as-targetword-' + this.pane);
+          }
+
         });
 
       menuEntries.filter((d) => d.hr).append('hr');

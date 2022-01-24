@@ -943,14 +943,14 @@ export var mixin = {
       movement.timestamp = timestamp;
       this.$store.dispatch('sauto/handleMouseMove', { movement });
     },
-    keyPress(event) {
+    keyPress(event, id) {
       if (this.$store.state.sauto.sauto === false) {
         return;
       }
 
       //currently im logging only keypress on searchTargetWord input and nothing else, so id is that.
       const keyPress = {
-        id: 'selectTargetWord',
+        id,
         type: 'KeyPress',
         timestamp: Date.now(),
         key: event.key,
