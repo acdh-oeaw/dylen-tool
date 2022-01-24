@@ -54,7 +54,10 @@
           </b-col>
         </b-row>
         <b-row xl='12'>
-          <b-col xl='12'>
+          <b-col
+              xl='12'
+              class='px-0'
+          >
             <node-filter
                 @sliderValueChanged='handleSliderValue'
                 :available-metrics='availableMetrics'
@@ -63,10 +66,16 @@
           </b-col>
         </b-row>
         <b-row align-h='end' xl='12' class='mt-2'>
-          <b-col xl='6'>
+          <b-col
+              xl='6'
+              class='px-1'
+          >
             <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
           </b-col>
-          <b-col xl='6'>
+          <b-col
+              xl='6'
+              class='px-1'
+          >
             <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
           </b-col>
         </b-row>

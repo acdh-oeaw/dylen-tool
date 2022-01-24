@@ -29,14 +29,16 @@
         >
           <b-col
             data-sauto-id='left-query-bar'
-            xl='2'
+            md='3'
+            lg='2'
             class='pt-0 mt-0'
-            style='border-right: solid; border-right-color:lightgrey'
+            style='border-right: solid; border-right-color:lightgrey;max-height:100%; overflow:auto;'
           >
             <query-bar></query-bar>
           </b-col>
           <b-col
             class='h-100'
+            md='9'
             xl='10'
           >
             <div
