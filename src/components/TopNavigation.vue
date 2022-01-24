@@ -12,7 +12,9 @@
           class='top-nav'>
         <b-col xl='12'>
           <b-navbar toggleable="sm" type="dark" variant="info">
-            <b-navbar-brand href="#" class='pr-3 pt-2'>DYLEN</b-navbar-brand>
+            <b-navbar-brand href="#" class='pr-3 pt-2' style='max-width:150px'>
+              <img src='@/assets/dylen_logo.png' style='max-width:100%;height:auto'/>
+            </b-navbar-brand>
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
               <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>

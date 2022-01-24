@@ -89,10 +89,16 @@
           </b-col>
         </b-row>
         <b-row class="text-center" xl='12'>
-          <b-col xl='6'>
+          <b-col
+              xl='6'
+              class='px-1'
+          >
             <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
           </b-col>
-          <b-col xl='6'>
+          <b-col
+              xl='6'
+              class='px-1'
+          >
             <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
           </b-col>
 

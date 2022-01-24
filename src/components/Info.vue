@@ -1,9 +1,13 @@
 <template>
   <b-row class='justify-content-center mt-3'>
-    <b-col xl='6'>
+    <b-col xl='10'>
       <b-row class='justify-content-center' aligh-h='center'>
-        <b-card align='center' no-body>
-          <b-tabs content-class='mt-3' card>
+        <b-card
+            align='center'
+        >
+          <b-tabs
+              content-class='mt-3'
+          >
             <b-tab title='General Information' active @click='onTabClick' data-sauto-id='info-tab-content'>
               <b-card-text align='left'>
                 <p>
