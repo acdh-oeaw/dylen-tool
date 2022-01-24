@@ -26,7 +26,7 @@
                     v-for='option in availableParties'
                     v-bind:key='option'
                     v-bind:value='option'
-                    :data-sauto-id="'partyOption-' + option"
+                    data-sauto-id="partyOption"
                 >
                   {{ option }}
                 </b-form-select-option>
