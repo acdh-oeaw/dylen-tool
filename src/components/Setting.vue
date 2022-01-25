@@ -3,7 +3,7 @@
   <b-col>
     <b-button
       v-if='position === "nav"'
-      data-sauto-id='settings-button'
+      data-sauto-id='settings-button-nav'
       class='mr-2'
       variant='info'
       @click='toggleSideBar(settingComponent)'
@@ -13,7 +13,7 @@
     <b-button
       v-if='position === "result"'
       size='sm'
-      data-sauto-id='settings-button'
+      data-sauto-id='settings-button-result'
       class='settings-button'
       variant="light"
       @click='toggleSideBar(settingComponent)'
