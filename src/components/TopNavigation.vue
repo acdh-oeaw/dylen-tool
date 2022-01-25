@@ -81,7 +81,7 @@
 
 <script>
 import Setting from '@/components/Setting';
-import { EGO_NETWORK, networkTypeMixin } from '@/helpers/mixins';
+import { networkTypeMixin } from '@/helpers/mixins';
 
 export default {
   mixins: [networkTypeMixin],
@@ -92,13 +92,9 @@ export default {
   props: ['showInfo'],
   data() {
     return {
-      typeOfNetwork: EGO_NETWORK
     };
   },
   created() {
-    this.$store.commit('main/changeTopNavType', {
-      networkType: this.typeOfNetwork
-    });
   },
   computed: {
     showInfoButton() {

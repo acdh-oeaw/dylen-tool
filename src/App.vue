@@ -24,10 +24,11 @@
         </b-row>
         <b-row
           xl='12'
-          class='pl-3 pt-0 mx-0 flex-grow-1'
+          class='pl-3 pt-0 mx-0 flex-grow-1 justify-content-center'
           style='border-bottom: solid; border-bottom-color: lightgrey; overflow: auto; height: calc(100% - 88px)'
         >
           <b-col
+            v-if='type!==null'
             data-sauto-id='left-query-bar'
             md='3'
             lg='2'
@@ -348,7 +349,10 @@ import QueryBar from '@/components/QueryBar';
 import AlertArea from '@/components/AlertArea';
 import { camelCaseToSpaces } from '@/helpers/utils';
 
+const {networkTypeMixin} = require("@/helpers/mixins");
+
 export default {
+  mixins: [networkTypeMixin],
   name: 'App',
   components: {
     QueryBar,

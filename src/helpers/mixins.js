@@ -10,6 +10,11 @@ export const networkTypeMixin = {
             GENERAL_PARTY,
             GENERAL_SPEAKER
         }
+    },
+    computed: {
+        type() {
+            return this.$store.getters['main/topNav'].networkType;
+        }
     }
 }
 
