@@ -219,7 +219,7 @@ export default {
             _pane: this.pane,
             _absoluteFrequency: node.absoluteFrequency,
             _normalisedFrequency: node.normalisedFrequency,
-            _pos: this.pos
+            _pos: node.pos
           });
         }
         for (const link of network.edges) {
