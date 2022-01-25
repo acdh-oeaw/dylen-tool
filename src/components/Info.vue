@@ -171,7 +171,7 @@
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
-                    <info-collapsable>
+                    <info-collapsable name='ego-network'>
                       <span slot='definition'>What is an Ego Network?</span>
                       <span slot='definition-content'>
                         <p>Ego-network visualization of a selected target word provides information about its <b>semantic
@@ -232,7 +232,7 @@
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
-                    <info-collapsable>
+                    <info-collapsable name='general-network'>
                       <span slot='definition'>
                         What is a General Network?
                       </span>
@@ -296,11 +296,13 @@
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
-                    <info-collapsable>
+                    <info-collapsable name='node-metrics'>
                       <span slot='definition'>Description</span>
                       <span slot='definition-content'>
                         A network is a set of nodes and edges, and chracteristics of nodes and edges can be described with different metrics.<br>
-                        The <code>Node Metrics Comparison</code> component helps users to compare different networks based on <b>10 different node metrics</b>
+                        The <code>Node Metrics Comparison</code> component helps users to compare different networks based on <b>10 different node metrics</b>.
+                        <br>
+                        Details of metrics used are described in the <b>Technical detail</b> section.
                       </span>
                       <span slot='use-case-header'>Use Node Metrics Comaprison for..</span>
                       <span slot='use-case-content'></span>
@@ -404,7 +406,7 @@
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
-                    <info-collapsable>
+                    <info-collapsable name='timeseries'>
                       <span slot='definition'>Description</span>
                       <span slot='definition-content'>
                         <b>Time series analysis</b> allows us to track the change over time. <br>
