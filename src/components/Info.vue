@@ -13,32 +13,46 @@
             content-class='mt-3'
             card
           >
-            <b-tab title='Start' active @click='onTabClick'>
+            <b-tab
+                title='Start'
+                active
+                @click='onTabClick'
+                style='overflow: hidden'
+            >
               <b-row class='justify-content-md-center'>
-                <b-col lg='10'>
+                <b-col lg='10' style='height: 100%'>
                   <b-card-body
-                      style='max-height:50%;'
+                      style='max-height:100%;'
                   >
                     <b-carousel
                         id="carousel-1"
                         v-model="slide"
-                        :interval="4000"
-                        controls
-                        indicators
+                        :interval="0"
+                        :controls='true'
+                        :indicators='true'
                         background="#ababab"
-                        img-width="auto"
-                        img-height="100px"
                         style="text-shadow: 1px 1px 2px #333;"
                         @sliding-start="onSlideStart"
                         @sliding-end="onSlideEnd"
                     >
-                      <div style='color: black; max-height: 100px'>
+                      <div style='color: black;'>
                         <b-carousel-slide
                             :class='carousel-caption-black'
-                            img-height='50%'
                             caption="Ego Network"
                             text="Explore semantic neighborhood of a target word in a given time period"
-                            :img-src="require('../assets/info/ego-network.png')"
+                            :img-src="require('../assets/info/ego.png')"
+                        ></b-carousel-slide>
+                        <b-carousel-slide
+                            :class='carousel-caption-black'
+                            caption="General Network - Party"
+                            text="Explore most frequent lexemes used by political parties"
+                            :img-src="require('../assets/info/general.png')"
+                        ></b-carousel-slide>
+                        <b-carousel-slide
+                            :class='carousel-caption-black'
+                            caption="General Network - Politicians"
+                            text="Explore most frequent lexemes used by politicians"
+                            :img-src="require('../assets/info/speaker.png')"
                         ></b-carousel-slide>
                       </div>
                     </b-carousel>
@@ -47,7 +61,10 @@
               </b-row>
 
             </b-tab>
-            <b-tab title='General Information' active @click='onTabClick' data-sauto-id='info-tab-content'>
+            <b-tab
+                title='General Information'
+                @click='onTabClick'
+                data-sauto-id='info-tab-content'>
               <b-card-text align='left'>
                 <p>
                   DYLEN is a research project which aims to gain insights to the dynamics of the Austrian German lexicon
@@ -123,7 +140,6 @@
               </b-card-text>
             </b-tab>
             <b-tab
-              v-if='false'
               title='General Network'
               @click='onTabClick'
               data-sauto-id='info-tab-content'
@@ -346,6 +362,16 @@ export default {
 </script>
 <style>
 .carousel-caption {
-  color:#248eff!important;
+  color:#666d69!important;
+}
+.carousel-indicators li {
+  background-color: #666d69 !important;
+}
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
 </style>
