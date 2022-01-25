@@ -173,7 +173,6 @@ export default {
       const network = this.$store.getters['main/getPane'](
         this.pane
       ).selectedNetwork;
-      console.log(network);
       const nodes = [];
       const links = [];
       let selectedNetwork;
