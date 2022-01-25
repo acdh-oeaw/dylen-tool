@@ -6,7 +6,10 @@
     style='background-color: white'
     v-if='speakerNetwork'
   >
-    <b-overlay :show='isNetworkLoading' rounded='lg'>
+    <b-overlay
+      :show='isNetworkLoading'
+      rounded='lg'
+    >
       <b-row class='h-10'>
         <b-col>
           <span><b>{{ speakerNetwork.party }} / {{ speakerNetwork.speaker }}</b></span>
@@ -15,47 +18,47 @@
       <b-row class='h-20 pb-2'>
         <!--      <b-col xl='2'></b-col>-->
         <b-col
-            class='pl-5 year-slider-row'
-            data-sauto-id='ignore'
+          class='pl-5 year-slider-row'
+          data-sauto-id='ignore'
         >
           <div
-              ref='sliderDiv'
-              class='pl-2'
+            ref='sliderDiv'
+            class='pl-2'
           >
             <vue-slider
-                ref='slider'
-                v-model='speakerNetwork.year'
-                v-bind='sliderOptions'
-                :min='speakerNetwork.possibleYears[0]'
-                :max='speakerNetwork.possibleYears[speakerNetwork.possibleYears.length - 1]'
-                :data='speakerNetwork.possibleYears'
-                :process='false'
-                :lazy='true'
-                :adsorb='true'
-                :duration='0.3'
-                v-on:change='handleChange'
-                :marks='speakerNetwork.possibleYears'
-                :tooltip="'none'"
+              ref='slider'
+              v-model='speakerNetwork.year'
+              v-bind='sliderOptions'
+              :min='speakerNetwork.possibleYears[0]'
+              :max='speakerNetwork.possibleYears[speakerNetwork.possibleYears.length - 1]'
+              :data='speakerNetwork.possibleYears'
+              :process='false'
+              :lazy='true'
+              :adsorb='true'
+              :duration='0.3'
+              v-on:change='handleChange'
+              :marks='speakerNetwork.possibleYears'
+              :tooltip="'none'"
             />
           </div>
         </b-col>
       </b-row>
       <b-row
-          lg='12'
-          class='pt-2 h-70'
-          v-bind='speakerNetwork'
-          :key='speakerNetwork.id'
-          data-sauto-id='ignore'
+        lg='12'
+        class='pt-2 h-70'
+        v-bind='speakerNetwork'
+        :key='speakerNetwork.id'
+        data-sauto-id='ignore'
       >
         <b-col>
           <div>
             <d3-network
-                ref='egoChart'
-                class='network-wrapper'
-                :net-nodes='speakerNetwork.nodes'
-                :net-links='speakerNetwork.links'
-                :options='options'
-                :pane='this.pane'
+              ref='egoChart'
+              class='network-wrapper'
+              :net-nodes='speakerNetwork.nodes'
+              :net-links='speakerNetwork.links'
+              :options='options'
+              :pane='this.pane'
             />
           </div>
         </b-col>
@@ -119,8 +122,8 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.9 - 70;
-      const chartWidth = widthRefElem.clientWidth / 1.08;
+      const chartHeight = heightRefElem.clientHeight - 105;
+      const chartWidth = widthRefElem.clientWidth;
 
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
@@ -216,7 +219,7 @@ export default {
             _pane: this.pane,
             _absoluteFrequency: node.absoluteFrequency,
             _normalisedFrequency: node.normalisedFrequency,
-            _pos: this.pos
+            _pos: node.pos
           });
         }
         for (const link of network.edges) {
