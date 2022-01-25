@@ -118,8 +118,8 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.9 - 70;
-      const chartWidth = widthRefElem.clientWidth / 1.08;
+      const chartHeight = heightRefElem.clientHeight - 85;
+      const chartWidth = widthRefElem.clientWidth;
 
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;

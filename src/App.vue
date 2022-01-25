@@ -2,7 +2,7 @@
   <div
     id='app'
     ref='app'
-    style='margin-top: 0; height: 90%'
+    style='margin-top: 0; height: 100%'
     @mousemove='mouseMove'
     @click='mouseClick'
     @wheel='scroll'
@@ -13,70 +13,100 @@
       class='main full'
     >
       <b-container
-        class='pb-5 h-100 pr-0 pl-0'
+        class='h-100 pr-0 pl-0 d-flex flex-column'
         fluid
       >
-        <b-row>
-          <b-col>
+        <b-row class="mx-0">
+          <b-col class="px-0">
             <top-navigation>
             </top-navigation>
           </b-col>
         </b-row>
         <b-row
           xl='12'
-          class='pl-3 pt-0 h-100'
-          style='border-bottom: solid; border-bottom-color: lightgrey;'
+          class='pl-3 pt-0 mx-0 flex-grow-1'
+          style='border-bottom: solid; border-bottom-color: lightgrey; overflow: auto; height: calc(100% - 88px)'
         >
           <b-col
             data-sauto-id='left-query-bar'
             md='3'
             lg='2'
             class='pt-0 mt-0'
-            style='border-right: solid; border-right-color:lightgrey;max-height:100%; overflow:auto;'
+            style='border-right: solid; border-right-color:lightgrey; overflow:auto; max-height: 100%;'
           >
             <query-bar></query-bar>
           </b-col>
           <b-col
-            class='h-100'
-            md='9'
+            class='h-100 overflow-hidden'
             xl='10'
+            md='9'
           >
             <div
-              class='h-100 pr-4'
+              class='h-100'
               data-sauto-id='results'
             >
-              <Results />
+              <Results ref="results" />
             </div>
             <div
               class='h-100 w-100 infoContainer'
               data-sauto-id='info'
               v-if='this.$store.state.main.showInfo'
             >
-              <Info />
+              <info />
             </div>
           </b-col>
         </b-row>
         <Modal />
-        <b-row data-sauto-id='bottom-info-bar' class='mb-1 py-3' style='background-color: #17a2b8; color: white'>
-          <b-col xl='11'>
+        <b-row
+          data-sauto-id='bottom-info-bar'
+          class='py-2 mx-0 align-items-center footer'
+          style='background-color: #17a2b8; color: white'
+        >
+          <b-col
+            xl='11'
+            class="align-middle"
+          >
             <b-row xl='12'>
-              <b-col xl='12' class='text-right pr-4'>
+              <b-col
+                xl='12'
+                class='text-right pr-4'
+              >
                 The Dylen project is funded by the ÖAW go!digital Next Generation grant (GDNG 2018-020)
               </b-col>
             </b-row>
-            <b-row xl='12' class='pb-1 mb-1'>
+            <b-row
+              xl='12'
+              class='pb-1 mb-1'
+            >
               <b-col
-                  xl='12'
-                  class='text-right pr-4 footer-links'
+                xl='12'
+                class='text-right pr-4'
               >
-                <a href='https://dylen.acdh.oeaw.ac.at/about/' target='_blank'>More about the project</a><span> | </span>
-                <a href="https://dylen.acdh.oeaw.ac.at/imprint" target="_blank">Imprint</a><span> | </span>
-                <a href='mailto:acdh-helpdesk@oeaw.ac.at' target='_black'>Helpdesk</a>
+                <a
+                  href='https://dylen.acdh.oeaw.ac.at/about/'
+                  target='_blank'
+                >More about the project</a><span> | </span>
+                <a
+                  href="https://dylen.acdh.oeaw.ac.at/imprint"
+                  target="_blank"
+                >Imprint</a><span> | </span>
+                <a
+                  href='mailto:acdh-helpdesk@oeaw.ac.at'
+                  target='_black'
+                >Helpdesk</a>
               </b-col>
             </b-row>
           </b-col>
           <b-col xl='1'>
-            <a href="http://www.oeaw.ac.at/" target="_blank"><img class='partner-logos' style='max-width:40%; height:auto' src="@/assets/acdh-ch-logo96.png" alt=""></a>
+            <a
+              href="http://www.oeaw.ac.at/"
+              target="_blank"
+            ><img
+                class='partner-logos'
+                style='max-height:50px; width:auto'
+                src="@/assets/acdh-ch-logo96.png"
+                alt=""
+              ></a>
           </b-col>
         </b-row>
 
@@ -88,14 +118,18 @@
       data-sauto-id='sidebar'
     >
       <div
-        class='pr-4 pl-1 py-3'
+        class='pr-4 pl-1 py-1'
         style='width: 300px'
       >
         <b-row
           xl='12'
           align-content='end'
         >
-          <b-col xl='12'>
+          <b-col
+            xl='12'
+            class="position-absolute pt-1"
+            style="top: 0; z-index: 2; right: 0;"
+          >
             <b-button
               type='button'
               class='close'
@@ -396,6 +430,7 @@ export default {
       console.log('settings active changed from ' + newVal + " to " + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
+      window.setTimeout(() => this.$refs['results'].resized(), 500);
     }
   }
 };
@@ -469,10 +504,10 @@ body {
   }
 }
 
-.footer-links a:link {
+.footer a:link {
   color: white;
 }
-.footer-links a:visited {
+.footer a:visited {
   color: indianred;
   background-color: transparent;
   text-decoration: none;

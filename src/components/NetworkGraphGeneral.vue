@@ -6,7 +6,10 @@
     style='background-color: white'
     v-if='generalNetwork'
   >
-    <b-overlay :show="isNetworkLoading" rounded="sm">
+    <b-overlay
+      :show="isNetworkLoading"
+      rounded="sm"
+    >
       <b-row class='h-10'>
         <b-col>
           <span><b>{{ generalNetwork.party }}</b></span>
@@ -15,47 +18,47 @@
       <b-row class='h-20 pb-2'>
         <!--      <b-col xl='2'></b-col>-->
         <b-col
-            class='pl-5 year-slider-row'
-            data-sauto-id='ignore'
+          class='pl-5 year-slider-row'
+          data-sauto-id='ignore'
         >
           <div
-              ref='sliderDiv'
-              class='pl-2'
+            ref='sliderDiv'
+            class='pl-2'
           >
             <vue-slider
-                ref='slider'
-                v-model='generalNetwork.year'
-                v-bind='sliderOptions'
-                :min='generalNetwork.possibleYears[0]'
-                :max='generalNetwork.possibleYears[generalNetwork.possibleYears.length - 1]'
-                :data='generalNetwork.possibleYears'
-                :process='false'
-                :lazy='true'
-                :adsorb='true'
-                :duration='0.3'
-                v-on:change='handleYearChange'
-                :marks='generalNetwork.possibleYears'
-                :tooltip="'none'"
+              ref='slider'
+              v-model='generalNetwork.year'
+              v-bind='sliderOptions'
+              :min='generalNetwork.possibleYears[0]'
+              :max='generalNetwork.possibleYears[generalNetwork.possibleYears.length - 1]'
+              :data='generalNetwork.possibleYears'
+              :process='false'
+              :lazy='true'
+              :adsorb='true'
+              :duration='0.3'
+              v-on:change='handleYearChange'
+              :marks='generalNetwork.possibleYears'
+              :tooltip="'none'"
             />
           </div>
         </b-col>
       </b-row>
       <b-row
-          lg='12'
-          class='pt-2 h-70'
-          v-bind='generalNetwork'
-          :key='generalNetwork.id'
-          data-sauto-id='ignore'
+        lg='12'
+        class='pt-2 h-70'
+        v-bind='generalNetwork'
+        :key='generalNetwork.id'
+        data-sauto-id='ignore'
       >
         <b-col>
           <div>
             <d3-network
-                ref='egoChart'
-                class='network-wrapper'
-                :net-nodes='generalNetwork.nodes'
-                :net-links='generalNetwork.links'
-                :options='options'
-                :pane='this.pane'
+              ref='egoChart'
+              class='network-wrapper'
+              :net-nodes='generalNetwork.nodes'
+              :net-links='generalNetwork.links'
+              :options='options'
+              :pane='this.pane'
             />
           </div>
         </b-col>
@@ -119,8 +122,8 @@ export default {
       const heightRefElem = this.$refs.con?.parentElement;
       const widthRefElem = this.$refs.egoChart.$el.parentElement;
 
-      const chartHeight = heightRefElem.clientHeight * 0.9 - 70;
-      const chartWidth = widthRefElem.clientWidth / 1.08;
+      const chartHeight = heightRefElem.clientHeight - 105;
+      const chartWidth = widthRefElem.clientWidth;
 
       if (chartHeight) this.options.size.h = chartHeight;
       if (chartWidth) this.options.size.w = chartWidth;
@@ -189,8 +192,8 @@ export default {
       if (network) {
         for (const node of network.nodes) {
           let camelMetrics = {};
+          //TODO: Not the right place to change this.. change it when it gets loaded from the backend
           for (let key in node.metrics)
-            //TODO: Not the right place to change this.. change it when it gets loaded from the backend
             camelMetrics[snakeToCamel(key)] = node.metrics[key];
           nodes.push({
             id: network.id + '_' + node.id,
