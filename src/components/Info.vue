@@ -19,6 +19,7 @@
                 card
             >
               <b-tab
+                  class='info-tab'
                   title='Start'
                   active
                   @click='onTabClick'
@@ -168,46 +169,122 @@
                   @click='onTabClick'
                   data-sauto-id='info-tab-content'
               >
-                <img
-                    src='@/assets/ego_example.png'
-                    width='600'
-                    height='auto'
-                />
+                <b-row class='justify-content-md-center'>
+                  <b-col lg='10' style='height: 100%'>
+                    <b-card-text>
+                      <div class='accordion' role='tablist'>
+                        <b-card no-body class='mb-1'>
+                          <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-ego-1 variant="info">What is an Ego Network?</b-button>
+                          </b-card-header>
+                          <b-collapse id="accordion-ego-1" visible accordion="ego-accordion" role="tabpanel">
+                            <b-card-body>
+                              <b-card-text class='text-left'>
+                                <p>Ego-network visualization of a selected target word provides information about its <b>semantic
+                                  neighborhood</b> in a given time period.<br>
+                                  Nodes are represented by <b>top-50 lexemes</b> that, according to the semantic model in use, are <b>semantically
+                                    most relevant to a target word.</b> <br></p>
+                              </b-card-text>
+                            </b-card-body>
+                          </b-collapse>
+                        </b-card>
+                        <b-card no-body class='mb-1'>
+                          <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-ego-2 variant="info">Use Ego Network to answer..</b-button>
+                          </b-card-header>
+                          <b-collapse id="accordion-ego-2" accordion="ego-accordion" role="tabpanel">
+                            <b-card-body>
+                              <b-card-text class='text-left'>
 
-                <b-card-text align='left'>
-                  <h5>General Description</h5>
-                  <p>Network visualization of a selected target word provides information about its <b>semantic
-                    neighborhood</b> in a given time period.<br>
-                    Nodes are represented by top-50 lexemes that, according to the semantic model in use, are semantically
-                    most relevant to a target word. <br></p>
-                  For semantic modeling, we utilize a <b>distributional word embedding</b> model, namely a neural network
-                  based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
-                  The model is trained on the chosen corpus and it produces a word-vector correspondence based on
-                  co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
-                  determine the semantic similarity between pairs of words which is reflected in the strength of the
-                  connections between respective nodes. For semantic modeling, we utilize a <b>distributional word
-                  embedding</b> model, namely a neural network
-                  based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
-                  The model is trained on the chosen corpus and it produces a word-vector correspondence based on
-                  co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
-                  determine the semantic similarity between pairs of words which is reflected in the strength of the
-                  connections between respective nodes.<br><br>
-                  <h5>How to view the visualisation</h5>
-                  Some of interpretation guidelines are given here.
-                  <ul>
-                    <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
-                      the targetword and the network visualisation would too unnecessarily complex
-                    </li>
-                    <li>The colors of the labels represent different Part-of-speech tags</li>
-                    <li>The colors of the nodes represent different clusters</li>
-                  </ul>
-                </b-card-text>
+                              </b-card-text>
+                            </b-card-body>
+                          </b-collapse>
+                        </b-card>
+                        <b-card no-body class='mb-1'>
+                          <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-ego-3 variant="info">How to interpret the visuliation</b-button>
+                          </b-card-header>
+                          <b-collapse id="accordion-ego-3" accordion="ego-accordion" role="tabpanel">
+                            <b-card-body>
+                              <b-card-text class='text-left'>
+                                <ul>
+                                  <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
+                                    the targetword and the network visualisation would be too unnecessarily complex.
+                                  </li>
+                                  <li>The <b>size of nodes</b> represents word frequency</li>
+                                  <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
+                                  <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
+                                  <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+                                </ul>
+                              </b-card-text>
+                            </b-card-body>
+                          </b-collapse>
+                        </b-card>
+                        <b-card no-body class='mb-1'>
+                          <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-ego-4 variant="info">Technical Details</b-button>
+                          </b-card-header>
+                          <b-collapse id="accordion-ego-4" accordion="ego-accordion" role="tabpanel">
+                            <b-card-body>
+                              <b-card-text class='text-left'>
+                                <p>
+                                  For semantic modeling, we utilize a <b>distributional word embedding</b> model, namely a neural network
+                                  based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
+                                </p>
+                                <p>
+                                  The model is trained on the chosen corpus and it produces a word-vector correspondence based on
+                                  co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
+                                  determine the semantic similarity between pairs of words which is reflected in the strength of the
+                                  connections between respective nodes.
+                                </p>
+                                <p>
+                                  For semantic modeling, we utilize a <b>distributional word
+                                  embedding</b> model, namely a neural network
+                                  based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
+                                  The model is trained on the chosen corpus and it produces a word-vector correspondence based on
+                                  co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
+                                  determine the semantic similarity between pairs of words which is reflected in the strength of the
+                                  connections between respective nodes.<br><br>
+                                </p>
+
+                              </b-card-text>
+
+                            </b-card-body>
+                          </b-collapse>
+                        </b-card>
+                      </div>
+                    </b-card-text>
+                  </b-col>
+                </b-row>
               </b-tab>
               <b-tab
                   title='General Network'
                   @click='onTabClick'
                   data-sauto-id='info-tab-content'
               >
+                <b-row class='justify-content-md-center'>
+                  <b-col lg='10' style='height: 100%'>
+                    <b-card-text>
+                      <div class='accordion' role='tablist'>
+                        <b-card no-body class='mb-1'>
+                          <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-button block v-b-toggle.accordion-general-1 variant="info">What is a General Network?</b-button>
+                          </b-card-header>
+                          <b-collapse id="accordion-ego-1" visible accordion="general-accordion" role="tabpanel">
+                            <b-card-body>
+                              <b-card-text class='text-left'>
+                                Network visualization of a selected parliament speaker or party provides information about their
+                                discourse topics in a given time period.<br>
+                                Nodes are represented by the <b>most frequent lexemes</b> that constitute the selected corpus of a
+                                speaker/party. <br>
+                              </b-card-text>
+                            </b-card-body>
+                          </b-collapse>
+                        </b-card>
+                      </div>
+                    </b-card-text>
+                  </b-col>
+                </b-row>
                 <b-card-text align='left'>
                   Network visualization of a selected parliament speaker or party provides information about their
                   discourse topics in a given time period.<br>
@@ -433,5 +510,8 @@ export default {
 
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+.card-header ul li a {
+  color:#158394!important;
 }
 </style>
