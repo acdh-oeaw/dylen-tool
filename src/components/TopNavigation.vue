@@ -26,7 +26,7 @@
                 style='max-width:150px'
             >
               <img
-                  src='@/assets/dylen_logo.png'
+                  src='@/assets/dylen_white.png'
                   style='max-width:100%;height:auto'/>
             </b-navbar-brand>
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

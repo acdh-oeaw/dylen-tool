@@ -54,6 +54,18 @@
                             text="Explore most frequent lexemes used by politicians"
                             :img-src="require('../assets/info/speaker.png')"
                         ></b-carousel-slide>
+                        <b-carousel-slide
+                            :class='carousel-caption-black'
+                            caption="Node Metrics"
+                            text="Visualize nodes based on their node metrics with Parallel Coordinates"
+                            :img-src="require('../assets/info/parallel.png')"
+                        ></b-carousel-slide>
+                        <b-carousel-slide
+                            :class='carousel-caption-black'
+                            caption="Times series"
+                            text="Track changes of network over time"
+                            :img-src="require('../assets/info/timeseries.png')"
+                        ></b-carousel-slide>
                       </div>
                     </b-carousel>
                   </b-card-body>
@@ -67,7 +79,7 @@
                 data-sauto-id='info-tab-content'>
               <b-card-text align='left'>
                 <p>
-                  DYLEN is a research project which aims to gain insights to the dynamics of the Austrian German lexicon
+                  <b>DYLEN</b> is a research project which aims to gain insights to the dynamics of the Austrian German lexicon
                   in the
                   last 20 years and to measure the semantic change of language.
                 </p>
@@ -163,11 +175,6 @@
               @click='onTabClick'
               data-sauto-id='info-tab-content'
             >
-              <img
-                src='@/assets/parallel_coordinates.png'
-                width='800'
-                height='auto'
-              />
               <b-card-text align='left'>
                 Each of the ego networks can be described by different network metrics. <br>
                 <a
