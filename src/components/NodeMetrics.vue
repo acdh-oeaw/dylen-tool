@@ -44,13 +44,15 @@
             size='sm'
             :pressed.sync='showTable'
             variant='outline-secondary'
-            data-sauto-id='table-button'
+            data-sauto-id='node-metrics-table-button'
           >
             <b-icon
+              data-sauto-id='node-metrics-table-button'
               v-if='showTable'
               icon='graph-up'
             ></b-icon>
             <b-icon
+              data-sauto-id='node-metrics-table-button'
               v-if='!showTable'
               icon='table'
             ></b-icon>

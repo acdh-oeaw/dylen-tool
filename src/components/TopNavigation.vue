@@ -108,10 +108,6 @@ export default {
       });
       this.$root.$emit('networkTypeChanged', event);
     },
-    toggleSideBar() {
-      this.$parent.$refs.sidebar.classList.toggle('collapsed');
-      this.$parent.$refs.main.classList.toggle('full');
-    },
     updateShowInfo() {
       this.$store.commit('main/setShowInfo', {
         showInfo: !this.$store.state.main.showInfo

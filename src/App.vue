@@ -28,6 +28,7 @@
           style='border-bottom: solid; border-bottom-color: lightgrey; overflow: auto; height: calc(100% - 88px)'
         >
           <b-col
+            data-sauto-id='left-query-bar'
             xl='2'
             class='pt-0 mt-0'
             style='border-right: solid; border-right-color:lightgrey; overflow:auto; max-height: 100%;'
@@ -55,6 +56,7 @@
         </b-row>
         <Modal />
         <b-row
+          data-sauto-id='bottom-info-bar'
           class='py-2 mx-0 align-items-center footer'
           style='background-color: #17a2b8; color: white'
         >
@@ -312,8 +314,10 @@
                       class="list-group-item w-100"
                       v-for="element in selectedMetrics"
                       :key="element.name"
+                      data-sauto-id='ignore'
                     >{{camelCaseToSpaces(element.name)}}
                       <b-form-checkbox
+                        :data-sauto-id='"parallel-coordinates-"+element.name+"-checkbox-option"'
                         v-model="element.enabled"
                         switch
                       >
@@ -421,7 +425,7 @@ export default {
   },
   watch: {
     settingsActive: function (newVal, oldVal) {
-      console.log('settings changed: ' + newVal + oldVal);
+      console.log('settings active changed from ' + newVal + " to " + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       this.$refs.main.classList.toggle('full');
       window.setTimeout(() => this.$refs['results'].resized(), 500);

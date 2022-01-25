@@ -217,9 +217,6 @@ export default {
     this.windowResizeHandler();
   },
   methods: {
-    toggleSideBar(component) {
-      this.$store.commit('main/changeActiveSettings', { component: component });
-    },
     resized(paneId) {
       for (let ref in this.$refs) {
         this.$refs[ref]?.resizeHandler();
