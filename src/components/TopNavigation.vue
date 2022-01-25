@@ -42,11 +42,11 @@
                 <b-nav-item
                   href="#"
                   @click='onTypeOfNetworkSelect(GENERAL_PARTY)'
-                >General Network</b-nav-item>
+                >General Network (Party)</b-nav-item>
                 <b-nav-item
                   href="#"
                   @click='onTypeOfNetworkSelect(GENERAL_SPEAKER)'
-                >General Network Speaker</b-nav-item>
+                >General Network (Speaker)</b-nav-item>
               </b-navbar-nav>
             </b-collapse>
             <b-row align-h='end'>
@@ -126,5 +126,13 @@ export default {
 .top-nav {
   border-bottom: solid thick;
   border-bottom-color: lightgrey;
+}
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  font-weight: 800;
+  border: solid;
+  color: rgba(255, 255, 255, 1)!important;
+}
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.8)!important;
 }
 </style>
