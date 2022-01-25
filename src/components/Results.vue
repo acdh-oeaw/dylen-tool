@@ -12,7 +12,7 @@
           @resized='resized("left-horizontal")'
           @pane-maximize='resized'
         >
-          <pane :size="fullscreen['networkGraph1'] ? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+          <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <setting
               position='result'
               setting-component='egoNetwork'
@@ -238,7 +238,11 @@ export default {
       let current = this.fullscreen[idx];
       for (let idx in this.fullscreen) this.fullscreen[idx] = 0;
       this.fullscreen[idx] = 1 - current;
-      window.setTimeout(() => this.$refs[idx]?.resizeHandler(), 150);
+      if (current)
+        window.setTimeout(() => {
+          for (let ref in this.$refs) this.$refs[ref]?.resizeHandler();
+        }, 250);
+      else window.setTimeout(() => this.$refs[idx]?.resizeHandler(), 250);
 
       //sauto
       this.mouseClick(event, sautoId);
