@@ -1,27 +1,28 @@
 <template>
   <b-form @submit='onSubmit'>
     <b-row
-        text-center
-        xl='12'>
+      text-center
+      xl='12'
+    >
       <b-col xl='12'>
         <b-row xl='12'>
           <b-col>
             <b-form-group
-                id='select-corpus-group-viz'
-                label='Corpus: '
-                label-size='sm'
-                label-cols-xl='12'
+              id='select-corpus-group-viz'
+              label='Corpus: '
+              label-size='sm'
+              label-cols-xl='12'
             >
               <b-form-select
-                  size='sm'
-                  v-model='selectedCorpus'
-                  :data-sauto-id="'selectCorpus-'+this.pane"
+                size='sm'
+                v-model='selectedCorpus'
+                :data-sauto-id="'selectCorpus-'+this.pane"
               >
                 <b-form-select-option
-                    v-for='option in availableCorpora'
-                    v-bind:key='option.id'
-                    v-bind:value='option'
-                    data-sauto-id="corpusOption"
+                  v-for='option in availableCorpora'
+                  v-bind:key='option.id'
+                  v-bind:value='option'
+                  data-sauto-id="corpusOption"
                 >
                   {{ option.name }} ({{option.id}})
                 </b-form-select-option>
@@ -32,22 +33,22 @@
         <b-row xl='12'>
           <b-col>
             <b-form-group
-                id='select-subcorpus-group-viz'
-                label='Subcorpus:'
-                label-size='sm'
-                label-cols-xl='12'
-                label-for='select-subcorpus'
+              id='select-subcorpus-group-viz'
+              label='Subcorpus:'
+              label-size='sm'
+              label-cols-xl='12'
+              label-for='select-subcorpus'
             >
               <b-form-select
-                  size='sm'
-                  v-model='selectedSubcorpus'
-                  :data-sauto-id="'selectSubCorpus-'+this.pane"
+                size='sm'
+                v-model='selectedSubcorpus'
+                :data-sauto-id="'selectSubCorpus-'+this.pane"
               >
                 <b-form-select-option
-                    v-for='option in availableSources'
-                    v-bind:key='option.id'
-                    v-bind:value='option'
-                    data-sauto-id="subCorpusOption"
+                  v-for='option in availableSources'
+                  v-bind:key='option.id'
+                  v-bind:value='option'
+                  data-sauto-id="subCorpusOption"
                 >
                   {{ option.name}}
                 </b-form-select-option>
@@ -58,29 +59,29 @@
         <b-row xl='12'>
           <b-col xl='12'>
             <b-form-group
-                id='select-targetword-group-biz'
-                label='Targetword:'
-                label-size='sm'
-                label-cols-xl='12'
-                label-for='select-targetword'
-                label-align-lg='left'
+              id='select-targetword-group-biz'
+              label='Targetword:'
+              label-size='sm'
+              label-cols-xl='12'
+              label-for='select-targetword'
+              label-align-lg='left'
             >
               <b-form-input
-                  ref='selectTargetWord'
-                  size='sm'
-                  v-model='searchTerm'
-                  :data-sauto-id="'selectTargetword-'+this.pane"
-                  :list='`datalist-${pane}`'
-                  :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
-                  @change='handleSearchTermSelect'
-                  @keypress='e => this.keyPress(e,"selectTargetWord")'
-                  autocomplete='off'
+                ref='selectTargetWord'
+                size='sm'
+                v-model='searchTerm'
+                :data-sauto-id="'selectTargetword-'+this.pane"
+                :list='`datalist-${pane}`'
+                :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
+                @change='handleSearchTermSelect'
+                @keypress='e => this.keyPress(e,"selectTargetWord")'
+                autocomplete='off'
               ></b-form-input>
-              <datalist v-if='showSuggestions' :id='`datalist-${pane}`'>
+              <datalist :id='`datalist-${pane}`'>
                 <option
-                    v-for='option in availableTargetwords'
-                    v-bind:key='option.text + option.pos'
-                    v-bind:value='option.text'
+                  v-for='option in availableTargetwords.filter(() => showSuggestions)'
+                  v-bind:key='option.text + option.pos'
+                  v-bind:value='option.text'
                 >
                   {{ option.text + ' (' + option.pos.replace("_", " ") + ')' }}
                 </option>
@@ -88,18 +89,27 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row class="text-center" xl='12'>
+        <b-row
+          class="text-center"
+          xl='12'
+        >
           <b-col
               xl='6'
               class='px-1'
           >
-            <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
+            <visualize-button
+              :queryButtonActive='queryButtonActive'
+              :query-pane='queryPane'
+            ></visualize-button>
           </b-col>
           <b-col
               xl='6'
               class='px-1'
           >
-            <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
+            <reset-button
+              @resetClicked='initialize'
+              :pane='queryPane'
+            ></reset-button>
           </b-col>
 
         </b-row>
@@ -109,12 +119,12 @@
 </template>
 
 <script>
-import VisualizeButton from "@/components/VisualizeButton";
-import ResetButton from "@/components/ResetButton";
+import VisualizeButton from '@/components/VisualizeButton';
+import ResetButton from '@/components/ResetButton';
 
 export default {
   name: 'SearchForm',
-  components: {ResetButton, VisualizeButton},
+  components: { ResetButton, VisualizeButton },
   props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
@@ -127,32 +137,33 @@ export default {
   },
   mounted() {
     this.$root.$on('networkTypeChanged', () => {
-      this.initialize()
-    })
+      this.initialize();
+    });
   },
   methods: {
     checkInvalidChars(val) {
-      let invalidChars = []
+      let invalidChars = [];
       for (let c of val) {
         if (c.match(/[1-9;:\s!@#$%^&*)(+=.,'"_]/)) {
-          console.log('contains invalid character.')
-          invalidChars.push(c)
+          console.log('contains invalid character.');
+          invalidChars.push(c);
         }
       }
-      return invalidChars
+      return invalidChars;
     },
     validateSearchTerm(val) {
       this.$store.commit('main/resetError', {
         pane: this.queryPane
       });
-      let invalidChars = this.checkInvalidChars(val)
-      if(invalidChars.length > 0) {
+      let invalidChars = this.checkInvalidChars(val);
+      if (invalidChars.length > 0) {
         this.$store.commit('main/addError', {
-          error: "contains invalid character(s): '" + invalidChars.join(' ') + "'",
+          error:
+            "contains invalid character(s): '" + invalidChars.join(' ') + "'",
           pane: this.queryPane
         });
       } else {
-        if(this.errors.length === 0) {
+        if (this.errors.length === 0) {
           this.$store.commit('main/changeSearchTerm', {
             searchTerm: val,
             pane: this.queryPane
@@ -163,19 +174,22 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
-        this.$emit('visualizeClicked')
+        this.$emit('visualizeClicked');
       });
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
-      let settingsComponent = this.$store.getters['main/activeSettings']
+      let settingsComponent = this.$store.getters['main/activeSettings'];
       if (!settingsComponent) {
-        this.$store.commit('main/changeActiveSettings', {active:true, component: 'egoNetwork'})
+        this.$store.commit('main/changeActiveSettings', {
+          active: true,
+          component: 'egoNetwork'
+        });
       }
     },
     findSearchTermInAvailableTargetwords() {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
     },
     handleSearchTermSelect() {
-      console.log('handle searchterm select: ' + target)
+      console.log('handle searchterm select: ' + target);
       const target = this.findSearchTermInAvailableTargetwords();
       this.$store.dispatch('main/loadTargetwordBySearchTerm', {
         pane: this.queryPane,
@@ -217,17 +231,23 @@ export default {
   },
   computed: {
     showSuggestions() {
-      if (this.searchTerm && this.selectedTargetword.text && (this.searchTerm.toLowerCase() === this.selectedTargetword.text.toLowerCase())) {
-        return false
+      if (
+        this.searchTerm &&
+        this.selectedTargetword.text &&
+        this.searchTerm.toLowerCase() ===
+          this.selectedTargetword.text.toLowerCase()
+      ) {
+        return false;
       }
-      return true
+      return true;
     },
     hasSuggestions() {
       return !(this.availableTargetwords.length === 0 && this.searchTerm);
-
     },
     errors() {
-      console.log('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors)
+      console.log(
+        'CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors
+      );
       return this.$store.getters['main/getPane']('pane1').errors;
     },
     queryButtonActive() {
@@ -334,14 +354,11 @@ export default {
         return this.$store.getters['main/searchTerm'](this.queryPane);
       },
       set(val) {
-        this.validateSearchTerm(val)
-
+        this.validateSearchTerm(val);
       }
     }
   },
-  watch: {
-  }
-
+  watch: {}
 };
 </script>
 <style scoped>
