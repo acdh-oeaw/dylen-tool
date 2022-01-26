@@ -19,19 +19,24 @@
                 card
             >
               <b-tab
-                  class='info-tab'
+                  class='info-tab py-0'
                   title='Start'
                   active
                   @click='onTabClick'
                   style='overflow: hidden'
               >
-                <b-row class='justify-content-md-center'>
+                <b-row class='justify-content-md-center pt-0 mb-0'>
                   <b-col lg='10' style='height: 100%'>
+                    <b-card-header>
+                      <h4>Welcome to DYLEN! Take a look at our tool's features</h4>
+                    </b-card-header>
                     <b-card-body
+                        class='py-0 my-0'
                         style='max-height:100%;'
                     >
                       <b-carousel
                           id="carousel-1"
+                          class='mt-1'
                           :interval="0"
                           :controls='true'
                           :indicators='true'

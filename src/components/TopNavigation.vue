@@ -150,16 +150,18 @@ export default {
 }
 .nav-item.dysen .nav-link:hover, .nav-item.dysen .nav-link:focus, .nav-item.dysen .nav-link {
   color: white !important;
+  text-decoration: underline white;
 }
 
 .nav-item.dysen .nav-link {
   color: white !important;
+  text-decoration: underline white;
 }
 
 .nav-item.selected .nav-link:hover, .nav-item.selected .nav-link:focus, .nav-item.selected .nav-link {
   font-weight: 800 !important;
-  border: solid !important;
   color: white !important;
+  text-decoration: underline white;
 }
 
 .nav-item.notselected .nav-link {
