@@ -33,14 +33,17 @@
                 <b-nav-item
                   href="#"
                   @click='onTypeOfNetworkSelect(EGO_NETWORK)'
+                  data-sauto-id='ego-network-tab'
                 >Ego Network</b-nav-item>
                 <b-nav-item
                   href="#"
                   @click='onTypeOfNetworkSelect(GENERAL_PARTY)'
+                  data-sauto-id='general-network-tab'
                 >General Network</b-nav-item>
                 <b-nav-item
                   href="#"
                   @click='onTypeOfNetworkSelect(GENERAL_SPEAKER)'
+                  data-sauto-id='general-network-speaker-tab'
                 >General Network Speaker</b-nav-item>
               </b-navbar-nav>
             </b-collapse>

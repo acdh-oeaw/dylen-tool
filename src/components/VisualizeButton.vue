@@ -4,7 +4,7 @@
       block
       type='submit'
       variant='info'
-      :data-sauto-id='"queryButton-"+this.queryPane'
+      :data-sauto-id='"queryButton-"+type+"-"+this.queryPane'
       :disabled='!queryButtonActive'
       @click='setShowInfo'
   >
@@ -32,7 +32,10 @@ export default {
           pane: this.queryPane
         });
       }
-    }
+    },
+    type() {
+      return this.$store.getters['main/topNav'].networkType;
+    },
   },
   methods: {
     setShowInfo() {
