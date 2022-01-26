@@ -4,9 +4,9 @@
       class='justify-content-center mt-3'>
     <b-col xl='10'>
       <b-row
-        xl='12'
-        class='justify-content-center'
-        aligh-h='center'
+          xl='12'
+          class='justify-content-center'
+          aligh-h='center'
       >
         <b-col
             xl='12'>
@@ -95,26 +95,44 @@
                             <b-card-body>
                               <b-card-text class='text-left'>
                                 <p>
-                                  <b>DYLEN</b> Tool is an <b>interactive visualization tool</b>, which aims to help users to gain insights to the dynamics of the Austrian German lexicon
-                                  in the last 20 years and to measure the semantic change of language, based on two different corpora, the <b>Austrian Media Corpus (AMC)</b> and the <b>Corpus of Austrian Parliamentary Records (ParlAT)</b>
+                                  <b>DYLEN</b> Tool is an <b>interactive visualization tool</b>, which aims to help
+                                  users to gain insights to the dynamics of the Austrian German lexicon
+                                  in the last 20 years and to measure the semantic change of language, based on two
+                                  different corpora, the <b>Austrian Media Corpus (AMC)</b> and the <b>Corpus of
+                                  Austrian Parliamentary Records (ParlAT)</b>
                                 </p>
                                 <p>
                                 <h5>How to use DYLEN</h5>
                                 DYLEN provides visualizations of three different network types.<br>
                                 <ul>
-                                  <li><b>Ego Network:</b> This network type provides insights about semantic neighborhood of a target word in a given time period. </li>
-                                  <li><b>General Network - Party:</b> Analysis the network of most frequent lexemes of a political party</li>
-                                  <li><b>General Network - Politicians:</b> Analysis the network of most frequent lexemes of a politicians</li>
+                                  <li><b>Ego Network:</b> This network type provides insights about semantic
+                                    neighborhood of a target word in a given time period.
+                                  </li>
+                                  <li><b>General Network - Party:</b> Analysis the network of most frequent lexemes of a
+                                    political party
+                                  </li>
+                                  <li><b>General Network - Politicians:</b> Analysis the network of most frequent
+                                    lexemes of a politicians
+                                  </li>
                                 </ul>
                                 <p>
-                                  You can <b>select the network type</b> you want to explore on the top of the application.
+                                  You can <b>select the network type</b> you want to explore on the top of the
+                                  application.
                                 </p>
                                 <p>
-                                  Click on the corresponding tabs for more information of each network types and different visualizations.<br>
+                                  Click on the corresponding tabs for more information of each network types and
+                                  different visualizations.<br>
                                 </p>
                                 <p>
-                                  You can read more about the project here: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.
+                                  You can read more about the project here: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.<br>
                                 </p>
+                                Codes are available on following Github repositories:
+                                <ul>
+                                  <li>Frontend: <a href='https://github.com/acdh-oeaw/dylen-tool'>https://github.com/acdh-oeaw/dylen-tool</a>
+                                  </li>
+                                  <li>Backend: <a href='https://github.com/acdh-oeaw/dylen-backend'>https://github.com/acdh-oeaw/dylen-backend</a>
+                                  </li>
+                                </ul>
                               </b-card-text>
                             </b-card-body>
                           </b-collapse>
@@ -133,11 +151,14 @@
                                   <li><b>Corpus of Austrian Parliamentary Records (ParlAT)</b></li>
                                 </ul>
                                 <h5>Austrian Media Corpus</h5>
-                                Austrian Media Corpus (AMC) covers the entire Austrian media landscape of the past 20 years
+                                Austrian Media Corpus (AMC) covers the entire Austrian media landscape of the past 20
+                                years
                                 and contains 40 million texts (more than 10 billion tokens).<br>
-                                For DYLEN, AMC corpus was divided into multiple subcorpora, which are collection of articles
+                                For DYLEN, AMC corpus was divided into multiple subcorpora, which are collection of
+                                articles
                                 from different Austrian newspapers and magazines in the years between 1996 and 2017<br>
-                                Some of the subcorpora are combination of different media sources, which are listed below;
+                                Some of the subcorpora are combination of different media sources, which are listed
+                                below;
                                 <ul>
                                   <li>All magazines</li>
                                   <li>All newspapers</li>
@@ -153,7 +174,8 @@
                                   <li>Der Standard</li>
                                 </ul>
                                 <h5>Corpus of Austrian Parliamentary Records (ParlAT)</h5>
-                                The ParlAT corpus covers the Austrian parliamentary records of the last 20 years with more than 75 million tokens.
+                                The ParlAT corpus covers the Austrian parliamentary records of the last 20 years with
+                                more than 75 million tokens.
                               </b-card-text>
                             </b-card-body>
                           </b-collapse>
@@ -324,13 +346,49 @@
                       <span slot='use-case-header'>Use Node Metrics Comaprison for..</span>
                       <span slot='use-case-content'></span>
                       <span slot='guide-header'>How to use Node Metrics Comparison</span>
-                      <span slot='guide-content'></span>
+                      <span slot='guide-content'>
+                        <h5><u>Parallel Coordinates</u></h5>
+                        <p>
+                          The DYLEN Parallel coordinates visualization is able to display node metrics of all nodes from two different networks.
+                        </p>
+
+                        <h6><b>Axes</b></h6>
+                        <ul>
+                          <li>
+                            <code>x-axis</code> represents name of different node metrics, while the <code>y-axis</code> shows the metric values.
+                          </li>
+                          <li>
+                            5 from 10 available node metrics are visualized as default, more metrics can be added by clicking on the <code>settings</code> icon <b-icon
+                              icon='gear'></b-icon> and enabling the metrics from the <code>Axes to display</code> section. You can also change the order of the axes from settings
+                          </li>
+                        </ul>
+
+                        <h6><b>Network Labels</b></h6>
+                        <p>
+                          The labels of the first and the second network are shown in the top left and top right position of the chart respectively.
+                        </p>
+                        <h6><b>Node Labels</b></h6>
+                        <p>
+                          The node labels are shown on the left and right side of the chart, overlapping words(words having the same/similar metric value on the first/last axis ) are displayed as <code>*</code>, the actual word can be viewed by hovering over the <code>*</code> character
+                        </p>
+                        <h6><b>Select/Deselect nodes</b></h6>
+                        <p>
+                          Sometimes the number of nodes can make interpretation of parallel coordinates difficult. <br>
+                          You can use the <code>deselect all</code> button to remove all nodes and manually selecting the nodes to be shown
+                          from the <code>Network visualization</code> or from the <code>Table view</code><br>
+                          Individual nodes can be removed from the chart by clicking on the <code>'x'</code> icon, which appears when you hover over the node label.
+                        </p>
+                        <h6><b>Interactivity with Network Visualization</b></h6>
+                        <p>
+                          <code>Network visualization</code> and <code>Node metrics comparison</code> components share the same data. <br>
+                          When you hover over the lines in the <code>Parallel coordinates</code>, corresponding node and its neighbors will be emphasized in the <code>Network visualization</code> and vice versa.
+                        </p>
+                      </span>
                       <span slot='details-header'>Technical details</span>
                       <span slot='details-content'>
                         <a
-                                              href='https://en.wikipedia.org/wiki/Parallel_coordinates'
-                                              target='_blank'
-                                          >Parallel coordinates</a> is used to visualise scores of different metrics for selected nodes, x-axis represents different network
+                            href='https://en.wikipedia.org/wiki/Parallel_coordinates'
+                            target='_blank'>Parallel coordinates</a> is used to visualise scores of different metrics for selected nodes, x-axis represents different network
                         metrics, while the y-axis show the scores.<br>
                         We assume the values to be significant when comparing the scores for different nodes within one chosen
                         metric.<br>
@@ -520,7 +578,8 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     onTabClick(event) {
       this.mouseClick(event, 'info-tab');
@@ -532,11 +591,13 @@ export default {
 </script>
 <style>
 .carousel-caption {
-  color:#666d69!important;
+  color: #666d69 !important;
 }
+
 .carousel-indicators li {
   background-color: #666d69 !important;
 }
+
 .carousel-control-prev-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
 }
@@ -544,7 +605,8 @@ export default {
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
+
 .card-header ul li a {
-  color:#158394!important;
+  color: #158394 !important;
 }
 </style>
