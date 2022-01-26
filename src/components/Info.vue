@@ -486,12 +486,24 @@
                       <span slot='definition-content'>
                         <b>Time series analysis</b> allows us to track the change over time. <br>
                         Each graph indicates the diachronic development of a given target word according to the frequency
-                        change or to one of the similarity measures (all measures are introduced later).<br>
+                        change or to one of the similarity measures. See <code>Technical details</code> section for detailed descriptions of each of the measures<br>
                       </span>
                       <span slot='use-case-header'>Use Time series analysis for..</span>
                       <span slot='use-case-content'></span>
                       <span slot='guide-header'>How to use Time series analysis</span>
-                      <span slot='guide-content'></span>
+                      <span slot='guide-content'>
+                        <p>
+                          The DYLEN Time series Analysis component visualizes the change of (absolute) difference in the values of selected metrics to a specific target year.
+                        </p>
+                        <ol>
+                          <li>Select the metric you want to visualize from the <code>Metric dropdown selector</code></li>
+                          <li>Select the year you want to compare the metrics to.</li>
+                        </ol>
+
+                        <h6>Axes</h6>
+                        x-axis shows the years, while y-axis shows the value of the selected metrics
+
+                      </span>
                       <span slot='details-header'>Technical details</span>
                       <span slot='details-content'>
                         <p>
@@ -554,6 +566,15 @@
                           [2]. The score between two years is computed by averaging node embeddings to represent a network and
                           taking cosine similarity between obtained network vectors. The score ranges from 0 to 1.
                         </li>
+                        <br>
+                        <h6><b>References</b></h6>
+                        <ol>
+                          <li>Golub, G. H., & Van Loan, C. F. (1996). Matrix computations. Johns Hopkins studies in the mathematical sciences.</li>
+                          <li>Grover, A., & Leskovec, J. (2016, August). node2vec: Scalable feature learning for networks. In Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining (pp. 855-864).</li>
+                          <li>Hamilton, W. L., Leskovec, J., & Jurafsky, D. (2016, November). Cultural shift or linguistic drift? comparing two computational measures of semantic change. In Proceedings of the Conference on Empirical Methods in Natural Language Processing. Conference on Empirical Methods in Natural Language Processing (Vol. 2016, p. 2116). NIH Public Access.</li>
+                          <li>Jaccard, P. (1912). The distribution of the flora in the alpine zone. 1. New phytologist, 11(2), 37-50.</li>
+                          <li>Katerenchuk, D., & Rosenberg, A. (2018). Rankdcg: Rank-ordering evaluation measure. arXiv preprint arXiv:1803.00719.</li>
+                        </ol>
                       </ul>
                       </span>
                     </info-collapsable>

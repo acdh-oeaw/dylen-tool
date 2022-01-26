@@ -15,7 +15,7 @@
           <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <info-icon
                 size='1.2x'
-                class='custom-class ego-info-button'
+                class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
                 v-b-modal='"ego-info"'></info-icon>
             <setting
@@ -89,7 +89,7 @@
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
             <info-icon
                 size='1.2x'
-                class='custom-class ego-info-button'
+                class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
                 v-b-modal='"pc-info"'></info-icon>
             <setting
@@ -108,6 +108,11 @@
             </node-metrics>
           </pane>
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
+            <info-icon
+                size='1.2x'
+                class='custom-class info-button ts-info-button'
+                style='color:#17a2b8'
+                v-b-modal='"ts-info"'></info-icon>
             <button
               @click="(event) => toggleFullscreen('timeSeries', event,'toggleFullScreenButton-timeSeries')"
               class='fullscreen-button'
@@ -172,6 +177,19 @@
         <code>Network visualization</code> and <code>Node metrics comparison</code> components share the same data. <br>
         When you hover over the lines in the <code>Parallel coordinates</code>, corresponding node and its neighbors will be emphasized in the <code>Network visualization</code> and vice versa.
       </p>
+    </b-modal>
+    <b-modal xl='12' :id='"ts-info"' title='Node metrics comparison guidelines' ok-only>
+      <p>
+        The DYLEN Time series Analysis component visualizes the change of (absolute) difference in the values of selected metrics to a specific target year.
+      </p>
+      <ol>
+        <li>Select the metric you want to visualize from the <code>Metric dropdown selector</code></li>
+        <li>Select the year you want to compare the metrics to.</li>
+      </ol>
+
+      <h6>Axes</h6>
+      x-axis shows the years, while y-axis shows the value of the selected metrics
+
     </b-modal>
   </b-row>
 
@@ -352,13 +370,20 @@ export default {
 .splitpanes__pane {
   position: relative;
 }
+.info-button {
+  z-index: 3;
+  position: absolute;
+  right: 0;
+}
 .ego-info-button {
   margin-right: 3.3em;
   margin-top:0.4em;
   margin-bottom: 0.5em;
-  z-index: 3;
-  position: absolute;
-  right: 0;
+}
+.ts-info-button {
+  margin-right: 1.9em;
+  margin-top:0.3em;
+  margin-bottom: 0.5em;
 }
 .fullscreen-button {
   position: absolute;

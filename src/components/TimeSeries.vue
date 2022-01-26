@@ -11,7 +11,7 @@
     >
       <b-col class='h-10'><b>Time series Analysis</b></b-col>
       <b-button
-        class='mr-5'
+        style='margin-right: 3.5rem'
         size='sm'
         :pressed.sync='showTable'
         variant='outline-secondary'
