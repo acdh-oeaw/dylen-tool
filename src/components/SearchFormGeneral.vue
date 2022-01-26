@@ -34,9 +34,10 @@
             </b-form-group>
           </b-col>
       </b-row>
-      <b-row xl='12'>
-        <b-col xl='12' class='px-0'>
+      <b-row xl='12' class='mx-0 px-0'>
+        <b-col xl='12' class='px-0 mx-0'>
           <node-filter
+              class='mx-0 px-0'
               @sliderValueChanged='handleSliderValue'
               :general-type='GENERAL_PARTY'
               :available-metrics='availableMetrics'

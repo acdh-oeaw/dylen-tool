@@ -1,6 +1,6 @@
 <template>
-  <b-card class='mt-0 mx-0'>
-    <b-row xl='12'>
+  <b-card class='mt-0 mx-0 px-0'>
+    <b-row xl='12' class='mx-0 px-0'>
       <b-col xl='12' class='mt-0 text-center' style='font-size:0.9em'>
         <info-icon size='1.2x' class='custom-class' style='color:red' v-b-modal="'threshold-'+this.pane"
                    data-sauto-id='node-filter-info'></info-icon>
@@ -63,7 +63,7 @@
         </b-modal>
       </b-col>
     </b-row>
-    <b-row xl='12'>
+    <b-row xl='12' class='mx-0 px-0'>
       <b-col xl='12' class='mt-2 pb-4'>
         <Slider
           @change='valueChanged'

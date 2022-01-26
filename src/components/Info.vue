@@ -32,42 +32,34 @@
                     >
                       <b-carousel
                           id="carousel-1"
-                          v-model="slide"
                           :interval="0"
                           :controls='true'
                           :indicators='true'
                           background="#ababab"
                           style="text-shadow: 1px 1px 2px #333;"
-                          @sliding-start="onSlideStart"
-                          @sliding-end="onSlideEnd"
                       >
                         <div style='color: black;'>
                           <b-carousel-slide
-                              :class='carousel-caption-black'
                               caption="Ego Network"
                               text="Explore semantic neighborhood of a target word in a given time period"
                               :img-src="require('../assets/info/ego.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              :class='carousel-caption-black'
                               caption="General Network - Party"
                               text="Explore most frequent lexemes used by political parties"
                               :img-src="require('../assets/info/general.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              :class='carousel-caption-black'
                               caption="General Network - Politicians"
                               text="Explore most frequent lexemes used by politicians"
                               :img-src="require('../assets/info/speaker.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              :class='carousel-caption-black'
                               caption="Node Metrics"
                               text="Visualize nodes based on their node metrics with Parallel Coordinates"
                               :img-src="require('../assets/info/parallel.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              :class='carousel-caption-black'
                               caption="Times series"
                               text="Track changes of network over time"
                               :img-src="require('../assets/info/timeseries.png')"
