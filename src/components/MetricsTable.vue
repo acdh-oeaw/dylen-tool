@@ -84,7 +84,7 @@
                     v-model="filterWord"
                     type="search"
                     placeholder="Type to Filter"
-                    @keypress='e => keyPress(e,"metrics-filter")'
+                    @keypress='e => keyPress(e,"node-metrics-filter")'
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
@@ -130,7 +130,7 @@
                   v-model="filterNetwork"
                   type="search"
                   placeholder="Type to Filter"
-                  @keypress='e => keyPress(e,"metrics-filter")'
+                  @keypress='e => keyPress(e,"node-metrics-filter")'
                 ></b-form-input>
               </b-input-group>
             </b-form-group>

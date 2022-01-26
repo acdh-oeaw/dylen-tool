@@ -381,7 +381,7 @@ export default {
           if(typeof entry.onClick === 'function'){
             event.preventDefault();
             entry.onClick(d.name);
-            this.mouseClick(event, 'context-menu-select-as-targetword-' + this.pane);
+            this.mouseClick(event, 'context-menu-select-as-targetword');
           }
 
         });

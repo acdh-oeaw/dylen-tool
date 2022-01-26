@@ -1004,9 +1004,6 @@ export var mixin = {
 
       click.timestamp = Date.now();
 
-      //todo delete
-      console.log(click.id)
-
       this.$store.dispatch('sauto/handleMouseClick', { click });
     },
     dragStart(event) {
