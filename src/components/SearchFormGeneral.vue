@@ -5,59 +5,61 @@
       xl='12'>
       <b-col
           xl='12'
-          class='mlr-0'>
-          <b-row
-              xl='12'
-              class='mt-2 mlr-0 plr-0'
+          class='mx-0 px-0'>
+        <b-row
+            xl='12'
+            class='mt-0'
+        >
+          <b-col>
+            <b-form-group
+              id='select-party-group-viz'
+              label='Party: '
+              label-size='sm'
+              label-cols-xl='4'
           >
-            <b-col>
-              <b-form-group
-                id='select-party-group-viz'
-                label='Party: '
-                label-size='sm'
-                label-cols-xl='4'
+            <b-form-select
+                size='sm'
+                v-model='selectedParty'
+                :data-sauto-id="'selectParty-'+this.pane"
             >
-              <b-form-select
-                  size='sm'
-                  v-model='selectedParty'
-                  :data-sauto-id="'selectParty-'+this.pane"
+              <b-form-select-option
+                  v-for='option in availableParties'
+                  v-bind:key='option'
+                  v-bind:value='option'
+                  data-sauto-id="partyOption"
               >
-                <b-form-select-option
-                    v-for='option in availableParties'
-                    v-bind:key='option'
-                    v-bind:value='option'
-                    data-sauto-id="partyOption"
-                >
-                  {{ option }}
-                </b-form-select-option>
-              </b-form-select>
-            </b-form-group>
+                {{ option }}
+              </b-form-select-option>
+            </b-form-select>
+          </b-form-group>
+        </b-col>
+    </b-row>
+        <b-row xl='12' class='mx-0 px-0'>
+          <b-col xl='12' class='px-0 mx-0'>
+            <node-filter
+                class='mx-0 px-0'
+                @sliderValueChanged='handleSliderValue'
+                :general-type='GENERAL_PARTY'
+                :available-metrics='availableMetrics'
+                :pane='queryPane'></node-filter>
           </b-col>
-      </b-row>
-      <b-row xl='12' class='mx-0 px-0'>
-        <b-col xl='12' class='px-0 mx-0'>
-          <node-filter
-              class='mx-0 px-0'
-              @sliderValueChanged='handleSliderValue'
-              :general-type='GENERAL_PARTY'
-              :available-metrics='availableMetrics'
-              :pane='queryPane'></node-filter>
-        </b-col>
-      </b-row>
-      <b-row xl='12' class='mt-2'>
-        <b-col
-            xl='6'
-            class='px-1'
-        >
-          <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
-        </b-col>
-        <b-col
-            xl='6'
-            class='px-1'
-        >
-          <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
-        </b-col>
-      </b-row>
+        </b-row>
+        <b-row
+            xl='12'
+            class='mt-2 px-0 mx-1'>
+          <b-col
+              xl='6'
+              class='px-1'
+          >
+            <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
+          </b-col>
+          <b-col
+              xl='6'
+              class='px-1'
+          >
+            <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
+          </b-col>
+        </b-row>
       </b-col>
     </b-row>
   </b-form>

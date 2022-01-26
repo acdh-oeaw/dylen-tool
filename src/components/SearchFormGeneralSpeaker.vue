@@ -1,8 +1,11 @@
 <template>
   <b-form @submit='onSubmit'>
     <b-row>
-      <b-col xl='12'>
-        <b-row xl='12' class='mt-2'>
+      <b-col
+          xl='12'
+        class='mx-0 px-0'
+      >
+        <b-row xl='12' class='mt-0'>
           <b-col xl='12'>
             <b-form-group
               id='select-party-group-viz'
@@ -53,7 +56,10 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row xl='12'>
+        <b-row
+            xl='12'
+          class='mx-0 px-0'
+        >
           <b-col
               xl='12'
               class='px-0'
@@ -65,7 +71,10 @@
                 :pane='queryPane'></node-filter>
           </b-col>
         </b-row>
-        <b-row align-h='end' xl='12' class='mt-2'>
+        <b-row
+            align-h='end'
+            xl='12'
+            class='mt-2 px-0 mx-1'>
           <b-col
               xl='6'
               class='px-1'
