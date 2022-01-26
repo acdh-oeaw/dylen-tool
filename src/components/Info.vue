@@ -612,7 +612,7 @@ export default {
 </script>
 <style>
 .carousel-caption {
-  color: #666d69 !important;
+  color: #000000 !important;
 }
 
 .carousel-indicators li {

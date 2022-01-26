@@ -4,7 +4,7 @@
     <b-button
       v-if='position === "nav"'
       data-sauto-id='settings-button'
-      class='mr-2'
+      class='mr-2 ml-0 pl-0'
       variant='info'
       @click='toggleSideBar(settingComponent)'
     >
