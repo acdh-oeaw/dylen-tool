@@ -13,6 +13,11 @@
           @pane-maximize='resized'
         >
           <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+            <info-icon
+                size='1.2x'
+                class='custom-class info-button ego-info-button'
+                style='color:#17a2b8'
+                v-b-modal='"ego-info"'></info-icon>
             <setting
               position='result'
               setting-component='egoNetwork'
@@ -82,6 +87,11 @@
           @pane-maximize='resized'
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
+            <info-icon
+                size='1.2x'
+                class='custom-class info-button ego-info-button'
+                style='color:#17a2b8'
+                v-b-modal='"pc-info"'></info-icon>
             <setting
               position='result'
               setting-component='nodeMetrics'
@@ -98,6 +108,11 @@
             </node-metrics>
           </pane>
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
+            <info-icon
+                size='1.2x'
+                class='custom-class info-button ts-info-button'
+                style='color:#17a2b8'
+                v-b-modal='"ts-info"'></info-icon>
             <button
               @click="(event) => toggleFullscreen('timeSeries', event,'toggleFullScreenButton-timeSeries')"
               class='fullscreen-button'
@@ -115,8 +130,83 @@
         </splitpanes>
       </pane>
     </splitpanes>
+    <b-modal
+        :id='"ego-info"'
+        modal-class='guide'
+        title='Ego Network interpretation guidelines'
+        ok-only>
+      <ul>
+        <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
+          the targetword and the network visualisation would be too unnecessarily complex.
+        </li>
+        <li>The <b>size of nodes</b> represents word frequency</li>
+        <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
+        <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
+        <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+      </ul>
+    </b-modal>
+    <b-modal
+        xl='12'
+        :id='"pc-info"'
+        modal-class='guide'
+        title='Node metrics comparison guidelines'
+        ok-only>
+      <p>
+        The DYLEN Parallel coordinates visualization is able to display node metrics of all nodes from two different networks.
+      </p>
 
+      <h6><b>Axes</b></h6>
+      <ul>
+        <li>
+          <code>x-axis</code> represents name of different node metrics, while the <code>y-axis</code> shows the metric values.
+        </li>
+        <li>
+          5 from 10 available node metrics are visualized as default, more metrics can be added by clicking on the <code>settings</code> icon <b-icon
+            icon='gear'></b-icon> and enabling the metrics from the <code>Axes to display</code> section. You can also change the order of the axes from settings
+        </li>
+      </ul>
+
+      <h6><b>Network Labels</b></h6>
+      <p>
+        The labels of the first and the second network are shown in the top left and top right position of the chart respectively.
+      </p>
+      <h6><b>Node Labels</b></h6>
+      <p>
+        The node labels are shown on the left and right side of the chart, overlapping words(words having the same/similar metric value on the first/last axis ) are displayed as <code>*</code>, the actual word can be viewed by hovering over the <code>*</code> character
+      </p>
+      <h6><b>Select/Deselect nodes</b></h6>
+      <p>
+        Sometimes the number of nodes can make interpretation of parallel coordinates difficult. <br>
+        You can use the <code>deselect all</code> button to remove all nodes and manually selecting the nodes to be shown
+        from the <code>Network visualization</code> or from the <code>Table view</code><br>
+        Individual nodes can be removed from the chart by clicking on the <code>'x'</code> icon, which appears when you hover over the node label.
+      </p>
+      <h6><b>Interactivity with Network Visualization</b></h6>
+      <p>
+        <code>Network visualization</code> and <code>Node metrics comparison</code> components share the same data. <br>
+        When you hover over the lines in the <code>Parallel coordinates</code>, corresponding node and its neighbors will be emphasized in the <code>Network visualization</code> and vice versa.
+      </p>
+    </b-modal>
+    <b-modal
+        xl='12'
+        :id='"ts-info"'
+        modal-class='guide'
+        title='Node metrics comparison guidelines'
+        ok-only>
+      <p>
+        The DYLEN Time series Analysis component visualizes the change of (absolute) difference in the values of selected metrics to a specific target year.
+      </p>
+      <ol>
+        <li>Select the metric you want to visualize from the <code>Metric dropdown selector</code></li>
+        <li>Select the year you want to compare the metrics to.</li>
+      </ol>
+
+      <h6>Axes</h6>
+      x-axis shows the years, while y-axis shows the value of the selected metrics
+
+    </b-modal>
   </b-row>
+
 </template>
 
 <script>
@@ -128,6 +218,8 @@ import TimeSeries from '@/components/TimeSeries';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import Setting from '@/components/Setting';
+import { InfoIcon } from 'vue-feather-icons';
+
 import {
   NETWORK_SIZE_SHOW_WARNING,
   NETWORK_SIZE_CANCEL
@@ -137,6 +229,7 @@ export default {
   name: 'Results',
   props: ['pane'],
   components: {
+    InfoIcon,
     Setting,
     NodeMetrics,
     NetworkGraph,
@@ -291,12 +384,29 @@ export default {
 .splitpanes__pane {
   position: relative;
 }
-
+.info-button {
+  z-index: 3;
+  position: absolute;
+  right: 0;
+}
+.ego-info-button {
+  margin-right: 3.3em;
+  margin-top:0.4em;
+  margin-bottom: 0.5em;
+}
+.ts-info-button {
+  margin-right: 1.9em;
+  margin-top:0.3em;
+  margin-bottom: 0.5em;
+}
 .fullscreen-button {
   position: absolute;
   z-index: 2;
   right: 0;
   background: transparent !important;
   border: #d3d9df;
+}
+.modal.guide .modal-dialog {
+  max-width: 60%!important;
 }
 </style>
