@@ -26,13 +26,13 @@
                   style='overflow: hidden'
               >
                 <b-row class='justify-content-md-center pt-0 mb-0'>
-                  <b-col lg='10' style='height: 100%'>
+                  <b-col lg='10' style='height: 100%;'>
                     <b-card-header>
                       <h4>Welcome to DYLEN! Take a look at our tool's features</h4>
                     </b-card-header>
                     <b-card-body
-                        class='py-0 my-0'
-                        style='max-height:100%;'
+                        class='pt-0 pb-0 mt-0 mb-2'
+                        style='max-height:90%;border:solid darkgrey'
                     >
                       <b-carousel
                           id="carousel-1"
