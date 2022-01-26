@@ -188,6 +188,23 @@
                         How to interpret the visuliation
                       </span>
                       <span slot='guide-content'>
+                        <h5>How to use ego-network</h5>
+                        <ol>
+                          <li>
+                            Select <code>Ego Network</code> on the Top Navigation bar.
+                          </li>
+                          <li>
+                            Select a corpus dropdown selector. <br>
+                          </li>
+                          <li>
+                            Select a subcorpus from the subcorpus dropdown selector
+                          </li>
+                          <li>
+                            Type a target word into the input field and select one of the autocomplete suggestions
+                          </li>
+                          <li>Click on <code>Visualize</code></li>
+                        </ol>
+                        <h5>Ego-network interpretation guideline</h5>
                         <ul>
                           <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
                             the targetword and the network visualisation would be too unnecessarily complex.

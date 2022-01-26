@@ -13,6 +13,11 @@
           @pane-maximize='resized'
         >
           <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
+            <info-icon
+                size='1.2x'
+                class='custom-class ego-info-button'
+                style='color:#17a2b8'
+                v-b-modal='"ego-info"'></info-icon>
             <setting
               position='result'
               setting-component='egoNetwork'
@@ -115,8 +120,19 @@
         </splitpanes>
       </pane>
     </splitpanes>
-
+    <b-modal :id='"ego-info"' title='Ego Network interpretation guidelines' ok-only>
+      <ul>
+        <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
+          the targetword and the network visualisation would be too unnecessarily complex.
+        </li>
+        <li>The <b>size of nodes</b> represents word frequency</li>
+        <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
+        <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
+        <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+      </ul>
+    </b-modal>
   </b-row>
+
 </template>
 
 <script>
@@ -128,6 +144,8 @@ import TimeSeries from '@/components/TimeSeries';
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import Setting from '@/components/Setting';
+import { InfoIcon } from 'vue-feather-icons';
+
 import {
   NETWORK_SIZE_SHOW_WARNING,
   NETWORK_SIZE_CANCEL
@@ -137,6 +155,7 @@ export default {
   name: 'Results',
   props: ['pane'],
   components: {
+    InfoIcon,
     Setting,
     NodeMetrics,
     NetworkGraph,
@@ -291,7 +310,14 @@ export default {
 .splitpanes__pane {
   position: relative;
 }
-
+.ego-info-button {
+  margin-right: 3.3em;
+  margin-top:0.4em;
+  margin-bottom: 0.5em;
+  z-index: 3;
+  position: absolute;
+  right: 0;
+}
 .fullscreen-button {
   position: absolute;
   z-index: 2;
