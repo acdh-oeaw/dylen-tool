@@ -130,7 +130,11 @@
         </splitpanes>
       </pane>
     </splitpanes>
-    <b-modal :id='"ego-info"' title='Ego Network interpretation guidelines' ok-only>
+    <b-modal
+        :id='"ego-info"'
+        modal-class='guide'
+        title='Ego Network interpretation guidelines'
+        ok-only>
       <ul>
         <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
           the targetword and the network visualisation would be too unnecessarily complex.
@@ -141,7 +145,12 @@
         <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
       </ul>
     </b-modal>
-    <b-modal xl='12' :id='"pc-info"' title='Node metrics comparison guidelines' ok-only>
+    <b-modal
+        xl='12'
+        :id='"pc-info"'
+        modal-class='guide'
+        title='Node metrics comparison guidelines'
+        ok-only>
       <p>
         The DYLEN Parallel coordinates visualization is able to display node metrics of all nodes from two different networks.
       </p>
@@ -178,7 +187,12 @@
         When you hover over the lines in the <code>Parallel coordinates</code>, corresponding node and its neighbors will be emphasized in the <code>Network visualization</code> and vice versa.
       </p>
     </b-modal>
-    <b-modal xl='12' :id='"ts-info"' title='Node metrics comparison guidelines' ok-only>
+    <b-modal
+        xl='12'
+        :id='"ts-info"'
+        modal-class='guide'
+        title='Node metrics comparison guidelines'
+        ok-only>
       <p>
         The DYLEN Time series Analysis component visualizes the change of (absolute) difference in the values of selected metrics to a specific target year.
       </p>
@@ -392,7 +406,7 @@ export default {
   background: transparent !important;
   border: #d3d9df;
 }
-.modal-dialog {
+.modal.guide .modal-dialog {
   max-width: 60%!important;
 }
 </style>
