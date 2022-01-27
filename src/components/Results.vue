@@ -17,6 +17,7 @@
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
+                data-sauto-id='ego-network-info-button'
                 v-b-modal='"ego-info"'></info-icon>
             <setting
               position='result'
@@ -91,6 +92,7 @@
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
+                data-sauto-id='parallel-coordinates-info-button'
                 v-b-modal='"pc-info"'></info-icon>
             <setting
               position='result'
@@ -112,6 +114,7 @@
                 size='1.2x'
                 class='custom-class info-button ts-info-button'
                 style='color:#17a2b8'
+                data-sauto-id='time-series-info-button'
                 v-b-modal='"ts-info"'></info-icon>
             <button
               @click="(event) => toggleFullscreen('timeSeries', event,'toggleFullScreenButton-timeSeries')"
