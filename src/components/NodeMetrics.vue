@@ -40,7 +40,7 @@
             >Export JSON</b-dropdown-item-button>
           </b-dropdown>
           <b-button
-            class='mr-5'
+            style='margin-right: 4rem'
             size='sm'
             :pressed.sync='showTable'
             variant='outline-secondary'

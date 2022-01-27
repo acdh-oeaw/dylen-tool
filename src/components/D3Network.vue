@@ -102,13 +102,13 @@
 
 <script>
 import * as d3 from 'd3';
-import { mixin } from '@/store/store';
+import { sauto_mixin } from '@/store/sauto';
 import { EGO_NETWORK } from '@/helpers/mixins';
 
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options', 'pane'],
-  mixins: [mixin],
+  mixins: [sauto_mixin],
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),

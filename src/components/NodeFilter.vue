@@ -1,7 +1,7 @@
 <template>
-  <b-card class='mt-0'>
-    <b-row xl='12'>
-      <b-col xl='12' class='mt-0 text-center' style='font-size:0.9em'>
+  <b-card class='mt-0 mx-0 px-0 pt-0 nodefilter'>
+    <b-row xl='12' class='mx-0 px-0 pt-0 mt-0'>
+      <b-col xl='12' class='mt-0 text-center pt-0' style='font-size:0.9em'>
         <info-icon size='1.2x' class='custom-class' style='color:red' v-b-modal="'threshold-'+this.pane"
                    data-sauto-id='node-filter-info'></info-icon>
         <b> Node filter</b>
@@ -26,7 +26,7 @@
         </b-form-select>
       </b-col>
     </b-row>
-    <b-row xl='12' class='mt-2'>
+    <b-row xl='12' class='mt-0'>
       <b-col xl='12' class='mt-3 mb-2' style='font-size:0.9em'>
         % of nodes to display:
         <b-row xl='12'>
@@ -63,7 +63,7 @@
         </b-modal>
       </b-col>
     </b-row>
-    <b-row xl='12'>
+    <b-row xl='12' class='mx-0 px-0'>
       <b-col xl='12' class='mt-2 pb-4'>
         <Slider
           @change='valueChanged'
@@ -143,6 +143,10 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style>
+.nodefilter.card .card-body {
+  padding-top: 0.5rem!important;
+  padding-left: 0.5rem!important;
+  padding-right: 0.5rem!important;
+}
 </style>

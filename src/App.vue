@@ -24,13 +24,15 @@
         </b-row>
         <b-row
           xl='12'
-          class='pl-3 pt-0 mx-0 flex-grow-1'
+          class='px-1 pt-0 mx-0 flex-grow-1 justify-content-center'
           style='border-bottom: solid; border-bottom-color: lightgrey; overflow: auto; height: calc(100% - 88px)'
         >
           <b-col
+            v-if='type!==null'
             data-sauto-id='left-query-bar'
-            xl='2'
-            class='pt-0 mt-0'
+            md='3'
+            lg='2'
+            class='pt-0 mt-0 px-1'
             style='border-right: solid; border-right-color:lightgrey; overflow:auto; max-height: 100%;'
           >
             <query-bar></query-bar>
@@ -38,6 +40,7 @@
           <b-col
             class='h-100 overflow-hidden'
             xl='10'
+            md='9'
           >
             <div
               class='h-100'
@@ -50,7 +53,7 @@
               data-sauto-id='info'
               v-if='this.$store.state.main.showInfo'
             >
-              <Info />
+              <info />
             </div>
           </b-col>
         </b-row>
@@ -346,7 +349,10 @@ import QueryBar from '@/components/QueryBar';
 import AlertArea from '@/components/AlertArea';
 import { camelCaseToSpaces } from '@/helpers/utils';
 
+const {networkTypeMixin} = require("@/helpers/mixins");
+
 export default {
+  mixins: [networkTypeMixin],
   name: 'App',
   components: {
     QueryBar,
@@ -489,7 +495,7 @@ body {
   overflow-x: hidden;
 }
 .settings-button {
-  margin-right: 2.5em;
+  margin-right: 1.5em;
   margin-bottom: 0.5em;
   z-index: 2;
   position: absolute;

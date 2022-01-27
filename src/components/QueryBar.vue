@@ -28,7 +28,7 @@
                   </b-card>
                 </b-col>
                 <b-col v-if="type===GENERAL_PARTY">
-                  <b-card class='mt-2'>
+                  <b-card class='mt-2 px-0'>
                     <search-form-general
                         :is-vertical='true'
                         :with-labels='false'
