@@ -5,7 +5,7 @@
       size='sm'
       variant='danger'
       type='button'
-      :data-sauto-id='"resetQueryButton-"+type+"-"+this.pane'
+      :data-sauto-id='"resetQueryButton-"+this.type+"-"+this.pane'
       @click='resetClicked'
       v-b-tooltip.hover
       title="Reset query"
@@ -15,7 +15,10 @@
 </template>
 
 <script>
+import { networkTypeMixin } from '@/helpers/mixins';
+
 export default {
+  mixins: [networkTypeMixin],
   name: "ResetButton",
   props: ["pane"],
   methods: {
@@ -23,11 +26,6 @@ export default {
       this.$emit('resetClicked')
     }
   },
-  computed: {
-    type() {
-      return this.$store.getters['main/topNav'].networkType;
-    },
-  }
 
 }
 </script>

@@ -17,7 +17,10 @@
 </template>
 
 <script>
+import { networkTypeMixin } from '@/helpers/mixins';
+
 export default {
+  mixins: [networkTypeMixin],
   name: "VisualizeButton",
   props: ['queryButtonActive', 'queryPane'],
   computed: {
@@ -32,9 +35,6 @@ export default {
           pane: this.queryPane
         });
       }
-    },
-    type() {
-      return this.$store.getters['main/topNav'].networkType;
     },
   },
   methods: {
