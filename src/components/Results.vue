@@ -136,16 +136,16 @@
     <b-modal
         :id='"ego-info"'
         modal-class='guide'
-        title='Ego Network interpretation guidelines'
+        title='Network interpretation guidelines'
         ok-only>
       <ul>
-        <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
-          the targetword and the network visualisation would be too unnecessarily complex.
-        </li>
         <li>The <b>size of nodes</b> represents word frequency</li>
         <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
         <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
         <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+        <li>If you are viewing ....The targetword isn't shown in the visualised ego-network, since every node have a connection to
+          the targetword and the network visualisation would be too unnecessarily complex.
+        </li>
       </ul>
     </b-modal>
     <b-modal

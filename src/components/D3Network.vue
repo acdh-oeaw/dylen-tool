@@ -63,6 +63,7 @@
             select all
           </b-form-checkbox>
           <b-form-checkbox
+            v-if='this.networkType===EGO_NETWORK'
             class='b-0'
             v-model='options.showClusters'
             @change='!options.showClusters'
@@ -103,12 +104,12 @@
 <script>
 import * as d3 from 'd3';
 import { sauto_mixin } from '@/store/sauto';
-import { EGO_NETWORK } from '@/helpers/mixins';
+import { EGO_NETWORK, networkTypeMixin } from '@/helpers/mixins';
 
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options', 'pane'],
-  mixins: [sauto_mixin],
+  mixins: [sauto_mixin, networkTypeMixin],
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),
@@ -378,7 +379,7 @@ export default {
         })
         .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
         .on('click', (event, entry) => {
-          if(typeof entry.onClick === 'function'){
+          if (typeof entry.onClick === 'function') {
             event.preventDefault();
             entry.onClick(d.name);
             this.mouseClick(event, 'context-menu-select-as-targetword');
