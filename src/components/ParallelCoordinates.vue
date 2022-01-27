@@ -40,17 +40,17 @@
             :transform='`translate(${scaleX(scale[0])},0)`'
           ></g>
           <text
-            :transform='`translate(${scaleX(scale[0])},${scale[1].range()[0]+12})`'
-            style='text-anchor: middle;'
-            font-size='12'
+            :transform='`translate(${scaleX(scale[0])},${scale[1].range()[0]}) rotate(-45)`'
+            style='text-anchor: end;'
+            font-size='10'
             fill='black'
             font-weight='bold'
           >
             <tspan
-              v-for="(line, idx) in camelCaseToSpaces(scale[0]).split(' ')"
+              v-for="line in camelCaseToSpaces(scale[0]).split(' ')"
               :key='line'
               x='0'
-              :dy="idx == 0 ? '1em' : '1.2em'"
+              dy="1em"
             >
               {{ line }}
             </tspan>
@@ -296,7 +296,7 @@ export default {
       svgPadding: {
         top: 35,
         right: 140,
-        bottom: 50,
+        bottom: 55,
         left: 140
       },
       camelCaseToSpaces: camelCaseToSpaces
@@ -457,9 +457,26 @@ export default {
           };
         case GENERAL_SPEAKER:
           return {
-            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](pane) : '',
-            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane) : '',
-            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).network.year : '',
+            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
+              pane
+            ).loaded
+              ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](
+                  pane
+                )
+              : '',
+            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
+              pane
+            ).loaded
+              ? this.$store.getters[
+                  'main/selectedGeneralNetworkSpeakerSpeaker'
+                ](pane)
+              : '',
+            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
+              pane
+            ).loaded
+              ? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane)
+                  .network.year
+              : '',
             color: this.$store.getters['main/selectionColors'][0]
           };
         default:
