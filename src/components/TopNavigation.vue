@@ -69,7 +69,6 @@
                       href='https://dysen-tool.acdh.oeaw.ac.at' target='_blank'>DYSEN</a>
                     </span>
                 </b-nav-text>
-                >>>>>>> dev
               </b-navbar-nav>
             </b-collapse>
             <b-row align-h='end'>
