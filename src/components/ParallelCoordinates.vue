@@ -457,9 +457,26 @@ export default {
           };
         case GENERAL_SPEAKER:
           return {
-            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](pane) : '',
-            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded ? this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](pane) : '',
-            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).loaded? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane).network.year : '',
+            party: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
+              pane
+            ).loaded
+              ? this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](
+                  pane
+                )
+              : '',
+            text: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
+              pane
+            ).loaded
+              ? this.$store.getters[
+                  'main/selectedGeneralNetworkSpeakerSpeaker'
+                ](pane)
+              : '',
+            year: this.$store.getters['main/selectedGeneralNetworkSpeaker'](
+              pane
+            ).loaded
+              ? this.$store.getters['main/selectedGeneralNetworkSpeaker'](pane)
+                  .network.year
+              : '',
             color: this.$store.getters['main/selectionColors'][0]
           };
         default:
@@ -495,7 +512,7 @@ export default {
         .data(this.metrics)
         .join('text')
         .text((d) => roundToMaxDigit(node._metrics[d], 2))
-        .attr('y', (d) => this.scaleY[d](node._metrics[d]))
+        .attr('y', (d) => this.scaleY[d](node._metrics[d]) - 6)
         .attr('x', (d) => this.scaleX(d))
         .style('font-size', '10px')
         .style('font-weight', 'bold')
