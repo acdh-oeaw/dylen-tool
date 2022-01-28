@@ -592,10 +592,9 @@ export default {
       return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
     setWordAsSearchTerm(word) {
-      this.$store.dispatch('main/loadAutocompleteSuggestions', {
+      this.$store.dispatch('main/selectSurroundingWordAsTargetword', {
         pane: this.pane,
         searchTerm: word,
-        commit: true
       });
     }
   },

@@ -57,7 +57,7 @@
           </b-col>
         </b-row>
         <b-row xl='12'>
-          <b-col xl='12'>
+          <b-col xl='12' class='query'>
             <b-form-group
               id='select-targetword-group-biz'
               label='Targetword:'
@@ -70,13 +70,17 @@
                 ref='selectTargetWord'
                 size='sm'
                 v-model='searchTerm'
+                @keyup="handleSearchTermChange($event)"
                 :data-sauto-id="'selectTargetword-'+this.pane"
                 :list='`datalist-${pane}`'
                 :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
-                @change='handleSearchTermSelect'
                 @keypress='e => this.keyPress(e,"selectTargetWord")'
                 autocomplete='off'
               ></b-form-input>
+              <div v-for="error in errors" :key="error">
+                <b-alert show variant='danger'>{{error}}</b-alert>
+              </div>
+
               <datalist :id='`datalist-${pane}`'>
                 <option
                   v-for='option in availableTargetwords.filter(() => showSuggestions)'
@@ -128,12 +132,8 @@ export default {
   props: ['isSidebar', 'pane', 'withLabels'],
   data() {
     return {
-      corpusEdit: false,
-      subcorpusEdit: false,
-      targetwordEdit: false,
-      yearEdit: false,
-      searchTermSelected: false
-    };
+      tempSearchTerm: ''
+    }
   },
   mounted() {
     this.$root.$on('networkTypeChanged', () => {
@@ -157,20 +157,10 @@ export default {
       });
       let invalidChars = this.checkInvalidChars(val);
       if (invalidChars.length > 0) {
-        this.$store.commit('main/addError', {
-          error:
-            "contains invalid character(s): '" + invalidChars.join(' ') + "'",
-          pane: this.queryPane
-        });
-      } else {
-        if (this.errors.length === 0) {
-          this.$store.commit('main/changeSearchTerm', {
-            searchTerm: val,
-            pane: this.queryPane
-          });
-        }
+        this.$store.commit('main/addError', {pane: this.queryPane,error:"contains invalid character(s): '" + invalidChars.join(' ') + "'"})
       }
-    },
+    }
+    ,
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
@@ -185,23 +175,40 @@ export default {
         });
       }
     },
-    findSearchTermInAvailableTargetwords() {
-      return this.availableTargetwords.find((t) => t.text === this.searchTerm);
+    findSearchTermInAvailableTargetwords(searchTerm) {
+      return this.availableTargetwords.find((t) => t.text === searchTerm);
     },
-    handleSearchTermSelect() {
-      console.log('handle searchterm select: ' + target);
-      const target = this.findSearchTermInAvailableTargetwords();
-      this.$store.dispatch('main/loadTargetwordBySearchTerm', {
-        pane: this.queryPane,
-        searchTerm: target
-      });
-
+    sautoTargetWordSelectedEvent: function () {
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
       const event = {
         clientX: rect.x,
         clientY: rect.y
       };
       this.mouseClick(event, 'selectTargetWord-option');
+    },
+    handleSearchTermChange(event) {
+      if (event.key) {
+        if (this.errors.size === 0) {
+          this.$store.dispatch('main/loadAutocompleteSuggestions', { pane: this.queryPane, searchTerm: this.searchTerm}).then(response => {
+            this.$store.dispatch('main/setAutocompleteSuggestions', {
+              suggestions: response.data.data.getAutocompleteSuggestions,
+              pane: this.queryPane
+            })
+          })
+        }
+      } else {
+        let matchedSuggestion = this.findSearchTermInAvailableTargetwords(this.searchTerm);
+        this.$store.dispatch('main/loadTargetwordBySearchTerm', {
+          pane: this.queryPane,
+          searchTerm: matchedSuggestion
+        }).then(() => {
+          this.$store.dispatch('main/setAutocompleteSuggestions', {
+            suggestions: [matchedSuggestion],
+            pane: this.queryPane
+          })
+        });
+        this.sautoTargetWordSelectedEvent();
+      }
     },
     initialize() {
       this.$store.commit('main/changeSelectedCorpus', {
@@ -212,7 +219,7 @@ export default {
         subcorpus: null,
         pane: this.queryPane
       });
-      this.$store.commit('main/changeSearchTerm', {
+      this.$store.dispatch('main/changeSearchTerm', {
         searchTerm: null,
         pane: this.queryPane
       });
@@ -248,13 +255,13 @@ export default {
       console.log(
         'CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors
       );
-      return this.$store.getters['main/getPane']('pane1').errors;
+      return new Set(this.$store.getters['main/getPane']('pane1').errors);
     },
     queryButtonActive() {
       if (
-        !this.searchTerm ||
-        this.searchTerm.length === 0 ||
-        !this.findSearchTermInAvailableTargetwords()
+        !this.selectedTargetword ||
+          this.selectedTargetword.text.length === 0 ||
+        !this.findSearchTermInAvailableTargetwords(this.selectedTargetword.text)
       ) {
         return false;
       }
@@ -354,7 +361,13 @@ export default {
         return this.$store.getters['main/searchTerm'](this.queryPane);
       },
       set(val) {
-        this.validateSearchTerm(val);
+        this.validateSearchTerm(val)
+        if (this.errors.size === 0) {
+          this.$store.dispatch('main/changeSearchTerm', {
+            searchTerm: val,
+            pane: this.queryPane
+          })
+        }
       }
     }
   },
@@ -364,5 +377,13 @@ export default {
 <style scoped>
 .align-end {
   text-align: end;
+}
+.query .alert {
+  font-size: 0.8rem;
+  position: relative;
+  padding: 0.1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
 }
 </style>
