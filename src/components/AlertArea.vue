@@ -18,18 +18,8 @@
       :no-auto-hide="true"
       toaster="b-toaster-top-center"
     >
-      Loading this network may have a negative impact on your system's performance. Do you want to abort the loading process and try again with a smaller network?
-      <b-button
-        variant="danger"
-        size="sm"
-        @click="cancelNetworkLoading('pane1')"
-      >Abort</b-button>
-      <b-button
-        variant="outline-danger"
-        size="sm"
-        class="ml-1"
-        @click="timeoutWarning1 = false"
-      >Load this network</b-button>
+      Loading this network may have a negative impact on your system's performance. Please try again with different filter settings to load a smaller network.
+
     </b-toast>
     <b-toast
       title="Possible application timeout"
@@ -39,18 +29,8 @@
       :no-auto-hide="true"
       toaster="b-toaster-top-center"
     >
-      Loading this network may have a negative impact on your system's performance. Do you want to abort the loading process and try again with a smaller network?
-      <b-button
-        variant="danger"
-        size="sm"
-        @click="cancelNetworkLoading('pane2')"
-      >Abort</b-button>
-      <b-button
-        variant="outline-danger"
-        size="sm"
-        class="ml-1"
-        @click="timeoutWarning2 = false"
-      >Load this network</b-button>
+      Loading this network may have a negative impact on your system's performance. Please try again with different filter settings to load a smaller network.
+
     </b-toast>
   </div>
 </template>
@@ -58,7 +38,6 @@
 <script>
 import {
   NETWORK_SIZE_SHOW_WARNING,
-  NETWORK_SIZE_IGNORE,
   NETWORK_SIZE_CANCEL
 } from '@/helpers/mixins';
 
@@ -90,7 +69,7 @@ export default {
       set(val) {
         this.$store.commit('main/setTimeoutWarning', {
           pane: 'pane1',
-          value: !val ? NETWORK_SIZE_IGNORE : NETWORK_SIZE_SHOW_WARNING
+          value: !val ? NETWORK_SIZE_CANCEL : NETWORK_SIZE_SHOW_WARNING
         });
       }
     },
@@ -104,7 +83,7 @@ export default {
       set(val) {
         this.$store.commit('main/setTimeoutWarning', {
           pane: 'pane2',
-          value: !val ? NETWORK_SIZE_IGNORE : NETWORK_SIZE_SHOW_WARNING
+          value: !val ? NETWORK_SIZE_CANCEL : NETWORK_SIZE_SHOW_WARNING
         });
       }
     }
