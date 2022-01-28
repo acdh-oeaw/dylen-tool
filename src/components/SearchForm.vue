@@ -67,9 +67,9 @@
               label-align-lg='left'
             >
               <b-form-input
+                v-model='searchTerm'
                 ref='selectTargetWord'
                 size='sm'
-                v-model='searchTerm'
                 @keyup="handleSearchTermChange($event)"
                 :data-sauto-id="'selectTargetword-'+this.pane"
                 :list='`datalist-${pane}`'
@@ -85,9 +85,8 @@
                 <option
                   v-for='option in availableTargetwords.filter(() => showSuggestions)'
                   v-bind:key='option.text + option.pos'
-                  v-bind:value='option.text'
+                  v-bind:value='option.text + " (" + option.pos + ")"'
                 >
-                  {{ option.text + ' (' + option.pos.replace("_", " ") + ')' }}
                 </option>
               </datalist>
             </b-form-group>
@@ -132,7 +131,7 @@ export default {
   props: ['pane'],
   data() {
     return {
-      tempSearchTerm: ''
+      currentPos: ''
     }
   },
   mounted() {
@@ -157,7 +156,6 @@ export default {
       });
     },
     validateSearchTerm(val) {
-      this.resetError()
       let invalidChars = this.checkInvalidChars(val);
       if (invalidChars.length > 0) {
         this.$store.commit('main/addError', {pane: this.queryPane,error:"contains invalid character(s): '" + invalidChars.join(' ') + "'"})
@@ -180,7 +178,7 @@ export default {
       }
     },
     findSearchTermInAvailableTargetwords(searchTerm) {
-      return this.availableTargetwords.find((t) => t.text === searchTerm);
+      return this.availableTargetwords.find((t) => t.text === searchTerm && t.pos === this.currentPos);
     },
     handleSearchTermChange(event) {
       if (event.key) {
@@ -232,6 +230,17 @@ export default {
         pane: this.queryPane
       });
       console.log('initialised');
+    },
+    splitTermAndPos: function (val) {
+      const allPoS = ['noun', 'verb', 'adjective', 'proper_noun']
+      let termAndPos = val.replace('(','').replace(')','').split(' ')
+      if (termAndPos.length > 2 || (termAndPos.length === 2 && !allPoS.includes(termAndPos[1]))) {
+        this.$store.commit('main/addError', {pane: this.queryPane,error:"contains whitespace"})
+        return null
+      }
+      this.currentPos = termAndPos.length === 2 ? termAndPos[1] : ''
+
+      return {term: termAndPos[0], pos: termAndPos[1]}
     },
     sautoTargetWordSelectedEvent: function () {
       const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
@@ -363,16 +372,39 @@ export default {
     },
     searchTerm: {
       get() {
-        return this.$store.getters['main/searchTerm'](this.queryPane);
+        let currentSearchTerm = this.$store.getters['main/searchTerm'](this.queryPane);
+        console.debug('CURRENT SEARCHTERM: ' + currentSearchTerm)
+        return currentSearchTerm
       },
       set(val) {
-        this.validateSearchTerm(val)
-        if (this.errors.size === 0) {
-          this.$store.dispatch('main/changeSearchTerm', {
-            searchTerm: val,
-            pane: this.queryPane
-          })
+        this.resetError()
+        let termAndPos = this.splitTermAndPos(val)
+        if (termAndPos !== null) {
+          this.validateSearchTerm(termAndPos.term)
+          if (termAndPos.pos && termAndPos.term === this.searchTerm) {
+            if (this.errors.size === 0) {
+              this.$store.dispatch('main/changeSearchTerm', {
+                searchTerm: '',
+                pane: this.queryPane
+              }).then(() => {
+                if (this.errors.size === 0) {
+                  this.$store.dispatch('main/changeSearchTerm', {
+                    searchTerm: termAndPos.term,
+                    pane: this.queryPane
+                  })
+                }
+              })
+            }
+          } else {
+            if (this.errors.size === 0) {
+              this.$store.dispatch('main/changeSearchTerm', {
+                searchTerm: termAndPos.term,
+                pane: this.queryPane
+              })
+            }
+          }
         }
+
       }
     }
   },

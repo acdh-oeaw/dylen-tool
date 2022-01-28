@@ -415,7 +415,7 @@ const mainModule = {
       this.dispatch('main/loadAvailableSpeakers', payload);
     },
     async changeSearchTerm({ commit }, {searchTerm, pane}) {
-      console.log('changing searchterm: ' + searchTerm);
+      console.debug('changing searchterm: ' + searchTerm);
       let termToSearch = searchTerm ? searchTerm : ''
 
       commit('changeSearchTerm', {pane: pane, searchTerm: termToSearch})
