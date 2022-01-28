@@ -129,7 +129,7 @@ import ResetButton from '@/components/ResetButton';
 export default {
   name: 'SearchForm',
   components: { ResetButton, VisualizeButton },
-  props: ['isSidebar', 'pane', 'withLabels'],
+  props: ['pane'],
   data() {
     return {
       tempSearchTerm: ''
@@ -159,14 +159,15 @@ export default {
       if (invalidChars.length > 0) {
         this.$store.commit('main/addError', {pane: this.queryPane,error:"contains invalid character(s): '" + invalidChars.join(' ') + "'"})
       }
-    }
-    ,
+    },
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
+        //TODO: make events as constants
         this.$emit('visualizeClicked');
       });
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
+
       let settingsComponent = this.$store.getters['main/activeSettings'];
       if (!settingsComponent) {
         this.$store.commit('main/changeActiveSettings', {
@@ -177,14 +178,6 @@ export default {
     },
     findSearchTermInAvailableTargetwords(searchTerm) {
       return this.availableTargetwords.find((t) => t.text === searchTerm);
-    },
-    sautoTargetWordSelectedEvent: function () {
-      const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
-      const event = {
-        clientX: rect.x,
-        clientY: rect.y
-      };
-      this.mouseClick(event, 'selectTargetWord-option');
     },
     handleSearchTermChange(event) {
       if (event.key) {
@@ -202,6 +195,8 @@ export default {
           pane: this.queryPane,
           searchTerm: matchedSuggestion
         }).then(() => {
+          let matchedIndex = this.availableTargetwords.indexOf(matchedSuggestion)
+          this.availableTargetwords.splice(matchedIndex, 1)
           this.$store.dispatch('main/setAutocompleteSuggestions', {
             suggestions: [matchedSuggestion],
             pane: this.queryPane
@@ -234,6 +229,14 @@ export default {
         pane: this.queryPane
       });
       console.log('initialised');
+    },
+    sautoTargetWordSelectedEvent: function () {
+      const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
+      const event = {
+        clientX: rect.x,
+        clientY: rect.y
+      };
+      this.mouseClick(event, 'selectTargetWord-option');
     }
   },
   computed: {
@@ -252,9 +255,7 @@ export default {
       return !(this.availableTargetwords.length === 0 && this.searchTerm);
     },
     errors() {
-      console.log(
-        'CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors
-      );
+      console.debug('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors);
       return new Set(this.$store.getters['main/getPane']('pane1').errors);
     },
     queryButtonActive() {
@@ -280,8 +281,7 @@ export default {
         count++;
       }
 
-      if (count > 0) return 'pane2';
-      return 'pane1';
+      return count > 0 ? 'pane2' : 'pane1'
     },
     availableCorpora: {
       get() {
