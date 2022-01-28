@@ -261,7 +261,7 @@
                               data-sauto-id='ignore'
                             >{{camelCaseToSpaces(element.name)}}
                               <b-form-checkbox
-                                :data-sauto-id='"parallel-coordinates-"+element.name+"-checkbox-option"'
+                                data-sauto-id='parallel-coordinates-axis-checkbox-option'
                                 v-model="element.enabled"
                                 switch
                               >
