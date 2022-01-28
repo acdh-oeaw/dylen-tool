@@ -65,6 +65,7 @@
                     Check our our sister project <br> for sentiment analysis: <a
                       href="https://dysen-tool.acdh.oeaw.ac.at"
                       target="_blank"
+                      data-sauto-id='dysen-link'
                     >DYSEN</a>
                   </span>
                 </b-nav-text>
