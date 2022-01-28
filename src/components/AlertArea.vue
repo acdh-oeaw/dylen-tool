@@ -52,6 +52,16 @@
         @click="timeoutWarning2 = false"
       >Load this network</b-button>
     </b-toast>
+    <b-toast
+      title="No edges in this network"
+      v-model="noEdges"
+      variant="warning"
+      solid
+      :no-auto-hide="true"
+      toaster="b-toaster-top-center"
+    >
+      Looks like this network has no edges. This may be because none of the displayed words are connected to each other. Try using different filter values to show more nodes and edges.
+    </b-toast>
   </div>
 </template>
     
@@ -105,6 +115,24 @@ export default {
         this.$store.commit('main/setTimeoutWarning', {
           pane: 'pane2',
           value: !val ? NETWORK_SIZE_IGNORE : NETWORK_SIZE_SHOW_WARNING
+        });
+      }
+    },
+    noEdges: {
+      get() {
+        return (
+          this.$store.getters['main/noEdgesInNetwork']('pane1') ||
+          this.$store.getters['main/noEdgesInNetwork']('pane2')
+        );
+      },
+      set(val) {
+        this.$store.commit('main/setNoEdgesInNetwork', {
+          pane: 'pane1',
+          value: val
+        });
+        this.$store.commit('main/setNoEdgesInNetwork', {
+          pane: 'pane2',
+          value: val
         });
       }
     }
