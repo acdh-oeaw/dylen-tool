@@ -4,7 +4,13 @@ import VueCompositionAPI from '@vue/composition-api';
 
 import { BSpinner } from 'bootstrap-vue';
 import axios from 'axios';
-import { corpusNameMapping, filterBasedOnSlider, partyMapping, sourceNameMapping } from '@/helpers/mappers';
+import {
+  corpusNameMapping,
+  filterBasedOnSlider,
+  getKeyByValue,
+  partyMapping,
+  sourceNameMapping
+} from '@/helpers/mappers';
 import props from '../properties/propertiesLoader';
 import {
   allAvailableCorporaQuery,
@@ -141,7 +147,7 @@ const mainModule = {
       }
       state[pane].selectedNetwork = null;
     },
-    async loadGeneralNetwork({ state }, {
+    async loadGeneralNetwork({ state, commit }, {
       pane: pane,
       party: party_orig,
       sliderMin: slidValMin,
@@ -154,7 +160,7 @@ const mainModule = {
           valueMin: slidValMin,
           valueMax: slidValMax
         };
-        network.party = party;
+        network.party = getKeyByValue(partyMapping, party);
         network.possibleYears = years.map(Number).sort();
         network.year = Math.max(...years.map(Number));
         network.type = 'Party';
@@ -188,17 +194,14 @@ const mainModule = {
         else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-        if (network.edges.length === 0)
-        state[pane].noEdgesInNetwork = true;
-        else
-        state[pane].noEdgesInNetwork = false;
+        state[pane].noEdgesInNetwork = network.edges.length === 0
 
         const payload = {
           pane: pane,
           network: network
         };
 
-        this.commit('main/addGeneralNetwork', payload);
+        commit('addGeneralNetwork', payload);
         state[pane].busy = false;
         logger.log('General Network loaded successfully.');
       } catch (error) {
@@ -210,7 +213,7 @@ const mainModule = {
       function assignValuesFromState(network, networkID, possibleYears) {
         network.id = networkID;
         network.speaker = state[pane].generalNetworkSpeaker.form.selectedSpeaker;
-        network.party = partyMapping[state[pane].generalNetworkSpeaker.form.selectedParty];
+        network.party = state[pane].generalNetworkSpeaker.form.selectedParty;
         network.possibleYears = possibleYears.map(Number).sort();
         network.filter = {
           metric: state[pane].generalNetworkSpeaker.form.selectedMetric,
@@ -345,7 +348,7 @@ const mainModule = {
     async loadUpdatedGeneralNetwork({ state }, { network: oldNetwork, pane: pane }) {
       try {
         let response = await axios.post(graphqlEndpoint,
-          getGeneralNetworkQuery(oldNetwork.party, oldNetwork.year));
+          getGeneralNetworkQuery(partyMapping[oldNetwork.party], oldNetwork.year));
         let networkID = oldNetwork.party + '_' + oldNetwork.year;
         let updatedNetwork = response.data.data.getGeneralSourceByPartyYear.networks;
 

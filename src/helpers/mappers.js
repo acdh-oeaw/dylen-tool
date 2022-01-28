@@ -24,6 +24,12 @@ export const partyMapping = {
   "SPÖ": "SPOe",
   "BZÖ": "BZOe"
 }
+
+export function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
+
+
 export const corpusNameMapping = {
     "AMC": "Austrian Media Corpus",
     "ParlAT": "Corpus of Austrian Parliamentary Records"
