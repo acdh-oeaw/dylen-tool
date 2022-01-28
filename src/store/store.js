@@ -188,6 +188,11 @@ const mainModule = {
         else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
+        if (network.edges.length === 0)
+        state[pane].noEdgesInNetwork = true;
+        else
+        state[pane].noEdgesInNetwork = false;
+
         const payload = {
           pane: pane,
           network: network
@@ -242,6 +247,11 @@ const mainModule = {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
         else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
+
+          if (network.edges.length === 0)
+          state[pane].noEdgesInNetwork = true;
+          else
+          state[pane].noEdgesInNetwork = false;
 
         const payload = {
           pane: pane,
@@ -357,6 +367,11 @@ const mainModule = {
         else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
+          if (updatedNetwork.edges.length === 0)
+          state[pane].noEdgesInNetwork = true;
+          else
+          state[pane].noEdgesInNetwork = false;
+
         logger.log('Network %s updated successfully.', networkID);
 
         this.commit('main/updateGeneralNetwork', { networkObj: updatedNetwork, pane: pane });
@@ -401,6 +416,11 @@ const mainModule = {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
         else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
+
+          if (updatedNetwork.edges.length === 0)
+          state[pane].noEdgesInNetwork = true;
+          else
+          state[pane].noEdgesInNetwork = false;
 
         logger.log('General Network %s updated successfully.', networkID);
 
@@ -574,7 +594,8 @@ const mainModule = {
       timeSeriesData: {},
       busy: false,
       errors: [],
-      timeoutWarning: NETWORK_SIZE_OK
+      timeoutWarning: NETWORK_SIZE_OK,
+      noEdgesInNetwork: false
     },
     pane2: {
       availableSpeakers: [],
@@ -602,7 +623,8 @@ const mainModule = {
       timeSeriesData: {},
       busy: false,
       errors: [],
-      timeoutWarning: NETWORK_SIZE_OK
+      timeoutWarning: NETWORK_SIZE_OK,
+      noEdgesInNetwork: false
     },
     nodeMetrics: {
       selectedNodes: []
@@ -851,7 +873,10 @@ const mainModule = {
     },
     setTimeoutWarning(state, { pane, value }) {
       state[pane].timeoutWarning = value;
-    }
+    },
+    setNoEdgesInNetwork(state, { pane, value }) {
+      state[pane].noEdgesInNetwork = value;
+    },
   },
   getters: {
     focusNode: (state) => {
@@ -901,7 +926,8 @@ const mainModule = {
     busyState: state => pane => state[pane].busy,
     parallelCoordinateMetrics: state => state.parallelCoordinateMetrics,
     targetWordNotFound: state => state.targetWordNotFound,
-    timeoutWarning: state => pane => state[pane].timeoutWarning
+    timeoutWarning: state => pane => state[pane].timeoutWarning,
+    noEdgesInNetwork: state => pane => state[pane].noEdgesInNetwork
   }
 };
 
