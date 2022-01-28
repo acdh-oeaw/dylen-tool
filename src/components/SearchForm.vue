@@ -151,10 +151,13 @@ export default {
       }
       return invalidChars;
     },
-    validateSearchTerm(val) {
+    resetError() {
       this.$store.commit('main/resetError', {
         pane: this.queryPane
       });
+    },
+    validateSearchTerm(val) {
+      this.resetError()
       let invalidChars = this.checkInvalidChars(val);
       if (invalidChars.length > 0) {
         this.$store.commit('main/addError', {pane: this.queryPane,error:"contains invalid character(s): '" + invalidChars.join(' ') + "'"})
@@ -299,6 +302,7 @@ export default {
             pane: this.queryPane
           });
         if (val && this.searchTerm && this.searchTerm.length > 0) {
+          this.resetError()
           this.$store.dispatch(
             'main/loadAutocompleteSuggestionsForNewSubCorpus',
             {
@@ -327,6 +331,7 @@ export default {
             pane: this.queryPane
           });
         if (val && this.searchTerm && this.searchTerm.length > 0) {
+          this.resetError()
           this.$store.dispatch(
             'main/loadAutocompleteSuggestionsForNewSubCorpus',
             {
