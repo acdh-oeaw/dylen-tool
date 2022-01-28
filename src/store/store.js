@@ -213,7 +213,7 @@ const mainModule = {
       function assignValuesFromState(network, networkID, possibleYears) {
         network.id = networkID;
         network.speaker = state[pane].generalNetworkSpeaker.form.selectedSpeaker;
-        network.party = partyMapping[state[pane].generalNetworkSpeaker.form.selectedParty];
+        network.party = state[pane].generalNetworkSpeaker.form.selectedParty;
         network.possibleYears = possibleYears.map(Number).sort();
         network.filter = {
           metric: state[pane].generalNetworkSpeaker.form.selectedMetric,
