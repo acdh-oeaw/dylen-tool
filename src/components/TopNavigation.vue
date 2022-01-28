@@ -30,28 +30,31 @@
                 style='max-width:100%;height:auto'
               />
             </b-navbar-brand>
-            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+            <b-navbar-toggle target='nav-collapse'></b-navbar-toggle>
             <b-collapse
               id="nav-collapse"
               is-nav
             >
               <b-navbar-nav>
                 <b-nav-item
-                  href="#"
+                  href='#'
                   :class='this.typeOfNetwork === EGO_NETWORK ? "selected" : "notselected"'
                   @click='onTypeOfNetworkSelect(EGO_NETWORK)'
+                  data-sauto-id='ego-network-tab'
                 >Ego Network
                 </b-nav-item>
                 <b-nav-item
                   :class='this.typeOfNetwork === GENERAL_PARTY ? "selected" : "notselected"'
-                  href="#"
+                  href='#'
                   @click='onTypeOfNetworkSelect(GENERAL_PARTY)'
+                  data-sauto-id='general-network-tab'
                 >General Network (Party)
                 </b-nav-item>
                 <b-nav-item
                   :class='this.typeOfNetwork === GENERAL_SPEAKER ? "selected" : "notselected"'
                   href="#"
                   @click='onTypeOfNetworkSelect(GENERAL_SPEAKER)'
+                  data-sauto-id='general-network-speaker-tab'
                 >General Network (Speaker)
                 </b-nav-item>
               </b-navbar-nav>
@@ -82,6 +85,7 @@
                   class='custom-class'
                   style='color:white; margin-right: 0;'
                 ></info-icon>
+
               </b-button>
               <setting
                 class='px-0 mx-0'
@@ -145,9 +149,11 @@ export default {
   border-bottom: solid thick;
   border-bottom-color: lightgrey;
 }
+
 .dysen {
   color: white;
 }
+
 .nav-item.dysen .nav-link:hover,
 .nav-item.dysen .nav-link:focus,
 .nav-item.dysen .nav-link {

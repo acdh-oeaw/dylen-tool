@@ -4,7 +4,7 @@
       block
       type='submit'
       variant='info'
-      :data-sauto-id='"queryButton-"+this.queryPane'
+      :data-sauto-id='"queryButton-"+type+"-"+this.queryPane'
       :disabled='!queryButtonActive'
       @click='setShowInfo'
   >
@@ -17,7 +17,10 @@
 </template>
 
 <script>
+import { networkTypeMixin } from '@/helpers/mixins';
+
 export default {
+  mixins: [networkTypeMixin],
   name: "VisualizeButton",
   props: ['queryButtonActive', 'queryPane'],
   computed: {
@@ -32,7 +35,7 @@ export default {
           pane: this.queryPane
         });
       }
-    }
+    },
   },
   methods: {
     setShowInfo() {
