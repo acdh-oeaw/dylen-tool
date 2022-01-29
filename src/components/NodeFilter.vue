@@ -83,7 +83,7 @@
 import { InfoIcon, AlertTriangleIcon } from 'vue-feather-icons';
 import Slider from '@vueform/slider/dist/slider.vue2.js';
 import { GENERAL_SPEAKER } from '@/helpers/mixins';
-
+const logger = require('../helpers/logger');
 export default {
   components: { InfoIcon, AlertTriangleIcon, Slider },
   name: 'NodeFilter',
@@ -135,7 +135,7 @@ export default {
               pane: this.pane
             });
           }
-          console.log('Set metric to: ' + val);
+          logger.log('Set metric to: ' + val);
         }
       }
     }

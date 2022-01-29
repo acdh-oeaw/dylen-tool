@@ -121,7 +121,7 @@
 <script>
 import VisualizeButton from '@/components/VisualizeButton';
 import ResetButton from '@/components/ResetButton';
-
+const logger = require('../helpers/logger');
 export default {
   name: 'SearchForm',
   components: { ResetButton, VisualizeButton },
@@ -145,7 +145,7 @@ export default {
       let invalidChars = [];
       for (let c of val) {
         if (c.match(/[1-9;:\s!@#$%^&*)(+=.,'"_]/)) {
-          console.log('contains invalid character.');
+          logger.log('contains invalid character.');
           invalidChars.push(c);
         }
       }
@@ -189,7 +189,7 @@ export default {
       return this.availableTargetwords.find((t) => t.text === this.searchTerm);
     },
     handleSearchTermSelect() {
-      console.log('handle searchterm select: ' + target);
+      logger.log('handle searchterm select: ' + target);
       const target = this.findSearchTermInAvailableTargetwords();
       this.$store.dispatch('main/loadTargetwordBySearchTerm', {
         pane: this.queryPane,
@@ -226,7 +226,7 @@ export default {
       this.$store.commit('main/resetTimeSeries', {
         pane: this.queryPane
       });
-      console.log('initialised');
+      logger.log('initialised');
     }
   },
   computed: {
@@ -245,7 +245,7 @@ export default {
       return !(this.availableTargetwords.length === 0 && this.searchTerm);
     },
     errors() {
-      console.log(
+      logger.log(
         'CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors
       );
       return this.$store.getters['main/getPane']('pane1').errors;

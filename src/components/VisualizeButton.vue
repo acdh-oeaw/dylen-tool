@@ -18,7 +18,7 @@
 
 <script>
 import { networkTypeMixin } from '@/helpers/mixins';
-
+const logger = require('../helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   name: "VisualizeButton",
@@ -29,7 +29,7 @@ export default {
         return this.$store.getters['main/busyState'](this.queryPane);
       },
       set(val) {
-        console.log('setting busy state: ' + val)
+        logger.log('setting busy state: ' + val)
         this.$store.commit('main/setBusyState', {
           busy: val,
           pane: this.queryPane

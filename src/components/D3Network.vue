@@ -105,7 +105,7 @@
 import * as d3 from 'd3';
 import { sauto_mixin } from '@/store/sauto';
 import { EGO_NETWORK, networkTypeMixin } from '@/helpers/mixins';
-
+const logger = require('../helpers/logger');
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options', 'pane'],
@@ -128,7 +128,7 @@ export default {
           title: 'Select as target word',
           value: () => ``,
           onClick: (d) => {
-            console.log('Select as target word:', d);
+            logger.log('Select as target word:', d);
             this.setWordAsSearchTerm(d);
           },
           networkType: EGO_NETWORK,
@@ -534,7 +534,7 @@ export default {
       this.applyScaleAndTransform();
     },
     updateSimulation() {
-      console.log('updating sim: ' + this.options.showClusters);
+      logger.log('updating sim: ' + this.options.showClusters);
       const options = this.options;
       const width = options.size.w;
       const height = options.size.h;

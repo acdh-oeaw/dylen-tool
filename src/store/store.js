@@ -292,7 +292,7 @@ const mainModule = {
           searchTerm: state[pane].autocompleteSuggestions[0]
         });
         state[pane].selectedTargetword = response.data.data.getTargetWordById;
-        console.log(state[pane].selectedTargetword);
+        logger.log(state[pane].selectedTargetword);
       }
       let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
@@ -364,7 +364,7 @@ const mainModule = {
         updatedNetwork.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
 
         filterBasedOnSlider(updatedNetwork);
-        console.log(state, pane, state[pane]);
+        logger.log(state, pane, state[pane]);
         if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
         else
@@ -725,7 +725,7 @@ const mainModule = {
       state[payload.pane].generalNetwork.selectedParty = payload.party;
     },
     changeSelectedMetric(state, payload) {
-      console.log('setting selected metic to: ' + payload.metric);
+      logger.log('setting selected metic to: ' + payload.metric);
       state[payload.pane].generalNetwork.selectedMetric = payload.metric;
     },
     changeAvailableSpeakers(state, payload) {
@@ -744,7 +744,7 @@ const mainModule = {
       state[payload.pane].generalNetworkSpeaker.loaded = false;
     },
     changeSelectedSubcorpus(state, payload) {
-      console.log('changing selected subcorpus');
+      logger.log('changing selected subcorpus');
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
       this.commit('main/changeSearchTerm', {
         searchTerm: state[payload.pane].searchTerm,
@@ -772,7 +772,7 @@ const mainModule = {
       state[payload.pane].errors = [];
     },
     changeSearchTerm(state, payload) {
-      console.log('changing searchterm: ' + payload.searchTerm);
+      logger.log('changing searchterm: ' + payload.searchTerm);
       if (payload.searchTerm) {
         state[payload.pane].searchTerm = payload.searchTerm;
         if (state[payload.pane].searchTerm.toLowerCase() !== state[payload.pane].selectedTargetword.text.toLowerCase()) {
@@ -827,11 +827,11 @@ const mainModule = {
       logger.log('Updated General Network for pane ' + payload.pane);
     },
     setAutocompleteSuggestions(state, payload) {
-      console.log('setting autocomplete');
+      logger.log('setting autocomplete');
       state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));
-      console.log('autosuggestions: ' + state[payload.pane].autocompleteSuggestions);
+      logger.log('autosuggestions: ' + state[payload.pane].autocompleteSuggestions);
       if (state[payload.pane].autocompleteSuggestions.length === 0 && state[payload.pane].searchTerm) {
-        console.log('not found');
+        logger.log('not found');
         this.commit('main/addError', {
           error: 'Keyword not found',
           pane: payload.pane
@@ -839,7 +839,7 @@ const mainModule = {
       }
     },
     setShowInfo(state, payload) {
-      console.log('setting showinfo button: ' + payload.showInfo);
+      logger.log('setting showinfo button: ' + payload.showInfo);
       state.showInfo = payload.showInfo;
     },
     setShowInfoButton(state, payload) {

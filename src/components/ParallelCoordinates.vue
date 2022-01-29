@@ -320,7 +320,7 @@ export default {
       ];
     },
     metrics() {
-      //console.log(this.selectedNodes);
+      //logger.log(this.selectedNodes);
       return this.$store.getters['main/parallelCoordinateMetrics']
         .filter((m) => m.enabled)
         .map((m) => m.name);
@@ -485,7 +485,7 @@ export default {
     },
     generateLine(node) {
       let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
-      //console.log(node, data);
+      //logger.log(node, data);
       return this.lineGenerator(data);
     },
 
