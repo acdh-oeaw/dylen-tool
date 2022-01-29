@@ -350,7 +350,7 @@ import AlertArea from '@/components/AlertArea';
 import { camelCaseToSpaces } from '@/helpers/utils';
 
 const { networkTypeMixin } = require('@/helpers/mixins');
-
+const logger = require('./helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   name: 'App',
