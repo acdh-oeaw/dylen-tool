@@ -64,7 +64,7 @@
     </b-toast>
   </div>
 </template>
-    
+
 <script>
 import {
   NETWORK_SIZE_SHOW_WARNING,
@@ -139,4 +139,3 @@ export default {
   }
 };
 </script>
-    
