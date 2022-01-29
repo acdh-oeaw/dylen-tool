@@ -21,7 +21,6 @@
             variant="info"
           >
             <b-navbar-brand
-              href="#"
               class='pr-3 pt-2'
               style='max-width:150px'
             >
