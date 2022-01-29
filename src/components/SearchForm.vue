@@ -70,7 +70,7 @@
                 v-model='searchTerm'
                 ref='selectTargetWord'
                 size='sm'
-                @keyup="handleSearchTermChange($event)"
+                @input.native="handleSearchTermChange($event)"
                 :data-sauto-id="'selectTargetword-'+this.pane"
                 :list='`datalist-${pane}`'
                 :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
@@ -181,7 +181,8 @@ export default {
       return this.availableTargetwords.find((t) => t.text === searchTerm && t.pos === this.currentPos);
     },
     handleSearchTermChange(event) {
-      if (event.key) {
+      console.debug('handling event: ' +  event)
+      if (event.inputType === "insertText") {
         if (this.errors.size === 0) {
           this.$store.dispatch('main/loadAutocompleteSuggestions', { pane: this.queryPane, searchTerm: this.searchTerm}).then(response => {
             this.$store.dispatch('main/setAutocompleteSuggestions', {
