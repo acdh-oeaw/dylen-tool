@@ -62,7 +62,7 @@
               <b-navbar-nav class='ml-auto mr-3'>
                 <b-nav-text class='d-inline-flex flex-column'>
                   <span class='mr-2 dysen'>
-                    Check our our sister project <br> for sentiment analysis: <a
+                    Check out our sister project <br> for sentiment analysis: <a
                       href="https://dysen-tool.acdh.oeaw.ac.at"
                       target="_blank"
                       data-sauto-id='dysen-link'

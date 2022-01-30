@@ -50,23 +50,23 @@
                               :img-src="require('../assets/info/ego.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="General Network - (Party)"
+                              caption="General Network (Party)"
                               text="Explore lexemes used by political parties in the Austrian Parliament"
                               :img-src="require('../assets/info/general.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="General Network - (Speaker)"
+                              caption="General Network (Speaker)"
                               text="Explore lexemes used by individual speakers in the Austrian Parliament"
                               :img-src="require('../assets/info/speaker.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="Node Metrics"
+                              caption="Node Metrics Comparison"
                               text="Compare nodes according to frequency and network metrcs"
                               :img-src="require('../assets/info/parallel.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="Times Series"
-                              text="Track frequency/similarity changes of network over time"
+                              caption="Times Series Analysis"
+                              text="Track frequency/similarity changes over time"
                               :img-src="require('../assets/info/timeseries.png')"
                           ></b-carousel-slide>
                         </div>
@@ -163,8 +163,9 @@
                                   <li>Der Standard</li>
                                 </ul>
                                 <h5>Corpus of Austrian Parliamentary Records (ParlAT)</h5>
-                                The ParlAT corpus covers the Austrian parliamentary records since 1996 with
-                                more than 75 million tokens. DYLEN Tool includes material up to 2017.
+                                The ParlAT Corpus contains the parliamentary records of the National Chamber (Nationalrat) – one of two chambers of the Austrian parliament. <br>
+                                The ParlAT covers the official shorthand transcripts from 1996 – 2017 and contains more than 75 million tokens. <br>
+                                Besides being linguistically annotated (part-of-speech tagged and lemmatized), the corpus also contains semantic annotations for example all speakers are identified and marked up.
                               </b-card-text>
                             </b-card-body>
                           </b-collapse>
@@ -195,15 +196,20 @@
                         Use Ego Network to..
                       </span>
                       <span slot='use-case-content'>
-                        investigate the meaning/usage of words and how they develop.<br>
+                        <p>
+                        ...investigate the meaning/usage of words and how they develop.<br>
+                        </p>
 
-                        The Ego Network visualization could be used to gain insights into following questions.
+                        <p>
+                        The Ego Network visualization could be used to answer following question.
+                        </p>
+
                         <ul>
-                          <li>Does a word have different meaning/usage?</li> - click on <code>show clusters</code> checkbox.
+                          <li>Does a word have different meaning/usage? - click on <code>show clusters</code> checkbox.</li>
                           <li>Which meaning of the word was pre-dominant in a given year - number of nodes in a cluster / sizes of the nodes. </li>
                           <li>How did the meaning of the word 'stationär' changed? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word</li>
                           <li>How does the word usage 'Klima (noun)' and 'Klima (pronoun)' - Compare two networks in parallel</li>
-                          <li>Which words have strong similarities? - Strength of edges</li>
+                          <li>Which of the surrounding words have strong similarities? - Strength of edges</li>
                         </ul>
                       </span>
                       <span slot='guide-header'>
@@ -347,17 +353,17 @@
                       <span slot='guide-content'>
                         <h5><u>Parallel Coordinates</u></h5>
                         <p>
-                          The DYLEN Parallel coordinates visualization is able to display node metrics of all nodes from two different networks.
+                          The DYLEN Parallel Coordinates visualization allows you to display node metrics of all nodes from up to two different networks.
                         </p>
 
                         <h6><b>Axes</b></h6>
                         <ul>
                           <li>
-                            <code>x-axis</code> represents name of different node metrics, while the <code>y-axis</code> shows the metric values.
+                            The <code>x-axis</code> represents the names of different node metrics, the <code>y-axis</code> shows their values.
                           </li>
                           <li>
-                            5 from 10 available node metrics are visualized as default, more metrics can be added by clicking on the <code>settings</code> icon <b-icon
-                              icon='gear'></b-icon> and enabling the metrics from the <code>Axes to display</code> section. You can also change the order of the axes from settings
+                            5 of 10 available node metrics are visualized by default, more metrics can be added by clicking on the <code>settings</code> icon <b-icon
+                              icon='gear'></b-icon> and enabling the metrics from the <code>Metrics to display</code> section. You can also change the order of the axes from settings
                           </li>
                         </ul>
 
@@ -367,29 +373,28 @@
                         </p>
                         <h6><b>Node Labels</b></h6>
                         <p>
-                          The node labels are shown on the left and right side of the chart, overlapping words(words having the same/similar metric value on the first/last axis ) are displayed as <code>*</code>, the actual word can be viewed by hovering over the <code>*</code> character
+                          The node labels are shown on the left and right side of the chart, overlapping words (words with the same/similar metric value on the first/last axis ) are displayed as <code>*</code>,
+                          the actual word can be viewed by hovering over the <code>*</code> character,
                         </p>
                         <h6><b>Select/Deselect nodes</b></h6>
                         <p>
                           Sometimes the number of nodes can make interpretation of parallel coordinates difficult. <br>
-                          You can use the <code>deselect all</code> button to remove all nodes and manually selecting the nodes to be shown
-                          from the <code>Network visualization</code> or from the <code>Table view</code><br>
+                          You can use the <code>deselect all</code> button to remove all nodes and manually select the nodes to be shown
+                          from the <code>Network Visualization</code> or from the <code>Table View</code><br>
                           Individual nodes can be removed from the chart by clicking on the <code>'x'</code> icon, which appears when you hover over the node label.
                         </p>
                         <h6><b>Interactivity with Network Visualization</b></h6>
                         <p>
-                          <code>Network visualization</code> and <code>Node metrics comparison</code> components share the same data. <br>
-                          When you hover over the lines in the <code>Parallel coordinates</code>, corresponding node and its neighbors will be emphasized in the <code>Network visualization</code> and vice versa.
+                          The <code>Network Visualization</code> and <code>Node Metrics Comparison</code> components share the same data. <br>
+                          When you hover over the lines in the <code>Parallel Coordinates</code>, the corresponding node and its neighbors will be emphasized in the <code>Network Visualization</code> and vice versa.
                         </p>
                       </span>
                       <span slot='details-header'>Technical details</span>
                       <span slot='details-content'>
                         <a
                             href='https://en.wikipedia.org/wiki/Parallel_coordinates'
-                            target='_blank'>Parallel coordinates</a> is used to visualise scores of different metrics for selected nodes, x-axis represents different network
-                        metrics, while the y-axis show the scores.<br>
-                        We assume the values to be significant when comparing the scores for different nodes within one chosen
-                        metric.<br>
+                            target='_blank'>Parallel coordinates</a> are used to visualize scores of different metrics for selected nodes, the x-axis provides the names of various node metrics, the y-axis
+                            shows their values.<br>
                         <br>
                         Network metrics used are as follows:
                         <ul>
@@ -455,7 +460,7 @@
                                   target='_blank'
                               >pagerank</a>
                             </b> - is a variant of eigenvector centrality; the underlying
-                            assumption is that a node is only as important as the nodes that link to it.
+                            assumption is that a node is as important as the combined importance of the nodes that link to it.
                           </li>
                           <li>
                             <b>
@@ -473,7 +478,7 @@
                 </b-row>
               </b-tab>
               <b-tab
-                  title='Time Series Analysis'
+                  title='What is Time Series Analysis'
                   @click='onTabClick'
                   data-sauto-id='info-tab-content'
               >
@@ -482,42 +487,46 @@
                     <info-collapsable name='timeseries'>
                       <span slot='definition'>Description</span>
                       <span slot='definition-content'>
-                        <b>Time series analysis</b> allows us to track the change over time. <br>
-                        Each graph indicates the diachronic development of a given target word according to the frequency
-                        change or to one of the similarity measures. See <code>Technical details</code> section for detailed descriptions of each of the measures<br>
+                        <b>Time Series Analysis</b> allows you to track changes over time. <br>
+                        Each graph indicates the diachronic development of a given target word according to frequency changes or measures of similarity.
+                        See the <code>Technical details</code> section below for detailed descriptions of each of the measures<br>
                       </span>
-                      <span slot='use-case-header'>Use Time series analysis for..</span>
-                      <span slot='use-case-content'></span>
+                      <span slot='use-case-header'>Use Time series analysis for...</span>
+                      <span slot='use-case-content'>
+                        ... tracking changes in frequency and meaning/usage over time.
+                        <br>
+                        Use Table View to download the data for further analysis.
+                      </span>
                       <span slot='guide-header'>How to use Time series analysis</span>
                       <span slot='guide-content'>
                         <p>
-                          The DYLEN Time series Analysis component visualizes the change of (absolute) difference in the values of selected metrics to a specific target year.
+                          The Time series Analysis component visualizes the development of (absolute) differences between the values of selected metrics and a specific reference year.
                         </p>
                         <ol>
-                          <li>Select the metric you want to visualize from the <code>Metric dropdown selector</code></li>
-                          <li>Select the year you want to compare the metrics to.</li>
+                          <li>Select the metric you would like to visualize from the <code>metric dropdown menu</code></li>
+                          <li>Select the year you would like to compare the metrics to (first year, last year, previous year).</li>
                         </ol>
 
                         <h6>Axes</h6>
-                        x-axis shows the years, while y-axis shows the value of the selected metrics
+                        The years are displayed on the x-axis, the y-axis shows the values of the selected metrics.
 
                       </span>
                       <span slot='details-header'>Technical details</span>
                       <span slot='details-content'>
                         <p>
                         Each measure provides a single score by comparing data from two time periods, and thus produces three
-                        time series graphs depending on which time periods and in what order are compared. <br>
-                        The first perspective is to compare each subsequent year to the previous one, second - each subsequent
+                        time series graphs depending on which years are compared and in what order. <br>
+                        The first perspective is to compare each consecutive year to the previous one, second - each consecutive
                         year to the first year,
                         and third - each subsequent year to the last year. <br>
-                        Only the similarity score based on network embeddings
-                        doesn't follow the procedure described above. Instead of providing point-wise comparison, this measure
+                        Only the similarity score based on network embedding does not
+                        follow the procedure described above. Instead of providing point-wise comparisons, this measure
                         adopts a cumulative strategy. The idea behind the cumulative approach is that semantic similarity is
                         defined not by a single previous year, but by all previous time periods.
                       </p>
                       <p>
-                        All similarity scores are based on the network representation of a target word in different time
-                        periods. Some of the measures make use only of network nodes lists (not the network itself), however
+                        All similarity scores are based on the network representation of a target word in different years.
+                        Some of the measures make use only of network nodes lists (not the network itself), however
                         the
                         set of nodes is also influenced by the network structure. To interpret similarity measures one can
                         assume that a high value suggests that the context of a word has not changed much, while a low value
@@ -553,8 +562,8 @@
                         <li>
                           <b>Frobenius similarity:</b> this measure is computed by taking the Frobenius norm [1] of a matrix
                           obtained
-                          as a difference between adjacency matrices of target word networks in two years. Adjacency matrices
-                          are pre-processed to represent the union of nodes of two time slices. The score doesn't have a fixed
+                          as the difference between adjacency matrices of target word networks in two years. Adjacency matrices
+                          are pre-processed to represent the union of nodes of two time slices. The score does not have a fixed
                           range.
                         </li>
                         <li>
@@ -562,7 +571,7 @@
                           models
                           of networks of subsequent years. Node embeddings are obtained by the node2vec algorithm described in
                           [2]. The score between two years is computed by averaging node embeddings to represent a network and
-                          taking cosine similarity between obtained network vectors. The score ranges from 0 to 1.
+                          taking cosine similarity between the obtained network vectors. The score ranges from 0 to 1.
                         </li>
                         <br>
                         <h6><b>References</b></h6>
