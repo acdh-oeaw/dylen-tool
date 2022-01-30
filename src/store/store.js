@@ -31,7 +31,7 @@ import { getEgoNetworkTimeSeries, getGeneralTimeSeries } from '@/helpers/api_cli
 import { compare } from '@/helpers/utils';
 import { GENERAL_PARTY } from '@/helpers/mixins';
 import { NETWORK_SIZE_OK, NETWORK_SIZE_SHOW_WARNING } from '@/helpers/mixins';
-import {sauto_mixin, sautoModule} from '@/store/sauto';
+import { sauto_mixin, sautoModule } from '@/store/sauto';
 
 Vue.component('b-spinner', BSpinner);
 
@@ -189,12 +189,13 @@ const mainModule = {
         assignValuesFromState(network, networkID, years);
         filterBasedOnSlider(network);
 
-        if (network.nodes.length > 1000 || network.edges.length > 1000)
+        if (network.nodes.length > 1000 || network.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', { slidValMin, slidValMax });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-        state[pane].noEdgesInNetwork = network.edges.length === 0
+        state[pane].noEdgesInNetwork = network.edges.length === 0;
 
         const payload = {
           pane: pane,
@@ -246,14 +247,15 @@ const mainModule = {
         network.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
         filterBasedOnSlider(network);
 
-        if (network.nodes.length > 1000 || network.edges.length > 1000)
+        if (network.nodes.length > 1000 || network.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', { slidValMin, slidValMax });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-          if (network.edges.length === 0)
+        if (network.edges.length === 0)
           state[pane].noEdgesInNetwork = true;
-          else
+        else
           state[pane].noEdgesInNetwork = false;
 
         const payload = {
@@ -365,14 +367,18 @@ const mainModule = {
 
         filterBasedOnSlider(updatedNetwork);
         logger.log(state, pane, state[pane]);
-        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
+        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', {
+            slidValMin: oldNetwork.filter.valueMin,
+            slidValMax: oldNetwork.filter.valueMax
+          });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-          if (updatedNetwork.edges.length === 0)
+        if (updatedNetwork.edges.length === 0)
           state[pane].noEdgesInNetwork = true;
-          else
+        else
           state[pane].noEdgesInNetwork = false;
 
         logger.log('Network %s updated successfully.', networkID);
@@ -415,14 +421,18 @@ const mainModule = {
         updatedNetwork.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
         filterBasedOnSlider(updatedNetwork);
 
-        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
+        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', {
+            slidValMin: oldNetwork.filter.valueMin,
+            slidValMax: oldNetwork.filter.valueMax
+          });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-          if (updatedNetwork.edges.length === 0)
+        if (updatedNetwork.edges.length === 0)
           state[pane].noEdgesInNetwork = true;
-          else
+        else
           state[pane].noEdgesInNetwork = false;
 
         logger.log('General Network %s updated successfully.', networkID);
@@ -437,33 +447,37 @@ const mainModule = {
       this.commit('main/setSelectedSpeakerParty', payload);
       this.dispatch('main/loadAvailableSpeakers', payload);
     },
-    async loadAutocompleteSuggestions({ state }, { pane, searchTerm, commit }) {
-      let oldSearchTerm = state[pane].searchTerm;
-      let oldSuggestions = state[pane].autocompleteSuggestions;
-      if (searchTerm)
-        state[pane].searchTerm = searchTerm;
-      const suggestionsResponse = await axios.post(graphqlEndpoint,
-        getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
-      this.commit('main/setAutocompleteSuggestions', {
-        suggestions: suggestionsResponse.data.data.getAutocompleteSuggestions,
-        pane: pane
-      });
-      if (commit) {
-        let matchingSuggestion = state[pane].autocompleteSuggestions.find(s => s.text == state[pane].searchTerm);
-        if (state[pane].autocompleteSuggestions.length === 0 || !matchingSuggestion) {
-          state[pane].searchTerm = oldSearchTerm;
-          state[pane].autocompleteSuggestions = oldSuggestions;
-          state.targetWordNotFound = true;
-        } else {
-          let response = await this.dispatch('main/loadTargetwordBySearchTerm', {
-            pane: pane,
-            searchTerm: matchingSuggestion
-          });
-          state[pane].selectedTargetword = response.data.data.getTargetWordById;
-          await Promise.all([this.dispatch('main/loadEgoNetwork', pane), this.dispatch('main/loadTimeSeriesData', pane)]);
-        }
+    async changeSearchTerm({ commit }, {searchTerm, pane}) {
+      console.debug('changing searchterm: ' + searchTerm);
+      let termToSearch = searchTerm ? searchTerm : ''
+
+      commit('changeSearchTerm', {pane: pane, searchTerm: termToSearch})
+      return termToSearch
+    },
+    async selectSurroundingWordAsTargetword({commit, dispatch}, {pane, searchTerm}) {
+      console.log(searchTerm)
+      let suggestionResponse = await dispatch('loadAutocompleteSuggestions', { pane: pane, searchTerm: searchTerm})
+      let suggestions = suggestionResponse.data.data.getAutocompleteSuggestions
+      let matchingSuggestion = suggestions.find(s => s.text == searchTerm);
+      if (suggestions.length === 0 || !matchingSuggestion) {
+        commit('setTargetWordNotFound', true)
+      } else {
+        let response = await dispatch('loadTargetwordBySearchTerm', {pane: pane, searchTerm: matchingSuggestion});
+        await Promise.all([dispatch('loadEgoNetwork', pane), dispatch('main/loadTimeSeriesData', pane)]);
+        commit("changeSearchTerm", {searchTerm: searchTerm, pane: pane})
+        commit('changeSelectedTargetword', {pane: pane, targetword: response.data.data.getTargetWordById})
       }
     },
+    async setAutocompleteSuggestions({commit}, payload) {
+      commit('setAutocompleteSuggestions', payload)
+    },
+    async loadAutocompleteSuggestions({ state }, payload) {
+      console.log('loading autocomplete suggestions...')
+      let searchTerm = payload.searchTerm ? payload.searchTerm : state[payload.pane].searchTerm
+      return axios.post(graphqlEndpoint,
+          getAutocompleteSuggestionsQuery(state[payload.pane].selectedCorpus.id, state[payload.pane].selectedSubcorpus.id, searchTerm));
+    },
+      //TODO Refactor this method with loadAutocompleteSuggestions
     async loadAutocompleteSuggestionsForNewSubCorpus({ state, dispatch }, { pane }) {
       const suggestionsResponse = await axios.post(graphqlEndpoint,
         getAutocompleteSuggestionsQuery(state[pane].selectedCorpus.id, state[pane].selectedSubcorpus.id, state[pane].searchTerm));
@@ -513,15 +527,15 @@ const mainModule = {
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
     },
-    async loadTargetwordBySearchTerm(state, payload) {
+    async loadTargetwordBySearchTerm({commit}, {searchTerm, pane}) {
       let searchTermId = '';
-      if (payload.searchTerm) {
-        searchTermId = payload.searchTerm.id;
+      if (searchTerm) {
+        searchTermId = searchTerm.id;
       }
-      const response = await axios.post(graphqlEndpoint,
-        getTargetWordByIdQuery(searchTermId));
-      this.commit('main/changeSelectedTargetword', {
-        pane: payload.pane,
+      if(!searchTermId) console.warn('Empty searchTermId: ' +  searchTermId)
+      const response = await axios.post(graphqlEndpoint, getTargetWordByIdQuery(searchTermId));
+      commit('changeSelectedTargetword', {
+        pane: pane,
         targetword: response.data.data.getTargetWordById
       });
 
@@ -555,8 +569,6 @@ const mainModule = {
         logger.error(error);
       }
     }
-
-
   },
   namespaced: true,
   state: {
@@ -746,21 +758,21 @@ const mainModule = {
     changeSelectedSubcorpus(state, payload) {
       logger.log('changing selected subcorpus');
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
-      this.commit('main/changeSearchTerm', {
+      this.dispatch('main/changeSearchTerm', {
         searchTerm: state[payload.pane].searchTerm,
         pane: payload.pane
       });
     },
-    changeSelectedTargetword(state, payload) {
+    changeSelectedTargetword(state, {pane, targetword}) {
       let selectedYearPayload = {
-        pane: payload.pane,
+        pane: pane,
         reset: false
       };
-      if (payload.targetword) {
-        state[payload.pane].selectedTargetword = payload.targetword;
-        state[payload.pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
+      if (targetword) {
+        state[pane].selectedTargetword = targetword;
+        state[pane].selectedTargetword.networks.sort((a, b) => a.year - b.year);
       } else {
-        state[payload.pane].selectedTargetword = { id: '', text: '' };
+        state[pane].selectedTargetword = { id: '', text: '' };
         selectedYearPayload.reset = true;
       }
       this.commit('main/changeSelectedYear', selectedYearPayload);
@@ -771,16 +783,9 @@ const mainModule = {
     resetError(state, payload) {
       state[payload.pane].errors = [];
     },
-    changeSearchTerm(state, payload) {
-      logger.log('changing searchterm: ' + payload.searchTerm);
-      if (payload.searchTerm) {
-        state[payload.pane].searchTerm = payload.searchTerm;
-        if (state[payload.pane].searchTerm.toLowerCase() !== state[payload.pane].selectedTargetword.text.toLowerCase()) {
-          this.dispatch('main/loadAutocompleteSuggestions', { pane: payload.pane });
-        }
-      } else {
-        state[payload.pane].searchTerm = ''; //state.availableTargetwordsByCorpusAndSource[state[payload.pane].selectedCorpus][state[payload.pane].selectedSubcorpus][0];
-      }
+    changeSearchTerm(state, {searchTerm, pane}) {
+      logger.log('changing searchterm: ' + searchTerm);
+      state[pane].searchTerm = searchTerm ? searchTerm : ''
     },
     changeSelectedYear(state, payload) {
       if (payload.year) {
@@ -826,16 +831,12 @@ const mainModule = {
       state[payload.pane].selectedNetwork = payload.networkObj;
       logger.log('Updated General Network for pane ' + payload.pane);
     },
-    setAutocompleteSuggestions(state, payload) {
-      logger.log('setting autocomplete');
-      state[payload.pane].autocompleteSuggestions = payload.suggestions.sort((a, b) => a.text.localeCompare(b.text));
-      logger.log('autosuggestions: ' + state[payload.pane].autocompleteSuggestions);
-      if (state[payload.pane].autocompleteSuggestions.length === 0 && state[payload.pane].searchTerm) {
-        logger.log('not found');
-        this.commit('main/addError', {
-          error: 'Keyword not found',
-          pane: payload.pane
-        });
+    setAutocompleteSuggestions(state, {pane, suggestions}) {
+      state[pane].autocompleteSuggestions = suggestions.sort((a, b) => a.text.localeCompare(b.text));
+      logger.log('autosuggestions: ' + state[pane].autocompleteSuggestions);
+      //TODO this should be in the component
+      if (state[pane].autocompleteSuggestions.length === 0 && state[pane].searchTerm) {
+        this.commit('main/addError', { error: 'Keyword not found', pane: pane});
       }
     },
     setShowInfo(state, payload) {
@@ -879,7 +880,7 @@ const mainModule = {
     },
     setNoEdgesInNetwork(state, { pane, value }) {
       state[pane].noEdgesInNetwork = value;
-    },
+    }
   },
   getters: {
     focusNode: (state) => {

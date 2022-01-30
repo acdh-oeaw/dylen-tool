@@ -158,6 +158,10 @@ export default {
       this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
     },
     initialize() {
+      this.$store.commit('main/setTimeoutWarning', {
+        pane: this.queryPane,
+        value: false
+      });
       this.$store.dispatch('main/resetGeneralNetworkSpeaker', {
         pane: this.queryPane,
         party: this.defaultParty,

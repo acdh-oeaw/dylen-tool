@@ -116,6 +116,10 @@ export default {
       });
     },
     initialize() {
+      this.$store.commit('main/setTimeoutWarning', {
+        pane: this.queryPane,
+        value: false
+      });
       this.selectedParty = "ÖVP"
 
       this.$store.dispatch('main/resetGeneralNetwork', {

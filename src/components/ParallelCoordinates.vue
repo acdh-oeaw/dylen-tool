@@ -175,7 +175,7 @@
         </g>
       </g>
       <g class='targetwordLabels'>
-        <g v-if="targetWordLabelLeft.text != ''">
+        <g v-if="targetWordLabelLeft.text !== ''">
           <text
             :y='svgPadding.top - 20'
             :x='2'
@@ -441,7 +441,7 @@ export default {
           return {
             text: this.$store.getters['main/selectedTargetword'](pane).text,
             year: this.$store.getters['main/selectedYear'](pane)?.year,
-            color: this.$store.getters['main/selectionColors'][0]
+            color: this.$store.getters['main/selectionColors'][pane==='pane1'? 0 : 1]
           };
         case GENERAL_PARTY:
           return {

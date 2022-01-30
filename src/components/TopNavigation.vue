@@ -21,12 +21,12 @@
             variant="info"
           >
             <b-navbar-brand
-              href="#"
               class='pr-3 pt-2'
               style='max-width:150px'
             >
               <img
                 src='@/assets/dylen_white.png'
+                alt='DYLEN Logo'
                 style='max-width:100%;height:auto'
               />
             </b-navbar-brand>
@@ -62,7 +62,7 @@
               <b-navbar-nav class='ml-auto mr-3'>
                 <b-nav-text class='d-inline-flex flex-column'>
                   <span class='mr-2 dysen'>
-                    Check our our sister project <br> for sentiment analysis: <a
+                    Check out our sister project <br> for sentiment analysis: <a
                       href="https://dysen-tool.acdh.oeaw.ac.at"
                       target="_blank"
                       data-sauto-id='dysen-link'
@@ -82,6 +82,7 @@
                 style='z-index: 1'
               >
                 <info-icon
+                  aria-label='Info button'
                   size='1.5x'
                   class='custom-class'
                   style='color:white; margin-right: 0;'

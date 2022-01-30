@@ -14,6 +14,7 @@
         >
           <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <info-icon
+                aria-label='Ego Network info button'
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
@@ -32,17 +33,17 @@
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
 
-            <NetworkGraph
+            <network-graph
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Ego'"
               ref='networkGraph1'
               pane='pane1'
             />
-            <NetworkGraphGeneral
+            <network-graph-general
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Party'"
               ref='networkGraph1'
               pane='pane1'
             />
-            <NetworkGraphSpeaker
+            <network-graph-speaker
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Speaker'"
               ref='networkGraph1'
               pane='pane1'
@@ -89,6 +90,7 @@
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
             <info-icon
+                aria-label='Parallel coordinates info button'
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
@@ -112,6 +114,7 @@
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
             <info-icon
                 size='1.2x'
+                aria-label='Time series info button'
                 class='custom-class info-button ts-info-button'
                 style='color:#17a2b8'
                 data-sauto-id='time-series-info-button'
