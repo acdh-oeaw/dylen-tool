@@ -31,7 +31,7 @@ import { getEgoNetworkTimeSeries, getGeneralTimeSeries } from '@/helpers/api_cli
 import { compare } from '@/helpers/utils';
 import { GENERAL_PARTY } from '@/helpers/mixins';
 import { NETWORK_SIZE_OK, NETWORK_SIZE_SHOW_WARNING } from '@/helpers/mixins';
-import {sauto_mixin, sautoModule} from '@/store/sauto';
+import { sauto_mixin, sautoModule } from '@/store/sauto';
 
 Vue.component('b-spinner', BSpinner);
 
@@ -189,12 +189,13 @@ const mainModule = {
         assignValuesFromState(network, networkID, years);
         filterBasedOnSlider(network);
 
-        if (network.nodes.length > 1000 || network.edges.length > 1000)
+        if (network.nodes.length > 1000 || network.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', { slidValMin, slidValMax });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-        state[pane].noEdgesInNetwork = network.edges.length === 0
+        state[pane].noEdgesInNetwork = network.edges.length === 0;
 
         const payload = {
           pane: pane,
@@ -246,14 +247,15 @@ const mainModule = {
         network.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
         filterBasedOnSlider(network);
 
-        if (network.nodes.length > 1000 || network.edges.length > 1000)
+        if (network.nodes.length > 1000 || network.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', { slidValMin, slidValMax });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-          if (network.edges.length === 0)
+        if (network.edges.length === 0)
           state[pane].noEdgesInNetwork = true;
-          else
+        else
           state[pane].noEdgesInNetwork = false;
 
         const payload = {
@@ -365,14 +367,18 @@ const mainModule = {
 
         filterBasedOnSlider(updatedNetwork);
         console.log(state, pane, state[pane]);
-        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
+        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', {
+            slidValMin: oldNetwork.filter.valueMin,
+            slidValMax: oldNetwork.filter.valueMax
+          });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-          if (updatedNetwork.edges.length === 0)
+        if (updatedNetwork.edges.length === 0)
           state[pane].noEdgesInNetwork = true;
-          else
+        else
           state[pane].noEdgesInNetwork = false;
 
         logger.log('Network %s updated successfully.', networkID);
@@ -415,14 +421,18 @@ const mainModule = {
         updatedNetwork.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
         filterBasedOnSlider(updatedNetwork);
 
-        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000)
+        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
-        else
+          this.dispatch('sauto/generalNetworkTimeout', {
+            slidValMin: oldNetwork.filter.valueMin,
+            slidValMax: oldNetwork.filter.valueMax
+          });
+        } else
           state[pane].timeoutWarning = NETWORK_SIZE_OK;
 
-          if (updatedNetwork.edges.length === 0)
+        if (updatedNetwork.edges.length === 0)
           state[pane].noEdgesInNetwork = true;
-          else
+        else
           state[pane].noEdgesInNetwork = false;
 
         logger.log('General Network %s updated successfully.', networkID);
@@ -879,7 +889,7 @@ const mainModule = {
     },
     setNoEdgesInNetwork(state, { pane, value }) {
       state[pane].noEdgesInNetwork = value;
-    },
+    }
   },
   getters: {
     focusNode: (state) => {
