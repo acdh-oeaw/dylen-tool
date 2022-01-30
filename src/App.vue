@@ -37,7 +37,11 @@
           >
             <query-bar></query-bar>
           </b-col>
-          <b-col class='h-100 overflow-hidden'>
+          <b-col
+            class='h-100 overflow-hidden'
+            xl='10'
+            md='9'
+          >
             <div
               class='h-100'
               data-sauto-id='results'
