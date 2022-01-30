@@ -46,27 +46,27 @@
                         <div style='color: black;'>
                           <b-carousel-slide
                               caption="Ego Network"
-                              text="Explore semantic neighborhood of a target word in a given time period"
+                              text="Explore the semantic neighborhood of a target word in different years"
                               :img-src="require('../assets/info/ego.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="General Network - Party"
-                              text="Explore most frequent lexemes used by political parties"
+                              caption="General Network - (Party)"
+                              text="Explore lexemes used by political parties in the Austrian Parliament"
                               :img-src="require('../assets/info/general.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="General Network - Politicians"
-                              text="Explore most frequent lexemes used by politicians"
+                              caption="General Network - (Speaker)"
+                              text="Explore lexemes used by individual speakers in the Austrian Parliament"
                               :img-src="require('../assets/info/speaker.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="Node Metrics"
-                              text="Visualize nodes based on their node metrics with Parallel Coordinates"
+                              text="Compare nodes according to frequency and network metrcs"
                               :img-src="require('../assets/info/parallel.png')"
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="Times series"
-                              text="Track changes of network over time"
+                              caption="Times Series"
+                              text="Track frequency/similarity changes of network over time"
                               :img-src="require('../assets/info/timeseries.png')"
                           ></b-carousel-slide>
                         </div>
@@ -92,38 +92,34 @@
                             <b-card-body>
                               <b-card-text class='text-left'>
                                 <p>
-                                  <b>DYLEN</b> Tool is an <b>interactive visualization tool</b>, which aims to help
-                                  users to gain insights to the dynamics of the Austrian German lexicon
-                                  in the last 20 years and to measure the semantic change of language, based on two
-                                  different corpora, the <b>Austrian Media Corpus (AMC)</b> and the <b>Corpus of
+                                  <b>DYLEN</b> Tool is an <b>interactive visualization tool</b>, which helps
+                                  users to gain insight into the dynamics of the Austrian German lexicon
+                                  over 20 years in the recent past and to measure semantic change, based on two
+                                  different text corpora, the <b>Austrian Media Corpus (AMC)</b> and the <b>Corpus of
                                   Austrian Parliamentary Records (ParlAT)</b>
                                 </p>
                                 <p>
                                 <h5>How to use DYLEN</h5>
                                 DYLEN provides visualizations of three different network types.<br>
                                 <ul>
-                                  <li><b>Ego Network:</b> This network type provides insights about semantic
-                                    neighborhood of a target word in a given time period.
+                                  <li><b>Ego Network:</b> This network type allows you to explore the semantic neighborhoods of target words in different years
                                   </li>
-                                  <li><b>General Network - Party:</b> Analysis the network of most frequent lexemes of a
-                                    political party
+                                  <li><b>General Network (Party):</b> This network type allows you to explore lexemes used by political parties in the Austrian Parliament
                                   </li>
-                                  <li><b>General Network - Politicians:</b> Analysis the network of most frequent
-                                    lexemes of a politicians
+                                  <li><b>General Network (Politicians):</b> This network type allows you to explore lexemes used by individual speakers in the Austrian Parliament.
                                   </li>
                                 </ul>
                                 <p>
-                                  You can <b>select the network type</b> you want to explore on the top of the
-                                  application.
+                                  Select the network type you would like to explore at the top of the tool.
                                 </p>
                                 <p>
-                                  Click on the corresponding tabs for more information of each network types and
-                                  different visualizations.<br>
+                                  Click on the corresponding tabs for more information on each network type and
+                                  different visualization options<br>
                                 </p>
                                 <p>
-                                  You can read more about the project here: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.<br>
+                                  Learn more about the project here:: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.<br>
                                 </p>
-                                Codes are available on following Github repositories:
+                                Code available on Github:
                                 <ul>
                                   <li>Frontend: <a href='https://github.com/acdh-oeaw/dylen-tool'>https://github.com/acdh-oeaw/dylen-tool</a>
                                   </li>
@@ -147,21 +143,17 @@
                                   <li><b>Austrian Media Corpus (AMC)</b></li>
                                   <li><b>Corpus of Austrian Parliamentary Records (ParlAT)</b></li>
                                 </ul>
-                                <h5>Austrian Media Corpus</h5>
-                                Austrian Media Corpus (AMC) covers the entire Austrian media landscape of the past 20
-                                years
-                                and contains 40 million texts (more than 10 billion tokens).<br>
-                                For DYLEN, AMC corpus was divided into multiple subcorpora, which are collection of
-                                articles
-                                from different Austrian newspapers and magazines in the years between 1996 and 2017<br>
-                                Some of the subcorpora are combination of different media sources, which are listed
-                                below;
+                                <h5>Austrian Media Corpus (AMC)</h5>
+                                AMC covers almost the entire Austrian print media landscape of the few decades,
+                                containing more than 40 million texts (more than 10 billion tokens).<br>
+                                For DYLEN, AMC was divided into multiple subcorpora, containing articles from different Austrian newspapers and magazines from 1996 to 2017<br>
+                                Some of the subcorpora available for visualizations represent combinations of various media sources:
                                 <ul>
                                   <li>All magazines</li>
                                   <li>All newspapers</li>
                                   <li>All magazines and newspapers</li>
                                 </ul>
-                                Following newspapers and magazines are available for visualizations.
+                                Other subcorpora available for visualizations represent individual publications:
                                 <ul>
                                   <li>Falter</li>
                                   <li>Kleine Zeitung</li>
@@ -171,8 +163,8 @@
                                   <li>Der Standard</li>
                                 </ul>
                                 <h5>Corpus of Austrian Parliamentary Records (ParlAT)</h5>
-                                The ParlAT corpus covers the Austrian parliamentary records of the last 20 years with
-                                more than 75 million tokens.
+                                The ParlAT corpus covers the Austrian parliamentary records since 1996 with
+                                more than 75 million tokens. DYLEN Tool includes material up to 2017.
                               </b-card-text>
                             </b-card-body>
                           </b-collapse>
@@ -193,45 +185,54 @@
                     <info-collapsable name='ego-network'>
                       <span slot='definition'>What is an Ego Network?</span>
                       <span slot='definition-content'>
-                        <p>Ego-network visualization of a selected target word provides information about its <b>semantic
-                        neighborhood</b> in a given time period.<br>
-                        Nodes are represented by <b>top-50 lexemes</b> that, according to the semantic model in use, are <b>semantically
-                        most relevant to a target word.</b> <br></p>
+                        <p>Ego network visualizations of a selected target word provide information about its <b>semantic
+                        neighborhood</b> in a given year<br>
+                        The nodes in the network represent the <b>top-50 lexemes</b> that are <b>semantically most closely related</b> to a target word according to the applied semantic model <br>
+                          Please have a look into the <code>Technical details</code> section for more information about the semantic model.
+                        </p>
                       </span>
                       <span slot='use-case-header'>
-                        Use Ego Network to answer..
+                        Use Ego Network to..
                       </span>
                       <span slot='use-case-content'>
+                        investigate the meaning/usage of words and how they develop.<br>
+
+                        The Ego Network visualization could be used to gain insights into following questions.
+                        <ul>
+                          <li>Does a word have different meaning/usage?</li> - click on <code>show clusters</code> checkbox.
+                          <li>Which meaning of the word was pre-dominant in a given year - number of nodes in a cluster / sizes of the nodes. </li>
+                          <li>How did the meaning of the word 'stationär' changed? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word</li>
+                          <li>How does the word usage 'Klima (noun)' and 'Klima (pronoun)' - Compare two networks in parallel</li>
+                          <li>Which words have strong similarities? - Strength of edges</li>
+                        </ul>
                       </span>
                       <span slot='guide-header'>
-                        How to interpret the visuliation
+                        How to use Ego Network
                       </span>
                       <span slot='guide-content'>
-                        <h5>How to use ego-network</h5>
                         <ol>
                           <li>
-                            Select <code>Ego Network</code> on the Top Navigation bar.
+                            Select <code>Ego Network</code> in the Top Navigation bar.
                           </li>
                           <li>
-                            Select a corpus dropdown selector. <br>
+                            Select a corpus from the corpus dropdown menu. <br>
                           </li>
                           <li>
-                            Select a subcorpus from the subcorpus dropdown selector
+                            Select a subcorpus from the subcorpus dropdown menu
                           </li>
                           <li>
                             Type a target word into the input field and select one of the autocomplete suggestions
                           </li>
-                          <li>Click on <code>Visualize</code></li>
+                          <li>Click <code>Visualize</code></li>
                         </ol>
-                        <h5>Ego-network interpretation guideline</h5>
+                        <h5>How to interpret ego networks</h5>
                         <ul>
-                          <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
-                            the targetword and the network visualisation would be too unnecessarily complex.
+                          <li>The target word itself is <b>not displayed</b> in the visualized ego network, since by definition every node in the network is connected to the target word by an edge.
                           </li>
-                          <li>The <b>size of nodes</b> represents word frequency</li>
-                          <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
-                          <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
-                          <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+                          <li>The <b>size of the nodes</b> represents word frequency</li>
+                          <li>The <b>thickness of the edges</b> represents the semantic similarity between nodes</li>
+                          <li>The <b>colors of the labels</b> represent different part-of-speech tags</li>
+                          <li>The <b>colors of the nodes</b> represent semantic clusters, which may sometimes be interpreted as polysemic meanings or distinct usage contexts, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
                         </ul>
                       </span>
                       <span slot='details-header'>Technical details</span>
@@ -244,18 +245,8 @@
                           The model is trained on the chosen corpus and it produces a word-vector correspondence based on
                           co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
                           determine the semantic similarity between pairs of words which is reflected in the strength of the
-                          connections between respective nodes.
+                          connections between respective the nodes.
                         </p>
-                        <p>
-                          For semantic modeling, we utilize a <b>distributional word
-                          embedding</b> model, namely a neural network
-                          based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. <br>
-                          The model is trained on the chosen corpus and it produces a word-vector correspondence based on
-                          co-occurrence statistics. <b>Cosine similarity</b> is further applied to vector representations to
-                          determine the semantic similarity between pairs of words which is reflected in the strength of the
-                          connections between respective nodes.<br><br>
-                        </p>
-
                       </span>
                     </info-collapsable>
                   </b-col>
@@ -273,53 +264,53 @@
                         What is a General Network?
                       </span>
                       <span slot='definition-content'>
-                        Network visualization of a selected parliament speaker or party provides information about their
-                        discourse topics in a given time period.<br>
-                        Nodes are represented by the <b>most frequent lexemes</b> that constitute the selected corpus of a
-                        speaker/party. <br>
+                        General network visualizations of a selected party or speaker in parliament provide information about their
+                        discourse topics in a given year.<br>
+                        The nodes in the network represent the <b>most frequent lexemes</b> in the subcorpus representing the speech of a selected party or speaker.<br>
                       </span>
                       <span slot='use-case-header'>
-                        Use general network to answer..
+                        Use General Network to..
                       </span>
-                      <span slot='use-case-content'></span>
-                      <span slot='guide-header'>How to use general network</span>
+                      <span slot='use-case-content'>
+                        investigate what speakers and parties in the Austrian Parliament talk about and how they talk about it.
+                      </span>
+                      <span slot='guide-header'>How to use General Network</span>
                       <span slot='guide-content'>
                         <ol>
                           <li>
-                            Select <code>General Network (Party)</code> or <code>General Network (Speaker)</code> on the Top Navigation bar.
+                            Select <code>General Network (Party)</code> or <code>General Network (Speaker)</code> inn the Top Navigation bar.
                           </li>
                           <li>
-                            Select a party from the drop down selector. <br>
+                            Select a party from the dropdown menu. <br>
                             (Only for <code>General Network (Speaker)</code>)
-                            Select a speaker from the drop down selector
+                            Select a speaker from the dropdown men
                           </li>
                           <li>
-                            (Optional) Select a <code>node filter metric</code> you want to use to filter the nodes from the dropdown selector <br>
+                            (Optional) Select a <code>Node Filter Metric</code> you want to use to filter the nodes from the dropdown menu <br>
                             General networks are very large in size, and visualizing the network is computationally expensive.<br>
-                            Node metric filter is used to select only specific number of nodes based on the selected metrics,
+                            The node metric filter is used to select only a specific number of nodes based on the selected metrics,
                             <code>degree centrality</code> is the default selection
                           </li>
                           <li>
-                            (Optional) Adjust the <code>node filter</code>. Too large span might cause long waiting time or even might freeze the browser.
+                            (Optional) Adjust the <code>Node Filter</code>. Too wide a range may cause long waiting times or might even freeze the browser.
                           </li>
-                          <li>Click on <code>Visualize</code></li>
+                          <li>Click <code>Visualize</code></li>
                         </ol>
-                          <h5>How to interpret the visualization</h5>
+                          <h5>How to interpret general networks</h5>
                             <ul>
-                              <li>The <b>size of nodes</b> represents word frequency</li>
-                              <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
-                              <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
+                              <li>The <b>size of the nodes</b> represents word frequency</li>
+                              <li>The <b>thickness of the edges</b> represents the semantic similarity between nodes</li>
+                              <li>The <b>colors of the labels</b> represent different part-of-speech tags</li>
                             </ul>
                       </span>
                       <span slot='details-header'>Technical details</span>
                       <span slot='details-content'>
-                        The strength of the connections between respective nodes is determined by a semantic model in use. <br>
                         For semantic modeling, we utilize a <b>distributional word embedding</b> model, namely a neural network
                         based <b>skip-gram with negative-sampling</b> architecture from a word2vec package. The model is trained
                         on the chosen corpus and it produces a word-vector correspondence based on co-occurrence statistics.
                         <br>
                         <b>Cosine similarity</b> is further applied to vector representations to determine the semantic
-                        similarity between pairs of words.
+                        similarity between pairs of words, whcih is reflected in the strength of the connections between the respective nodes.
                       </span>
                     </info-collapsable>
                   </b-col>
@@ -333,15 +324,25 @@
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
                     <info-collapsable name='node-metrics'>
-                      <span slot='definition'>Description</span>
+                      <span slot='definition'>What are Node Metrics?</span>
                       <span slot='definition-content'>
-                        A network is a set of nodes and edges, and chracteristics of nodes and edges can be described with different metrics.<br>
+                        A network is a structure consisting of of nodes and edges, and characteristics of nodes and edges can be described with different metrics.<br>
                         The <code>Node Metrics Comparison</code> component helps users to compare different networks based on <b>10 different node metrics</b>.
                         <br>
-                        Details of metrics used are described in the <b>Technical detail</b> section.
+                        Details on the metrics used are described in the <b>Technical details</b> below.
                       </span>
-                      <span slot='use-case-header'>Use Node Metrics Comaprison for..</span>
-                      <span slot='use-case-content'></span>
+                      <span slot='use-case-header'>Use Node Metrics Comparison for..</span>
+                      <span slot='use-case-content'>
+                        ... finding out which nodes are the most important in the structure of a network.
+                        <ul>
+                          <li>
+                            Which word has the most neighbors? - the node with the highest <code>degrees centrality</code>
+                          </li>
+                          <li>
+                            Are there overlapping words between two networks? - use table view and sort by word.
+                          </li>
+                        </ul>
+                      </span>
                       <span slot='guide-header'>How to use Node Metrics Comparison</span>
                       <span slot='guide-content'>
                         <h5><u>Parallel Coordinates</u></h5>
