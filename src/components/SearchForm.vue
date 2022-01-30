@@ -57,7 +57,7 @@
           </b-col>
         </b-row>
         <b-row xl='12'>
-          <b-col xl='12'>
+          <b-col xl='12' class='query'>
             <b-form-group
               id='select-targetword-group-biz'
               label='Targetword:'
@@ -67,23 +67,25 @@
               label-align-lg='left'
             >
               <b-form-input
+                v-model='searchTerm'
                 ref='selectTargetWord'
                 size='sm'
-                v-model='searchTerm'
                 :data-sauto-id="'selectTargetword-'+this.pane"
                 :list='`datalist-${pane}`'
                 :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
-                @change='handleSearchTermSelect'
                 @keypress='e => this.keyPress(e,"selectTargetWord")'
                 autocomplete='off'
               ></b-form-input>
+              <div v-for="error in errors" :key="error">
+                <b-alert show variant='danger'>{{error}}</b-alert>
+              </div>
+
               <datalist :id='`datalist-${pane}`'>
                 <option
                   v-for='option in availableTargetwords.filter(() => showSuggestions)'
                   v-bind:key='option.text + option.pos'
-                  v-bind:value='option.text'
+                  v-bind:value='option.text + " (" + option.pos + ")"'
                 >
-                  {{ option.text + ' (' + option.pos.replace("_", " ") + ')' }}
                 </option>
               </datalist>
             </b-form-group>
@@ -125,15 +127,11 @@ import ResetButton from '@/components/ResetButton';
 export default {
   name: 'SearchForm',
   components: { ResetButton, VisualizeButton },
-  props: ['isSidebar', 'pane', 'withLabels'],
+  props: ['pane'],
   data() {
     return {
-      corpusEdit: false,
-      subcorpusEdit: false,
-      targetwordEdit: false,
-      yearEdit: false,
-      searchTermSelected: false
-    };
+      currentPos: ''
+    }
   },
   mounted() {
     this.$root.$on('networkTypeChanged', () => {
@@ -151,32 +149,25 @@ export default {
       }
       return invalidChars;
     },
-    validateSearchTerm(val) {
+    resetError() {
       this.$store.commit('main/resetError', {
         pane: this.queryPane
       });
+    },
+    validateSearchTerm(val) {
       let invalidChars = this.checkInvalidChars(val);
       if (invalidChars.length > 0) {
-        this.$store.commit('main/addError', {
-          error:
-            "contains invalid character(s): '" + invalidChars.join(' ') + "'",
-          pane: this.queryPane
-        });
-      } else {
-        if (this.errors.length === 0) {
-          this.$store.commit('main/changeSearchTerm', {
-            searchTerm: val,
-            pane: this.queryPane
-          });
-        }
+        this.$store.commit('main/addError', {pane: this.queryPane,error:"contains invalid character(s): '" + invalidChars.join(' ') + "'"})
       }
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/loadEgoNetwork', this.queryPane).then(() => {
+        //TODO: make events as constants
         this.$emit('visualizeClicked');
       });
       this.$store.dispatch('main/loadTimeSeriesData', this.queryPane);
+
       let settingsComponent = this.$store.getters['main/activeSettings'];
       if (!settingsComponent) {
         this.$store.commit('main/changeActiveSettings', {
@@ -185,23 +176,33 @@ export default {
         });
       }
     },
-    findSearchTermInAvailableTargetwords() {
-      return this.availableTargetwords.find((t) => t.text === this.searchTerm);
+    findSearchTermInAvailableTargetwords(searchTerm) {
+      return this.availableTargetwords.find((t) => t.text === searchTerm && t.pos === this.currentPos);
     },
-    handleSearchTermSelect() {
-      console.log('handle searchterm select: ' + target);
-      const target = this.findSearchTermInAvailableTargetwords();
+    handleDatalistSelection() {
+      let matchedSuggestion = this.findSearchTermInAvailableTargetwords(this.searchTerm);
       this.$store.dispatch('main/loadTargetwordBySearchTerm', {
         pane: this.queryPane,
-        searchTerm: target
+        searchTerm: matchedSuggestion
+      }).then(() => {
+        let matchedIndex = this.availableTargetwords.indexOf(matchedSuggestion)
+        this.availableTargetwords.splice(matchedIndex, 1)
+        this.$store.dispatch('main/setAutocompleteSuggestions', {
+          suggestions: [matchedSuggestion],
+          pane: this.queryPane
+        })
       });
-
-      const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
-      const event = {
-        clientX: rect.x,
-        clientY: rect.y
-      };
-      this.mouseClick(event, 'selectTargetWord-option');
+      this.sautoTargetWordSelectedEvent();
+    },
+    handleInput() {
+      if (this.errors.size === 0) {
+        this.$store.dispatch('main/loadAutocompleteSuggestions', { pane: this.queryPane, searchTerm: this.searchTerm}).then(response => {
+          this.$store.dispatch('main/setAutocompleteSuggestions', {
+            suggestions: response.data.data.getAutocompleteSuggestions,
+            pane: this.queryPane
+          })
+        })
+      }
     },
     initialize() {
       this.$store.commit('main/changeSelectedCorpus', {
@@ -212,7 +213,7 @@ export default {
         subcorpus: null,
         pane: this.queryPane
       });
-      this.$store.commit('main/changeSearchTerm', {
+      this.$store.dispatch('main/changeSearchTerm', {
         searchTerm: null,
         pane: this.queryPane
       });
@@ -227,6 +228,25 @@ export default {
         pane: this.queryPane
       });
       console.log('initialised');
+    },
+    splitTermAndPos: function (val) {
+      const allPoS = ['noun', 'verb', 'adjective', 'proper_noun']
+      let termAndPos = val.replace('(','').replace(')','').split(' ')
+      if (termAndPos.length > 2 || (termAndPos.length === 2 && !allPoS.includes(termAndPos[1]))) {
+        this.$store.commit('main/addError', {pane: this.queryPane,error:"contains whitespace"})
+        return null
+      }
+      this.currentPos = termAndPos.length === 2 ? termAndPos[1] : ''
+
+      return {term: termAndPos[0], pos: termAndPos[1]}
+    },
+    sautoTargetWordSelectedEvent: function () {
+      const rect = this.$refs.selectTargetWord.$el.getBoundingClientRect();
+      const event = {
+        clientX: rect.x,
+        clientY: rect.y
+      };
+      this.mouseClick(event, 'selectTargetWord-option');
     }
   },
   computed: {
@@ -245,16 +265,14 @@ export default {
       return !(this.availableTargetwords.length === 0 && this.searchTerm);
     },
     errors() {
-      console.log(
-        'CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors
-      );
-      return this.$store.getters['main/getPane']('pane1').errors;
+      console.debug('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors);
+      return new Set(this.$store.getters['main/getPane']('pane1').errors);
     },
     queryButtonActive() {
       if (
         !this.searchTerm ||
         this.searchTerm.length === 0 ||
-        !this.findSearchTermInAvailableTargetwords()
+        !this.findSearchTermInAvailableTargetwords(this.searchTerm)
       ) {
         return false;
       }
@@ -273,8 +291,7 @@ export default {
         count++;
       }
 
-      if (count > 0) return 'pane2';
-      return 'pane1';
+      return count > 0 ? 'pane2' : 'pane1'
     },
     availableCorpora: {
       get() {
@@ -292,6 +309,7 @@ export default {
             pane: this.queryPane
           });
         if (val && this.searchTerm && this.searchTerm.length > 0) {
+          this.resetError()
           this.$store.dispatch(
             'main/loadAutocompleteSuggestionsForNewSubCorpus',
             {
@@ -320,6 +338,7 @@ export default {
             pane: this.queryPane
           });
         if (val && this.searchTerm && this.searchTerm.length > 0) {
+          this.resetError()
           this.$store.dispatch(
             'main/loadAutocompleteSuggestionsForNewSubCorpus',
             {
@@ -351,10 +370,43 @@ export default {
     },
     searchTerm: {
       get() {
-        return this.$store.getters['main/searchTerm'](this.queryPane);
+        let currentSearchTerm = this.$store.getters['main/searchTerm'](this.queryPane);
+        console.debug('CURRENT SEARCHTERM: ' + currentSearchTerm)
+        return currentSearchTerm
       },
       set(val) {
-        this.validateSearchTerm(val);
+        this.resetError()
+        let termAndPos = this.splitTermAndPos(val)
+        if (termAndPos !== null) {
+          this.validateSearchTerm(termAndPos.term)
+          if (termAndPos.pos && termAndPos.term === this.searchTerm) {
+            if (this.errors.size === 0) {
+              this.$store.dispatch('main/changeSearchTerm', {
+                searchTerm: '',
+                pane: this.queryPane
+              }).then(() => {
+                if (this.errors.size === 0) {
+                  this.$store.dispatch('main/changeSearchTerm', {
+                    searchTerm: termAndPos.term,
+                    pane: this.queryPane
+                  }).then(() => {
+                    this.handleDatalistSelection()
+                  })
+                }
+              })
+            }
+          } else {
+            if (this.errors.size === 0) {
+              this.$store.dispatch('main/changeSearchTerm', {
+                searchTerm: termAndPos.term,
+                pane: this.queryPane
+              }).then(() => {
+                this.handleInput()
+              })
+            }
+          }
+        }
+
       }
     }
   },
@@ -364,5 +416,13 @@ export default {
 <style scoped>
 .align-end {
   text-align: end;
+}
+.query .alert {
+  font-size: 0.8rem;
+  position: relative;
+  padding: 0.1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
 }
 </style>
