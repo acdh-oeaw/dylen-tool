@@ -12,6 +12,7 @@
         <info-icon
           size='1.2x'
           class='custom-class'
+          aria-label='Node Filter info button'
           style='color:red'
           v-b-modal="'threshold-'+this.pane"
           data-sauto-id='node-filter-info'
@@ -122,7 +123,7 @@
 import { InfoIcon, AlertTriangleIcon } from 'vue-feather-icons';
 import Slider from '@vueform/slider/dist/slider.vue2.js';
 import { GENERAL_SPEAKER } from '@/helpers/mixins';
-
+const logger = require('../helpers/logger');
 export default {
   components: { InfoIcon, AlertTriangleIcon, Slider },
   name: 'NodeFilter',
@@ -195,7 +196,7 @@ export default {
               pane: this.pane
             });
           }
-          console.log('Set metric to: ' + val);
+          logger.log('Set metric to: ' + val);
         }
       }
     }

@@ -63,6 +63,7 @@
             select all
           </b-form-checkbox>
           <b-form-checkbox
+            v-if='this.networkType===EGO_NETWORK'
             class='b-0'
             v-model='options.showClusters'
             @change='!options.showClusters'
@@ -103,12 +104,12 @@
 <script>
 import * as d3 from 'd3';
 import { sauto_mixin } from '@/store/sauto';
-import { EGO_NETWORK } from '@/helpers/mixins';
-
+import { EGO_NETWORK, networkTypeMixin } from '@/helpers/mixins';
+const logger = require('../helpers/logger');
 export default {
   name: 'D3Network',
   props: ['netNodes', 'netLinks', 'options', 'pane'],
-  mixins: [sauto_mixin],
+  mixins: [sauto_mixin, networkTypeMixin],
   data() {
     return {
       d3Zoom: d3.zoom().on('zoom', this.zoom),
@@ -127,7 +128,7 @@ export default {
           title: 'Select as target word',
           value: () => ``,
           onClick: (d) => {
-            console.log('Select as target word:', d);
+            logger.log('Select as target word:', d);
             this.setWordAsSearchTerm(d);
           },
           networkType: EGO_NETWORK,
@@ -378,10 +379,10 @@ export default {
         })
         .style('cursor', (entry) => (entry.onClick ? 'pointer' : 'default'))
         .on('click', (event, entry) => {
-          if(typeof entry.onClick === 'function'){
+          if (typeof entry.onClick === 'function') {
             event.preventDefault();
             entry.onClick(d.name);
-            this.mouseClick(event, 'context-menu-select-as-targetword-' + this.pane);
+            this.mouseClick(event, 'context-menu-select-as-targetword');
           }
 
         });
@@ -533,7 +534,7 @@ export default {
       this.applyScaleAndTransform();
     },
     updateSimulation() {
-      console.log('updating sim: ' + this.options.showClusters);
+      logger.log('updating sim: ' + this.options.showClusters);
       const options = this.options;
       const width = options.size.w;
       const height = options.size.h;
@@ -592,10 +593,9 @@ export default {
       return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
     setWordAsSearchTerm(word) {
-      this.$store.dispatch('main/loadAutocompleteSuggestions', {
+      this.$store.dispatch('main/selectSurroundingWordAsTargetword', {
         pane: this.pane,
         searchTerm: word,
-        commit: true
       });
     }
   },

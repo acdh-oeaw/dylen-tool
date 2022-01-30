@@ -246,7 +246,7 @@
                           header-bg-variant='info'
                           header-text-variant='white'
                         >
-                          <b-row>Axes to display (drag to reorder):</b-row>
+                          <b-row>Metrics to display (drag to reorder):</b-row>
                           <draggable
                             :list="selectedMetrics"
                             @start="drag=true"
@@ -261,7 +261,7 @@
                               data-sauto-id='ignore'
                             >{{camelCaseToSpaces(element.name)}}
                               <b-form-checkbox
-                                :data-sauto-id='"parallel-coordinates-"+element.name+"-checkbox-option"'
+                                data-sauto-id='parallel-coordinates-axis-checkbox-option'
                                 v-model="element.enabled"
                                 switch
                               >
@@ -323,12 +323,15 @@
             <a
               href="http://www.oeaw.ac.at/"
               target="_blank"
-            ><img
-                class='partner-logos'
-                style='max-height:50px; width:auto'
-                src="@/assets/acdh-ch-logo96.png"
-                alt=""
-              ></a>
+            >
+            <img
+              class='partner-logos'
+              style='max-height:50px; width:auto'
+              src="@/assets/acdh-ch-logo96.png"
+              alt="ACDH Logo"
+            >
+              <span class="assistive-text">Link to OEAW Homepage</span>
+            </a>
           </b-col>
         </b-row>
 
@@ -350,7 +353,7 @@ import AlertArea from '@/components/AlertArea';
 import { camelCaseToSpaces } from '@/helpers/utils';
 
 const { networkTypeMixin } = require('@/helpers/mixins');
-
+const logger = require('./helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   name: 'App',
@@ -415,7 +418,7 @@ export default {
         return this.$store.getters['main/parallelCoordinateMetrics'];
       },
       set(value) {
-        console.log(value);
+        logger.log(value);
         this.$store.commit('main/setParallelCoordinateMetrics', value);
       }
     }
@@ -431,7 +434,7 @@ export default {
   },
   watch: {
     settingsActive: function (newVal, oldVal) {
-      console.log('settings active changed from ' + newVal + ' to ' + oldVal);
+      logger.log('settings active changed from ' + newVal + ' to ' + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       /* this.$refs.main.classList.toggle('full');  */
       window.setTimeout(() => this.$refs['results'].resized(), 500);
@@ -455,7 +458,7 @@ html,
 body {
   height: 100%;
 }
-
+.assistive-text { height: 1px; width: 1px; position: absolute; overflow: hidden; top: -10px; }
 .sidebar {
   z-index: 6;
   height: 100%; /* 100% Full-height */

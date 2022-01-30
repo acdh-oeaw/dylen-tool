@@ -175,7 +175,7 @@
         </g>
       </g>
       <g class='targetwordLabels'>
-        <g v-if="targetWordLabelLeft.text != ''">
+        <g v-if="targetWordLabelLeft.text !== ''">
           <text
             :y='svgPadding.top - 20'
             :x='2'
@@ -320,7 +320,7 @@ export default {
       ];
     },
     metrics() {
-      //console.log(this.selectedNodes);
+      //logger.log(this.selectedNodes);
       return this.$store.getters['main/parallelCoordinateMetrics']
         .filter((m) => m.enabled)
         .map((m) => m.name);
@@ -441,7 +441,7 @@ export default {
           return {
             text: this.$store.getters['main/selectedTargetword'](pane).text,
             year: this.$store.getters['main/selectedYear'](pane)?.year,
-            color: this.$store.getters['main/selectionColors'][0]
+            color: this.$store.getters['main/selectionColors'][pane==='pane1'? 0 : 1]
           };
         case GENERAL_PARTY:
           return {
@@ -485,7 +485,7 @@ export default {
     },
     generateLine(node) {
       let data = this.metrics.map((m) => [m, node._metrics[m] || 0]);
-      //console.log(node, data);
+      //logger.log(node, data);
       return this.lineGenerator(data);
     },
 
