@@ -123,7 +123,7 @@
 <script>
 import VisualizeButton from '@/components/VisualizeButton';
 import ResetButton from '@/components/ResetButton';
-
+const logger = require('../helpers/logger');
 export default {
   name: 'SearchForm',
   components: { ResetButton, VisualizeButton },
@@ -143,7 +143,7 @@ export default {
       let invalidChars = [];
       for (let c of val) {
         if (c.match(/[1-9;:\s!@#$%^&*)(+=.,'"_]/)) {
-          console.log('contains invalid character.');
+          logger.log('contains invalid character.');
           invalidChars.push(c);
         }
       }
@@ -231,7 +231,7 @@ export default {
       this.$store.commit('main/resetTimeSeries', {
         pane: this.queryPane
       });
-      console.log('initialised');
+      logger.log('initialised');
     },
     splitTermAndPos: function (val) {
       const allPoS = ['noun', 'verb', 'adjective', 'proper_noun']
@@ -269,7 +269,7 @@ export default {
       return !(this.availableTargetwords.length === 0 && this.searchTerm);
     },
     errors() {
-      console.debug('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors);
+      logger.log('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors);
       return new Set(this.$store.getters['main/getPane']('pane1').errors);
     },
     queryButtonActive() {

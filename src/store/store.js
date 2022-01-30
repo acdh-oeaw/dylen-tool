@@ -294,7 +294,7 @@ const mainModule = {
           searchTerm: state[pane].autocompleteSuggestions[0]
         });
         state[pane].selectedTargetword = response.data.data.getTargetWordById;
-        console.log(state[pane].selectedTargetword);
+        logger.log(state[pane].selectedTargetword);
       }
       let year_param = state[pane].selectedYear ? state[pane].selectedYear.year : state[pane].selectedTargetword.networks[0].year;
 
@@ -366,7 +366,7 @@ const mainModule = {
         updatedNetwork.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
 
         filterBasedOnSlider(updatedNetwork);
-        console.log(state, pane, state[pane]);
+        logger.log(state, pane, state[pane]);
         if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
           this.dispatch('sauto/generalNetworkTimeout', {
@@ -737,7 +737,7 @@ const mainModule = {
       state[payload.pane].generalNetwork.selectedParty = payload.party;
     },
     changeSelectedMetric(state, payload) {
-      console.log('setting selected metic to: ' + payload.metric);
+      logger.log('setting selected metic to: ' + payload.metric);
       state[payload.pane].generalNetwork.selectedMetric = payload.metric;
     },
     changeAvailableSpeakers(state, payload) {
@@ -756,7 +756,7 @@ const mainModule = {
       state[payload.pane].generalNetworkSpeaker.loaded = false;
     },
     changeSelectedSubcorpus(state, payload) {
-      console.log('changing selected subcorpus');
+      logger.log('changing selected subcorpus');
       state[payload.pane].selectedSubcorpus = payload.subcorpus ? payload.subcorpus : state.availableSourcesByCorpus[state[payload.pane].selectedCorpus.id][0];
       this.dispatch('main/changeSearchTerm', {
         searchTerm: state[payload.pane].searchTerm,
@@ -784,7 +784,7 @@ const mainModule = {
       state[payload.pane].errors = [];
     },
     changeSearchTerm(state, {searchTerm, pane}) {
-      console.log('changing searchterm: ' + searchTerm);
+      logger.log('changing searchterm: ' + searchTerm);
       state[pane].searchTerm = searchTerm ? searchTerm : ''
     },
     changeSelectedYear(state, payload) {
@@ -833,14 +833,14 @@ const mainModule = {
     },
     setAutocompleteSuggestions(state, {pane, suggestions}) {
       state[pane].autocompleteSuggestions = suggestions.sort((a, b) => a.text.localeCompare(b.text));
-      console.log('autosuggestions: ' + state[pane].autocompleteSuggestions);
+      logger.log('autosuggestions: ' + state[pane].autocompleteSuggestions);
       //TODO this should be in the component
       if (state[pane].autocompleteSuggestions.length === 0 && state[pane].searchTerm) {
         this.commit('main/addError', { error: 'Keyword not found', pane: pane});
       }
     },
     setShowInfo(state, payload) {
-      console.log('setting showinfo button: ' + payload.showInfo);
+      logger.log('setting showinfo button: ' + payload.showInfo);
       state.showInfo = payload.showInfo;
     },
     setShowInfoButton(state, payload) {

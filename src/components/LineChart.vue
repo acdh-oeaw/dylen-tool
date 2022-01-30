@@ -74,7 +74,7 @@
 </template>
 <script>
 import * as d3 from 'd3';
-
+const logger = require('../helpers/logger');
 export default {
   name: 'LineChart',
   props: ['data', 'options', 'colors', 'labels'],
@@ -90,7 +90,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.data);
+    logger.log(this.data);
     this.mouseout();
   },
   computed: {

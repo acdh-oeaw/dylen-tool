@@ -70,7 +70,7 @@ import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
 import NodeFilter from "@/components/NodeFilter";
 import {networkTypeMixin, GENERAL_PARTY} from "@/helpers/mixins";
-
+const logger = require('../helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   components: {
@@ -126,7 +126,7 @@ export default {
         pane: this.queryPane,
         party: this.selectedParty,
       });
-      console.log('initialised');
+      logger.log('initialised');
     }
   },
   computed: {

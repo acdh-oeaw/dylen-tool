@@ -353,7 +353,7 @@ import AlertArea from '@/components/AlertArea';
 import { camelCaseToSpaces } from '@/helpers/utils';
 
 const { networkTypeMixin } = require('@/helpers/mixins');
-
+const logger = require('./helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   name: 'App',
@@ -418,7 +418,7 @@ export default {
         return this.$store.getters['main/parallelCoordinateMetrics'];
       },
       set(value) {
-        console.log(value);
+        logger.log(value);
         this.$store.commit('main/setParallelCoordinateMetrics', value);
       }
     }
@@ -434,7 +434,7 @@ export default {
   },
   watch: {
     settingsActive: function (newVal, oldVal) {
-      console.log('settings active changed from ' + newVal + ' to ' + oldVal);
+      logger.log('settings active changed from ' + newVal + ' to ' + oldVal);
       this.$refs.sidebar.classList.toggle('collapsed');
       /* this.$refs.main.classList.toggle('full');  */
       window.setTimeout(() => this.$refs['results'].resized(), 500);
