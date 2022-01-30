@@ -32,17 +32,17 @@
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
 
-            <NetworkGraph
+            <network-graph
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Ego'"
               ref='networkGraph1'
               pane='pane1'
             />
-            <NetworkGraphGeneral
+            <network-graph-general
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Party'"
               ref='networkGraph1'
               pane='pane1'
             />
-            <NetworkGraphSpeaker
+            <network-graph-speaker
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Speaker'"
               ref='networkGraph1'
               pane='pane1'

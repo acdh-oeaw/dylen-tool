@@ -204,6 +204,10 @@ export default {
       this.mouseClick(event, 'selectTargetWord-option');
     },
     initialize() {
+      this.$store.commit('main/setTimeoutWarning', {
+        pane: this.queryPane,
+        value: false
+      });
       this.$store.commit('main/changeSelectedCorpus', {
         corpus: null,
         pane: this.queryPane

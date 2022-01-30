@@ -278,7 +278,7 @@
                         Use General Network to..
                       </span>
                       <span slot='use-case-content'>
-                        investigate what speakers and parties in the Austrian Parliament talk about and how they talk about it.
+                        ...investigate what speakers and parties in the Austrian Parliament talk about and how they talk about it.
                       </span>
                       <span slot='guide-header'>How to use General Network</span>
                       <span slot='guide-content'>
