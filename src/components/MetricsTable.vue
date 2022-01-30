@@ -84,7 +84,7 @@
                     v-model="filterWord"
                     type="search"
                     placeholder="Type to Filter"
-                    @keypress='e => keyPress(e,"metrics-filter")'
+                    @keypress='e => keyPress(e,"node-metrics-filter")'
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
@@ -130,7 +130,7 @@
                   v-model="filterNetwork"
                   type="search"
                   placeholder="Type to Filter"
-                  @keypress='e => keyPress(e,"metrics-filter")'
+                  @keypress='e => keyPress(e,"node-metrics-filter")'
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
@@ -159,7 +159,7 @@
 </template>
 <script>
 import { roundToMaxDigit } from '@/helpers/utils';
-
+const logger = require('../helpers/logger');
 export default {
   name: 'MetricsTable',
   props: ['selectedNodes', 'allNodes', 'options'],
@@ -213,7 +213,7 @@ export default {
           node: node
         };
         let maxDigits = this.tableOptions.digits;
-        /* console.log(node);
+        /* logger.log(node);
         tableEntry['normalizedFrequency'] =
           node._normalisedFrequency?.toExponential(2); */
         for (let key in node._metrics)
@@ -315,15 +315,15 @@ export default {
       };
     },
     selectionCheckboxChanged(event) {
-      console.log(this.tableData);
+      logger.log(this.tableData);
       if (this.isAllSelected) this.deselectAllNodes();
       else this.selectAllNodes();
       this.mouseClick(event, 'table-select-all');
     },
     customFilter(row, filter) {
-      // console.log('filtering on: ' + this.filterOn);
-      // console.log('filter row: ' + JSON.stringify(row));
-      // console.log('filter filter: ' + filter);
+      // logger.log('filtering on: ' + this.filterOn);
+      // logger.log('filter row: ' + JSON.stringify(row));
+      // logger.log('filter filter: ' + filter);
 
       const selectedCheck =
         filter[0] !== null ? row.selected === filter[0] : null;

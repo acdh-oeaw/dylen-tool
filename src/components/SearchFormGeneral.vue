@@ -70,7 +70,7 @@ import VisualizeButton from "@/components/VisualizeButton";
 import ResetButton from "@/components/ResetButton";
 import NodeFilter from "@/components/NodeFilter";
 import {networkTypeMixin, GENERAL_PARTY} from "@/helpers/mixins";
-
+const logger = require('../helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   components: {
@@ -116,13 +116,17 @@ export default {
       });
     },
     initialize() {
+      this.$store.commit('main/setTimeoutWarning', {
+        pane: this.queryPane,
+        value: false
+      });
       this.selectedParty = "ÖVP"
 
       this.$store.dispatch('main/resetGeneralNetwork', {
         pane: this.queryPane,
         party: this.selectedParty,
       });
-      console.log('initialised');
+      logger.log('initialised');
     }
   },
   computed: {

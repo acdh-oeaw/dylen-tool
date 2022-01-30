@@ -14,9 +14,11 @@
         >
           <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <info-icon
+                aria-label='Ego Network info button'
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
+                data-sauto-id='ego-network-info-button'
                 v-b-modal='"ego-info"'></info-icon>
             <setting
               position='result'
@@ -31,17 +33,17 @@
               <b-icon :icon="fullscreen['networkGraph1'] ? 'fullscreen-exit' : 'arrows-fullscreen'"></b-icon>
             </button>
 
-            <NetworkGraph
+            <network-graph
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Ego'"
               ref='networkGraph1'
               pane='pane1'
             />
-            <NetworkGraphGeneral
+            <network-graph-general
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Party'"
               ref='networkGraph1'
               pane='pane1'
             />
-            <NetworkGraphSpeaker
+            <network-graph-speaker
               v-if="!timeoutWarning1 && showFirstGraph && type === 'Speaker'"
               ref='networkGraph1'
               pane='pane1'
@@ -88,9 +90,11 @@
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
             <info-icon
+                aria-label='Parallel coordinates info button'
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
+                data-sauto-id='parallel-coordinates-info-button'
                 v-b-modal='"pc-info"'></info-icon>
             <setting
               position='result'
@@ -110,8 +114,10 @@
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
             <info-icon
                 size='1.2x'
+                aria-label='Time series info button'
                 class='custom-class info-button ts-info-button'
                 style='color:#17a2b8'
+                data-sauto-id='time-series-info-button'
                 v-b-modal='"ts-info"'></info-icon>
             <button
               @click="(event) => toggleFullscreen('timeSeries', event,'toggleFullScreenButton-timeSeries')"
@@ -133,16 +139,16 @@
     <b-modal
         :id='"ego-info"'
         modal-class='guide'
-        title='Ego Network interpretation guidelines'
+        title='Network interpretation guidelines'
         ok-only>
       <ul>
-        <li>The targetword isn't shown in the visualised ego-network, since every node have a connection to
-          the targetword and the network visualisation would be too unnecessarily complex.
-        </li>
         <li>The <b>size of nodes</b> represents word frequency</li>
         <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
         <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
         <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+        <li>If you are viewing ....The targetword isn't shown in the visualised ego-network, since every node have a connection to
+          the targetword and the network visualisation would be too unnecessarily complex.
+        </li>
       </ul>
     </b-modal>
     <b-modal

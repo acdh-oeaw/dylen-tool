@@ -24,6 +24,14 @@ export const partyMapping = {
   "SPÖ": "SPOe",
   "BZÖ": "BZOe"
 }
+
+const logger = require('./logger');
+
+export function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
+
+
 export const corpusNameMapping = {
     "AMC": "Austrian Media Corpus",
     "ParlAT": "Corpus of Austrian Parliamentary Records"
@@ -113,7 +121,7 @@ export function filterBasedOnSlider(network) {
 
 export function zipTimeSeriesAndYears(timeSeries, years) {
     let newTimeSeries = {};
-    console.log(timeSeries);
+    logger.log(timeSeries);
     Object.keys(timeSeries).forEach(key => {
         newTimeSeries[timeSeriesKeyMap[key]] = {};
         Object.keys(timeSeries[key]).forEach(metric => {
@@ -138,6 +146,6 @@ export function zipTimeSeriesAndYears(timeSeries, years) {
             newTimeSeries[timeSeriesKeyMap[key]][relativeToMap[metric]] = zippedArray;
         });
     });
-    console.log(newTimeSeries)
+    logger.log(newTimeSeries)
     return newTimeSeries;
 }

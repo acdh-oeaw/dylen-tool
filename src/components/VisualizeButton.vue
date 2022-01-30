@@ -4,7 +4,7 @@
       block
       type='submit'
       variant='info'
-      :data-sauto-id='"queryButton-"+this.queryPane'
+      :data-sauto-id='"queryButton-"+type+"-"+this.queryPane'
       :disabled='!queryButtonActive'
       @click='setShowInfo'
   >
@@ -17,7 +17,10 @@
 </template>
 
 <script>
+import { networkTypeMixin } from '@/helpers/mixins';
+const logger = require('../helpers/logger');
 export default {
+  mixins: [networkTypeMixin],
   name: "VisualizeButton",
   props: ['queryButtonActive', 'queryPane'],
   computed: {
@@ -26,13 +29,13 @@ export default {
         return this.$store.getters['main/busyState'](this.queryPane);
       },
       set(val) {
-        console.log('setting busy state: ' + val)
+        logger.log('setting busy state: ' + val)
         this.$store.commit('main/setBusyState', {
           busy: val,
           pane: this.queryPane
         });
       }
-    }
+    },
   },
   methods: {
     setShowInfo() {

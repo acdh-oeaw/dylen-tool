@@ -7,7 +7,10 @@ let environment = process.env.VUE_APP_ENVIRONMENT;
 
 let props;
 
-console.log('environment' + environment)
+const logger = require('../helpers/logger');
+
+logger.log('environment' + environment)
+
 if (environment === 'dev') {
   props = properties_dev;
 } else if (environment === 'prod') {

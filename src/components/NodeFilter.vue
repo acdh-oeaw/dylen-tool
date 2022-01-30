@@ -2,8 +2,13 @@
   <b-card class='mt-0 mx-0 px-0 pt-0 nodefilter'>
     <b-row xl='12' class='mx-0 px-0 pt-0 mt-0'>
       <b-col xl='12' class='mt-0 text-center pt-0' style='font-size:0.9em'>
-        <info-icon size='1.2x' class='custom-class' style='color:red' v-b-modal="'threshold-'+this.pane"
-                   data-sauto-id='node-filter-info'></info-icon>
+        <info-icon
+            size='1.2x'
+            class='custom-class'
+            aria-label='Node Filter info button'
+            style='color:red'
+            v-b-modal="'threshold-'+this.pane"
+            data-sauto-id='node-filter-info'></info-icon>
         <b> Node filter</b>
       </b-col>
     </b-row>
@@ -83,7 +88,7 @@
 import { InfoIcon, AlertTriangleIcon } from 'vue-feather-icons';
 import Slider from '@vueform/slider/dist/slider.vue2.js';
 import { GENERAL_SPEAKER } from '@/helpers/mixins';
-
+const logger = require('../helpers/logger');
 export default {
   components: { InfoIcon, AlertTriangleIcon, Slider },
   name: 'NodeFilter',
@@ -135,7 +140,7 @@ export default {
               pane: this.pane
             });
           }
-          console.log('Set metric to: ' + val);
+          logger.log('Set metric to: ' + val);
         }
       }
     }
