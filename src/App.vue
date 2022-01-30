@@ -327,8 +327,10 @@
                 class='partner-logos'
                 style='max-height:50px; width:auto'
                 src="@/assets/acdh-ch-logo96.png"
-                alt=""
-              ></a>
+                alt="ACDH Logo"
+              >
+              <span class="assistive-text">Link to OEAW Homepage</span>
+            </a>
           </b-col>
         </b-row>
 
@@ -455,7 +457,7 @@ html,
 body {
   height: 100%;
 }
-
+.assistive-text { height: 1px; width: 1px; position: absolute; overflow: hidden; top: -10px; }
 .sidebar {
   z-index: 6;
   height: 100%; /* 100% Full-height */
