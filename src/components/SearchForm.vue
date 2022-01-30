@@ -70,7 +70,6 @@
                 v-model='searchTerm'
                 ref='selectTargetWord'
                 size='sm'
-                @input.native="handleSearchTermChange($event)"
                 :data-sauto-id="'selectTargetword-'+this.pane"
                 :list='`datalist-${pane}`'
                 :style="!hasSuggestions ? { 'color': 'lightcoral' } : null"
@@ -180,6 +179,31 @@ export default {
     findSearchTermInAvailableTargetwords(searchTerm) {
       return this.availableTargetwords.find((t) => t.text === searchTerm && t.pos === this.currentPos);
     },
+    handleDatalistSelection() {
+      let matchedSuggestion = this.findSearchTermInAvailableTargetwords(this.searchTerm);
+      this.$store.dispatch('main/loadTargetwordBySearchTerm', {
+        pane: this.queryPane,
+        searchTerm: matchedSuggestion
+      }).then(() => {
+        let matchedIndex = this.availableTargetwords.indexOf(matchedSuggestion)
+        this.availableTargetwords.splice(matchedIndex, 1)
+        this.$store.dispatch('main/setAutocompleteSuggestions', {
+          suggestions: [matchedSuggestion],
+          pane: this.queryPane
+        })
+      });
+      this.sautoTargetWordSelectedEvent();
+    },
+    handleInput() {
+      if (this.errors.size === 0) {
+        this.$store.dispatch('main/loadAutocompleteSuggestions', { pane: this.queryPane, searchTerm: this.searchTerm}).then(response => {
+          this.$store.dispatch('main/setAutocompleteSuggestions', {
+            suggestions: response.data.data.getAutocompleteSuggestions,
+            pane: this.queryPane
+          })
+        })
+      }
+    },
     handleSearchTermChange(event) {
       console.debug('handling event: ' +  event)
       if (event.inputType === "insertText") {
@@ -273,9 +297,9 @@ export default {
     },
     queryButtonActive() {
       if (
-        !this.selectedTargetword ||
-          this.selectedTargetword.text.length === 0 ||
-        !this.findSearchTermInAvailableTargetwords(this.selectedTargetword.text)
+        !this.searchTerm ||
+        this.searchTerm.length === 0 ||
+        !this.findSearchTermInAvailableTargetwords(this.searchTerm)
       ) {
         return false;
       }
@@ -392,6 +416,8 @@ export default {
                   this.$store.dispatch('main/changeSearchTerm', {
                     searchTerm: termAndPos.term,
                     pane: this.queryPane
+                  }).then(() => {
+                    this.handleDatalistSelection()
                   })
                 }
               })
@@ -401,6 +427,8 @@ export default {
               this.$store.dispatch('main/changeSearchTerm', {
                 searchTerm: termAndPos.term,
                 pane: this.queryPane
+              }).then(() => {
+                this.handleInput()
               })
             }
           }

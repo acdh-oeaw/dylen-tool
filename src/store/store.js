@@ -499,9 +499,9 @@ const mainModule = {
       if (searchTerm) {
         searchTermId = searchTerm.id;
       }
-      const response = await axios.post(graphqlEndpoint,
-        getTargetWordByIdQuery(searchTermId));
-        commit('changeSelectedTargetword', {
+      if(!searchTermId) console.warn('Empty searchTermId: ' +  searchTermId)
+      const response = await axios.post(graphqlEndpoint, getTargetWordByIdQuery(searchTermId));
+      commit('changeSelectedTargetword', {
         pane: pane,
         targetword: response.data.data.getTargetWordById
       });
