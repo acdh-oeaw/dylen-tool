@@ -246,7 +246,7 @@
                           header-bg-variant='info'
                           header-text-variant='white'
                         >
-                          <b-row>Axes to display (drag to reorder):</b-row>
+                          <b-row>Metrics to display (drag to reorder):</b-row>
                           <draggable
                             :list="selectedMetrics"
                             @start="drag=true"
