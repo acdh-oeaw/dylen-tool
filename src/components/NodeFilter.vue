@@ -103,6 +103,7 @@
         class='mt-2 pb-4'
       >
         <Slider
+          :class="stepsize ? 'no-fill' : ''"
           @change='valueChanged'
           :format='sliderFormat'
           showTooltip='always'
@@ -207,5 +208,9 @@ export default {
   padding-top: 0.5rem !important;
   padding-left: 0.5rem !important;
   padding-right: 0.5rem !important;
+}
+
+.no-fill .slider-connect {
+  background-color: unset;
 }
 </style>
