@@ -14,6 +14,7 @@
         >
           <pane :size="(fullscreen['networkGraph1'] || !showSecondGraph)? 100 : fullscreen['networkGraph2'] ? 0 : 50">
             <info-icon
+                aria-label='Ego Network info button'
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
@@ -89,6 +90,7 @@
         >
           <pane :size="fullscreen['nodeMetrics'] ? 100 : fullscreen['timeSeries'] ? 0 : 50">
             <info-icon
+                aria-label='Parallel coordinates info button'
                 size='1.2x'
                 class='custom-class info-button ego-info-button'
                 style='color:#17a2b8'
@@ -112,6 +114,7 @@
           <pane :size="fullscreen['timeSeries'] ? 100 : fullscreen['nodeMetrics'] ? 0 : 50">
             <info-icon
                 size='1.2x'
+                aria-label='Time series info button'
                 class='custom-class info-button ts-info-button'
                 style='color:#17a2b8'
                 data-sauto-id='time-series-info-button'

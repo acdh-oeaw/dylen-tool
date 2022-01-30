@@ -323,12 +323,13 @@
             <a
               href="http://www.oeaw.ac.at/"
               target="_blank"
-            ><img
-                class='partner-logos'
-                style='max-height:50px; width:auto'
-                src="@/assets/acdh-ch-logo96.png"
-                alt="ACDH Logo"
-              >
+            >
+            <img
+              class='partner-logos'
+              style='max-height:50px; width:auto'
+              src="@/assets/acdh-ch-logo96.png"
+              alt="ACDH Logo"
+            >
               <span class="assistive-text">Link to OEAW Homepage</span>
             </a>
           </b-col>

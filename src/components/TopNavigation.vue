@@ -82,6 +82,7 @@
                 style='z-index: 1'
               >
                 <info-icon
+                  aria-label='Info button'
                   size='1.5x'
                   class='custom-class'
                   style='color:white; margin-right: 0;'
