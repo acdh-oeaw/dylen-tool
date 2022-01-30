@@ -204,33 +204,6 @@ export default {
         })
       }
     },
-    handleSearchTermChange(event) {
-      console.debug('handling event: ' +  event)
-      if (event.inputType === "insertText") {
-        if (this.errors.size === 0) {
-          this.$store.dispatch('main/loadAutocompleteSuggestions', { pane: this.queryPane, searchTerm: this.searchTerm}).then(response => {
-            this.$store.dispatch('main/setAutocompleteSuggestions', {
-              suggestions: response.data.data.getAutocompleteSuggestions,
-              pane: this.queryPane
-            })
-          })
-        }
-      } else {
-        let matchedSuggestion = this.findSearchTermInAvailableTargetwords(this.searchTerm);
-        this.$store.dispatch('main/loadTargetwordBySearchTerm', {
-          pane: this.queryPane,
-          searchTerm: matchedSuggestion
-        }).then(() => {
-          let matchedIndex = this.availableTargetwords.indexOf(matchedSuggestion)
-          this.availableTargetwords.splice(matchedIndex, 1)
-          this.$store.dispatch('main/setAutocompleteSuggestions', {
-            suggestions: [matchedSuggestion],
-            pane: this.queryPane
-          })
-        });
-        this.sautoTargetWordSelectedEvent();
-      }
-    },
     initialize() {
       this.$store.commit('main/changeSelectedCorpus', {
         corpus: null,
