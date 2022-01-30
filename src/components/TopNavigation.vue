@@ -26,6 +26,7 @@
             >
               <img
                 src='@/assets/dylen_white.png'
+                alt='DYLEN Logo'
                 style='max-width:100%;height:auto'
               />
             </b-navbar-brand>

@@ -42,32 +42,39 @@
                           :indicators='true'
                           background="#ababab"
                           style="text-shadow: 1px 1px 2px #333;"
+                          label-next='Next slide'
+                          label-prev='Previous slide'
                       >
                         <div style='color: black;'>
                           <b-carousel-slide
                               caption="Ego Network"
                               text="Explore the semantic neighborhood of a target word in different years"
                               :img-src="require('../assets/info/ego.png')"
+                              img-alt='Ego Network Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="General Network (Party)"
                               text="Explore lexemes used by political parties in the Austrian Parliament"
                               :img-src="require('../assets/info/general.png')"
+                              img-alt='General Network Party Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="General Network (Speaker)"
                               text="Explore lexemes used by individual speakers in the Austrian Parliament"
                               :img-src="require('../assets/info/speaker.png')"
+                              img-alt='General Network Speaker Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="Node Metrics Comparison"
                               text="Compare nodes according to frequency and network metrcs"
                               :img-src="require('../assets/info/parallel.png')"
+                              img-alt='Node Metrics Comparison Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="Times Series Analysis"
                               text="Track frequency/similarity changes over time"
                               :img-src="require('../assets/info/timeseries.png')"
+                              img-alt='Time Series Analysis Image'
                           ></b-carousel-slide>
                         </div>
                       </b-carousel>
@@ -627,11 +634,11 @@ export default {
 }
 
 .carousel-control-prev-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' aria-label='previous image' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
 }
 
 .carousel-control-next-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' aria-label='next image' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
 
 .card-header ul li a {
