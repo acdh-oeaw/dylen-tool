@@ -2,10 +2,13 @@
   <b-form @submit='onSubmit'>
     <b-row>
       <b-col
-          xl='12'
+        xl='12'
         class='mx-0 px-0'
       >
-        <b-row xl='12' class='mt-0'>
+        <b-row
+          xl='12'
+          class='mt-0'
+        >
           <b-col xl='12'>
             <b-form-group
               id='select-party-group-viz'
@@ -34,21 +37,21 @@
         <b-row xl='12'>
           <b-col xl='12'>
             <b-form-group
-                id='select-speaker-group-viz'
-                label='Speaker: '
-                label-size='sm'
-                label-cols-xl='4'
+              id='select-speaker-group-viz'
+              label='Speaker: '
+              label-size='sm'
+              label-cols-xl='4'
             >
               <b-form-select
-                  size='sm'
-                  v-model='selectedSpeaker'
-                  :data-sauto-id="'selectSpeaker-'+this.pane"
+                size='sm'
+                v-model='selectedSpeaker'
+                :data-sauto-id="'selectSpeaker-'+this.pane"
               >
                 <b-form-select-option
-                    v-for='optionSpeaker in availableSpeakers'
-                    v-bind:key='optionSpeaker.id'
-                    v-bind:value='optionSpeaker'
-                    data-sauto-id="speakerOption"
+                  v-for='optionSpeaker in availableSpeakers'
+                  v-bind:key='optionSpeaker.id'
+                  v-bind:value='optionSpeaker'
+                  data-sauto-id="speakerOption"
                 >
                   {{ optionSpeaker }}
                 </b-form-select-option>
@@ -57,35 +60,44 @@
           </b-col>
         </b-row>
         <b-row
-            xl='12'
+          xl='12'
           class='mx-0 px-0'
         >
           <b-col
-              xl='12'
-              class='px-0'
+            xl='12'
+            class='px-0'
           >
             <node-filter
-                @sliderValueChanged='handleSliderValue'
-                :available-metrics='availableMetrics'
-                :general-type='GENERAL_SPEAKER'
-                :pane='queryPane'></node-filter>
+              @sliderValueChanged='handleSliderValue'
+              :available-metrics='availableMetrics'
+              :general-type='GENERAL_SPEAKER'
+              :pane='queryPane'
+              :initialValueSlid="valueSlid"
+            ></node-filter>
           </b-col>
         </b-row>
         <b-row
-            align-h='end'
-            xl='12'
-            class='mt-2 px-0 mx-1'>
+          align-h='end'
+          xl='12'
+          class='mt-2 px-0 mx-1'
+        >
           <b-col
-              xl='6'
-              class='px-1'
+            xl='6'
+            class='px-1'
           >
-            <visualize-button :queryButtonActive='queryButtonActive' :query-pane='queryPane'></visualize-button>
+            <visualize-button
+              :queryButtonActive='queryButtonActive'
+              :query-pane='queryPane'
+            ></visualize-button>
           </b-col>
           <b-col
-              xl='6'
-              class='px-1'
+            xl='6'
+            class='px-1'
           >
-            <reset-button @resetClicked='initialize' :pane='queryPane'></reset-button>
+            <reset-button
+              @resetClicked='initialize'
+              :pane='queryPane'
+            ></reset-button>
           </b-col>
         </b-row>
       </b-col>
@@ -94,81 +106,105 @@
 </template>
 
 <script>
-import NodeFilter from "@/components/NodeFilter";
-import VisualizeButton from "@/components/VisualizeButton";
-import ResetButton from "@/components/ResetButton";
-import {networkTypeMixin, GENERAL_SPEAKER} from "@/helpers/mixins";
+import NodeFilter from '@/components/NodeFilter';
+import VisualizeButton from '@/components/VisualizeButton';
+import ResetButton from '@/components/ResetButton';
+import { networkTypeMixin, GENERAL_SPEAKER } from '@/helpers/mixins';
 const logger = require('../helpers/logger');
 export default {
   mixins: [networkTypeMixin],
   props: ['pane'],
   components: {
-    NodeFilter, VisualizeButton, ResetButton
+    NodeFilter,
+    VisualizeButton,
+    ResetButton
   },
   data() {
     return {
-      defaultMetric: "Degree Centrality",
-      defaultParty: "ÖVP",
+      defaultMetric: 'Degree Centrality',
+      defaultParty: 'ÖVP',
       corpusEdit: false,
       slider: 1,
       sliderFormat: function (value) {
-        return `${Math.round(value)}%`
+        return `${Math.round(value)}%`;
       },
       valueSlid: [0, 20]
     };
   },
   mounted() {
-    let selectedParty = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane);
+    let selectedParty = this.$store.getters[
+      'main/selectedGeneralNetworkSpeakerParty'
+    ](this.queryPane);
 
-    this.selectedParty = this.checkSelectedParty(selectedParty) ? selectedParty : this.defaultParty
+    this.selectedParty = this.checkSelectedParty(selectedParty)
+      ? selectedParty
+      : this.defaultParty;
 
-    this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:this.selectedParty}).then(() => {
-      this.selectedSpeaker = this.availableSpeakers[0];
-    });
+    this.$store
+      .dispatch('main/loadAvailableSpeakers', {
+        pane: this.queryPane,
+        party: this.selectedParty
+      })
+      .then(() => {
+        this.selectedSpeaker = this.availableSpeakers[0];
+      });
     this.$root.$on('networkTypeChanged', () => {
-      this.initialize()
-    })
+      this.initialize();
+    });
   },
   methods: {
     checkSelectedParty(party) {
-      if(party) return true
-      return false
+      if (party) return true;
+      return false;
     },
     handleSliderValue(values) {
-      this.$data.valueSlid=values
+      this.$data.valueSlid = values;
     },
     changeSelectedPartyEvent(evt) {
-      this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, event:evt}).then(() => {
-        this.selectedSpeaker = this.availableSpeakers[0];
-      });
+      this.$store
+        .dispatch('main/loadAvailableSpeakers', {
+          pane: this.queryPane,
+          event: evt
+        })
+        .then(() => {
+          this.selectedSpeaker = this.availableSpeakers[0];
+        });
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$store.dispatch('main/resetSelectedNetwork', {
         pane: this.queryPane
-      })
-      this.$store.dispatch('main/loadGeneralSpeakerNetwork', {
-        pane: this.queryPane,
-        sliderMin: this.$data.valueSlid[0]/100,
-        sliderMax: this.$data.valueSlid[1]/100,
-      }).then(() => {
-        this.$emit('visualizeClicked')
-      }).finally(() => {
       });
-      this.$store.dispatch('main/loadGeneralTimeSeriesData', {pane:this.queryPane, type: GENERAL_SPEAKER, entity: this.selectedSpeaker});
+      this.$store
+        .dispatch('main/loadGeneralSpeakerNetwork', {
+          pane: this.queryPane,
+          sliderMin: this.$data.valueSlid[0] / 100,
+          sliderMax: this.$data.valueSlid[1] / 100
+        })
+        .then(() => {
+          this.$emit('visualizeClicked');
+        })
+        .finally(() => {});
+      this.$store.dispatch('main/loadGeneralTimeSeriesData', {
+        pane: this.queryPane,
+        type: GENERAL_SPEAKER,
+        entity: this.selectedSpeaker
+      });
     },
     initialize() {
       this.$store.commit('main/setTimeoutWarning', {
         pane: this.queryPane,
         value: false
       });
-      this.$store.dispatch('main/resetGeneralNetworkSpeaker', {
-        pane: this.queryPane,
-        party: this.defaultParty,
-        metric: this.defaultMetric,
-      }).then(() => {
-        this.selectedSpeaker = this.availableSpeakers[0];
-      })
+      this.$store
+        .dispatch('main/resetGeneralNetworkSpeaker', {
+          pane: this.queryPane,
+          party: this.defaultParty,
+          metric: this.defaultMetric
+        })
+        .then(() => {
+          this.selectedSpeaker = this.availableSpeakers[0];
+        });
       logger.log('initialised');
     }
   },
@@ -204,18 +240,25 @@ export default {
     },
     selectedParty: {
       get() {
-        const party = this.$store.getters['main/selectedGeneralNetworkSpeakerParty'](this.queryPane)
-        this.$store.dispatch('main/loadAvailableSpeakers', {pane:this.queryPane, party:party});
+        const party = this.$store.getters[
+          'main/selectedGeneralNetworkSpeakerParty'
+        ](this.queryPane);
+        this.$store.dispatch('main/loadAvailableSpeakers', {
+          pane: this.queryPane,
+          party: party
+        });
         return party;
       },
       set(val) {
         if (val) {
-          this.$store.dispatch('main/changeSelectedSpeakerParty', {
-            party: val,
-            pane: this.queryPane
-          }).then(() => {
-            this.selectedSpeaker = this.availableSpeakers[0];
-          })
+          this.$store
+            .dispatch('main/changeSelectedSpeakerParty', {
+              party: val,
+              pane: this.queryPane
+            })
+            .then(() => {
+              this.selectedSpeaker = this.availableSpeakers[0];
+            });
         }
       }
     },
@@ -226,7 +269,9 @@ export default {
     },
     selectedSpeaker: {
       get() {
-        return this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](this.queryPane);
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerSpeaker'](
+          this.queryPane
+        );
       },
       set(val) {
         if (val) {
