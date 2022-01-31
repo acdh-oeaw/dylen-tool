@@ -383,21 +383,28 @@ export default {
         let termAndPos = this.splitTermAndPos(val)
         if (termAndPos !== null) {
           this.validateSearchTerm(termAndPos.term)
-          if (termAndPos.pos && termAndPos.term === this.searchTerm) {
+          if (termAndPos.pos) {
             if (this.errors.size === 0) {
-              this.$store.dispatch('main/changeSearchTerm', {
-                searchTerm: '',
-                pane: this.queryPane
-              }).then(() => {
-                if (this.errors.size === 0) {
+              if (termAndPos.term === this.searchTerm) {
+                this.$store.dispatch('main/changeSearchTerm', {
+                  searchTerm: '',
+                  pane: this.queryPane
+                }).then(() => {
                   this.$store.dispatch('main/changeSearchTerm', {
                     searchTerm: termAndPos.term,
                     pane: this.queryPane
                   }).then(() => {
                     this.handleDatalistSelection()
                   })
-                }
-              })
+                })
+              } else {
+                  this.$store.dispatch('main/changeSearchTerm', {
+                    searchTerm: termAndPos.term,
+                    pane: this.queryPane
+                  }).then(() => {
+                    this.handleDatalistSelection()
+                  })
+              }
             }
           } else {
             if (this.errors.size === 0) {

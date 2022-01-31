@@ -492,8 +492,8 @@ const mainModule = {
       commit('setAutocompleteSuggestions', payload)
     },
     async loadAutocompleteSuggestions({ state }, payload) {
-      console.log('loading autocomplete suggestions...')
       let searchTerm = payload.searchTerm ? payload.searchTerm : state[payload.pane].searchTerm
+      logger.log('loading autocomplete suggestions for :' +  searchTerm)
       return axios.post(graphqlEndpoint,
           getAutocompleteSuggestionsQuery(state[payload.pane].selectedCorpus.id, state[payload.pane].selectedSubcorpus.id, searchTerm));
     },
@@ -855,7 +855,7 @@ const mainModule = {
     },
     setAutocompleteSuggestions(state, {pane, suggestions}) {
       state[pane].autocompleteSuggestions = suggestions.sort((a, b) => a.text.localeCompare(b.text));
-      logger.log('autosuggestions: ' + state[pane].autocompleteSuggestions);
+      logger.log('autosuggestions: ' + JSON.stringify(state[pane].autocompleteSuggestions));
       //TODO this should be in the component
       if (state[pane].autocompleteSuggestions.length === 0 && state[pane].searchTerm) {
         this.commit('main/addError', { error: 'Keyword not found', pane: pane});
