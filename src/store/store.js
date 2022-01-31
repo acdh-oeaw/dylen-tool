@@ -473,7 +473,7 @@ const mainModule = {
     },
     async loadAutocompleteSuggestions({ state }, payload) {
       let searchTerm = payload.searchTerm ? payload.searchTerm : state[payload.pane].searchTerm
-      console.log('loading autocomplete suggestions for :' +  searchTerm)
+      logger.log('loading autocomplete suggestions for :' +  searchTerm)
       return axios.post(graphqlEndpoint,
           getAutocompleteSuggestionsQuery(state[payload.pane].selectedCorpus.id, state[payload.pane].selectedSubcorpus.id, searchTerm));
     },
