@@ -169,7 +169,7 @@ export default {
   },
   computed: {
     networkType() {
-      return this.$store.getters['main/selectedNetwork']('pane1').type;
+      return this.$store.getters['main/selectedNetwork']('pane1')? this.$store.getters['main/selectedNetwork']('pane1')?.type : '';
     },
     sharedNode() {
       return this.$store.getters['main/focusNode'];
