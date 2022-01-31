@@ -111,8 +111,9 @@
           tooltipPosition='bottom'
           v-model='valueSlid'
           :max="maximum"
-          :data-sauto-id='"node-filter-slider-"+this.pane'
+          data-sauto-id='ignore'
           :merge="15"
+          ref='nodeFilterSlider'
         />
       </b-col>
 
@@ -139,7 +140,8 @@ export default {
     return {
       defaultMetric: 'Degree Centrality',
       maximum: this.stepsize !== undefined ? 100 - this.stepsize : 100,
-      valueSlid: [this.initialValueSlid[0], this.initialValueSlid[1]]
+      valueSlid: [this.initialValueSlid[0], this.initialValueSlid[1]],
+      oldValue1: 0,
     };
   },
   mounted() {
@@ -159,6 +161,31 @@ export default {
           this.$data.valueSlid + this.stepsize
         ]);
       else this.$emit('sliderValueChanged', this.$data.valueSlid);
+
+      let changedValue = 0;
+      if(this.oldValue1===this.$data.valueSlid[0]){
+        changedValue=this.$data.valueSlid[1]
+      }else{
+        changedValue=this.$data.valueSlid[0]
+        this.oldValue1=this.$data.valueSlid[0]
+      }
+
+      const event = this.calculateSliderPosition(changedValue);
+      this.mouseClick(event, 'node-filter-slider'+this.pane);
+    },
+    calculateSliderPosition(value) {
+      //im sorry for this hacky workaround but slider doesnt register drags correctly
+      const sizes = this.$refs.nodeFilterSlider.$el.getBoundingClientRect();
+      //x, y, width, height
+      const clientY = sizes.y;
+
+      const clientX = ((value) * sizes.width) / 100 + sizes.x;
+      //this calculation works with an error margin of couple of pixels
+      //to be honest im disgusted and proud of this method
+      return {
+        clientX,
+        clientY
+      };
     },
     getMetricByType(entityType) {
       if (entityType === GENERAL_SPEAKER) {
