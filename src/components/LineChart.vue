@@ -246,5 +246,7 @@ export default {
 
 .line-chart .x_axis .tick text {
   font-size: 14px;
+  transform: rotate(-45deg);
+  text-anchor: end;
 }
 </style>
