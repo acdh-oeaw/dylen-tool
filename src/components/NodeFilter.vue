@@ -128,12 +128,18 @@ const logger = require('../helpers/logger');
 export default {
   components: { InfoIcon, AlertTriangleIcon, Slider },
   name: 'NodeFilter',
-  props: ['availableMetrics', 'pane', 'generalType', 'stepsize'],
+  props: [
+    'availableMetrics',
+    'pane',
+    'generalType',
+    'stepsize',
+    'initialValueSlid'
+  ],
   data() {
     return {
       defaultMetric: 'Degree Centrality',
-      valueSlid: this.stepsize !== undefined ? 10 : [0, 20],
-      maximum: this.stepsize !== undefined ? 100 - this.stepsize : 100
+      maximum: this.stepsize !== undefined ? 100 - this.stepsize : 100,
+      valueSlid: [this.initialValueSlid[0], this.initialValueSlid[1]]
     };
   },
   mounted() {

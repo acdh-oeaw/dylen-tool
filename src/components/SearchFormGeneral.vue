@@ -50,6 +50,7 @@
               :general-type='GENERAL_PARTY'
               :available-metrics='availableMetrics'
               :pane='queryPane'
+              :initialValueSlid="valueSlid"
             ></node-filter>
           </b-col>
         </b-row>
@@ -99,7 +100,7 @@ export default {
   data() {
     return {
       selectedParty: 'ÖVP',
-      valueSlid: [0, 20],
+      valueSlid: [0, 5],
       corpusEdit: false
     };
   },

@@ -72,6 +72,7 @@
               :available-metrics='availableMetrics'
               :general-type='GENERAL_SPEAKER'
               :pane='queryPane'
+              :initialValueSlid="valueSlid"
             ></node-filter>
           </b-col>
         </b-row>
