@@ -51,65 +51,31 @@ export const sourceNameMapping = {
 }
 
 export function filterBasedOnSlider(network) {
-  let metricValues = network.nodes.map(node => {
-    switch(network.filter.metric) {
-      case "Degree Centrality":
-        return node.metrics.degree_centrality;
-      case "Eigenvector Centrality":
-        return node.metrics.eigenvector_centrality;
-      case "Betweenness Centrality":
-        return node.metrics.betweenness_centrality;
-      case "Load Centrality":
-        return node.metrics.load_centrality;
-      case "Pagerank":
-        return node.metrics.pagerank;
-      case "Clustering Coefficient":
-        return node.metrics.clustering_coefficient;
-      case "Harmonic Centrality":
-        return node.metrics.harmonic_centrality;
-      case "Closeness Centrality":
-        return node.metrics.closeness_centrality;
-      default: true
-    }
-  });
+  let selected_metric = ""
+  switch(network.filter.metric) {
+    case "Degree Centrality":
+      selected_metric = "degree_centrality"; break;
+    case "Eigenvector Centrality":
+      selected_metric = "eigenvector_centrality"; break;
+    case "Betweenness Centrality":
+      selected_metric = "betweenness_centrality"; break;
+    case "Load Centrality":
+      selected_metric = "load_centrality"; break;
+    case "Pagerank":
+      selected_metric = "pagerank"; break;
+    case "Clustering Coefficient":
+      selected_metric = "clustering_coefficient"; break;
+    case "Harmonic Centrality":
+      selected_metric = "harmonic_centrality"; break;
+    case "Closeness Centrality":
+      selected_metric = "closeness_centrality"; break;
+    default: true
+  }
 
-  let minVal = Math.min(...metricValues);
-  let maxVal = Math.max(...metricValues);
+  network.nodes.sort((a, b) => a.metrics[selected_metric] - b.metrics[selected_metric]);
+  let filteredNodes = network.nodes.slice(Math.round(network.nodes.length * network.filter.valueMin), Math.round(network.nodes.length * network.filter.valueMax));
 
-  const sliderMin = network.filter.valueMin;
-  const sliderMax = network.filter.valueMax;
-
-  let filteredNodes = network.nodes.filter(node => {
-    switch(network.filter.metric) {
-      case "Degree Centrality":
-        return node.metrics.degree_centrality <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.degree_centrality > minVal + (maxVal-minVal)*sliderMin;
-      case "Eigenvector Centrality":
-        return node.metrics.eigenvector_centrality <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.eigenvector_centrality > minVal + (maxVal-minVal)*sliderMin;
-      case "Betweenness Centrality":
-        return node.metrics.betweenness_centrality <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.betweenness_centrality > minVal + (maxVal-minVal)*sliderMin;
-      case "Load Centrality":
-        return node.metrics.load_centrality <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.load_centrality > minVal + (maxVal-minVal)*sliderMin;
-      case "Pagerank":
-        return node.metrics.pagerank <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.pagerank > minVal + (maxVal-minVal)*sliderMin;
-      case "Clustering Coefficient":
-        return node.metrics.clustering_coefficient <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.clustering_coefficient > minVal + (maxVal-minVal)*sliderMin;
-      case "Harmonic Centrality":
-        return node.metrics.harmonic_centrality <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.harmonic_centrality > minVal + (maxVal-minVal)*sliderMin;
-      case "Closeness Centrality":
-        return node.metrics.closeness_centrality <= minVal + (maxVal-minVal)*sliderMax &&
-          node.metrics.closeness_centrality > minVal + (maxVal-minVal)*sliderMin;
-      default: true
-    }
-  });
-
-  let filteredIds = filteredNodes.map(node => node.id).sort();
+  let filteredIds = filteredNodes.map(node => node.id);
 
   let filteredEdges = network.edges.filter(edge => {
     return filteredIds.includes(edge.node1) && filteredIds.includes(edge.node2);

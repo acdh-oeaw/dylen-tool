@@ -1,19 +1,31 @@
 <template>
   <b-card class='mt-0 mx-0 px-0 pt-0 nodefilter'>
-    <b-row xl='12' class='mx-0 px-0 pt-0 mt-0'>
-      <b-col xl='12' class='mt-0 text-center pt-0' style='font-size:0.9em'>
+    <b-row
+      xl='12'
+      class='mx-0 px-0 pt-0 mt-0'
+    >
+      <b-col
+        xl='12'
+        class='mt-0 text-center pt-0'
+        style='font-size:0.9em'
+      >
         <info-icon
-            size='1.2x'
-            class='custom-class'
-            aria-label='Node Filter info button'
-            style='color:red'
-            v-b-modal="'threshold-'+this.pane"
-            data-sauto-id='node-filter-info'></info-icon>
+          size='1.2x'
+          class='custom-class'
+          aria-label='Node Filter info button'
+          style='color:red'
+          v-b-modal="'threshold-'+this.pane"
+          data-sauto-id='node-filter-info'
+        ></info-icon>
         <b> Node filter</b>
       </b-col>
     </b-row>
     <b-row xl='12'>
-      <b-col xl='12' class='pt-2' style='font-size:0.9em'>
+      <b-col
+        xl='12'
+        class='pt-2'
+        style='font-size:0.9em'
+      >
         Metric:
         <b-form-select
           size='sm'
@@ -31,8 +43,15 @@
         </b-form-select>
       </b-col>
     </b-row>
-    <b-row xl='12' class='mt-0'>
-      <b-col xl='12' class='mt-3 mb-2' style='font-size:0.9em'>
+    <b-row
+      xl='12'
+      class='mt-0'
+    >
+      <b-col
+        xl='12'
+        class='mt-3 mb-2'
+        style='font-size:0.9em'
+      >
         % of nodes to display:
         <b-row xl='12'>
           <b-col
@@ -47,13 +66,21 @@
           </b-col>
         </b-row>
 
-        <b-modal :id='"threshold-"+this.pane' title='Node filter with threshold slider' ok-only>
+        <b-modal
+          :id='"threshold-"+this.pane'
+          title='Node filter with threshold slider'
+          ok-only
+        >
           <b-row xl='12'>
             <b-col
               xl='12'
               class='text-center'
             >
-              <alert-triangle-icon size='2x' class='custom-class' style='color: #E2CD0D'></alert-triangle-icon>
+              <alert-triangle-icon
+                size='2x'
+                class='custom-class'
+                style='color: #E2CD0D'
+              ></alert-triangle-icon>
               Caution<br>
             </b-col>
           </b-row>
@@ -68,15 +95,24 @@
         </b-modal>
       </b-col>
     </b-row>
-    <b-row xl='12' class='mx-0 px-0'>
-      <b-col xl='12' class='mt-2 pb-4'>
+    <b-row
+      xl='12'
+      class='mx-0 px-0'
+    >
+      <b-col
+        xl='12'
+        class='mt-2 pb-4'
+      >
         <Slider
+          :class="stepsize ? 'no-fill' : ''"
           @change='valueChanged'
           :format='sliderFormat'
           showTooltip='always'
           tooltipPosition='bottom'
           v-model='valueSlid'
+          :max="maximum"
           :data-sauto-id='"node-filter-slider-"+this.pane'
+          :merge="15"
         />
       </b-col>
 
@@ -92,19 +128,24 @@ const logger = require('../helpers/logger');
 export default {
   components: { InfoIcon, AlertTriangleIcon, Slider },
   name: 'NodeFilter',
-  props: ['availableMetrics', 'pane', 'generalType'],
+  props: [
+    'availableMetrics',
+    'pane',
+    'generalType',
+    'stepsize',
+    'initialValueSlid'
+  ],
   data() {
     return {
       defaultMetric: 'Degree Centrality',
-      valueSlid: [0, 20],
-      sliderFormat: function(value) {
-        return `${Math.round(value)}%`;
-      }
+      maximum: this.stepsize !== undefined ? 100 - this.stepsize : 100,
+      valueSlid: [this.initialValueSlid[0], this.initialValueSlid[1]]
     };
   },
   mounted() {
     let selectedMetric = this.getMetricByType(this.generalType);
-    this.selectedMetric = selectedMetric.metric === '' ? this.defaultMetric : selectedMetric.metric;
+    this.selectedMetric =
+      selectedMetric.metric === '' ? this.defaultMetric : selectedMetric.metric;
 
     this.$root.$on('networkTypeChanged', () => {
       this.selectedMetric = this.defaultMetric;
@@ -112,17 +153,38 @@ export default {
   },
   methods: {
     valueChanged() {
-      this.$emit('sliderValueChanged', this.$data.valueSlid);
+      if (this.stepsize !== undefined)
+        this.$emit('sliderValueChanged', [
+          this.$data.valueSlid,
+          this.$data.valueSlid + this.stepsize
+        ]);
+      else this.$emit('sliderValueChanged', this.$data.valueSlid);
     },
     getMetricByType(entityType) {
       if (entityType === GENERAL_SPEAKER) {
-        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](this.pane);
+        return this.$store.getters['main/selectedGeneralNetworkSpeakerMetric'](
+          this.pane
+        );
       } else {
-        return this.$store.getters['main/selectedGeneralNetworkMetric'](this.pane);
+        return this.$store.getters['main/selectedGeneralNetworkMetric'](
+          this.pane
+        );
       }
     }
   },
   computed: {
+    sliderFormat() {
+      if (this.stepsize != undefined) {
+        const s = this.stepsize;
+        return (value) => {
+          return `${Math.round(value)}% - ${Math.round(value + s)}%`;
+        };
+      } else {
+        return (value) => {
+          return `${Math.round(value)}%`;
+        };
+      }
+    },
     selectedMetric: {
       get() {
         return this.getMetricByType(this.generalType);
@@ -150,8 +212,12 @@ export default {
 
 <style>
 .nodefilter.card .card-body {
-  padding-top: 0.5rem!important;
-  padding-left: 0.5rem!important;
-  padding-right: 0.5rem!important;
+  padding-top: 0.5rem !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.no-fill .slider-connect {
+  background-color: unset;
 }
 </style>
