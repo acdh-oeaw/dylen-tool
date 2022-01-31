@@ -25,6 +25,7 @@
               style='max-width:150px'
             >
               <img
+                @click='updateShowInfo'
                 src='@/assets/dylen_white.png'
                 alt='DYLEN Logo'
                 style='max-width:100%;height:auto'

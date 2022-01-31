@@ -141,6 +141,18 @@
         modal-class='guide'
         title='Network interpretation guidelines'
         ok-only>
+      <h6><b>Use cases</b></h6>
+      <p>
+        The Ego Network visualization could be used to answer following question.
+      </p>
+      <ul>
+        <li>Does a word have different meaning/usage? - click on <code>show clusters</code> checkbox.</li>
+        <li>Which meaning of the word was pre-dominant in a given year - number of nodes in a cluster / sizes of the nodes. </li>
+        <li>How did the meaning of the word 'stationär' changed? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word</li>
+        <li>How does the word usage 'Klima (noun)' and 'Klima (pronoun)' - Compare two networks in parallel</li>
+        <li>Which of the surrounding words have strong similarities? - Strength of edges</li>
+      </ul>
+      <h6><b>Interpretation guideline</b></h6>
       <ul>
         <li>The <b>size of nodes</b> represents word frequency</li>
         <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
@@ -192,6 +204,82 @@
         <code>Network visualization</code> and <code>Node metrics comparison</code> components share the same data. <br>
         When you hover over the lines in the <code>Parallel coordinates</code>, corresponding node and its neighbors will be emphasized in the <code>Network visualization</code> and vice versa.
       </p>
+      <h6><b>Node Metrics</b></h6>
+      <ul>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.degree_centrality.html#networkx.algorithms.centrality.degree_centrality'
+                target='_blank'
+            >degree centrality</a>
+          </b> - is the total number of edges linked to a node.
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html#networkx.algorithms.centrality.betweenness_centrality'
+                target='_blank'
+            >betweenness centrality</a>
+          </b> - is the number of the shortest paths that pass
+          through the node; it represents the degree to which nodes stand between each other.
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.load_centrality.html#networkx.algorithms.centrality.load_centrality'
+                target='_blank'
+            >load centrality</a>
+          </b> - is a betweenness-like centrality measure that
+          differs in its definition (uses hypothetical flow process).
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.closeness_centrality.html#networkx.algorithms.centrality.closeness_centrality'
+                target='_blank'
+            >closeness centrality</a>
+          </b> - indicates how close a node is to all other
+          nodes in the network; nodes with a high closeness score have the shortest distances to all other
+          nodes, i.e. is the most central.
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.harmonic_centrality.html#networkx.algorithms.centrality.harmonic_centrality'
+                target='_blank'
+            >harmonic centrality</a>
+          </b> - is a variant of closeness centrality; higher
+          values indicate higher centrality.
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality'
+                target='_blank'
+            >eigenvector centrality</a>
+          </b> - the idea behind this measure is that a
+          high eigenvector centrality means that a node is connected to many nodes who themselves have high
+          scores.
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_analysis.pagerank_alg.pagerank.html#networkx.algorithms.link_analysis.pagerank_alg.pagerank'
+                target='_blank'
+            >pagerank</a>
+          </b> - is a variant of eigenvector centrality; the underlying
+          assumption is that a node is as important as the combined importance of the nodes that link to it.
+        </li>
+        <li>
+          <b>
+            <a
+                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html#networkx.algorithms.cluster.clustering'
+                target='_blank'
+            >clustering coefficient</a>
+          </b> - is a measure of the degree to which nodes
+          in a graph tend to cluster together.
+        </li>
+      </ul>
     </b-modal>
     <b-modal
         xl='12'
