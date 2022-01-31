@@ -203,6 +203,10 @@
                         Use Ego Network to..
                       </span>
                       <span slot='use-case-content'>
+                        <div style="text-align: center">
+                          <img src='@/assets/info/station1.png' alt='stationär Bild 1'/>
+                          <img src='@/assets/info/station2.png' alt='stationär Bild 2'/>
+                        </div>
                         <p>
                         ...investigate the meaning/usage of words and how they develop.<br>
                         </p>
@@ -285,6 +289,10 @@
                         Use General Network to..
                       </span>
                       <span slot='use-case-content'>
+                        <div style='text-align: center'>
+                          <img src='@/assets/info/gn1.png' alt='General Network Image 1'/>
+                          <img src='@/assets/info/gn2.png' alt='General Network Image 2'/>
+                        </div>
                         ...investigate what speakers and parties in the Austrian Parliament talk about and how they talk about it.
                       </span>
                       <span slot='guide-header'>How to use General Network</span>
@@ -346,6 +354,19 @@
                       </span>
                       <span slot='use-case-header'>Use Node Metrics Comparison for..</span>
                       <span slot='use-case-content'>
+                        <b-row lg='12'>
+                          <b-col lg='6'>
+                            <span>
+                              <img src='@/assets/info/nodemetrics1.png' alt='Node Metrics Image 1'/>
+                            </span>
+                          </b-col>
+                          <b-col lg='6'>
+                            <span>
+                              <img src='@/assets/info/nodemetrics2.png' alt='Node Metrics Image 2'/>
+                            </span>
+                          </b-col>
+                        </b-row>
+
                         ... finding out which nodes are the most important in the structure of a network.
                         <ul>
                           <li>

@@ -158,8 +158,7 @@
         <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
         <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
         <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
-        <li>If you are viewing ....The targetword isn't shown in the visualised ego-network, since every node have a connection to
-          the targetword and the network visualisation would be too unnecessarily complex.
+        <li>The target word itself is <b>not displayed</b> in the visualized ego network, since by definition every node in the network is connected to the target word by an edge.
         </li>
       </ul>
     </b-modal>
