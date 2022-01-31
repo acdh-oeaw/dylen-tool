@@ -97,9 +97,12 @@ export default {
       this.defineChartSize();
     },
     firstMetric() {
-      const networkType = this.$store.getters['main/selectedNetwork']('pane1').type;
+      let network1 = this.$store.getters['main/selectedNetwork']('pane1')
+      let network2 = this.$store.getters['main/selectedNetwork']('pane1')
+      const networkType1 = network1? network1.type : null;
+      const networkType2 = network2? network2.type : null;
 
-      if (networkType === 'Ego') {
+      if (networkType1 === 'Ego' || networkType2 === 'Ego') {
         return 'freqDiffNorm';
       } else {
         return 'jaccardSimilarity';

@@ -35,10 +35,8 @@
             class='bi bi-bootstrap-reboot'
             viewBox='0 0 16 16'
           >
-            <path
-              d='M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 1 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8z' />
-            <path
-              d='M6.641 11.671V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141zm0-3.75V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6z' />
+            <path d='M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 1 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8z' />
+            <path d='M6.641 11.671V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141zm0-3.75V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6z' />
           </svg>
         </b-button>
       </div>
@@ -138,13 +136,13 @@ export default {
     };
   },
   watch: {
-    showClusters: function() {
+    showClusters: function () {
       this.updateSimulation();
     },
-    netNodes: function() {
+    netNodes: function () {
       this.updateSimulation();
     },
-    netLinks: function() {
+    netLinks: function () {
       this.updateSimulation();
     },
     size: {
@@ -153,7 +151,7 @@ export default {
       },
       deep: true
     },
-    selectedNodes: function() {
+    selectedNodes: function () {
       this.simulation.restart();
     },
     options: {
@@ -171,7 +169,7 @@ export default {
   },
   computed: {
     networkType() {
-      return this.$store.getters['main/selectedNetwork']('pane1').type;
+      return this.$store.getters['main/selectedNetwork']('pane1')? this.$store.getters['main/selectedNetwork']('pane1')?.type : '';
     },
     sharedNode() {
       return this.$store.getters['main/focusNode'];
@@ -180,7 +178,7 @@ export default {
       return this.nodes.filter((node) => this.sharedNode === node.id);
     },
     isAllSelected: {
-      get: function() {
+      get: function () {
         let selectedSize = this.netNodes.filter((node) =>
           this.$store.getters['main/selectedNodesForMetrics'].find(
             (n) => n.id === node.id && n._pane === node._pane
@@ -189,8 +187,7 @@ export default {
         let allSize = this.netNodes.length;
         return selectedSize === allSize;
       },
-      set: function() {
-      }
+      set: function () {}
     },
     size() {
       return this.options.size;
@@ -295,7 +292,11 @@ export default {
       return this.svg
         .select(`.links`)
         .selectAll('line')
-        .data(this.links)
+        .data(
+          this.links.filter(
+            (d) => d.similarity >= this.options?.linkOptions?.minSimilarity
+          )
+        )
         .join('line')
         .attr(
           'stroke',
@@ -384,7 +385,6 @@ export default {
             entry.onClick(d.name);
             this.mouseClick(event, 'context-menu-select-as-targetword');
           }
-
         });
 
       menuEntries.filter((d) => d.hr).append('hr');
@@ -595,7 +595,7 @@ export default {
     setWordAsSearchTerm(word) {
       this.$store.dispatch('main/selectSurroundingWordAsTargetword', {
         pane: this.pane,
-        searchTerm: word,
+        searchTerm: word
       });
     }
   },

@@ -37,11 +37,7 @@
           >
             <query-bar></query-bar>
           </b-col>
-          <b-col
-            class='h-100 overflow-hidden'
-            xl='10'
-            md='9'
-          >
+          <b-col class='h-100 overflow-hidden'>
             <div
               class='h-100'
               data-sauto-id='results'
@@ -196,6 +192,24 @@
                               </b-form-input>
                             </b-col>
                           </b-row>
+                          <b-row class='pt-3'>
+                            <b-col
+                              xl='6'
+                              class='text-right'
+                            >Minimum similarity: {{ linkOptions.minSimilarity }}</b-col>
+                            <b-col>
+                              <b-form-input
+                                data-sauto-id='minimum-similarity-slider-option'
+                                type='range'
+                                v-model='linkOptions.minSimilarity'
+                                :number='true'
+                                :min='0'
+                                :max='1'
+                                :step='0.05'
+                              >
+                              </b-form-input>
+                            </b-col>
+                          </b-row>
                         </b-card>
                       </b-col>
                     </b-row>
@@ -328,12 +342,12 @@
               href="http://www.oeaw.ac.at/"
               target="_blank"
             >
-            <img
-              class='partner-logos'
-              style='max-height:50px; width:auto'
-              src="@/assets/acdh-ch-logo96.png"
-              alt="ACDH Logo"
-            >
+              <img
+                class='partner-logos'
+                style='max-height:50px; width:auto'
+                src="@/assets/acdh-ch-logo96.png"
+                alt="ACDH Logo"
+              >
               <span class="assistive-text">Link to OEAW Homepage</span>
             </a>
           </b-col>
@@ -462,7 +476,13 @@ html,
 body {
   height: 100%;
 }
-.assistive-text { height: 1px; width: 1px; position: absolute; overflow: hidden; top: -10px; }
+.assistive-text {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  top: -10px;
+}
 .sidebar {
   z-index: 6;
   height: 100%; /* 100% Full-height */
