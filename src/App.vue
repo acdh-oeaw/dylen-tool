@@ -199,7 +199,7 @@
                             >Minimum similarity: {{ linkOptions.minSimilarity }}</b-col>
                             <b-col>
                               <b-form-input
-                                data-sauto-id='opacity-slider-option'
+                                data-sauto-id='minimum-similarity-slider-option'
                                 type='range'
                                 v-model='linkOptions.minSimilarity'
                                 :number='true'
