@@ -270,7 +270,7 @@ export default {
     },
     errors() {
       logger.log('CHECKING ERRORS' + this.$store.getters['main/getPane']('pane1').errors);
-      return new Set(this.$store.getters['main/getPane']('pane1').errors);
+      return new Set(this.$store.getters['main/getPane'](this.queryPane).errors);
     },
     queryButtonActive() {
       if (
