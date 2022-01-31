@@ -112,6 +112,7 @@
           v-model='valueSlid'
           :max="maximum"
           :data-sauto-id='"node-filter-slider-"+this.pane'
+          :merge="15"
         />
       </b-col>
 
@@ -174,7 +175,6 @@ export default {
         };
       } else {
         return (value) => {
-          console.log(this);
           return `${Math.round(value)}%`;
         };
       }

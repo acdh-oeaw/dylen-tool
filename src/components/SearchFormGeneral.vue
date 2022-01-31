@@ -50,7 +50,6 @@
               :general-type='GENERAL_PARTY'
               :available-metrics='availableMetrics'
               :pane='queryPane'
-              :stepsize="5"
             ></node-filter>
           </b-col>
         </b-row>
