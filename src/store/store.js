@@ -189,7 +189,13 @@ const mainModule = {
         assignValuesFromState(network, networkID, years);
         filterBasedOnSlider(network);
 
-        if (network.nodes.length > 1000 || network.edges.length > 1000) {
+        if (network.edges.length > state.linkOptions.maxEdges){
+          let sortedEdges = network.edges.slice().sort((a, b) => a.similarity - b.similarity);
+          state.linkOptions.minSimilarity = Math.max(sortedEdges.slice(-state.linkOptions.maxEdges, -(state.linkOptions.maxEdges-1))[0].similarity, state.linkOptions.minSimilarity);
+        }
+        
+
+        if (network.nodes.length > 10000 || network.edges.length > 10000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
           this.dispatch('sauto/generalNetworkTimeout', { slidValMin, slidValMax });
         } else
@@ -247,7 +253,12 @@ const mainModule = {
         network.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
         filterBasedOnSlider(network);
 
-        if (network.nodes.length > 1000 || network.edges.length > 1000) {
+        if (network.edges.length > state.linkOptions.maxEdges){
+          let sortedEdges = network.edges.slice().sort((a, b) => a.similarity - b.similarity);
+          state.linkOptions.minSimilarity = Math.max(sortedEdges.slice(-state.linkOptions.maxEdges, -(state.linkOptions.maxEdges-1))[0].similarity, state.linkOptions.minSimilarity);
+        }
+
+        if (network.nodes.length > 10000 || network.edges.length > 10000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
           this.dispatch('sauto/generalNetworkTimeout', { slidValMin, slidValMax });
         } else
@@ -367,7 +378,12 @@ const mainModule = {
 
         filterBasedOnSlider(updatedNetwork);
         logger.log(state, pane, state[pane]);
-        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
+
+        if (updatedNetwork.edges.length > state.linkOptions.maxEdges){
+          let sortedEdges = updatedNetwork.edges.slice().sort((a, b) => a.similarity - b.similarity);
+          state.linkOptions.minSimilarity = Math.max(sortedEdges.slice(-state.linkOptions.maxEdges, -(state.linkOptions.maxEdges-1))[0].similarity, state.linkOptions.minSimilarity);
+        }
+        if (updatedNetwork.nodes.length > 10000 || updatedNetwork.edges.length > 10000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
           this.dispatch('sauto/generalNetworkTimeout', {
             slidValMin: oldNetwork.filter.valueMin,
@@ -421,7 +437,11 @@ const mainModule = {
         updatedNetwork.nodes.forEach(node => node.metrics['absoluteFrequency'] = node.absoluteFrequency);
         filterBasedOnSlider(updatedNetwork);
 
-        if (updatedNetwork.nodes.length > 1000 || updatedNetwork.edges.length > 1000) {
+        if (updatedNetwork.edges.length > state.linkOptions.maxEdges){
+          let sortedEdges = updatedNetwork.edges.slice().sort((a, b) => a.similarity - b.similarity);
+          state.linkOptions.minSimilarity = Math.max(sortedEdges.slice(-state.linkOptions.maxEdges, -(state.linkOptions.maxEdges-1))[0].similarity, state.linkOptions.minSimilarity);
+        }
+        if (updatedNetwork.nodes.length > 10000 || updatedNetwork.edges.length > 10000) {
           state[pane].timeoutWarning = NETWORK_SIZE_SHOW_WARNING;
           this.dispatch('sauto/generalNetworkTimeout', {
             slidValMin: oldNetwork.filter.valueMin,
@@ -656,7 +676,9 @@ const mainModule = {
       background: true
     },
     linkOptions: {
-      opacity: 0.25
+      opacity: 0.25,
+      minSimilarity: 0,
+      maxEdges: 500
     },
     tableOptions: {
       digits: 3,
