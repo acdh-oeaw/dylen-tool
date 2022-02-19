@@ -132,7 +132,7 @@ export default {
       this.isNetworkLoading = true;
       this.updateNetwork(this.generalNetwork);
       const position = this.calculateSliderPosition(value);
-      this.mouseClick(position, 'year-slider-' + this.pane + '-' + value);
+      this.mouseClick(position, 'year-slider-' + this.pane);
     },
     calculateSliderPosition(value) {
       //im sorry for this hacky workaround but vue slider doesnt register clicks on labels
