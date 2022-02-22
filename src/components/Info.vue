@@ -66,7 +66,7 @@
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="Node Metrics Comparison"
-                              text="Compare nodes according to frequency and network metrcs"
+                              text="Compare nodes according to frequency and network metrics"
                               :img-src="require('../assets/info/parallel.png')"
                               img-alt='Node Metrics Comparison Image'
                           ></b-carousel-slide>
@@ -209,7 +209,7 @@
                         </p>
                       </span>
                       <span slot='use-case-header'>
-                        Use Ego Network to..
+                        Use Ego Network to ...
                       </span>
                       <span slot='use-case-content'>
                         <div style="text-align: center">
@@ -310,7 +310,7 @@
                         The nodes in the network represent the <b>most frequent lexemes</b> in the subcorpus representing the speech of a selected party or speaker.<br>
                       </span>
                       <span slot='use-case-header'>
-                        Use General Network to..
+                        Use General Network to ...
                       </span>
                       <span slot='use-case-content'>
                         <div style='text-align: center'>
@@ -401,7 +401,7 @@
                         <br>
                         Details on the metrics used are described in the <b>Technical details</b> below.
                       </span>
-                      <span slot='use-case-header'>Use Node Metrics Comparison for..</span>
+                      <span slot='use-case-header'>Use Node Metrics Comparison for ...</span>
                       <span slot='use-case-content'>
                         <b-row lg='12'>
                           <b-col lg='6'>
@@ -428,7 +428,7 @@
                           </li>
                           <li>To what extent do the words in one network differ in frequency?
                             <ul>
-                              <li>Compare <code>normalised frequency.</code></li>
+                              <li>Compare <code>normalized frequency.</code></li>
                             </ul>
                           </li>
                           <li>How many words are shared by two compared networks?
@@ -572,20 +572,20 @@
                 </b-row>
               </b-tab>
               <b-tab
-                  title='What is Time Series Analysis'
+                  title='Time Series Analysis'
                   @click='onTabClick'
                   data-sauto-id='info-tab-content'
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
                     <info-collapsable name='timeseries'>
-                      <span slot='definition'>Description</span>
+                      <span slot='definition'>What is Time Series Analysis?</span>
                       <span slot='definition-content'>
                         <b>Time Series Analysis</b> allows you to track changes over time. <br>
                         Each graph indicates the diachronic development of a given target word according to frequency changes or measures of similarity.
                         See the <code>Technical details</code> section below for detailed descriptions of each of the measures<br>
                       </span>
-                      <span slot='use-case-header'>Use Time series analysis for...</span>
+                      <span slot='use-case-header'>Use Time series analysis for ...</span>
                       <span slot='use-case-content'>
                         <p>
                         The Time Series Analysis component could be used to answer following questions.
