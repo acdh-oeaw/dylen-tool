@@ -109,11 +109,14 @@
                                 <h5>How to use DYLEN</h5>
                                 DYLEN provides visualizations of three different network types.<br>
                                 <ul>
-                                  <li><b>Ego Network:</b> This network type allows you to explore the semantic neighborhoods of target words in different years
+                                  <li><b>Ego Network:</b> This network type allows you to explore the semantic
+                                    neighborhoods of target words in different years
                                   </li>
-                                  <li><b>General Network (Party):</b> This network type allows you to explore lexemes used by political parties in the Austrian Parliament
+                                  <li><b>General Network (Party):</b> This network type allows you to explore lexemes
+                                    used by political parties in the Austrian Parliament
                                   </li>
-                                  <li><b>General Network (Politicians):</b> This network type allows you to explore lexemes used by individual speakers in the Austrian Parliament.
+                                  <li><b>General Network (Politicians):</b> This network type allows you to explore
+                                    lexemes used by individual speakers in the Austrian Parliament.
                                   </li>
                                 </ul>
                                 <p>
@@ -153,8 +156,10 @@
                                 <h5>Austrian Media Corpus (AMC)</h5>
                                 AMC covers almost the entire Austrian print media landscape of the few decades,
                                 containing more than 40 million texts (more than 10 billion tokens).<br>
-                                For DYLEN, AMC was divided into multiple subcorpora, containing articles from different Austrian newspapers and magazines from 1996 to 2017<br>
-                                Some of the subcorpora available for visualizations represent combinations of various media sources:
+                                For DYLEN, AMC was divided into multiple subcorpora, containing articles from different
+                                Austrian newspapers and magazines from 1996 to 2017<br>
+                                Some of the subcorpora available for visualizations represent combinations of various
+                                media sources:
                                 <ul>
                                   <li>All magazines</li>
                                   <li>All newspapers</li>
@@ -170,9 +175,13 @@
                                   <li>Der Standard</li>
                                 </ul>
                                 <h5>Corpus of Austrian Parliamentary Records (ParlAT)</h5>
-                                The ParlAT Corpus contains the parliamentary records of the National Chamber (Nationalrat) – one of two chambers of the Austrian parliament. <br>
-                                The ParlAT covers the official shorthand transcripts from 1996 – 2017 and contains more than 75 million tokens. <br>
-                                Besides being linguistically annotated (part-of-speech tagged and lemmatized), the corpus also contains semantic annotations for example all speakers are identified and marked up.
+                                The ParlAT Corpus contains the parliamentary records of the National Chamber
+                                (Nationalrat) – one of two chambers of the Austrian parliament. <br>
+                                The ParlAT covers the official shorthand transcripts from 1996 – 2017 and contains more
+                                than 75 million tokens. <br>
+                                Besides being linguistically annotated (part-of-speech tagged and lemmatized), the
+                                corpus also contains semantic annotations for example all speakers are identified and
+                                marked up.
                               </b-card-text>
                             </b-card-body>
                           </b-collapse>
@@ -208,19 +217,34 @@
                           <img src='@/assets/info/station2.png' alt='stationär Bild 2'/>
                         </div>
                         <p>
-                        ...investigate the meaning/usage of words and how they develop.<br>
-                        </p>
-
-                        <p>
-                        The Ego Network visualization could be used to answer following question.
+                        The Ego Network visualization could be used to answer following questions.
                         </p>
 
                         <ul>
-                          <li>Does a word have different meaning/usage? - click on <code>show clusters</code> checkbox.</li>
-                          <li>Which meaning of the word was pre-dominant in a given year - number of nodes in a cluster / sizes of the nodes. </li>
-                          <li>How did the meaning of the word 'stationär' changed? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word</li>
-                          <li>How does the word usage 'Klima (noun)' and 'Klima (pronoun)' - Compare two networks in parallel</li>
-                          <li>Which of the surrounding words have strong similarities? - Strength of edges</li>
+                          <li>How did the usage of a word change over time (e.g. 'stationär')?
+                            <ul>
+                              <li>Use the year slider to investigate.</li>
+                            </ul>
+                          <li>Does a word have distinct meanings/usages?
+                            <ul>
+                              <li>Click on <code>show clusters</code> checkbox.</li>
+                            </ul>
+                          </li>
+                          <li>Which meaning of the word was dominant in a given year
+                            <ul>
+                              <li>Compare number of nodes in a cluster / sizes of the nodes. </li>
+                            </ul>
+                          </li>
+                          <li>How does the usage of near-synonyms differ? (e.g. 'Beitragserhöhung' vs. 'Steuererhöhung'
+                            <ul>
+                              <li>Visualize two networks in parallel.</li>
+                            </ul>
+                          </li>
+                          <li>How similar are the words in a network?
+                            <ul>
+                              <li>compare thickness of edges</li>
+                            </ul>
+                          </li>
                         </ul>
                       </span>
                       <span slot='guide-header'>
@@ -293,13 +317,38 @@
                           <img src='@/assets/info/gn1.png' alt='General Network Image 1'/>
                           <img src='@/assets/info/gn2.png' alt='General Network Image 2'/>
                         </div>
-                        ...investigate what speakers and parties in the Austrian Parliament talk about and how they talk about it.
+                        <p>
+                        The General Network visualization could be used to answer following questions.
+                        </p>
+
+                        <ul>
+                          <li>What do politicians focus on in their speeches in the Austrian parliament?
+                            <ul>
+                              <li>Investigate General Network (Party)</li>
+                            </ul>
+                          </li>
+                          <li>What do parties focus on in the Austrian parliament?
+                            <ul>
+                              <li>Investigate General Network (Speaker)</li>
+                            </ul>
+                          </li>
+                          <li>How do lexical choices differ between politicians/parties?
+                            <ul>
+                              <li>Visualize two networks in parallel </li>
+                            </ul>
+                          </li>
+                          <li>Does the general content of politicians' speeches remain stable or does it change over time?
+                            <ul>
+                              <li>Use the year slider to investigate</li>
+                            </ul>
+                          </li>
+                        </ul>
                       </span>
                       <span slot='guide-header'>How to use General Network</span>
                       <span slot='guide-content'>
                         <ol>
                           <li>
-                            Select <code>General Network (Party)</code> or <code>General Network (Speaker)</code> inn the Top Navigation bar.
+                            Select <code>General Network (Party)</code> or <code>General Network (Speaker)</code> in the Top Navigation bar.
                           </li>
                           <li>
                             Select a party from the dropdown menu. <br>
@@ -367,13 +416,30 @@
                           </b-col>
                         </b-row>
 
-                        ... finding out which nodes are the most important in the structure of a network.
+                        <p>
+                        The Node Metrics Comparison component could be used to answer following question.
+                        </p>
+
                         <ul>
-                          <li>
-                            Which word has the most neighbors? - the node with the highest <code>degrees centrality</code>
+                          <li>Which word in a network has the highest number of semantic neighbors?
+                            <ul>
+                              <li>The node with the highest <code>degree centrality.</code></li>
+                            </ul>
                           </li>
-                          <li>
-                            Are there overlapping words between two networks? - use table view and sort by word.
+                          <li>To what extent do the words in one network differ in frequency?
+                            <ul>
+                              <li>Compare <code>normalised frequency.</code></li>
+                            </ul>
+                          </li>
+                          <li>How many words are shared by two compared networks?
+                            <ul>
+                              <li>Use <code>Table View</code> and sort by Word. </li>
+                            </ul>
+                          </li>
+                          <li>Which centrality measures capture similar characteristics of the network?
+                            <ul>
+                              <li>Use <code>Download CSV/JSON</code> to investigate correlations between <code>centrality metrics</code>, e.g. with R (https://www.r-project.org/).</li>
+                            </ul>
                           </li>
                         </ul>
                       </span>
@@ -521,9 +587,27 @@
                       </span>
                       <span slot='use-case-header'>Use Time series analysis for...</span>
                       <span slot='use-case-content'>
-                        ... tracking changes in frequency and meaning/usage over time.
-                        <br>
-                        Use Table View to download the data for further analysis.
+                        <p>
+                        The Time Series Analysis component could be used to answer following questions.
+                        </p>
+
+                        <ul>
+                          <li>Do the networks for a target word change over time?
+                            <ul>
+                              <li>Choose Metric: <code>jaccard similarity</code></li>
+                            </ul>
+                          </li>
+                          <li>Does the frequency of a target word change over time?
+                            <ul>
+                              <li>Choose Metric: <code>frequency difference</code></li>
+                            </ul>
+                          </li>
+                          <li>Do different similarity measures capture the same diachronic trends?
+                            <ul>
+                              <li>Use Table View to copy data and investigate correlations between similarity metrics, e.g. with R (https://www.r-project.org/). </li>
+                            </ul>
+                          </li>
+                        </ul>
                       </span>
                       <span slot='guide-header'>How to use Time series analysis</span>
                       <span slot='guide-content'>
