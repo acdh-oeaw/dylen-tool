@@ -212,10 +212,6 @@
                         Use Ego Network to ...
                       </span>
                       <span slot='use-case-content'>
-                        <div style="text-align: center">
-                          <img src='@/assets/info/station1.png' alt='stationär Bild 1'/>
-                          <img src='@/assets/info/station2.png' alt='stationär Bild 2'/>
-                        </div>
                         <p>
                         The Ego Network visualization could be used to answer following questions.
                         </p>
@@ -313,10 +309,6 @@
                         Use General Network to ...
                       </span>
                       <span slot='use-case-content'>
-                        <div style='text-align: center'>
-                          <img src='@/assets/info/gn1.png' alt='General Network Image 1'/>
-                          <img src='@/assets/info/gn2.png' alt='General Network Image 2'/>
-                        </div>
                         <p>
                         The General Network visualization could be used to answer following questions.
                         </p>
@@ -403,19 +395,6 @@
                       </span>
                       <span slot='use-case-header'>Use Node Metrics Comparison for ...</span>
                       <span slot='use-case-content'>
-                        <b-row lg='12'>
-                          <b-col lg='6'>
-                            <span>
-                              <img src='@/assets/info/nodemetrics1.png' alt='Node Metrics Image 1'/>
-                            </span>
-                          </b-col>
-                          <b-col lg='6'>
-                            <span>
-                              <img src='@/assets/info/nodemetrics2.png' alt='Node Metrics Image 2'/>
-                            </span>
-                          </b-col>
-                        </b-row>
-
                         <p>
                         The Node Metrics Comparison component could be used to answer following question.
                         </p>
