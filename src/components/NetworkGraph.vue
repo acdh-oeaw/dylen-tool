@@ -11,9 +11,6 @@
         <b-row align-h='center'>
           <span><b>{{ egoNetwork.text }}</b>, {{ egoNetwork.pos.replace("_", " ") }} ({{ egoNetwork.corpus.id }} / {{ egoNetwork.subcorpus.name }})</span>
         </b-row>
-        <b-row align-h='center'>
-          <span>abs. Freq.: {{egoNetwork.absoluteFrequency}} / norm. Freq.: {{egoNetwork.normalisedFrequency.toFixed()}}</span>
-        </b-row>
       </b-col>
     </b-row>
     <b-row class='h-20 pb-2'>
@@ -214,9 +211,7 @@ export default {
           subcorpus: network.subcorpus,
           targetWordId: network.targetWordId,
           pos: network.pos,
-          type: network.type,
-          normalisedFrequency: network.normalisedFrequency,
-          absoluteFrequency: network.absoluteFrequency
+          type: network.type
         };
       }
       return selectedNetwork;
