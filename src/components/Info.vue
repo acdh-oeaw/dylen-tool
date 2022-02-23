@@ -1,7 +1,7 @@
 <template>
   <b-row
       xl='12'
-      class='justify-content-center mt-3'>
+      class='justify-content-center mt-3 info-container'>
     <b-col xl='10'>
       <b-row
           xl='12'
@@ -725,17 +725,17 @@ export default {
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' aria-label='next image' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
-.card-header {
+.info-container .card-header {
   color: white!important;
   background-color: rgb(23 162 184)!important;
 }
-.card {
+.info-container .card {
   border: 1px solid rgb(23 162 184)!important;
 }
-.card-header ul li a {
+.info-container .card-header ul li a {
   color: white !important;
 }
-.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+.info-container .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
   color: rgb(23 162 184)!important;
 }
 </style>
