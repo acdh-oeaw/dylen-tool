@@ -1,7 +1,7 @@
 <template>
   <b-row
       xl='12'
-      class='justify-content-center mt-3'>
+      class='justify-content-center mt-3 info-container'>
     <b-col xl='10'>
       <b-row
           xl='12'
@@ -16,6 +16,7 @@
           >
             <b-tabs
                 content-class='mt-3'
+                fill
                 card
             >
               <b-tab
@@ -27,12 +28,12 @@
               >
                 <b-row class='justify-content-md-center pt-0 mb-0'>
                   <b-col lg='10' style='height: 100%;'>
-                    <b-card-header>
-                      <h4>Welcome to DYLEN! Take a look at our tool's features</h4>
+                    <b-card-header header-bg-variant='info'>
+                      <span style='color:white'>Welcome to DYLEN! Take a look at our tool's features</span>
                     </b-card-header>
                     <b-card-body
                         class='pt-0 pb-0 mt-0 mb-2'
-                        style='max-height:90%;border:solid darkgrey'
+                        style='max-height:90%;border:solid rgb(23 162 184)'
                     >
                       <b-carousel
                           id="carousel-1"
@@ -66,7 +67,7 @@
                           ></b-carousel-slide>
                           <b-carousel-slide
                               caption="Node Metrics Comparison"
-                              text="Compare nodes according to frequency and network metrcs"
+                              text="Compare nodes according to frequency and network metrics"
                               :img-src="require('../assets/info/parallel.png')"
                               img-alt='Node Metrics Comparison Image'
                           ></b-carousel-slide>
@@ -109,11 +110,14 @@
                                 <h5>How to use DYLEN</h5>
                                 DYLEN provides visualizations of three different network types.<br>
                                 <ul>
-                                  <li><b>Ego Network:</b> This network type allows you to explore the semantic neighborhoods of target words in different years
+                                  <li><b>Ego Network:</b> This network type allows you to explore the semantic
+                                    neighborhoods of target words in different years
                                   </li>
-                                  <li><b>General Network (Party):</b> This network type allows you to explore lexemes used by political parties in the Austrian Parliament
+                                  <li><b>General Network (Party):</b> This network type allows you to explore lexemes
+                                    used by political parties in the Austrian Parliament
                                   </li>
-                                  <li><b>General Network (Politicians):</b> This network type allows you to explore lexemes used by individual speakers in the Austrian Parliament.
+                                  <li><b>General Network (Politicians):</b> This network type allows you to explore
+                                    lexemes used by individual speakers in the Austrian Parliament.
                                   </li>
                                 </ul>
                                 <p>
@@ -153,8 +157,10 @@
                                 <h5>Austrian Media Corpus (AMC)</h5>
                                 AMC covers almost the entire Austrian print media landscape of the few decades,
                                 containing more than 40 million texts (more than 10 billion tokens).<br>
-                                For DYLEN, AMC was divided into multiple subcorpora, containing articles from different Austrian newspapers and magazines from 1996 to 2017<br>
-                                Some of the subcorpora available for visualizations represent combinations of various media sources:
+                                For DYLEN, AMC was divided into multiple subcorpora, containing articles from different
+                                Austrian newspapers and magazines from 1996 to 2017<br>
+                                Some of the subcorpora available for visualizations represent combinations of various
+                                media sources:
                                 <ul>
                                   <li>All magazines</li>
                                   <li>All newspapers</li>
@@ -170,9 +176,13 @@
                                   <li>Der Standard</li>
                                 </ul>
                                 <h5>Corpus of Austrian Parliamentary Records (ParlAT)</h5>
-                                The ParlAT Corpus contains the parliamentary records of the National Chamber (Nationalrat) – one of two chambers of the Austrian parliament. <br>
-                                The ParlAT covers the official shorthand transcripts from 1996 – 2017 and contains more than 75 million tokens. <br>
-                                Besides being linguistically annotated (part-of-speech tagged and lemmatized), the corpus also contains semantic annotations for example all speakers are identified and marked up.
+                                The ParlAT Corpus contains the parliamentary records of the National Chamber
+                                (Nationalrat) – one of two chambers of the Austrian parliament. <br>
+                                The ParlAT covers the official shorthand transcripts from 1996 – 2017 and contains more
+                                than 75 million tokens. <br>
+                                Besides being linguistically annotated (part-of-speech tagged and lemmatized), the
+                                corpus also contains semantic annotations for example all speakers are identified and
+                                marked up.
                               </b-card-text>
                             </b-card-body>
                           </b-collapse>
@@ -200,27 +210,38 @@
                         </p>
                       </span>
                       <span slot='use-case-header'>
-                        Use Ego Network to..
+                        Use Ego Network to ...
                       </span>
                       <span slot='use-case-content'>
-                        <div style="text-align: center">
-                          <img src='@/assets/info/station1.png' alt='stationär Bild 1'/>
-                          <img src='@/assets/info/station2.png' alt='stationär Bild 2'/>
-                        </div>
                         <p>
-                        ...investigate the meaning/usage of words and how they develop.<br>
-                        </p>
-
-                        <p>
-                        The Ego Network visualization could be used to answer following question.
+                        The Ego Network visualization could be used to answer following questions.
                         </p>
 
                         <ul>
-                          <li>Does a word have different meaning/usage? - click on <code>show clusters</code> checkbox.</li>
-                          <li>Which meaning of the word was pre-dominant in a given year - number of nodes in a cluster / sizes of the nodes. </li>
-                          <li>How did the meaning of the word 'stationär' changed? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word</li>
-                          <li>How does the word usage 'Klima (noun)' and 'Klima (pronoun)' - Compare two networks in parallel</li>
-                          <li>Which of the surrounding words have strong similarities? - Strength of edges</li>
+                          <li>How did the usage of a word change over time (e.g. 'stationär')?
+                            <ul>
+                              <li>Use the year slider to investigate.</li>
+                            </ul>
+                          <li>Does a word have distinct meanings/usages?
+                            <ul>
+                              <li>Click on <code>show clusters</code> checkbox.</li>
+                            </ul>
+                          </li>
+                          <li>Which meaning of the word was dominant in a given year
+                            <ul>
+                              <li>Compare number of nodes in a cluster / sizes of the nodes. </li>
+                            </ul>
+                          </li>
+                          <li>How does the usage of near-synonyms differ? (e.g. 'Beitragserhöhung' vs. 'Steuererhöhung'
+                            <ul>
+                              <li>Visualize two networks in parallel.</li>
+                            </ul>
+                          </li>
+                          <li>How similar are the words in a network?
+                            <ul>
+                              <li>compare thickness of edges</li>
+                            </ul>
+                          </li>
                         </ul>
                       </span>
                       <span slot='guide-header'>
@@ -286,20 +307,41 @@
                         The nodes in the network represent the <b>most frequent lexemes</b> in the subcorpus representing the speech of a selected party or speaker.<br>
                       </span>
                       <span slot='use-case-header'>
-                        Use General Network to..
+                        Use General Network to ...
                       </span>
                       <span slot='use-case-content'>
-                        <div style='text-align: center'>
-                          <img src='@/assets/info/gn1.png' alt='General Network Image 1'/>
-                          <img src='@/assets/info/gn2.png' alt='General Network Image 2'/>
-                        </div>
-                        ...investigate what speakers and parties in the Austrian Parliament talk about and how they talk about it.
+                        <p>
+                        The General Network visualization could be used to answer following questions.
+                        </p>
+
+                        <ul>
+                          <li>What do politicians focus on in their speeches in the Austrian parliament?
+                            <ul>
+                              <li>Investigate General Network (Party)</li>
+                            </ul>
+                          </li>
+                          <li>What do parties focus on in the Austrian parliament?
+                            <ul>
+                              <li>Investigate General Network (Speaker)</li>
+                            </ul>
+                          </li>
+                          <li>How do lexical choices differ between politicians/parties?
+                            <ul>
+                              <li>Visualize two networks in parallel </li>
+                            </ul>
+                          </li>
+                          <li>Does the general content of politicians' speeches remain stable or does it change over time?
+                            <ul>
+                              <li>Use the year slider to investigate</li>
+                            </ul>
+                          </li>
+                        </ul>
                       </span>
                       <span slot='guide-header'>How to use General Network</span>
                       <span slot='guide-content'>
                         <ol>
                           <li>
-                            Select <code>General Network (Party)</code> or <code>General Network (Speaker)</code> inn the Top Navigation bar.
+                            Select <code>General Network (Party)</code> or <code>General Network (Speaker)</code> in the Top Navigation bar.
                           </li>
                           <li>
                             Select a party from the dropdown menu. <br>
@@ -352,28 +394,32 @@
                         <br>
                         Details on the metrics used are described in the <b>Technical details</b> below.
                       </span>
-                      <span slot='use-case-header'>Use Node Metrics Comparison for..</span>
+                      <span slot='use-case-header'>Use Node Metrics Comparison for ...</span>
                       <span slot='use-case-content'>
-                        <b-row lg='12'>
-                          <b-col lg='6'>
-                            <span>
-                              <img src='@/assets/info/nodemetrics1.png' alt='Node Metrics Image 1'/>
-                            </span>
-                          </b-col>
-                          <b-col lg='6'>
-                            <span>
-                              <img src='@/assets/info/nodemetrics2.png' alt='Node Metrics Image 2'/>
-                            </span>
-                          </b-col>
-                        </b-row>
+                        <p>
+                        The Node Metrics Comparison component could be used to answer following question.
+                        </p>
 
-                        ... finding out which nodes are the most important in the structure of a network.
                         <ul>
-                          <li>
-                            Which word has the most neighbors? - the node with the highest <code>degrees centrality</code>
+                          <li>Which word in a network has the highest number of semantic neighbors?
+                            <ul>
+                              <li>The node with the highest <code>degree centrality.</code></li>
+                            </ul>
                           </li>
-                          <li>
-                            Are there overlapping words between two networks? - use table view and sort by word.
+                          <li>To what extent do the words in one network differ in frequency?
+                            <ul>
+                              <li>Compare <code>normalized frequency.</code></li>
+                            </ul>
+                          </li>
+                          <li>How many words are shared by two compared networks?
+                            <ul>
+                              <li>Use <code>Table View</code> and sort by Word. </li>
+                            </ul>
+                          </li>
+                          <li>Which centrality measures capture similar characteristics of the network?
+                            <ul>
+                              <li>Use <code>Download CSV/JSON</code> to investigate correlations between <code>centrality metrics</code>, e.g. with R (https://www.r-project.org/).</li>
+                            </ul>
                           </li>
                         </ul>
                       </span>
@@ -506,24 +552,42 @@
                 </b-row>
               </b-tab>
               <b-tab
-                  title='What is Time Series Analysis'
+                  title='Time Series Analysis'
                   @click='onTabClick'
                   data-sauto-id='info-tab-content'
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
                     <info-collapsable name='timeseries'>
-                      <span slot='definition'>Description</span>
+                      <span slot='definition'>What is Time Series Analysis?</span>
                       <span slot='definition-content'>
                         <b>Time Series Analysis</b> allows you to track changes over time. <br>
                         Each graph indicates the diachronic development of a given target word according to frequency changes or measures of similarity.
                         See the <code>Technical details</code> section below for detailed descriptions of each of the measures<br>
                       </span>
-                      <span slot='use-case-header'>Use Time series analysis for...</span>
+                      <span slot='use-case-header'>Use Time series analysis for ...</span>
                       <span slot='use-case-content'>
-                        ... tracking changes in frequency and meaning/usage over time.
-                        <br>
-                        Use Table View to download the data for further analysis.
+                        <p>
+                        The Time Series Analysis component could be used to answer following questions.
+                        </p>
+
+                        <ul>
+                          <li>Do the networks for a target word change over time?
+                            <ul>
+                              <li>Choose Metric: <code>jaccard similarity</code></li>
+                            </ul>
+                          </li>
+                          <li>Does the frequency of a target word change over time?
+                            <ul>
+                              <li>Choose Metric: <code>frequency difference</code></li>
+                            </ul>
+                          </li>
+                          <li>Do different similarity measures capture the same diachronic trends?
+                            <ul>
+                              <li>Use Table View to copy data and investigate correlations between similarity metrics, e.g. with R (https://www.r-project.org/). </li>
+                            </ul>
+                          </li>
+                        </ul>
                       </span>
                       <span slot='guide-header'>How to use Time series analysis</span>
                       <span slot='guide-content'>
@@ -661,8 +725,17 @@ export default {
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' aria-label='next image' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
-
-.card-header ul li a {
-  color: #158394 !important;
+.info-container .card-header {
+  color: white!important;
+  background-color: rgb(23 162 184)!important;
+}
+.info-container .card {
+  border: 1px solid rgb(23 162 184)!important;
+}
+.info-container .card-header ul li a {
+  color: white !important;
+}
+.info-container .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color: rgb(23 162 184)!important;
 }
 </style>
