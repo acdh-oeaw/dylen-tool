@@ -16,6 +16,7 @@
           >
             <b-tabs
                 content-class='mt-3'
+                fill
                 card
             >
               <b-tab
@@ -27,12 +28,12 @@
               >
                 <b-row class='justify-content-md-center pt-0 mb-0'>
                   <b-col lg='10' style='height: 100%;'>
-                    <b-card-header>
-                      <h4>Welcome to DYLEN! Take a look at our tool's features</h4>
+                    <b-card-header header-bg-variant='info'>
+                      <span style='color:white'>Welcome to DYLEN! Take a look at our tool's features</span>
                     </b-card-header>
                     <b-card-body
                         class='pt-0 pb-0 mt-0 mb-2'
-                        style='max-height:90%;border:solid darkgrey'
+                        style='max-height:90%;border:solid rgb(23 162 184)'
                     >
                       <b-carousel
                           id="carousel-1"
@@ -724,8 +725,17 @@ export default {
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' aria-label='next image' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
-
+.card-header {
+  color: white!important;
+  background-color: rgb(23 162 184)!important;
+}
+.card {
+  border: 1px solid rgb(23 162 184)!important;
+}
 .card-header ul li a {
-  color: #158394 !important;
+  color: white !important;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color: rgb(23 162 184)!important;
 }
 </style>
