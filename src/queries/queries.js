@@ -53,6 +53,8 @@ export function getNetworkQuery(targetwordId, year) {
     query: `{
             getNetwork(targetword_id: "${targetwordId}", year:${year}){
                 year
+                absoluteFrequency
+                normalisedFrequency
                 nodes {
                     id
                     clusterId
