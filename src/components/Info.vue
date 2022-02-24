@@ -738,4 +738,7 @@ export default {
 .info-container .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
   color: rgb(23 162 184)!important;
 }
+.carousel {
+  width: 90%!important;
+}
 </style>
