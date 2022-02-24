@@ -18,6 +18,7 @@
                 content-class='mt-3'
                 fill
                 card
+                vertical
             >
               <b-tab
                   class='info-tab py-0'
@@ -732,7 +733,7 @@ export default {
 .info-container .card {
   border: 1px solid rgb(23 162 184)!important;
 }
-.info-container .card-header ul li a {
+.info-container .card-header li a {
   color: white !important;
 }
 .info-container .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
