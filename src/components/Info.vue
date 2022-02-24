@@ -731,7 +731,7 @@ export default {
   background-color: rgb(23 162 184)!important;
 }
 .info-container .card {
-  border: 1px solid rgb(23 162 184)!important;
+  border: 0px solid rgb(23 162 184)!important;
 }
 .info-container .card-header li a {
   color: white !important;
