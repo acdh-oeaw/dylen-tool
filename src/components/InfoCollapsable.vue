@@ -2,7 +2,7 @@
   <div class='accordion' role='tablist'>
     <b-card no-body class='mb-1'>
       <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-button block v-b-toggle='getCollapsableId(1)' variant="info">
+        <b-button block v-b-toggle='getCollapsableId(1)' variant="info" data-sauto-id='info-collapsable-button'>
           <slot name='definition'></slot>
         </b-button>
       </b-card-header>
@@ -16,7 +16,7 @@
     </b-card>
     <b-card no-body class='mb-1'>
       <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-button block v-b-toggle='getCollapsableId(2)' variant="info">
+        <b-button block v-b-toggle='getCollapsableId(2)' variant="info" data-sauto-id='info-collapsable-button'>
           <slot name='use-case-header'></slot>
         </b-button>
       </b-card-header>
@@ -30,7 +30,7 @@
     </b-card>
     <b-card no-body class='mb-1'>
       <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-button block v-b-toggle='getCollapsableId(3)' variant="info">
+        <b-button block v-b-toggle='getCollapsableId(3)' variant="info" data-sauto-id='info-collapsable-button'>
           <slot name='guide-header'></slot>
         </b-button>
       </b-card-header>
@@ -44,7 +44,7 @@
     </b-card>
     <b-card no-body class='mb-1'>
       <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-button block v-b-toggle='getCollapsableId(4)' variant="info"><slot name='details-header'></slot></b-button>
+        <b-button block v-b-toggle='getCollapsableId(4)' variant="info" data-sauto-id='info-collapsable-button'><slot name='details-header'></slot></b-button>
       </b-card-header>
       <b-collapse :id="getCollapsableId(4)" :accordion="getAccordionName()" role="tabpanel">
         <b-card-body>

@@ -26,14 +26,14 @@
                   @click='onTabClick'
                   style='overflow: hidden'
               >
-                <b-row class='justify-content-md-center pt-0 mb-0'>
+                <b-row class='justify-content-md-center pt-0 mb-0' style='max-width:90%;margin:auto'>
                   <b-col lg='10' style='height: 100%;'>
                     <b-card-header header-bg-variant='info'>
                       <span style='color:white'>Welcome to DYLEN! Take a look at our tool's features</span>
                     </b-card-header>
                     <b-card-body
                         class='pt-0 pb-0 mt-0 mb-2'
-                        style='max-height:90%;border:solid rgb(23 162 184)'
+                        style='max-height:90%;border:1px solid rgb(23 162 184);margin:auto'
                     >
                       <b-carousel
                           id="carousel-1"
@@ -94,7 +94,7 @@
                       <div class='accordion' role='tablist'>
                         <b-card no-body class='mb-1'>
                           <b-card-header header-tag="header" class="p-1" role="tab">
-                            <b-button block v-b-toggle.accordion-1 variant="info">About DYLEN</b-button>
+                            <b-button block v-b-toggle.accordion-1 variant="info" data-sauto-id='info-collapsable-button'>About DYLEN</b-button>
                           </b-card-header>
                           <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
                             <b-card-body>
@@ -143,7 +143,7 @@
                         </b-card>
                         <b-card no-body class="mb-1">
                           <b-card-header header-tag="header" class="p-1" role="tab">
-                            <b-button block v-b-toggle.accordion-2 variant="info">About Corpora/Data</b-button>
+                            <b-button block v-b-toggle.accordion-2 variant="info" data-sauto-id='info-collapsable-button'>About Corpora/Data</b-button>
                           </b-card-header>
                           <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
                             <b-card-body>
@@ -732,10 +732,14 @@ export default {
 .info-container .card {
   border: 1px solid rgb(23 162 184)!important;
 }
-.info-container .card-header ul li a {
+.info-container .card-header li a {
   color: white !important;
 }
 .info-container .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
   color: rgb(23 162 184)!important;
+}
+.carousel {
+  width: 90%!important;
+  margin: auto!important;
 }
 </style>
