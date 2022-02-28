@@ -18,7 +18,6 @@
                 content-class='mt-3'
                 fill
                 card
-                vertical
             >
               <b-tab
                   class='info-tab py-0'
@@ -27,14 +26,14 @@
                   @click='onTabClick'
                   style='overflow: hidden'
               >
-                <b-row class='justify-content-md-center pt-0 mb-0'>
+                <b-row class='justify-content-md-center pt-0 mb-0' style='max-width:90%;margin:auto'>
                   <b-col lg='10' style='height: 100%;'>
                     <b-card-header header-bg-variant='info'>
                       <span style='color:white'>Welcome to DYLEN! Take a look at our tool's features</span>
                     </b-card-header>
                     <b-card-body
                         class='pt-0 pb-0 mt-0 mb-2'
-                        style='max-height:90%;border:solid rgb(23 162 184)'
+                        style='max-height:90%;border:1px solid rgb(23 162 184);margin:auto'
                     >
                       <b-carousel
                           id="carousel-1"
@@ -731,7 +730,7 @@ export default {
   background-color: rgb(23 162 184)!important;
 }
 .info-container .card {
-  border: 0px solid rgb(23 162 184)!important;
+  border: 1px solid rgb(23 162 184)!important;
 }
 .info-container .card-header li a {
   color: white !important;
@@ -741,5 +740,6 @@ export default {
 }
 .carousel {
   width: 90%!important;
+  margin: auto!important;
 }
 </style>
