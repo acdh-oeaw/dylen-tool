@@ -389,7 +389,7 @@
                     <info-collapsable name='node-metrics'>
                       <span slot='definition'>What are Node Metrics?</span>
                       <span slot='definition-content'>
-                        A network is a structure consisting of of nodes and edges, and characteristics of nodes and edges can be described with different metrics.<br>
+                        A network is a structure consisting of nodes and edges, and characteristics of nodes and edges can be described with different metrics.<br>
                         The <code>Node Metrics Comparison</code> component helps users to compare different networks based on <b>10 different node metrics</b>.
                         <br>
                         Details on the metrics used are described in the <b>Technical details</b> below.
@@ -418,7 +418,7 @@
                           </li>
                           <li>Which centrality measures capture similar characteristics of the network?
                             <ul>
-                              <li>Use <code>Download CSV/JSON</code> to investigate correlations between <code>centrality metrics</code>, e.g. with R (https://www.r-project.org/).</li>
+                              <li>Use <code>Download CSV/JSON</code> to investigate correlations between <code>centrality metrics</code>, e.g. with R (<a href='https://www.r-project.org/'>https://www.r-project.org/</a>).</li>
                             </ul>
                           </li>
                         </ul>
@@ -447,8 +447,8 @@
                         </p>
                         <h6><b>Node Labels</b></h6>
                         <p>
-                          The node labels are shown on the left and right side of the chart, overlapping words (words with the same/similar metric value on the first/last axis ) are displayed as <code>*</code>,
-                          the actual word can be viewed by hovering over the <code>*</code> character,
+                          The node labels are shown on the left and right side of the chart, overlapping words (words with the same/similar metric value on the first/last axis) are displayed as <code>*</code>,
+                          the actual word can be viewed by hovering over the <code>*</code> character.
                         </p>
                         <h6><b>Select/Deselect nodes</b></h6>
                         <p>
@@ -584,7 +584,7 @@
                           </li>
                           <li>Do different similarity measures capture the same diachronic trends?
                             <ul>
-                              <li>Use Table View to copy data and investigate correlations between similarity metrics, e.g. with R (https://www.r-project.org/). </li>
+                              <li>Use Table View to copy data and investigate correlations between similarity metrics, e.g. with R (<a href='https://www.r-project.org/'>https://www.r-project.org/</a>). </li>
                             </ul>
                           </li>
                         </ul>

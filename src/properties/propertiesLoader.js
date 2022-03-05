@@ -9,7 +9,7 @@ let props;
 
 const logger = require('../helpers/logger');
 
-logger.log('environment' + environment)
+logger.log('environment: ' + environment)
 
 if (environment === 'dev') {
   props = properties_dev;
