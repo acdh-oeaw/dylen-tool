@@ -220,7 +220,6 @@
                         <p>
                         The Ego Network visualization could be used to answer following questions:
                         </p>
-
                         <ul>
                           <li>How did the usage of a word change over time (e.g. 'stationär')?
                             <ul>
@@ -275,6 +274,8 @@
                           <li>The <b>thickness of the edges</b> represents the semantic similarity between nodes</li>
                           <li>The <b>colors of the labels</b> represent different part-of-speech tags</li>
                           <li>The <b>colors of the nodes</b> represent semantic clusters, which may sometimes be interpreted as polysemic meanings or distinct usage contexts, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
+                          <li>Right click on a node to see its exact node metrics</li>
+                          <li>Right click on a node to visualize its word as the target word</li>
                         </ul>
                       </span>
                       <span slot='details-header'>Technical details</span>
@@ -368,6 +369,7 @@
                               <li>The <b>size of the nodes</b> represents word frequency</li>
                               <li>The <b>thickness of the edges</b> represents the semantic similarity between nodes</li>
                               <li>The <b>colors of the labels</b> represent different part-of-speech tags</li>
+                              <li>Right click on a node to see its exact node metrics</li>
                             </ul>
                       </span>
                       <span slot='details-header'>Technical details</span>
