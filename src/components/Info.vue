@@ -108,13 +108,13 @@
                                 </p>
                                 <p>
                                 <h5>How to use DYLEN</h5>
-                                DYLEN provides visualizations of three different network types.<br>
+                                DYLEN provides visualizations of three different network types:<br>
                                 <ul>
                                   <li><b>Ego Network:</b> This network type allows you to explore the semantic
-                                    neighborhoods of target words in different years
+                                    neighborhoods of target words in different years.
                                   </li>
                                   <li><b>General Network (Party):</b> This network type allows you to explore lexemes
-                                    used by political parties in the Austrian Parliament
+                                    used by political parties in the Austrian Parliament.
                                   </li>
                                   <li><b>General Network (Politicians):</b> This network type allows you to explore
                                     lexemes used by individual speakers in the Austrian Parliament.
@@ -125,10 +125,10 @@
                                 </p>
                                 <p>
                                   Click on the corresponding tabs for more information on each network type and
-                                  different visualization options<br>
+                                  different visualization options.<br>
                                 </p>
                                 <p>
-                                  Learn more about the project here:: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.<br>
+                                  Learn more about the project here: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.<br>
                                 </p>
                                 Code available on Github:
                                 <ul>
@@ -204,8 +204,8 @@
                       <span slot='definition'>What is an Ego Network?</span>
                       <span slot='definition-content'>
                         <p>Ego network visualizations of a selected target word provide information about its <b>semantic
-                        neighborhood</b> in a given year<br>
-                        The nodes in the network represent the <b>top-50 lexemes</b> that are <b>semantically most closely related</b> to a target word according to the applied semantic model <br>
+                        neighborhood</b> in a given year.<br>
+                        The nodes in the network represent the <b>top-50 lexemes</b> that are <b>semantically most closely related</b> to a target word according to the applied semantic model. <br>
                           Please have a look into the <code>Technical details</code> section for more information about the semantic model.
                         </p>
                       </span>
@@ -214,7 +214,7 @@
                       </span>
                       <span slot='use-case-content'>
                         <p>
-                        The Ego Network visualization could be used to answer following questions.
+                        The Ego Network visualization could be used to answer following questions:
                         </p>
 
                         <ul>
@@ -227,19 +227,19 @@
                               <li>Click on <code>show clusters</code> checkbox.</li>
                             </ul>
                           </li>
-                          <li>Which meaning of the word was dominant in a given year
+                          <li>Which meaning of the word was dominant in a given year?
                             <ul>
                               <li>Compare number of nodes in a cluster / sizes of the nodes. </li>
                             </ul>
                           </li>
-                          <li>How does the usage of near-synonyms differ? (e.g. 'Beitragserhöhung' vs. 'Steuererhöhung'
+                          <li>How does the usage of near-synonyms differ? (e.g. 'Beitragserhöhung' vs. 'Steuererhöhung')
                             <ul>
                               <li>Visualize two networks in parallel.</li>
                             </ul>
                           </li>
                           <li>How similar are the words in a network?
                             <ul>
-                              <li>compare thickness of edges</li>
+                              <li>Compare thickness of edges.</li>
                             </ul>
                           </li>
                         </ul>

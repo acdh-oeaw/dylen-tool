@@ -154,12 +154,11 @@
       </ul>
       <h6><b>Interpretation guideline</b></h6>
       <ul>
-        <li>The <b>size of nodes</b> represents word frequency</li>
-        <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
-        <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
-        <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
-        <li>The target word itself is <b>not displayed</b> in the visualized ego network, since by definition every node in the network is connected to the target word by an edge.
-        </li>
+        <li>The <b>size of nodes</b> represents word frequency.</li>
+        <li>The <b>thickness of edges</b> represents the similarity of nodes.</li>
+        <li>The <b>colors of the labels</b> represent different Part-of-speech tags.</li>
+        <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enabled by clicking on the checkbox <code>"show clusters"</code>.</li>
+        <li>The target word itself is <b>not displayed</b> in the visualized ego network, since by definition every node in the network is connected to the target word by an edge.</li>
       </ul>
     </b-modal>
     <b-modal
