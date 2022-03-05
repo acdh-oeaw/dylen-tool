@@ -580,7 +580,7 @@
                       <span slot='definition-content'>
                         <b>Time Series Analysis</b> allows you to track changes over time. <br>
                         Each graph indicates the diachronic development of a given target word according to frequency changes or measures of similarity.
-                        See the <code>Technical details</code> section below for detailed descriptions of each of the measures<br>
+                        See the <code>Technical details</code> section below for detailed descriptions of each of the measures.<br>
                       </span>
                       <span slot='use-case-header'>Use Time series analysis for ...</span>
                       <span slot='use-case-content'>
@@ -617,7 +617,7 @@
                           <li>Select the year you would like to compare the metrics to (first year, last year, previous year).</li>
                         </ol>
 
-                        <h6>Axes</h6>
+                        <h6><b>Axes</b></h6>
                         The years are displayed on the x-axis, the y-axis shows the values of the selected metrics.
 
                       </span>
@@ -676,13 +676,14 @@
                           are pre-processed to represent the union of nodes of two time slices. The score does not have a fixed
                           range.
                         </li>
-                        <li>
-                          <b>Network embeddings similarity:</b> this measure requires incremental training of node embedding
-                          models
-                          of networks of subsequent years. Node embeddings are obtained by the node2vec algorithm described in
-                          [2]. The score between two years is computed by averaging node embeddings to represent a network and
-                          taking cosine similarity between the obtained network vectors. The score ranges from 0 to 1.
-                        </li>
+<!--                        this is not one of the options in the drop down menu-->
+<!--                        <li>-->
+<!--                          <b>Network embeddings similarity:</b> this measure requires incremental training of node embedding-->
+<!--                          models-->
+<!--                          of networks of subsequent years. Node embeddings are obtained by the node2vec algorithm described in-->
+<!--                          [2]. The score between two years is computed by averaging node embeddings to represent a network and-->
+<!--                          taking cosine similarity between the obtained network vectors. The score ranges from 0 to 1.-->
+<!--                        </li>-->
                         <br>
                         <h6><b>References</b></h6>
                         <ol>
