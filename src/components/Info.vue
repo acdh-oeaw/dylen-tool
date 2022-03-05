@@ -315,24 +315,24 @@
                         </p>
 
                         <ul>
-                          <li>What do politicians focus on in their speeches in the Austrian parliament?
+                          <li>What do parties focus on in their speeches in the Austrian parliament?
                             <ul>
-                              <li>Investigate General Network (Party)</li>
+                              <li>Investigate General Network (Party).</li>
                             </ul>
                           </li>
-                          <li>What do parties focus on in the Austrian parliament?
+                          <li>What do individual politicians focus on in the Austrian parliament?
                             <ul>
-                              <li>Investigate General Network (Speaker)</li>
+                              <li>Investigate General Network (Speaker).</li>
                             </ul>
                           </li>
                           <li>How do lexical choices differ between politicians/parties?
                             <ul>
-                              <li>Visualize two networks in parallel </li>
+                              <li>Visualize two networks in parallel.</li>
                             </ul>
                           </li>
                           <li>Does the general content of politicians' speeches remain stable or does it change over time?
                             <ul>
-                              <li>Use the year slider to investigate</li>
+                              <li>Use the year slider to investigate.</li>
                             </ul>
                           </li>
                         </ul>
@@ -346,18 +346,18 @@
                           <li>
                             Select a party from the dropdown menu. <br>
                             (Only for <code>General Network (Speaker)</code>)
-                            Select a speaker from the dropdown men
+                            Select a speaker from the dropdown menu.
                           </li>
                           <li>
-                            (Optional) Select a <code>Node Filter Metric</code> you want to use to filter the nodes from the dropdown menu <br>
+                            (Optional) Select a <code>Node Filter Metric</code> you want to use to filter the nodes from the dropdown menu.<br>
                             General networks are very large in size, and visualizing the network is computationally expensive.<br>
                             The node metric filter is used to select only a specific number of nodes based on the selected metrics,
-                            <code>degree centrality</code> is the default selection
+                            <code>degree centrality</code> is the default selection.
                           </li>
                           <li>
                             (Optional) Adjust the <code>Node Filter</code>. Too wide a range may cause long waiting times or might even freeze the browser.
                           </li>
-                          <li>Click <code>Visualize</code></li>
+                          <li>Click <code>Visualize</code>.</li>
                         </ol>
                           <h5>How to interpret general networks</h5>
                             <ul>
