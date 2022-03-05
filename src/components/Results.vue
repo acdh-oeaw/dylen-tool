@@ -279,12 +279,12 @@
         </li>
         <li>
           <b>
-            Absolute Frequency
+            absolute frequency
           </b> - is the number of instances of the node in the selected subcorpus.
         </li>
         <li>
           <b>
-            Normalized Frequency
+            normalized frequency
           </b> - is the number of instances of the node in the selected subcorpus normalized to scale with min=0 and max=1.
         </li>
       </ul>

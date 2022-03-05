@@ -1,30 +1,30 @@
 <template>
   <b-row
-      xl='12'
-      class='justify-content-center mt-3 info-container'>
+    xl='12'
+    class='justify-content-center mt-3 info-container'>
     <b-col xl='10'>
       <b-row
-          xl='12'
-          class='justify-content-center'
-          aligh-h='center'
+        xl='12'
+        class='justify-content-center'
+        aligh-h='center'
       >
         <b-col
-            xl='12'>
+          xl='12'>
           <b-card
-              align='center'
-              no-body
+            align='center'
+            no-body
           >
             <b-tabs
-                content-class='mt-3'
-                fill
-                card
+              content-class='mt-3'
+              fill
+              card
             >
               <b-tab
-                  class='info-tab py-0'
-                  title='Start'
-                  active
-                  @click='onTabClick'
-                  style='overflow: hidden'
+                class='info-tab py-0'
+                title='Start'
+                active
+                @click='onTabClick'
+                style='overflow: hidden'
               >
                 <b-row class='justify-content-md-center pt-0 mb-0' style='max-width:90%;margin:auto'>
                   <b-col lg='10' style='height: 100%;'>
@@ -32,50 +32,50 @@
                       <span style='color:white'>Welcome to DYLEN! Take a look at our tool's features</span>
                     </b-card-header>
                     <b-card-body
-                        class='pt-0 pb-0 mt-0 mb-2'
-                        style='max-height:90%;border:1px solid rgb(23 162 184);margin:auto'
+                      class='pt-0 pb-0 mt-0 mb-2'
+                      style='max-height:90%;border:1px solid rgb(23 162 184);margin:auto'
                     >
                       <b-carousel
-                          id="carousel-1"
-                          class='mt-1'
-                          :interval="0"
-                          :controls='true'
-                          :indicators='true'
-                          background="#ababab"
-                          style="text-shadow: 1px 1px 2px #333;"
-                          label-next='Next slide'
-                          label-prev='Previous slide'
+                        id='carousel-1'
+                        class='mt-1'
+                        :interval='0'
+                        :controls='true'
+                        :indicators='true'
+                        background='#ababab'
+                        style='text-shadow: 1px 1px 2px #333;'
+                        label-next='Next slide'
+                        label-prev='Previous slide'
                       >
                         <div style='color: black;'>
                           <b-carousel-slide
-                              caption="Ego Network"
-                              text="Explore the semantic neighborhood of a target word in different years"
-                              :img-src="require('../assets/info/ego.png')"
-                              img-alt='Ego Network Image'
+                            caption='Ego Network'
+                            text='Explore the semantic neighborhood of a target word in different years'
+                            :img-src="require('../assets/info/ego.png')"
+                            img-alt='Ego Network Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="General Network (Party)"
-                              text="Explore lexemes used by political parties in the Austrian Parliament"
-                              :img-src="require('../assets/info/general.png')"
-                              img-alt='General Network Party Image'
+                            caption='General Network (Party)'
+                            text='Explore lexemes used by political parties in the Austrian Parliament'
+                            :img-src="require('../assets/info/general.png')"
+                            img-alt='General Network Party Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="General Network (Speaker)"
-                              text="Explore lexemes used by individual speakers in the Austrian Parliament"
-                              :img-src="require('../assets/info/speaker.png')"
-                              img-alt='General Network Speaker Image'
+                            caption='General Network (Speaker)'
+                            text='Explore lexemes used by individual speakers in the Austrian Parliament'
+                            :img-src="require('../assets/info/speaker.png')"
+                            img-alt='General Network Speaker Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="Node Metrics Comparison"
-                              text="Compare nodes according to frequency and network metrics"
-                              :img-src="require('../assets/info/parallel.png')"
-                              img-alt='Node Metrics Comparison Image'
+                            caption='Node Metrics Comparison'
+                            text='Compare nodes according to frequency and network metrics'
+                            :img-src="require('../assets/info/parallel.png')"
+                            img-alt='Node Metrics Comparison Image'
                           ></b-carousel-slide>
                           <b-carousel-slide
-                              caption="Times Series Analysis"
-                              text="Track frequency/similarity changes over time"
-                              :img-src="require('../assets/info/timeseries.png')"
-                              img-alt='Time Series Analysis Image'
+                            caption='Times Series Analysis'
+                            text='Track frequency/similarity changes over time'
+                            :img-src="require('../assets/info/timeseries.png')"
+                            img-alt='Time Series Analysis Image'
                           ></b-carousel-slide>
                         </div>
                       </b-carousel>
@@ -85,18 +85,20 @@
 
               </b-tab>
               <b-tab
-                  title='About'
-                  @click='onTabClick'
-                  data-sauto-id='info-tab-content'>
+                title='About'
+                @click='onTabClick'
+                data-sauto-id='info-tab-content'>
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
                     <b-card-text>
                       <div class='accordion' role='tablist'>
                         <b-card no-body class='mb-1'>
-                          <b-card-header header-tag="header" class="p-1" role="tab">
-                            <b-button block v-b-toggle.accordion-1 variant="info" data-sauto-id='info-collapsable-button'>About DYLEN</b-button>
+                          <b-card-header header-tag='header' class='p-1' role='tab'>
+                            <b-button block v-b-toggle.accordion-1 variant='info'
+                                      data-sauto-id='info-collapsable-button'>About DYLEN
+                            </b-button>
                           </b-card-header>
-                          <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+                          <b-collapse id='accordion-1' visible accordion='my-accordion' role='tabpanel'>
                             <b-card-body>
                               <b-card-text class='text-left'>
                                 <p>
@@ -141,11 +143,13 @@
                             </b-card-body>
                           </b-collapse>
                         </b-card>
-                        <b-card no-body class="mb-1">
-                          <b-card-header header-tag="header" class="p-1" role="tab">
-                            <b-button block v-b-toggle.accordion-2 variant="info" data-sauto-id='info-collapsable-button'>About Corpora/Data</b-button>
+                        <b-card no-body class='mb-1'>
+                          <b-card-header header-tag='header' class='p-1' role='tab'>
+                            <b-button block v-b-toggle.accordion-2 variant='info'
+                                      data-sauto-id='info-collapsable-button'>About Corpora/Data
+                            </b-button>
                           </b-card-header>
-                          <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+                          <b-collapse id='accordion-2' accordion='my-accordion' role='tabpanel'>
                             <b-card-body>
                               <b-card-text class='text-left'>
                                 <p>
@@ -194,9 +198,9 @@
 
               </b-tab>
               <b-tab
-                  title='Ego Network'
-                  @click='onTabClick'
-                  data-sauto-id='info-tab-content'
+                title='Ego Network'
+                @click='onTabClick'
+                data-sauto-id='info-tab-content'
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
@@ -291,9 +295,9 @@
                 </b-row>
               </b-tab>
               <b-tab
-                  title='General Network'
-                  @click='onTabClick'
-                  data-sauto-id='info-tab-content'
+                title='General Network'
+                @click='onTabClick'
+                data-sauto-id='info-tab-content'
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
@@ -380,9 +384,9 @@
                 </b-row>
               </b-tab>
               <b-tab
-                  title='Node Metrics Comparison'
-                  @click='onTabClick'
-                  data-sauto-id='info-tab-content'
+                title='Node Metrics Comparison'
+                @click='onTabClick'
+                data-sauto-id='info-tab-content'
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
@@ -418,7 +422,8 @@
                           </li>
                           <li>Which centrality measures capture similar characteristics of the network?
                             <ul>
-                              <li>Use <code>Download CSV/JSON</code> to investigate correlations between <code>centrality metrics</code>, e.g. with R (<a href='https://www.r-project.org/'>https://www.r-project.org/</a>).</li>
+                              <li>Use <code>Download CSV/JSON</code> to investigate correlations between <code>centrality metrics</code>, e.g. with R (<a
+                                href='https://www.r-project.org/'>https://www.r-project.org/</a>).</li>
                             </ul>
                           </li>
                         </ul>
@@ -437,7 +442,7 @@
                           </li>
                           <li>
                             5 of 10 available node metrics are visualized by default, more metrics can be added by clicking on the <code>settings</code> icon <b-icon
-                              icon='gear'></b-icon> and enabling the metrics from the <code>Metrics to display</code> section. You can also change the order of the axes from settings
+                            icon='gear'></b-icon> and enabling the metrics from the <code>Metrics to display</code> section. You can also change the order of the axes from settings
                           </li>
                         </ul>
 
@@ -466,8 +471,8 @@
                       <span slot='details-header'>Technical details</span>
                       <span slot='details-content'>
                         <a
-                            href='https://en.wikipedia.org/wiki/Parallel_coordinates'
-                            target='_blank'>Parallel coordinates</a> are used to visualize scores of different metrics for selected nodes, the x-axis provides the names of various node metrics, the y-axis
+                          href='https://en.wikipedia.org/wiki/Parallel_coordinates'
+                          target='_blank'>Parallel coordinates</a> are used to visualize scores of different metrics for selected nodes, the x-axis provides the names of various node metrics, the y-axis
                             shows their values.<br>
                         <br>
                         Network metrics used are as follows:
@@ -475,16 +480,16 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.degree_centrality.html#networkx.algorithms.centrality.degree_centrality'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.degree_centrality.html#networkx.algorithms.centrality.degree_centrality'
+                                target='_blank'
                               >degree centrality</a>
                             </b> - is the total number of edges linked to a node.
                           </li>
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html#networkx.algorithms.centrality.betweenness_centrality'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html#networkx.algorithms.centrality.betweenness_centrality'
+                                target='_blank'
                               >betweenness centrality</a>
                             </b> - is the number of the shortest paths that pass
                             through the node; it represents the degree to which nodes stand between each other.
@@ -492,8 +497,8 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.load_centrality.html#networkx.algorithms.centrality.load_centrality'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.load_centrality.html#networkx.algorithms.centrality.load_centrality'
+                                target='_blank'
                               >load centrality</a>
                             </b> - is a betweenness-like centrality measure that
                             differs in its definition (uses hypothetical flow process).
@@ -501,8 +506,8 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.closeness_centrality.html#networkx.algorithms.centrality.closeness_centrality'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.closeness_centrality.html#networkx.algorithms.centrality.closeness_centrality'
+                                target='_blank'
                               >closeness centrality</a>
                             </b> - indicates how close a node is to all other
                             nodes in the network; nodes with a high closeness score have the shortest distances to all other
@@ -511,8 +516,8 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.harmonic_centrality.html#networkx.algorithms.centrality.harmonic_centrality'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.harmonic_centrality.html#networkx.algorithms.centrality.harmonic_centrality'
+                                target='_blank'
                               >harmonic centrality</a>
                             </b> - is a variant of closeness centrality; higher
                             values indicate higher centrality.
@@ -520,8 +525,8 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality'
+                                target='_blank'
                               >eigenvector centrality</a>
                             </b> - the idea behind this measure is that a
                             high eigenvector centrality means that a node is connected to many nodes who themselves have high
@@ -530,8 +535,8 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_analysis.pagerank_alg.pagerank.html#networkx.algorithms.link_analysis.pagerank_alg.pagerank'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_analysis.pagerank_alg.pagerank.html#networkx.algorithms.link_analysis.pagerank_alg.pagerank'
+                                target='_blank'
                               >pagerank</a>
                             </b> - is a variant of eigenvector centrality; the underlying
                             assumption is that a node is as important as the combined importance of the nodes that link to it.
@@ -539,11 +544,21 @@
                           <li>
                             <b>
                               <a
-                                  href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html#networkx.algorithms.cluster.clustering'
-                                  target='_blank'
+                                href='https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html#networkx.algorithms.cluster.clustering'
+                                target='_blank'
                               >clustering coefficient</a>
                             </b> - is a measure of the degree to which nodes
                             in a graph tend to cluster together.
+                          </li>
+                          <li>
+                            <b>
+                              absolute frequency
+                            </b> - is the number of instances of the node in the selected subcorpus.
+                          </li>
+                          <li>
+                            <b>
+                              normalized frequency
+                            </b> - is the number of instances of the node in the selected subcorpus normalized to scale with min=0 and max=1.
                           </li>
                         </ul>
                       </span>
@@ -552,9 +567,9 @@
                 </b-row>
               </b-tab>
               <b-tab
-                  title='Time Series Analysis'
-                  @click='onTabClick'
-                  data-sauto-id='info-tab-content'
+                title='Time Series Analysis'
+                @click='onTabClick'
+                data-sauto-id='info-tab-content'
               >
                 <b-row class='justify-content-md-center'>
                   <b-col lg='10' style='height: 100%'>
@@ -584,7 +599,8 @@
                           </li>
                           <li>Do different similarity measures capture the same diachronic trends?
                             <ul>
-                              <li>Use Table View to copy data and investigate correlations between similarity metrics, e.g. with R (<a href='https://www.r-project.org/'>https://www.r-project.org/</a>). </li>
+                              <li>Use Table View to copy data and investigate correlations between similarity metrics, e.g. with R (<a
+                                href='https://www.r-project.org/'>https://www.r-project.org/</a>). </li>
                             </ul>
                           </li>
                         </ul>
@@ -689,11 +705,11 @@
 </template>
 
 <script>
-import InfoCollapsable from "@/components/InfoCollapsable";
+import InfoCollapsable from '@/components/InfoCollapsable';
 
 export default {
   name: 'Info',
-  components: {InfoCollapsable},
+  components: { InfoCollapsable },
   props: {},
   data() {
     return {};
@@ -725,21 +741,26 @@ export default {
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%666d69' aria-label='next image' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
+
 .info-container .card-header {
-  color: white!important;
-  background-color: rgb(23 162 184)!important;
+  color: white !important;
+  background-color: rgb(23 162 184) !important;
 }
+
 .info-container .card {
-  border: 1px solid rgb(23 162 184)!important;
+  border: 1px solid rgb(23 162 184) !important;
 }
+
 .info-container .card-header li a {
   color: white !important;
 }
+
 .info-container .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
-  color: rgb(23 162 184)!important;
+  color: rgb(23 162 184) !important;
 }
+
 .carousel {
-  width: 90%!important;
-  margin: auto!important;
+  width: 90% !important;
+  margin: auto !important;
 }
 </style>
