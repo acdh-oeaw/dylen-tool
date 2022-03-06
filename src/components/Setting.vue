@@ -1,5 +1,4 @@
 <template>
-  <!--  <b-row> -->
   <b-col>
     <b-button
       v-if='position === "nav"'
@@ -24,7 +23,6 @@
       ></b-icon>
     </b-button>
   </b-col>
-  <!-- </b-row> -->
 
 </template>
 

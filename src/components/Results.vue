@@ -146,20 +146,19 @@
         The Ego Network visualization could be used to answer following question.
       </p>
       <ul>
-        <li>Does a word have different meaning/usage? - click on <code>show clusters</code> checkbox.</li>
-        <li>Which meaning of the word was pre-dominant in a given year - number of nodes in a cluster / sizes of the nodes. </li>
-        <li>How did the meaning of the word 'stationär' changed? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word</li>
-        <li>How does the word usage 'Klima (noun)' and 'Klima (pronoun)' - Compare two networks in parallel</li>
-        <li>Which of the surrounding words have strong similarities? - Strength of edges</li>
+        <li>Does a word have different meaning/usage? - Click on <code>show clusters</code> checkbox.</li>
+        <li>Which meaning of the word was pre-dominant in a given year? - Number of nodes in a cluster / sizes of the nodes. </li>
+        <li>How did the meaning of the word 'stationär' change? - Use the <code>year slider</code> to analyze different years and use <code>show clusters</code> option to find out different meanings/usage of a target word.</li>
+        <li>How do the word usage 'Klima (noun)' and 'Klima (pronoun)' compare? - Compare two networks in parallel.</li>
+        <li>Which of the surrounding words have strong similarities? - Strength of edges.</li>
       </ul>
       <h6><b>Interpretation guideline</b></h6>
       <ul>
-        <li>The <b>size of nodes</b> represents word frequency</li>
-        <li>The <b>thickness of edges</b> represents the similarity of nodes</li>
-        <li>The <b>colors of the labels</b> represent different Part-of-speech tags</li>
-        <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enbaled by clicking on the checkbox <code>"show clusters"</code></li>
-        <li>The target word itself is <b>not displayed</b> in the visualized ego network, since by definition every node in the network is connected to the target word by an edge.
-        </li>
+        <li>The <b>size of nodes</b> represents word frequency.</li>
+        <li>The <b>thickness of edges</b> represents the similarity of nodes.</li>
+        <li>The <b>colors of the labels</b> represent different Part-of-speech tags.</li>
+        <li>The <b>colors of the nodes</b> represent different clusters. Cluster visualization is disabled by default, it can be enabled by clicking on the checkbox <code>"show clusters"</code>.</li>
+        <li>The target word itself is <b>not displayed</b> in the visualized ego network, since by definition every node in the network is connected to the target word by an edge.</li>
       </ul>
     </b-modal>
     <b-modal
@@ -189,7 +188,7 @@
       </p>
       <h6><b>Node Labels</b></h6>
       <p>
-        The node labels are shown on the left and right side of the chart, overlapping words(words having the same/similar metric value on the first/last axis ) are displayed as <code>*</code>, the actual word can be viewed by hovering over the <code>*</code> character
+        The node labels are shown on the left and right side of the chart, overlapping words (words having the same/similar metric value on the first/last axis) are displayed as <code>*</code>, the actual word can be viewed by hovering over the <code>*</code> character.
       </p>
       <h6><b>Select/Deselect nodes</b></h6>
       <p>
@@ -278,6 +277,16 @@
           </b> - is a measure of the degree to which nodes
           in a graph tend to cluster together.
         </li>
+        <li>
+          <b>
+            absolute frequency
+          </b> - is the number of instances of the node in the selected subcorpus.
+        </li>
+        <li>
+          <b>
+            normalized frequency
+          </b> - is the number of instances of the node in the selected subcorpus normalized to scale with min=0 and max=1.
+        </li>
       </ul>
     </b-modal>
     <b-modal
@@ -290,12 +299,12 @@
         The DYLEN Time series Analysis component visualizes the change of (absolute) difference in the values of selected metrics to a specific target year.
       </p>
       <ol>
-        <li>Select the metric you want to visualize from the <code>Metric dropdown selector</code></li>
+        <li>Select the metric you want to visualize from the <code>Metric dropdown selector</code>.</li>
         <li>Select the year you want to compare the metrics to.</li>
       </ol>
 
-      <h6>Axes</h6>
-      x-axis shows the years, while y-axis shows the value of the selected metrics
+      <h6><b>Axes</b></h6>
+      x-axis shows the years, while y-axis shows the value of the selected metrics.
 
     </b-modal>
   </b-row>

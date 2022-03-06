@@ -1,6 +1,4 @@
-const isProduction = window
-  ? window.location.host === 'https://dylen-tool.acdh.oeaw.ac.at/'
-  : process.env.VUE_APP_ENVIRONMENT === 'prod';
+const isProduction = process.env.VUE_APP_ENVIRONMENT === 'prod';
 
 exports.log = (message) => {
   if (!isProduction) console.log(message);
