@@ -267,8 +267,8 @@
                           <b-row>Metrics to display (drag to reorder):</b-row>
                           <draggable
                             :list="selectedMetrics"
-                            @start="drag=true"
-                            @end="drag=false"
+                            @start="e => parallelCoordinatesOptionsDrag(e, true)"
+                            @end="e => parallelCoordinatesOptionsDrag(e, false)"
                             class="list-group w-100"
                             :disabled="false"
                           >
@@ -448,6 +448,14 @@ export default {
     screenResizeHandler() {
       const size = this.$refs.app.getBoundingClientRect();
       this.$store.dispatch('sauto/setBoundingClientRect', { size });
+    },
+    parallelCoordinatesOptionsDrag(e,start){
+      this.drag=start
+      if(start){
+        this.dragStart(e.originalEvent);
+      }else{
+        this.dragEnd(e.originalEvent,"parallel-coordinates-options");
+      }
     }
   },
   watch: {
