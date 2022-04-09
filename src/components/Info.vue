@@ -130,13 +130,13 @@
                                   different visualization options.<br>
                                 </p>
                                 <p>
-                                  Learn more about the project here: <a href='https://dylen.acdh.oeaw.ac.at'>https://dylen.acdh.oeaw.ac.at</a>.<br>
+                                  Learn more about the project here: <a href='https://dylen.acdh.oeaw.ac.at' target='_blank'>https://dylen.acdh.oeaw.ac.at</a>.<br>
                                 </p>
                                 Code available on Github:
                                 <ul>
-                                  <li>Frontend: <a href='https://github.com/acdh-oeaw/dylen-tool'>https://github.com/acdh-oeaw/dylen-tool</a>
+                                  <li>Frontend: <a href='https://github.com/acdh-oeaw/dylen-tool' target='_blank'>https://github.com/acdh-oeaw/dylen-tool</a>
                                   </li>
-                                  <li>Backend: <a href='https://github.com/acdh-oeaw/dylen-backend'>https://github.com/acdh-oeaw/dylen-backend</a>
+                                  <li>Backend: <a href='https://github.com/acdh-oeaw/dylen-backend' target='_blank'>https://github.com/acdh-oeaw/dylen-backend</a>
                                   </li>
                                 </ul>
                               </b-card-text>
