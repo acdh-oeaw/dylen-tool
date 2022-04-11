@@ -50,7 +50,9 @@ export default {
   props: {},
   data() {
     return {
-      modalShow: true
+      // modalShow: true //since there are enough sessions in SAUTO, I am disabling the prompt. If for some reason,
+      //we want to turn it on again, we can just change this to true
+      modalShow: false
     };
   },
   mounted() {
