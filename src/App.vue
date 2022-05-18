@@ -302,10 +302,7 @@
           class='py-2 mx-0 align-items-center footer'
           style='background-color: #17a2b8; color: white'
         >
-          <b-col
-            xl='11'
-            class="align-middle"
-          >
+          <b-col class="align-middle">
             <b-row xl='12'>
               <b-col
                 xl='12'
@@ -337,7 +334,7 @@
               </b-col>
             </b-row>
           </b-col>
-          <b-col xl='1'>
+          <b-col xl='auto'>
             <a
               href="http://www.oeaw.ac.at/"
               target="_blank"
@@ -349,6 +346,34 @@
                 alt="ACDH Logo"
               >
               <span class="assistive-text">Link to OEAW Homepage</span>
+            </a>
+          </b-col>
+          <b-col xl="auto">
+            <a
+              href="http://www.univie.ac.at/"
+              target="_blank"
+            >
+              <img
+                class='partner-logos'
+                style='max-height:50px; width:auto'
+                src="@/assets/univie_logo.svg"
+                alt="Univie Logo"
+              >
+              <span class="assistive-text">Link to University of Vienna Homepage</span>
+            </a>
+          </b-col>
+          <b-col xl="auto">
+            <a
+              href="http://www.tuwien.ac.at/"
+              target="_blank"
+            >
+              <img
+                class='partner-logos'
+                style='max-height:50px; width:100%'
+                src="@/assets/TU_Wien-Logo.svg"
+                alt="TU Wien Logo"
+              >
+              <span class="assistive-text">Link to Technical University Homepage</span>
             </a>
           </b-col>
         </b-row>
@@ -449,12 +474,12 @@ export default {
       const size = this.$refs.app.getBoundingClientRect();
       this.$store.dispatch('sauto/setBoundingClientRect', { size });
     },
-    parallelCoordinatesOptionsDrag(e,start){
-      this.drag=start
-      if(start){
+    parallelCoordinatesOptionsDrag(e, start) {
+      this.drag = start;
+      if (start) {
         this.dragStart(e.originalEvent);
-      }else{
-        this.dragEnd(e.originalEvent,"parallel-coordinates-options");
+      } else {
+        this.dragEnd(e.originalEvent, 'parallel-coordinates-options');
       }
     }
   },
