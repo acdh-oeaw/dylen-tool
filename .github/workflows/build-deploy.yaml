@@ -12,9 +12,9 @@ jobs:
     environment: ${{ github.ref_name }}
     steps:
       - name: checkout
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v3
       - name: Pack Build
-        uses: dfreilich/pack-action@v2.1.1
+        uses: dfreilich/pack-action@v2
         with:
           args: 'build tmp-cnb-image --builder heroku/buildpacks:20'
       - name: Set default port 5000 within image
@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create tags based on git data
         id: meta
-        uses: docker/metadata-action@v4.0.1
+        uses: docker/metadata-action@v4
         with:
           images: |
              ${{ env.DOCKER_TAG }}/${{ github.ref_name }}
@@ -47,7 +47,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{sha}}
       - name: Build and push
-        uses: docker/build-push-action@v3.1.1
+        uses: docker/build-push-action@v3
         with:
           context: .
           platforms: linux/amd64
@@ -64,12 +64,12 @@ jobs:
     env:
       SECRETS_CONTEXT: ${{ toJson(secrets) }}
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3
         name: Checkout
       - name: Kubernetes credentials
         run: |
           mkdir ${HOME}/.kube
-          echo ${{ secrets.ACDH_KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+          echo ${{ secrets.C2_KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
           chmod 0600 ${HOME}/.kube/config
           KUBE_NAMESPACE="${{ secrets.KUBE_NAMESPACE }}"
           if [ "$KUBE_NAMESPACE"x == 'x' ]
@@ -80,7 +80,7 @@ jobs:
           kubectl get pod
       - name: Create tags based on git data
         id: meta
-        uses: docker/metadata-action@v4.0.1
+        uses: docker/metadata-action@v4
         with:
           images: |
             ${{ env.DOCKER_TAG }}/${{ github.ref_name }}
