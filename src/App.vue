@@ -302,7 +302,10 @@
           class='py-2 mx-0 align-items-center footer'
           style='background-color: #17a2b8; color: white'
         >
-          <b-col class="align-middle">
+          <b-col
+            class="align-middle ml-auto"
+            sm='auto'
+          >
             <b-row xl='12'>
               <b-col
                 xl='12'
@@ -582,6 +585,8 @@ body {
   .main {
     margin-right: 0px;
   }
+}
+@media screen and (max-width: 1170px) {
   .row.footer {
     display: none;
   }
