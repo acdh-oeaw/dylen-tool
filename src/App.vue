@@ -334,7 +334,7 @@
               </b-col>
             </b-row>
           </b-col>
-          <b-col xl='auto'>
+          <b-col sm='auto'>
             <a
               href="http://www.oeaw.ac.at/"
               target="_blank"
@@ -348,7 +348,7 @@
               <span class="assistive-text">Link to OEAW Homepage</span>
             </a>
           </b-col>
-          <b-col xl="auto">
+          <b-col sm="auto">
             <a
               href="http://www.univie.ac.at/"
               target="_blank"
@@ -362,7 +362,7 @@
               <span class="assistive-text">Link to University of Vienna Homepage</span>
             </a>
           </b-col>
-          <b-col xl="auto">
+          <b-col sm="auto">
             <a
               href="http://www.tuwien.ac.at/"
               target="_blank"
@@ -581,6 +581,9 @@ body {
 @media screen and (max-width: 576px) {
   .main {
     margin-right: 0px;
+  }
+  .row.footer {
+    display: none;
   }
 }
 

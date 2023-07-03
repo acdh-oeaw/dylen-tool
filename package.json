@@ -20,6 +20,7 @@
     "core-js": "^3.6.5",
     "d3": "^6.7.0",
     "export-to-csv": "^0.2.1",
+    "sass": "^1.63.6",
     "splitpanes": "^2.3.8",
     "vue": "^2.6.12",
     "vue-custom-range-slider": "^0.2.3",
@@ -39,7 +40,6 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.13.0",
     "sass-loader": "^7.3.1",
     "vue-template-compiler": "^2.6.11"
   },
